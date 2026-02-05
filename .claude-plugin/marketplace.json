@@ -1,0 +1,24 @@
+{
+  "name": "lfgtm",
+  "owner": {
+    "name": "Octave",
+    "url": "https://octavehq.com"
+  },
+  "metadata": {
+    "description": "Official Claude Code plugins for Octave - GTM knowledge base integration for positioning, research, content generation, and sales enablement",
+    "pluginRoot": "./"
+  },
+  "plugins": [
+    {
+      "name": "octave",
+      "source": "./",
+      "description": "Access Octave's GTM knowledge base directly from Claude Code for positioning, research, content generation, and sales enablement",
+      "version": "1.0.0",
+      "author": {
+        "name": "Octave",
+        "url": "https://octavehq.com"
+      },
+      "homepage": "https://octavehq.com"
+    }
+  ]
+}
