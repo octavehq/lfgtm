@@ -358,3 +358,5 @@ Runs audit then walks through each issue for resolution.
 
 - `/octave:library` - Browse and manage individual entities
 - `/octave:brainstorm` - Generate ideas to fill gaps
+- `/octave:icp-refine` - Refine ICP definitions from deal data
+- `/octave:enablement` - Generate enablement content from library

@@ -533,3 +533,5 @@ Your choice:
 - `/octave:library` - Create entities from brainstormed concepts
 - `/octave:prospector` - Find prospects for brainstormed campaigns
 - `/octave:audit` - Identify gaps to brainstorm around
+- `/octave:campaign` - Turn brainstormed ideas into full campaigns
+- `/octave:messaging` - Build messaging frameworks from brainstormed angles

@@ -511,3 +511,5 @@ Me: Did you have a chance to review the proposal?
 - `/octave:generate` - Generate follow-up content
 - `/octave:pmm` - Create collateral to address gaps
 - `/octave:audit` - Ensure playbooks have complete guidance
+- `/octave:pipeline` - Deal coaching based on conversation analysis
+- `/octave:insights` - Aggregate patterns across many conversations

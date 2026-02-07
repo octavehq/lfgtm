@@ -422,3 +422,4 @@ Use WebFetch to extract content, then proceed with repurposing.
 - `/octave:library` - Manage personas, playbooks, and other context
 - `/octave:brainstorm` - Brainstorm content ideas
 - `/octave:pmm` - Create marketing collateral
+- `/octave:campaign` - Multi-channel campaign content

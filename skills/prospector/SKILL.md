@@ -444,3 +444,5 @@ DataFlow,dataflow.io,85,SaaS,230,New York,Growth SaaS
 - `/octave:generate` - Create outreach for prospects
 - `/octave:brainstorm` - Generate campaign ideas for prospect lists
 - `/octave:audit` - Ensure library has good ICP definitions
+- `/octave:abm` - Full account plan for top prospects
+- `/octave:icp-refine` - Refine ICP definitions from deal data

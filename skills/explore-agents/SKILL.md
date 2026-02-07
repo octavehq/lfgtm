@@ -476,6 +476,6 @@ Your choice:
 
 ## Related Skills
 
-- `/octave:generate` - Generate content without pre-configured agents
+- `/octave:generate` - Generate content with 3-way mode choice (saved agent, Octave default, Claude direct). Its `--mode agent` routes through agent discovery and execution — same agents you manage here.
 - `/octave:research` - Research before running agents
 - `/octave:pmm` - Create content that could become agent templates

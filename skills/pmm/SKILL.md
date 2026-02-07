@@ -1,11 +1,11 @@
 ---
 name: pmm
-description: Product marketing assistant for creating sales collateral, landing pages, battlecards, and case studies
+description: Product marketing assistant for creating sales collateral, landing pages, case studies, and decks
 ---
 
 # /octave:pmm - Product Marketing Assistant
 
-Interactive PMM assistant for creating sales collateral, landing pages, battlecards, case studies, one-pagers, and other marketing content—all infused with your brand voice and library messaging.
+Interactive PMM assistant for creating sales collateral, landing pages, case studies, one-pagers, decks, and other marketing content—all infused with your brand voice and library messaging.
 
 ## Usage
 
@@ -18,14 +18,12 @@ Interactive PMM assistant for creating sales collateral, landing pages, battleca
 ```
 /octave:pmm                      # Interactive mode - asks what you're creating
 /octave:pmm one-pager            # Product one-pager
-/octave:pmm battlecard           # Competitive battlecard
 /octave:pmm case-study           # Customer case study
 /octave:pmm landing-page         # Landing page copy
 /octave:pmm deck                 # Sales deck outline
 /octave:pmm blog                 # Blog post / thought leadership
 /octave:pmm datasheet            # Technical datasheet
 /octave:pmm faq                  # FAQ document
-/octave:pmm objection-handler    # Objection handling guide
 ```
 
 ## Instructions
@@ -41,19 +39,20 @@ What would you like to create?
 
 SALES ENABLEMENT
 1. One-Pager - Single page product/solution overview
-2. Battlecard - Competitive positioning guide
-3. Objection Handler - Response guide for common objections
-4. Sales Deck - Presentation outline and talking points
+2. Sales Deck - Presentation outline and talking points
 
 MARKETING CONTENT
-5. Landing Page - Web page copy (hero, benefits, CTA)
-6. Case Study - Customer success story
-7. Blog Post - Thought leadership content
-8. Datasheet - Technical specifications
+3. Landing Page - Web page copy (hero, benefits, CTA)
+4. Case Study - Customer success story
+5. Blog Post - Thought leadership content
+6. Datasheet - Technical specifications
 
 OTHER
-9. FAQ - Frequently asked questions
-10. Something else - Describe what you need
+7. FAQ - Frequently asked questions
+8. Something else - Describe what you need
+
+TIP: For competitive battlecards, use /octave:battlecard
+TIP: For objection handling guides, use /octave:enablement objections
 
 Your choice:
 ```
@@ -85,31 +84,6 @@ Let's create your one-pager. A few questions:
 
 5. Any specific proof points to include?
    [List available proof points]
-```
-
----
-
-**For Battlecard:**
-```
-Let's create your battlecard. A few questions:
-
-1. Which competitor?
-   [List competitors from library]
-
-2. Target audience for this battlecard?
-   - Sales reps (detailed technical)
-   - Sales leaders (strategic overview)
-   - Both
-
-3. Key scenarios to address?
-   - Head-to-head replacement
-   - Competitive displacement
-   - New evaluation
-   - All of the above
-
-4. Include pricing comparison?
-   - Yes, with ranges
-   - No, keep it positioning-focused
 ```
 
 ---
@@ -206,9 +180,6 @@ get_entity({ oId: "<product_oId>" })
 
 # Get persona details
 get_entity({ oId: "<persona_oId>" })
-
-# Get competitor info (for battlecards)
-get_entity({ oId: "<competitor_oId>" })
 
 # Get reference details (for case studies)
 get_entity({ oId: "<reference_oId>" })
@@ -312,120 +283,6 @@ Want me to:
 2. Add/remove sections
 3. Create a different version for another persona
 4. Export as markdown/text
-```
-
----
-
-#### Battlecard Output
-
-```
-BATTLECARD: [Your Product] vs [Competitor]
-==========================================
-
-[Last Updated: [date]]
-[Audience: Sales Reps]
-
----
-
-QUICK POSITIONING
------------------
-When you hear: "[Competitor]"
-Lead with: "[Key differentiator statement]"
-
-One-liner: "[Elevator pitch positioning against competitor]"
-
----
-
-COMPETITOR OVERVIEW
--------------------
-What they do: [Brief description]
-Target market: [Their focus]
-Pricing model: [If known]
-Key customers: [Notable logos]
-
----
-
-WHERE WE WIN
-------------
-| Capability | Us | Them |
-|------------|-----|------|
-| [Feature 1] | ✓ [Our strength] | ✗ [Their weakness] |
-| [Feature 2] | ✓ [Our strength] | ~ [Partial] |
-| [Feature 3] | ✓ [Our strength] | ✗ [Their weakness] |
-
-Win themes:
-1. [Win reason 1 from library]
-2. [Win reason 2 from library]
-3. [Win reason 3 from library]
-
----
-
-WHERE THEY WIN (BE HONEST)
---------------------------
-| Capability | Them | Us |
-|------------|------|-----|
-| [Feature] | ✓ [Their strength] | [Our response/roadmap] |
-
-How to handle:
-- "[Objection]" → "[Response that reframes]"
-
----
-
-COMMON OBJECTIONS
------------------
-
-"[Competitor] is cheaper"
-→ [Response about value, TCO, hidden costs]
-
-"[Competitor] has feature X"
-→ [Response about why it matters/doesn't, alternatives]
-
-"We already use [Competitor]"
-→ [Displacement strategy, migration story]
-
----
-
-TRAP QUESTIONS TO ASK
----------------------
-Ask the prospect these questions to expose competitor weaknesses:
-
-1. "[Question that reveals competitor limitation]"
-   Why: [What you're hoping to uncover]
-
-2. "[Question about scalability/support/etc.]"
-   Why: [What you're hoping to uncover]
-
----
-
-PROOF POINTS TO USE
--------------------
-• [Customer who switched from competitor]
-• [Metric comparing outcomes]
-• [Third-party validation]
-
----
-
-LANDMINES TO SET
-----------------
-Plant these ideas early in the evaluation:
-
-1. "[Criteria] is critical because..." (plays to our strength)
-2. "Make sure to ask about [topic]..." (exposes their weakness)
-
----
-
-Sources Used:
-- Competitor: [competitor name] (strengths, weaknesses, differentiation)
-- Win/Loss reasons from library
-- Proof points: [list]
-
----
-
-Want me to:
-1. Add more objection handling
-2. Create a version for a specific persona
-3. Deep dive on a particular comparison area
-4. Create trap questions for specific features
 ```
 
 ---
@@ -547,11 +404,12 @@ What would you like to do?
 
 1. Adjust tone or style
 2. Add/remove/expand sections
-3. Create version for different persona
-4. Make it shorter / longer
-5. Add more proof points
-6. Strengthen the CTA
-7. Done - export final version
+3. Re-generate using a saved agent
+4. Create version for different persona
+5. Make it shorter / longer
+6. Add more proof points
+7. Strengthen the CTA
+8. Done - export final version
 
 Your choice:
 ```
@@ -591,6 +449,14 @@ Which brand voice should I use?
 
 Apply selected voice guidelines to all generated content.
 
+## Generation Mode Note
+
+This skill uses Octave's `generate_content` and `generate_email` tools by default. Two alternatives:
+- **Saved agents**: Check for matching agents with `list_agents` when relevant. See `/octave:explore-agents`.
+- **Claude-direct**: Skip `generate_*` calls, gather Octave context, Claude writes directly. Offer when user wants more control.
+
+For the full interactive mode selector, use `/octave:generate`.
+
 ## MCP Tools Used
 
 ### Library Context
@@ -608,13 +474,11 @@ Apply selected voice guidelines to all generated content.
 | Type | Key Inputs | Primary Library Sources |
 |------|------------|------------------------|
 | One-Pager | Product, persona, use case | Product, persona pain points, proof points |
-| Battlecard | Competitor, audience | Competitor (strengths, weaknesses, differentiation) |
 | Case Study | Reference customer | Reference (metrics, quotes), use case |
 | Landing Page | Product/campaign, persona, CTA | Product, persona, value props |
 | Blog Post | Topic, angle, persona | Use cases, proof points, messaging |
 | Datasheet | Product | Product (features, specs, capabilities) |
 | FAQ | Product/topic | Common objections, use cases |
-| Objection Handler | Objections, persona | Persona concerns, proof points, competitors |
 | Sales Deck | Product, persona, playbook | Playbook (narrative, value props), product |
 
 ## Error Handling
@@ -631,17 +495,13 @@ Apply selected voice guidelines to all generated content.
 > For consistent messaging, consider creating a brand voice:
 > This is done in the Octave web app under Settings > Brand Voices.
 
-**Missing Competitor (for battlecard):**
-> Competitor "[name]" not found in your library.
->
-> Options:
-> 1. Add competitor first (/octave:library create competitor)
-> 2. I'll research and create a basic battlecard (less accurate)
-> 3. Choose from existing: [list competitors]
-
 ## Related Skills
 
 - `/octave:brainstorm` - Generate content ideas before creating
 - `/octave:generate` - Quick one-off content (emails, LinkedIn)
 - `/octave:library` - Add/update entities used in content
 - `/octave:analyzer` - Analyze existing content for improvements
+- `/octave:battlecard` - Competitive battlecards with real deal evidence
+- `/octave:enablement` - Sales enablement materials (objection guides, cheat sheets)
+- `/octave:messaging` - Build messaging frameworks before creating collateral
+- `/octave:campaign` - Multi-channel campaign content

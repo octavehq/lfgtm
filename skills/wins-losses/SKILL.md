@@ -641,5 +641,7 @@ Would you like me to execute any of these?
 
 - `/octave:insights` - Broader findings across all events
 - `/octave:analyzer` - Deep dive on specific conversations
-- `/octave:pmm` - Create battlecards from competitive insights
+- `/octave:battlecard` - Competitive battlecards from win/loss data
 - `/octave:research` - Research for current pipeline deals
+- `/octave:icp-refine` - Refine ICP definitions from deal patterns
+- `/octave:enablement` - Turn win/loss learnings into training materials

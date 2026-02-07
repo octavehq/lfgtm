@@ -207,7 +207,7 @@ Content Gaps Identified:
 
 Follow-Up Actions:
 1. 3 deals have stalled objections - review with /octave:research
-2. 2 competitors gaining mentions - update battlecards with /octave:pmm
+2. 2 competitors gaining mentions - update battlecards with /octave:battlecard
 
 ---
 
@@ -462,3 +462,6 @@ If yes, use `update_entity` to apply.
 - `/octave:wins-losses` - Focus on deal outcomes
 - `/octave:audit` - Ensure library captures field learnings
 - `/octave:library` - Update library with insights
+- `/octave:battlecard` - Competitive intelligence from conversation data
+- `/octave:icp-refine` - Use conversation patterns to refine ICP
+- `/octave:enablement` - Turn field insights into team enablement materials

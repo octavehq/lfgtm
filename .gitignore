@@ -37,3 +37,4 @@ next-env.d.ts
 
 # Octave plugin local config
 .claude/config/
+PLAN.MD

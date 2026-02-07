@@ -21,7 +21,6 @@ Research prospects and prepare for calls, meetings, demos, outreach, and deal re
 /octave:research john@acme.com --for discovery       # Discovery call prep
 /octave:research "meeting with Acme Corp" --for demo # Demo prep
 /octave:research acme.com --for outreach             # Cold outreach angles
-/octave:research "Acme deal" --for pipeline-review   # Deal review
 ```
 
 ## Occasions
@@ -32,8 +31,9 @@ Research prospects and prepare for calls, meetings, demos, outreach, and deal re
 | `demo` | Use cases to show, proof points to cite, objections to prepare for |
 | `follow-up` | Next steps, open questions, momentum builders |
 | `outreach` | Hooks, angles, personalization points, CTAs |
-| `pipeline-review` | Deal health, risks, next moves, stakeholder mapping |
 | `general` | Comprehensive research (default) |
+
+> **Deal coaching?** Use `/octave:pipeline` for deal-level strategy, stalled deals, multi-threading, and competitive deal coaching.
 
 ## Instructions
 
@@ -59,8 +59,9 @@ What are you preparing for?
 2. Demo - Showing the product, proving value
 3. Follow-up - Continuing a conversation, next steps
 4. Outreach - Cold/warm outreach, getting a response
-5. Pipeline review - Assessing deal health, planning next moves
-6. General research - Just want to know more
+5. General research - Just want to know more
+
+TIP: For deal coaching and pipeline review, use /octave:pipeline
 
 Your choice:
 ```
@@ -486,148 +487,6 @@ Want me to:
 4. Find additional contacts at this company
 ```
 
----
-
-#### Pipeline Review
-
-```
-PIPELINE REVIEW: [Deal/Company]
-===============================
-
-DEAL SNAPSHOT
--------------
-Company: [Company]
-Primary Contact: [Name, Title]
-Stage: [Current stage]
-Amount: [If known]
-Close Date: [If known]
-Days in Stage: [X days]
-
----
-
-DEAL HEALTH ASSESSMENT
-----------------------
-
-Overall Health: [🟢 Healthy / 🟡 At Risk / 🔴 Stalled]
-
-Positive Signals:
-✓ [Positive indicator 1]
-✓ [Positive indicator 2]
-
-Warning Signs:
-⚠ [Risk factor 1]
-⚠ [Risk factor 2]
-
----
-
-STAKEHOLDER MAP
----------------
-[If multiple contacts known]
-
-Decision Maker: [Name, Title]
-  Status: [Champion / Neutral / Blocker]
-  Last contact: [Date]
-  Sentiment: [Positive / Neutral / Negative]
-
-Technical Evaluator: [Name, Title]
-  Status: [Champion / Neutral / Blocker]
-  Last contact: [Date]
-
-Economic Buyer: [Name, Title]
-  Status: [Unknown / Engaged / Not engaged]
-
-Missing: [Roles not yet identified]
-
----
-
-DEAL GAPS
----------
-□ Champion identified and confirmed
-□ Economic buyer engaged
-□ Technical validation complete
-□ Business case built
-□ Timeline confirmed
-□ Competition known
-□ Next steps agreed
-
----
-
-COMPETITIVE SITUATION
----------------------
-Known competitors in deal: [List]
-Our position: [Leading / Tied / Behind / Unknown]
-
-Competitive risks:
-• [Risk 1]
-• [Risk 2]
-
-Counter-strategy:
-• [Action to differentiate]
-
----
-
-RECOMMENDED NEXT MOVES
-----------------------
-
-Immediate (This Week):
-1. [Specific action with specific person]
-   Why: [Reason this moves the deal forward]
-
-2. [Specific action]
-   Why: [Reason]
-
-This Month:
-3. [Action to advance stage]
-4. [Action to expand stakeholders]
-
----
-
-CONVERSATION STARTERS
----------------------
-For [Primary Contact]:
-• "When we last spoke, you mentioned [X]. Has that changed?"
-• "What's the latest on [initiative they mentioned]?"
-• "Who else should we loop in to evaluate [specific area]?"
-
-For [Other Stakeholder]:
-• "[Tailored question based on their role]"
-
----
-
-CONTENT TO SEND
----------------
-Based on deal stage and stakeholders:
-
-• For [Decision Maker]: [Case study / ROI analysis]
-• For [Technical Evaluator]: [Technical documentation / Demo]
-• For [Economic Buyer]: [Business case / Executive summary]
-
----
-
-RISK MITIGATION
----------------
-
-If deal is stalling:
-• Try: [Re-engagement tactic]
-• Offer: [Value-add to restart momentum]
-
-If competition is strong:
-• Emphasize: [Key differentiators]
-• Reference: [Competitive win story]
-
-If champion is weak:
-• Find: [Additional champions]
-• Build: [Executive sponsorship]
-
----
-
-Want me to:
-1. Draft a re-engagement email
-2. Create a business case document
-3. Research additional stakeholders
-4. Generate competitive positioning
-```
-
 ### Step 4: Offer Follow-Up Actions
 
 After any research output, offer relevant next steps:
@@ -693,3 +552,6 @@ What would you like to do next?
 - `/octave:pmm` - Create account-specific collateral
 - `/octave:prospector` - Find more prospects like this one
 - `/octave:analyzer` - Analyze past interactions with this account
+- `/octave:pipeline` - Deal-level coaching (stalled deals, multi-threading, competitive)
+- `/octave:abm` - Full account-based planning with stakeholder mapping
+- `/octave:battlecard` - Competitive intelligence for deals
