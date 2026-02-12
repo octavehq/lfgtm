@@ -1,6 +1,6 @@
 ---
 name: pmm
-description: Product marketing assistant for creating sales collateral, landing pages, case studies, and decks
+description: Product marketing content generator for case studies, blog posts, datasheets, and FAQs. Use when user says "case study", "blog post", "datasheet", "FAQ", or asks for marketing collateral. For visual document output, prefer /octave:deck, /octave:one-pager, /octave:brief, /octave:proposal, or /octave:microsite.
 ---
 
 # /octave:pmm - Product Marketing Assistant

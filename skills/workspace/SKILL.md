@@ -1,6 +1,6 @@
 ---
 name: workspace
-description: Show current Octave MCP server
+description: Show current Octave MCP server connection and status. Use when user says "which workspace", "show connection", "what server", or asks about Octave setup.
 ---
 
 # /octave:workspace - Workspace Status

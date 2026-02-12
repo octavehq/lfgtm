@@ -1,6 +1,6 @@
 ---
 name: icp-refine
-description: Analyze deal outcomes and conversation patterns to refine ICP definitions and targeting criteria
+description: Analyze deal outcomes and conversation patterns to refine ICP definitions and targeting criteria. Use when user says "refine ICP", "who should we target", "update our ICP", "ideal customer profile", or asks why deals are being won or lost.
 ---
 
 # /octave:icp-refine - ICP Intelligence

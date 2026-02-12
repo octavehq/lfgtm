@@ -1,6 +1,6 @@
 ---
 name: train
-description: Practice selling with role-play simulations and quiz yourself on your GTM knowledge — personas, objections, competitive positioning, and more
+description: Practice selling with role-play simulations, knowledge quizzes, and guided learning on your GTM library. Use when user says "role-play a call", "quiz me", "practice objections", "sales training", "test my knowledge", or asks for interactive learning.
 ---
 
 # /octave:train - Sales Training Ground

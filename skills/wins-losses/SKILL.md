@@ -1,6 +1,6 @@
 ---
 name: wins-losses
-description: Analyze won and lost deals for patterns, insights, and learnings
+description: Analyze won and lost deals for patterns, insights, and actionable learnings. Use when user says "win/loss analysis", "why did we lose", "deal patterns", "win themes", or asks about deal outcome trends. Do NOT use for visual HTML reports — use /octave:win-loss-report instead.
 ---
 
 # /octave:wins-losses - Deal Intelligence

@@ -1,6 +1,6 @@
 ---
 name: insights
-description: Surface findings, trends, and patterns from calls, emails, and deals
+description: Surface findings, trends, and patterns from calls, emails, and deals. Use when user says "what are prospects saying", "common objections", "conversation trends", "field intelligence", "what patterns", or asks about aggregate conversation insights. Do NOT use for deal-level win/loss analysis — use /octave:wins-losses instead.
 ---
 
 # /octave:insights - Field Intelligence

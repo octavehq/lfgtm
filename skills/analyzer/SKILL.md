@@ -1,6 +1,6 @@
 ---
 name: analyzer
-description: Analyze email threads, call transcripts, and conversations for resonance, adherence, and differentiation
+description: Analyze email threads, call transcripts, and conversations for resonance, adherence to messaging, and competitive differentiation. Use when user says "analyze this call", "how did the email land", "score this thread", "conversation analysis", or pastes conversation content to evaluate.
 ---
 
 # /octave:analyzer - Conversation Analysis

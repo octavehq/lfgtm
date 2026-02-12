@@ -1,6 +1,6 @@
 ---
 name: launch
-description: Product and feature launch planning with full content kit generation across channels and audiences
+description: Product and feature launch planning with full content kit generation across channels and audiences. Use when user says "launch plan", "product launch", "feature announcement", "GTM plan for launch", "launch content kit", or mentions launching something new.
 ---
 
 # /octave:launch - Launch Command Center

@@ -98,13 +98,24 @@ You can use any name that starts with `octave-` (e.g. `octave-acme`). Skills det
 | `/octave:icp-refine` | Refine ICP definitions using deal outcome analysis |
 | `/octave:explore-agents` | Browse and run your saved Octave agents |
 
+### Document Builder Skills
+
+| Skill | Description |
+|-------|-------------|
+| `/octave:deck` | Build Octave-powered HTML slide decks with brand styling and export |
+| `/octave:one-pager` | Personalized one-pager / leave-behind as self-contained HTML |
+| `/octave:brief` | Internal account dossier and call prep HTML document |
+| `/octave:proposal` | Formal business case and proposal as customer-facing HTML |
+| `/octave:microsite` | Personalized ABM microsite / landing page as HTML |
+| `/octave:battlecard-doc` | Visual competitive battlecard as interactive HTML |
+| `/octave:win-loss-report` | Visual win/loss analysis report with CSS-based charts |
+
 ### Ideation & Content Skills
 
 | Skill | Description |
 |-------|-------------|
 | `/octave:brainstorm` | Ideation for campaigns, playbooks, lead magnets, CTAs |
 | `/octave:repurpose` | Repurpose content for a different audience, persona, or channel |
-| `/octave:deck` | Build Octave-powered HTML presentations with brand styling and export |
 
 ### Automation Skills
 
@@ -494,12 +505,17 @@ The plugin uses the single Octave MCP server you configure (e.g. `octave-acme`).
 │   ├── sdr-coach.md            # SDR coaching agent
 │   └── revenue-strategist.md   # Revenue strategy advisor agent
 ├── skills/                      # Skill definitions
+│   ├── SKILL-GUIDE.md          # Best practices for writing skills
 │   ├── abm/SKILL.md            # Account-based planning
 │   ├── analyzer/SKILL.md       # Conversation analysis
 │   ├── audit/SKILL.md          # Library health check
-│   ├── battlecard/SKILL.md     # Competitive intelligence
+│   ├── battlecard/SKILL.md     # Competitive intelligence (text)
+│   ├── battlecard-doc/SKILL.md # Competitive battlecard (HTML)
 │   ├── brainstorm/SKILL.md     # GTM ideation
+│   ├── brief/SKILL.md          # Account dossier (HTML)
 │   ├── campaign/SKILL.md       # Multi-channel campaigns
+│   ├── deck/SKILL.md           # Presentation builder (HTML)
+│   │   └── references/         # Slide templates, export guide
 │   ├── enablement/SKILL.md     # Sales enablement materials
 │   ├── explore-agents/SKILL.md # Agent management
 │   ├── generate/SKILL.md       # Quick content generation
@@ -508,11 +524,16 @@ The plugin uses the single Octave MCP server you configure (e.g. `octave-acme`).
 │   ├── launch/SKILL.md         # Launch planning
 │   ├── library/SKILL.md        # Library CRUD
 │   ├── messaging/SKILL.md      # Messaging frameworks
+│   ├── microsite/SKILL.md      # ABM microsite (HTML)
+│   ├── one-pager/SKILL.md      # One-pager / leave-behind (HTML)
 │   ├── pipeline/SKILL.md       # Deal coaching
 │   ├── pmm/SKILL.md            # Product marketing content
+│   ├── proposal/SKILL.md       # Business case / proposal (HTML)
 │   ├── prospector/SKILL.md     # Prospect discovery
 │   ├── repurpose/SKILL.md      # Content repurposing
 │   ├── research/SKILL.md       # Research & prep
+│   ├── train/SKILL.md          # Sales training & role-play
+│   ├── win-loss-report/SKILL.md # Win/loss report (HTML)
 │   ├── wins-losses/SKILL.md    # Deal outcome analysis
 │   ├── workflow/SKILL.md       # Workflow engine
 │   └── workspace/SKILL.md      # Connection status

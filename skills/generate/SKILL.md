@@ -1,6 +1,6 @@
 ---
 name: generate
-description: Generate GTM content (emails, LinkedIn messages, call prep) using saved agents, Octave AI, or Claude direct — your choice
+description: Generate GTM content (emails, LinkedIn messages, call prep) using saved agents, Octave AI, or Claude direct — your choice. Use when user says "generate an email", "write a LinkedIn message", "prep for a call", "create outreach", or asks for single-asset content generation with mode selection.
 ---
 
 # /octave:generate - GTM Content Generator

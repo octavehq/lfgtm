@@ -1,6 +1,6 @@
 ---
 name: research
-description: Context-aware research and prep for calls, meetings, demos, outreach, and deal reviews
+description: Context-aware research and prep for calls, meetings, demos, outreach, and deal reviews. Use when user says "research [company]", "prep for my call", "who is [person]", "meeting prep", "demo prep", or asks to research a company or person. Do NOT use for bulk prospecting — use /octave:prospector instead.
 ---
 
 # /octave:research - Context-Aware Research & Prep

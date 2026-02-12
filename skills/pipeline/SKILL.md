@@ -1,6 +1,6 @@
 ---
 name: pipeline
-description: Deal-level coaching with diagnosis, stakeholder strategy, and next-step recommendations
+description: Deal-level coaching with diagnosis, stakeholder strategy, and next-step recommendations. Use when user says "help with this deal", "deal is stalled", "how to close", "competitive deal", "multi-thread", "deal coaching", or mentions a specific stuck deal.
 ---
 
 # /octave:pipeline - Deal Coach

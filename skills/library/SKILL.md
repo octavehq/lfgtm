@@ -1,6 +1,6 @@
 ---
 name: library
-description: Browse, search, create, and update Octave library entities
+description: Browse, search, create, and update Octave library entities (personas, products, playbooks, segments, competitors, proof points, references). Use when user says "show my personas", "list products", "create a competitor", "update this segment", "search the library", or references any entity type by name.
 ---
 
 # /octave:library - Library Management
@@ -466,14 +466,25 @@ User: "Add value props for the CFO persona"
 ## Error Handling
 
 **Entity Not Found:**
-> Entity "pe_invalid" not found.
-> Use /octave:library list personas to see available personas.
+> Entity "[oId]" not found in your library.
+>
+> This usually means the oId is wrong or the entity was deleted.
+> 1. Run `/octave:library list [type]` to see available entities and their oIds
+> 2. Check for typos in the oId
+> 3. Search by name instead: `/octave:library search [name]`
 
 **Invalid Entity Type:**
-> Unknown entity type "xyz". Valid types:
-> personas, products, playbooks, segments, use-cases,
+> Unknown entity type "[input]".
+>
+> Valid types: personas, products, playbooks, segments, use-cases,
 > competitors, proof-points, references, services, brand-voices, writing-styles
+>
+> Check spelling and try again.
 
 **Create/Update Failed:**
-> Failed to create persona: <error message>
-> Please try again or check your permissions.
+> Failed to [create/update] [type]: [error message]
+>
+> Options:
+> 1. Check that all required fields are provided
+> 2. Try again with simpler instructions
+> 3. Run `/octave:workspace` to verify your connection

@@ -1,6 +1,6 @@
 ---
 name: messaging
-description: Build messaging frameworks, positioning statements, messaging matrices, and narrative arcs from your library
+description: Build messaging frameworks, positioning statements, messaging matrices, elevator pitches, and narrative arcs from your library. Use when user says "messaging framework", "positioning statement", "elevator pitch", "messaging matrix", "narrative arc", or asks to align or structure messaging.
 ---
 
 # /octave:messaging - Messaging Framework Builder

@@ -1,6 +1,6 @@
 ---
 name: explore-agents
-description: Browse, understand, and run your saved Octave agents
+description: Browse, understand, and run your saved Octave agents. Use when user says "show my agents", "list agents", "run an agent", "which agents do I have", or asks about saved agent configurations.
 ---
 
 # /octave:explore-agents - Agent Manager

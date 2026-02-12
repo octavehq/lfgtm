@@ -1,6 +1,6 @@
 ---
 name: abm
-description: Account-based planning with stakeholder mapping, persona matching, and coordinated outreach strategy
+description: Account-based planning with stakeholder mapping, persona matching, and coordinated outreach strategy. Use when user says "plan for [company]", "account plan", "stakeholder map", "ABM strategy", or mentions targeting a specific named company.
 ---
 
 # /octave:abm - Account Planner

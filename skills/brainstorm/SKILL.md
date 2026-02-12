@@ -1,6 +1,6 @@
 ---
 name: brainstorm
-description: Brainstorm campaigns, playbook ideas, lead magnets, CTAs, and growth experiments using your GTM library
+description: Brainstorm campaigns, playbook ideas, lead magnets, CTAs, and growth experiments using your GTM library. Use when user says "brainstorm ideas", "campaign ideas", "growth experiments", "what content should we create", or asks for creative ideation.
 ---
 
 # /octave:brainstorm - GTM Ideation Engine

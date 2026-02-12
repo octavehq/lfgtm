@@ -1,6 +1,6 @@
 ---
 name: battlecard
-description: Competitive intelligence hub for battlecards, displacement campaigns, trap questions, and objection counters
+description: Generate competitive battlecards, displacement campaigns, trap questions, and objection counters as text-based analysis grounded in library data and real deal evidence. Use when user says "battlecard for [competitor]", "how do we beat [competitor]", "competitive intel", "trap questions", "displacement campaign", or mentions competing against a rival. Do NOT use for visual HTML battlecard documents — use /octave:battlecard-doc instead.
 ---
 
 # /octave:battlecard - Competitive War Room

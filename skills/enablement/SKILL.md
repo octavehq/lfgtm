@@ -1,6 +1,6 @@
 ---
 name: enablement
-description: Generate sales enablement materials — cheat sheets, objection guides, discovery banks, and onboarding kits from your library
+description: Generate sales enablement materials — cheat sheets, objection guides, discovery question banks, competitive sheets, and onboarding kits from your library. Use when user says "cheat sheet", "objection guide", "discovery questions", "onboarding kit", "enablement materials", or asks for quick-reference sales tools.
 ---
 
 # /octave:enablement - Sales Enablement Studio

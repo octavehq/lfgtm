@@ -1,6 +1,6 @@
 ---
 name: repurpose
-description: Repurpose existing content (text, file, URL) for a different audience, persona, or context using your Octave library
+description: Repurpose existing content (text, file, URL) for a different audience, persona, or context using your Octave library. Use when user says "repurpose this", "adapt for [persona]", "convert this blog to email", "rewrite for a different audience", or provides existing content to transform.
 ---
 
 # /octave:repurpose - Content Repurposing

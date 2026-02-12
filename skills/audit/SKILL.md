@@ -1,6 +1,6 @@
 ---
 name: audit
-description: Audit your Octave library for gaps, stale content, duplicates, and inconsistencies
+description: Audit your Octave library for gaps, stale content, duplicates, and inconsistencies. Use when user says "audit my library", "check for gaps", "library health check", "find duplicates", or asks about library quality and completeness.
 ---
 
 # /octave:audit - Library Health Check

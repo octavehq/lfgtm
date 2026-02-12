@@ -1,6 +1,6 @@
 ---
 name: campaign
-description: Plan and generate multi-channel campaign content grounded in your GTM library intelligence
+description: Plan and generate multi-channel campaign content including email sequences, LinkedIn, ads, social, blog, and landing pages. Use when user says "create a campaign", "campaign for launch", "multi-channel outreach", "demand gen", or asks for coordinated content across channels. Do NOT use for single emails or messages — use /octave:generate instead.
 ---
 
 # /octave:campaign - Campaign Architect
