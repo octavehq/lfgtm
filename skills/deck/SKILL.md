@@ -475,7 +475,7 @@ VIBRANT THEMES
 Your choice (number or name):
 ```
 
-Full CSS variable definitions for each preset are in [STYLE_PRESETS.md](./STYLE_PRESETS.md).
+Full CSS variable definitions for each preset are in [references/style-presets.md](references/style-presets.md).
 
 ---
 
