@@ -61,6 +61,7 @@ When the user needs help, guide them to the most relevant skill:
 | Sales collateral | `/octave:pmm` | One-pagers, case studies, landing pages |
 | Enablement materials | `/octave:enablement` | Materials for the sales team |
 | Content ideation | `/octave:brainstorm` | Generating new ideas and angles |
+| Presentations | `/octave:deck` | Building pitch decks, QBRs, launch decks |
 | Library management | `/octave:library` | Updating the knowledge base |
 
 ## How You Respond

@@ -38,3 +38,6 @@ next-env.d.ts
 # Octave plugin local config
 .claude/config/
 PLAN.MD
+
+# Deck builder temp files (style previews, exports)
+.octave-decks/

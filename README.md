@@ -87,6 +87,7 @@ You can use any name that starts with `octave-` (e.g. `octave-acme`). Skills det
 | `/octave:enablement` | Generate sales enablement materials — cheat sheets, objection guides |
 | `/octave:pmm` | Create sales collateral — one-pagers, case studies, landing pages |
 | `/octave:analyzer` | Analyze conversations for resonance, adherence, differentiation |
+| `/octave:train` | Practice selling — role-play simulations, quizzes, guided learning |
 
 ### Intelligence & Analytics Skills
 
@@ -103,6 +104,7 @@ You can use any name that starts with `octave-` (e.g. `octave-acme`). Skills det
 |-------|-------------|
 | `/octave:brainstorm` | Ideation for campaigns, playbooks, lead magnets, CTAs |
 | `/octave:repurpose` | Repurpose content for a different audience, persona, or channel |
+| `/octave:deck` | Build Octave-powered HTML presentations with brand styling and export |
 
 ### Automation Skills
 
@@ -363,6 +365,27 @@ Transform existing content for different audiences:
 ```
 /octave:repurpose "Our platform reduces deployment time..." --persona "CFO"
 /octave:repurpose ./content/whitepaper.md --channel "email"
+```
+
+### /octave:train
+Practice selling with role-play simulations and knowledge quizzes:
+
+```
+/octave:train                                   # Interactive - pick a mode
+/octave:train roleplay --persona "CTO"          # Role-play with a specific persona
+/octave:train quiz --topic objections            # Quiz on objection handling
+/octave:train quiz --competitor "Acme"           # Competitive knowledge check
+```
+
+### /octave:deck
+Build Octave-powered HTML presentations with brand styling:
+
+```
+/octave:deck "pitch for Acme Corp"                          # Customer pitch
+/octave:deck "Q1 QBR for enterprise segment"                # QBR with real data
+/octave:deck --for competitive "vs Gong"                     # Competitive deck
+/octave:deck ~/Downloads/existing-deck.pptx                  # Convert PPTX to HTML
+/octave:deck "demo day pitch" --style octave-brand           # Specific style preset
 ```
 
 ## Workflow Templates
