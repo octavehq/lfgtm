@@ -35,7 +35,7 @@ You have access to the Octave MCP server which provides:
 ### Read Operations
 - `list_all_entities` - Quick list of entities with basic fields (name, oId, type)
 - `list_entities` - Detailed list with pagination, supports filtering by entity type
-- `get_entity` - Get full details for any entity (persona, product, segment, competitor, use-case, proof-point, reference, brand-voice, writing-style)
+- `get_entity` - Get full details for core library entities by oId (persona, product/service, playbook, segment, competitor, use-case, proof-point, reference)
 - `get_playbook` - Get playbook with associated personas and value propositions
 - `list_value_props` - List value propositions for a specific playbook
 - `search_knowledge_base` - Semantic search across all library content (personas, playbooks, products, use cases, etc.)
@@ -87,6 +87,10 @@ You have access to the Octave MCP server which provides:
 
 ### Agent Operations
 - `list_agents` - List saved agents (email, content, call prep, enrichment, qualification)
+- `create_agent` - Create a new saved agent
+- `update_agent` - Update an existing saved agent
+- `get_agent` - Get a saved agent by oId
+- `delete_agent` - Delete a saved agent (soft delete)
 - `run_email_agent` - Run a saved email sequence agent
 - `run_content_agent` - Run a saved content generation agent
 - `run_call_prep_agent` - Run a saved call prep agent

@@ -118,7 +118,7 @@ Based on the repurposing goal, fetch relevant context:
 **For Persona-Based Repurposing:**
 ```
 # Get persona details
-get_entity({ entityType: "persona", oId: "<selected_persona_oId>" })
+get_entity({ oId: "<selected_persona_oId>" })
 
 # Get relevant playbook for messaging guidance
 search_knowledge_base({
@@ -127,18 +127,16 @@ search_knowledge_base({
 })
 
 # Get brand voice if adjusting tone
-list_all_entities({ entityType: "brand_voice" })
-get_entity({ entityType: "brand_voice", oId: "<brand_voice_oId>" })
+list_brand_voices()
 
 # Get writing style if specified
-list_all_entities({ entityType: "writing_style" })
-get_entity({ entityType: "writing_style", oId: "<writing_style_oId>" })
+list_writing_styles()
 ```
 
 **For Segment-Based Repurposing:**
 ```
 # Get segment details
-get_entity({ entityType: "segment", oId: "<selected_segment_oId>" })
+get_entity({ oId: "<selected_segment_oId>" })
 
 # Find personas in this segment
 search_knowledge_base({
@@ -156,7 +154,7 @@ search_knowledge_base({
 **For Format/Channel Changes:**
 ```
 # Get brand voice guidelines
-get_entity({ entityType: "brand_voice", oId: "<brand_voice_oId>" })
+list_brand_voices()
 
 # Get writing style for target format
 search_knowledge_base({
@@ -340,8 +338,10 @@ Transformation:
 ## MCP Tools Used
 
 ### Read Operations
-- `list_all_entities` - Get available personas, segments, brand voices, writing styles
-- `get_entity` - Get full details for persona, segment, brand voice, writing style
+- `list_all_entities` - Get available personas and segments
+- `list_brand_voices` - Get available brand voice configurations
+- `list_writing_styles` - Get available writing style configurations
+- `get_entity` - Get full details for persona and segment entities by oId
 - `get_playbook` - Get messaging guidance and value props
 - `search_knowledge_base` - Find relevant proof points, messaging, examples
 

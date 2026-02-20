@@ -475,7 +475,6 @@ The plugin uses the single Octave MCP server you configure (e.g. `octave-acme`).
 - `generate_email` - Generate email sequences
 - `generate_content` - Generate various content types
 - `generate_call_prep` - Generate call preparation materials
-- `run_*_agent` - Run saved agents
 
 ### Events & Analytics
 - `list_events` - Search calls, emails, deals
@@ -484,11 +483,17 @@ The plugin uses the single Octave MCP server you configure (e.g. `octave-acme`).
 
 ### Agents
 - `list_agents` - List saved agents
+- `create_agent` - Create a saved agent
+- `update_agent` - Update a saved agent
+- `get_agent` - Get a saved agent by oId
+- `delete_agent` - Delete a saved agent
 - `run_email_agent` - Run email sequence agent
 - `run_content_agent` - Run content agent
 - `run_call_prep_agent` - Run call prep agent
-- `run_enrich_*_agent` - Run enrichment agents
-- `run_qualify_*_agent` - Run qualification agents
+- `run_enrich_person_agent` - Run person enrichment agent
+- `run_enrich_company_agent` - Run company enrichment agent
+- `run_qualify_person_agent` - Run person qualification agent
+- `run_qualify_company_agent` - Run company qualification agent
 
 ## Directory Structure
 
