@@ -13,6 +13,9 @@ Real-world examples of how to use the Octave Claude Code plugin for common GTM w
 | Analyze a conversation | `/octave:analyzer` |
 | Plan a multi-channel campaign | `/octave:campaign "Q1 pipeline push"` |
 | Build a messaging framework | `/octave:messaging framework` |
+| Full positioning exercise (visual HTML) | `/octave:positioning` |
+| Just the message framework | `/octave:positioning message-framework` |
+| Homepage messaging template | `/octave:positioning homepage` |
 | Create a competitive battlecard | `/octave:battlecard battlecard --competitor "Acme"` |
 | Plan an account approach | `/octave:abm acme.com` |
 | Coach on a stalled deal | `/octave:pipeline stalled acme.com` |
@@ -269,6 +272,33 @@ KEY MESSAGES BY AUDIENCE
 For CTO: Lead with engineering efficiency...
 For VP Sales: Lead with pipeline velocity...
 ```
+
+### Visual Positioning System
+
+Generate the complete 8-framework positioning system as a stunning HTML document:
+
+```
+# Full positioning exercise — all 8 frameworks
+/octave:positioning
+
+# Focus on a specific product
+/octave:positioning --product "Enterprise Platform"
+
+# Generate individual sections
+/octave:positioning message-framework     # The 3-layer messaging pyramid
+/octave:positioning anchors               # Positioning statements with highlighted keywords
+/octave:positioning strategy              # Competitive strategy table
+/octave:positioning personas              # Persona-based messaging translation
+/octave:positioning awareness             # Value props by awareness stage (funnel)
+/octave:positioning use-cases             # Current Way vs New Way canvases
+/octave:positioning lifecycle             # Customer journey timeline
+/octave:positioning homepage              # Website messaging implementation guide
+
+# With a specific style
+/octave:positioning --style executive-dark
+```
+
+The output is a single scrollable HTML document with sticky navigation, collapsible sections, and persona-color-coded frameworks. Print-friendly via Cmd+P.
 
 ---
 

@@ -375,6 +375,7 @@ For the full interactive mode selector, use `/octave:generate`.
 
 ## Related Skills
 
+- `/octave:positioning` - Run a full positioning exercise before the launch to establish your messaging foundation
 - `/octave:messaging` - Build messaging framework before the launch
 - `/octave:campaign` - Generate ongoing campaign content post-launch
 - `/octave:pmm` - Deep-dive on specific collateral (case study, deck, landing page)

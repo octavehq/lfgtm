@@ -575,6 +575,7 @@ update_entity({
 
 ## Related Skills
 
+- `/octave:positioning` - Complete visual positioning system as HTML document (the visual counterpart to this skill)
 - `/octave:campaign` - Generate campaign content from your messaging
 - `/octave:pmm` - Create collateral that uses this messaging
 - `/octave:launch` - Build a launch plan around this messaging

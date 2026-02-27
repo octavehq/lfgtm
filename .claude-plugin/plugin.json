@@ -1,6 +1,6 @@
 {
   "name": "octave",
-  "version": "1.2.2",
+  "version": "1.3.0",
   "description": "Octave GTM knowledge base integration for Claude Code - provides bidirectional access to personas, playbooks, messaging, and more. Give Claude grounded context for your GTM motions.",
   "author": {
     "name": "Octave",

@@ -503,5 +503,6 @@ For the full interactive mode selector, use `/octave:generate`.
 - `/octave:analyzer` - Analyze existing content for improvements
 - `/octave:battlecard` - Competitive battlecards with real deal evidence
 - `/octave:enablement` - Sales enablement materials (objection guides, cheat sheets)
+- `/octave:positioning` - Complete visual positioning system — message framework, anchors, strategy, persona messaging
 - `/octave:messaging` - Build messaging frameworks before creating collateral
 - `/octave:campaign` - Multi-channel campaign content

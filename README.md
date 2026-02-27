@@ -108,6 +108,7 @@ You can use any name that starts with `octave-` (e.g. `octave-acme`). Skills det
 | `/octave:proposal` | Formal business case and proposal as customer-facing HTML |
 | `/octave:microsite` | Personalized ABM microsite / landing page as HTML |
 | `/octave:battlecard-doc` | Visual competitive battlecard as interactive HTML |
+| `/octave:positioning` | Complete visual Messaging & Positioning system (8 frameworks) as HTML |
 | `/octave:win-loss-report` | Visual win/loss analysis report with CSS-based charts |
 
 ### Ideation & Content Skills
@@ -150,6 +151,25 @@ Build structured messaging artifacts from your library:
 /octave:messaging matrix
 /octave:messaging elevator
 /octave:messaging positioning
+```
+
+### /octave:positioning
+Complete visual Messaging & Positioning system as a scrollable HTML document:
+- Message Framework (3-layer pyramid: market → product → value props by persona)
+- Positioning Anchors (primary & secondary statements with keyword highlights)
+- Positioning Strategy (tactical table: buyer, use case, problems, differentiators)
+- Persona-Based Messaging (core message translated per buying committee role)
+- Value Prop by Awareness Stage (4-column funnel: unaware → product-aware)
+- Use Case Messaging Canvas (current way vs new way per use case)
+- Use Case Lifecycle (customer journey phases with touchpoints)
+- Homepage Messaging (website implementation: primary vs secondary messaging)
+
+```
+/octave:positioning                           # Full 8-section exercise
+/octave:positioning message-framework         # Just the message framework
+/octave:positioning anchors                   # Positioning anchors only
+/octave:positioning homepage                  # Homepage messaging template
+/octave:positioning --product "Platform"      # Focus on specific product
 ```
 
 ### /octave:campaign
@@ -413,6 +433,7 @@ Pre-built workflow templates for common multi-step GTM processes:
 | Competitive Response | Assess → update positioning → displacement campaign → enablement |
 | Deal Acceleration | Account intel → stakeholder mapping → coaching → outreach → meeting prep |
 | Quarterly GTM Review | Win/loss → field intel → ICP accuracy → competitive landscape |
+| Positioning Exercise | Library audit → data gathering → generate 8-framework positioning system → save back |
 | Content Sprint | Messaging → emails → LinkedIn → blog → social in one sprint |
 
 ## Configuration
@@ -533,6 +554,8 @@ The plugin uses the single Octave MCP server you configure (e.g. `octave-acme`).
 │   ├── one-pager/SKILL.md      # One-pager / leave-behind (HTML)
 │   ├── pipeline/SKILL.md       # Deal coaching
 │   ├── pmm/SKILL.md            # Product marketing content
+│   ├── positioning/SKILL.md    # Positioning system (HTML)
+│   │   └── references/         # Section templates, layouts
 │   ├── proposal/SKILL.md       # Business case / proposal (HTML)
 │   ├── prospector/SKILL.md     # Prospect discovery
 │   ├── repurpose/SKILL.md      # Content repurposing
@@ -551,6 +574,7 @@ The plugin uses the single Octave MCP server you configure (e.g. `octave-acme`).
 │   ├── full-outbound-pipeline.workflow.md
 │   ├── new-market-entry.workflow.md
 │   ├── persona-targeted-outreach.workflow.md
+│   ├── positioning-exercise.workflow.md
 │   └── quarterly-gtm-review.workflow.md
 ├── EXAMPLES.md                  # Detailed usage examples
 ├── .gitignore
