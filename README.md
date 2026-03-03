@@ -94,6 +94,7 @@ You can use any name that starts with `octave-` (e.g. `octave-acme`). Skills det
 | Skill | Description |
 |-------|-------------|
 | `/octave:insights` | Surface findings, trends, and patterns from calls and emails |
+| `/octave:signals` | Morning intelligence briefing — deals, patterns, and signals demanding attention |
 | `/octave:wins-losses` | Analyze won/lost deals for patterns and learnings |
 | `/octave:icp-refine` | Refine ICP definitions using deal outcome analysis |
 | `/octave:explore-agents` | Browse and run your saved Octave agents |
@@ -102,6 +103,7 @@ You can use any name that starts with `octave-` (e.g. `octave-acme`). Skills det
 
 | Skill | Description |
 |-------|-------------|
+| `/octave:meeting-prep` | Strategic meeting battle plan with coaching frameworks and talk tracks as HTML |
 | `/octave:deck` | Build Octave-powered HTML slide decks with brand styling and export |
 | `/octave:one-pager` | Personalized one-pager / leave-behind as self-contained HTML |
 | `/octave:brief` | Internal account dossier and call prep HTML document |
@@ -502,6 +504,11 @@ The plugin uses the single Octave MCP server you configure (e.g. `octave-acme`).
 - `list_findings` - Aggregate extracted insights
 - `get_event_detail` - Get detailed event info with transcript/content
 
+### CRM
+- `find_crm_records` - Search for CRM records (accounts, contacts, leads, opportunities)
+- `find_crm_activities` - Fetch activities (notes, tasks, calls, emails) for a CRM record
+- `generate_crm_context` - Generate synthesized CRM context summary for a person or company
+
 ### Agents
 - `list_agents` - List saved agents
 - `create_agent` - Create a saved agent
@@ -549,6 +556,7 @@ The plugin uses the single Octave MCP server you configure (e.g. `octave-acme`).
 │   ├── insights/SKILL.md       # Field intelligence
 │   ├── launch/SKILL.md         # Launch planning
 │   ├── library/SKILL.md        # Library CRUD
+│   ├── meeting-prep/SKILL.md   # Meeting battle plan (HTML)
 │   ├── messaging/SKILL.md      # Messaging frameworks
 │   ├── microsite/SKILL.md      # ABM microsite (HTML)
 │   ├── one-pager/SKILL.md      # One-pager / leave-behind (HTML)
@@ -560,6 +568,7 @@ The plugin uses the single Octave MCP server you configure (e.g. `octave-acme`).
 │   ├── prospector/SKILL.md     # Prospect discovery
 │   ├── repurpose/SKILL.md      # Content repurposing
 │   ├── research/SKILL.md       # Research & prep
+│   ├── signals/SKILL.md        # Morning intelligence briefing
 │   ├── train/SKILL.md          # Sales training & role-play
 │   ├── win-loss-report/SKILL.md # Win/loss report (HTML)
 │   ├── wins-losses/SKILL.md    # Deal outcome analysis

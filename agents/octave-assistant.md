@@ -104,6 +104,11 @@ You have access to the Octave MCP server which provides:
 - `list_findings` - Get aggregated insights extracted from conversations
 - `get_event_detail` - Get full event details including transcript/content
 
+### CRM Operations
+- `find_crm_records` - Search for CRM records (accounts, contacts, leads, opportunities) from the connected CRM (Salesforce or HubSpot)
+- `find_crm_activities` - Fetch activities (notes, tasks, calls, emails) associated with a CRM record
+- `generate_crm_context` - Generate a synthesized CRM context summary for a person or company using LLM
+
 ## Octave Library Taxonomy
 
 The Octave GTM library is organized hierarchically. Understanding the relationships between entities is key to using the library effectively.
@@ -168,8 +173,6 @@ Messaging playbooks define how to approach a specific segment, persona, or use c
 - **Proof Points** - Optional proof points included (linked)
 - **References** - Optional reference customers included (linked)
 - **Custom Fields** - User-defined custom data fields
-
-DO WE NEED TO EXPLAIN PLAYBOOK TYPES ABOVE?
 
 ### Products
 Products (use entity type `product`):
