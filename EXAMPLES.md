@@ -19,6 +19,8 @@ Real-world examples of how to use the Octave Claude Code plugin for common GTM w
 | Create a competitive battlecard | `/octave:battlecard battlecard --competitor "Acme"` |
 | Plan an account approach | `/octave:abm acme.com` |
 | Coach on a stalled deal | `/octave:pipeline stalled acme.com` |
+| Deal coaching role play | `/octave:deal-coach acme.com --mode roleplay` |
+| Coaching methodology quiz | `/octave:deal-coach --mode quiz --stage resonate` |
 | Generate enablement materials | `/octave:enablement objections --persona "CTO"` |
 | Plan a product launch | `/octave:launch "New AI feature"` |
 | Refine your ICP | `/octave:icp-refine --period 90` |
@@ -441,6 +443,35 @@ Approach 3: Offer a custom ROI analysis as value-add
 
 [Generates draft re-engagement email]
 ```
+
+### Methodology-Based Deal Coaching
+
+```
+# Interactive — picks output mode and coaching stage
+/octave:deal-coach
+
+# Ground coaching in a specific deal
+/octave:deal-coach acme.com
+
+# Role play a deal conversation with scoring
+/octave:deal-coach acme.com --mode roleplay
+
+# Coaching microsite for the Compel stage
+/octave:deal-coach acme.com --mode microsite --stage compel
+
+# Quiz on Resonate methodology
+/octave:deal-coach --mode quiz --stage resonate
+
+# Coaching deck for Elevate stage
+/octave:deal-coach acme.com --mode deck --stage elevate
+```
+
+The deal-coach skill uses the **Resonate → Elevate → Compel** methodology:
+- **Resonate** — Understand the buyer: discovery principles, trust, pain points
+- **Elevate** — Confirm fit: disrupt status quo, differentiate, build credibility
+- **Compel** — Drive action: business case, Why Now, champion enablement
+
+Each output mode (role play, microsite, deck, quiz) is scored against Buyer Mindset, Value Propositions, and Talking Points for the active stage.
 
 ---
 

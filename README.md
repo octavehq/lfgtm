@@ -88,6 +88,7 @@ You can use any name that starts with `octave-` (e.g. `octave-acme`). Skills det
 | `/octave:pmm` | Create sales collateral — one-pagers, case studies, landing pages |
 | `/octave:analyzer` | Analyze conversations for resonance, adherence, differentiation |
 | `/octave:train` | Practice selling — role-play simulations, quizzes, guided learning |
+| `/octave:deal-coach` | Methodology-driven deal coaching — role-play, microsites, decks, and quizzes around Resonate/Elevate/Compel |
 
 ### Intelligence & Analytics Skills
 
@@ -410,6 +411,23 @@ Practice selling with role-play simulations and knowledge quizzes:
 /octave:train quiz --competitor "Acme"           # Competitive knowledge check
 ```
 
+### /octave:deal-coach
+Methodology-driven deal coaching built around Resonate → Elevate → Compel:
+- Role play with stage-specific coaching agents and scored conversations
+- Coaching microsites as self-contained HTML
+- Coaching decks walking through the framework for a specific deal
+- Interactive quizzes with deal-grounded scenarios
+- Stage inference from CRM data, findings, and activity patterns
+
+```
+/octave:deal-coach                                        # Interactive — picks mode and stage
+/octave:deal-coach acme.com                               # Ground coaching in a specific deal
+/octave:deal-coach --mode roleplay                        # Jump to role play
+/octave:deal-coach acme.com --mode microsite --stage compel  # Specific mode + stage
+/octave:deal-coach --mode quiz --stage resonate           # Quiz on Resonate methodology
+/octave:deal-coach acme.com --mode deck --stage elevate   # Coaching deck for Elevate
+```
+
 ### /octave:deck
 Build Octave-powered HTML presentations with brand styling:
 
@@ -547,6 +565,8 @@ The plugin uses the single Octave MCP server you configure (e.g. `octave-acme`).
 │   ├── brainstorm/SKILL.md     # GTM ideation
 │   ├── brief/SKILL.md          # Account dossier (HTML)
 │   ├── campaign/SKILL.md       # Multi-channel campaigns
+│   ├── deal-coach/SKILL.md    # Deal coaching (Resonate/Elevate/Compel)
+│   │   └── references/         # Frameworks, agents, templates
 │   ├── deck/SKILL.md           # Presentation builder (HTML)
 │   │   └── references/         # Slide templates, export guide
 │   ├── enablement/SKILL.md     # Sales enablement materials
