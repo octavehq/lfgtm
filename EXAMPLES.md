@@ -12,6 +12,8 @@ Real-world examples of how to use the Octave Claude Code plugin for common GTM w
 | Generate an email | `/octave:generate email --to "John at Acme" --about "reducing costs"` |
 | Analyze a conversation | `/octave:analyzer` |
 | Plan a multi-channel campaign | `/octave:campaign "Q1 pipeline push"` |
+| Build a Google Search ad campaign | `/octave:ads "compliance automation for VPs of Engineering"` |
+| Competitive displacement ads | `/octave:ads "displacement campaign vs Acme"` |
 | Build a messaging framework | `/octave:messaging framework` |
 | Full positioning exercise (visual HTML) | `/octave:positioning` |
 | Just the message framework | `/octave:positioning message-framework` |
@@ -222,6 +224,159 @@ Ready to generate content for each channel? [Y/n]
 
 [Generates: 4-email sequence, LinkedIn messages + post, 5 social posts, 3 ad variants]
 ```
+
+---
+
+## Ad Campaigns
+
+### Build a Platform-Ready Ad Campaign
+
+```
+# Interactive — walks through platform, structure, voice, and objective
+/octave:ads
+
+# Campaign with a specific angle
+/octave:ads "compliance automation for VPs of Engineering at mid-market FinServ"
+
+# Competitive displacement ads
+/octave:ads "displacement campaign vs Acme"
+
+# Product launch ads
+/octave:ads "Q1 feature launch — AI Analytics Dashboard"
+```
+
+The ads skill generates complete ad set plans with:
+- 4-8 creative variants per ad set (pain-focused, outcome, social proof, competitive, question-based, data-driven, status quo, authority)
+- Source cards tracing every headline back to library data or prospect language
+- Audience targeting with positive keywords, negative keywords, and exclusions
+- Landing page recommendations from your resources
+- Headline independence review ensuring every headline stands alone
+
+### Export and Share
+
+After generating, you can:
+- **Export as CSV** for bulk upload to Google Ads, Meta, or LinkedIn
+- **Generate a visual campaign deck** as self-contained HTML for stakeholder review
+
+### Resonance Loop — Learn from Performance
+
+After your campaign has been running, feed performance data back to improve your entire GTM:
+
+```
+# Trigger the resonance loop (auto-detects available data source)
+/octave:ads loop
+
+# Or provide data manually
+/octave:ads resonance-loop
+```
+
+**Performance data sources** (auto-detected in priority order):
+1. **MCP** — live data via an installed Google Ads / Meta / LinkedIn MCP server
+2. **BigQuery Data Transfer** — managed daily refresh from Google Ads into BigQuery (~24h delayed, no developer token approval required — the recommended default for read-only analysis)
+3. **Direct API** — curl/Python against the Google Ads API if you have credentials but no MCP
+4. **Manual** — paste a CSV, screenshot, or verbal summary
+
+See `skills/ads/references/performance-data-sources.md` for setup steps, smoke tests, and troubleshooting.
+
+The resonance loop:
+- Maps winning variants back to their source cards to identify what resonated and why
+- Generates library update recommendations (persona pain points, playbook openers, value prop framing)
+- Produces a sales intelligence brief with winning language for discovery calls
+- Recommends next campaign iterations based on what worked
+
+#### What the resonance loop will and won't tell you
+
+The loop is honest about what the data actually supports. The conclusions you get depend on how much volume your campaigns have accumulated. **It will refuse to make confident claims from noisy data** — that's a feature, not a limitation.
+
+**At any spend level, the loop will:**
+- Tell you what data is in BigQuery and how fresh it is
+- Show you ad-group-level CTR and CPC across the window
+- Surface the biggest CPC gap between ad groups (usually the most actionable single finding)
+- Compare creative types using whatever signal exists, with confidence tiers attached
+- Refuse to apply library updates without your explicit approval
+
+**At < $100/day spend, the loop will:**
+- Run in **smoke-test mode** — verify the pipes work end-to-end
+- Show you what's in the data, but **not** rank ads or recommend changes
+- Tell you to re-run when more data is available
+
+**At $100–$500/day spend, the loop will:**
+- Run in **ad-group mode** — compare ad groups to each other on CTR and CPC
+- Surface "kill or rework this ad group" findings when CPC gaps exceed 3x
+- **Not** rank individual ads against each other (too noisy)
+- **Not** make conversion-rate claims (too few conversions)
+
+**At $500–$2,000/day spend, the loop will:**
+- Run in **ad mode** — rank individual ads within each ad group on CTR
+- Identify which creative angles are pulling clicks
+- Still avoid conversion-rate claims unless you have 30+ conversions
+
+**At > $2,000/day spend, the loop will:**
+- Run in **full resonance mode** — all of the above plus ad-level conversion analysis
+- Map winning variants back to source cards
+- Generate confident library update recommendations
+- Produce a meaningful sales intelligence brief
+
+**The loop will NEVER:**
+- Claim a "winner" from a single conversion (correlation is not causation)
+- Attribute performance to a specific headline within a Responsive Search Ad (Google does not expose headline-level attribution)
+- Apply library updates without your explicit approval
+- Pretend that 4 days of data means the same thing as 30 days
+- Tell you anything reliable about ads that received fewer than 100 impressions (Google didn't give them a fair test)
+
+If you want **fast** results, the right play is to set up the BigQuery transfer early (before your first campaign launches), let it accumulate 14+ days of data, then run the loop. Running the loop on 1–4 days of data will work mechanically but won't give you trustworthy conclusions — the loop will tell you so explicitly.
+
+#### Prediction cards: the loop has a verifiable track record
+
+Every resonance loop run generates **prediction cards** — explicit, falsifiable claims about what specific metrics will do over a specific window, with conditions that would confirm or refute them. The next time you run the loop, it evaluates the previous predictions against actual data and reports a track record.
+
+Cards live in a JSON file at `~/.octave/predictions/<MCC_ID>.json` (one file per Google Ads manager account). The loop reads it at startup, evaluates any pending predictions, generates new ones, and writes back.
+
+A typical scorecard on a small-spend account looks like this:
+
+```
+| ID | Type | Claim | Status | Notes |
+|---|---|---|---|---|
+| P-001 | cpc-efficiency-gap | CPC gap holds at >= 3x | ✅ CONFIRMED | Held at >5x via a brand new ad group that didn't exist at prediction time |
+| P-002 | regression-to-mean | Pilot ad group conv rate regresses to 0-3% | 🟡 INCONCLUSIVE_FAVORABLE | Volume gate failed (8 clicks); directional signal supports the prediction |
+| P-003 | regression-to-mean | Pilot ad group CTR regresses to 4-6% | 🟡 INCONCLUSIVE_UNFAVORABLE | Volume gate failed; CTR moved away from prediction |
+| P-004 | exposure-projection | Director Compliance ad group reaches 30 clicks in 7 days | ⏳ PENDING | Window not fully complete |
+```
+
+The CONFIRMED prediction is the most interesting one: it's a *structural* claim about the auction (one ad group is structurally cheaper than another), and it confirms via a brand new ad group that didn't exist when the prediction was written. That's strong evidence the loop is detecting auction-structure properties, not just measuring noise in specific units. Read `skills/ads/references/prediction-cards.md` for the full schema, prediction types, and empirical lessons.
+
+**The loop will NEVER make a prediction it can't validate.** Predictions are SQL queries that return booleans, with explicit volume gates. If the volume gate fails, the prediction is `INCONCLUSIVE` (with a `_FAVORABLE` / `_UNFAVORABLE` suffix tracking whether the directional signal at least pointed the right way). After 10+ resolved predictions, the loop self-tunes: it stops generating prediction types that consistently fail and promotes the confidence of types that consistently land.
+
+#### Running the resonance loop on a regular cadence
+
+Prediction cards make the loop *worth* running regularly, because each run adds calibration data to the historical record. The right cadence depends on your spend volume:
+
+| Account spend | Recommended cadence | Why |
+|---|---|---|
+| < $500/day | Weekly (Monday morning) | Most days don't meaningfully change ad-group-level findings |
+| $500–$2,000/day | Twice weekly (Mon + Thu) | Enough volume to see ad-level changes mid-week |
+| > $2,000/day | Daily | Conversion data accumulates fast enough that daily checks are useful |
+
+**Automate with Claude Code Desktop scheduled tasks.** Claude Code Desktop has a built-in scheduling feature that runs tasks locally on your machine on whatever cadence you pick. Local scheduled tasks have full access to `~/.octave/predictions/<MCC>.json`, can run `bq query` against your Google Cloud credentials, and persist across restarts. The Desktop app needs to be running for tasks to fire (your computer also needs to be awake — enable "Keep computer awake" in Desktop settings if you want runs to fire while you're away from the machine).
+
+**Setup is conversational.** From any Claude Code Desktop session, just describe what you want:
+
+> set up a scheduled task that runs `/octave:ads resonance` every Monday at 9am
+
+Or use the Schedule sidebar in the Desktop app (Schedule → New task → New local task) and fill in:
+- **Name**: `resonance-loop`
+- **Description**: `Weekly Google Ads resonance loop with prediction calibration`
+- **Prompt**: `/octave:ads resonance`
+- **Frequency**: Weekly, Monday, 9:00 AM (or whatever cadence matches your spend tier)
+
+The first time the task runs, you'll get permission prompts for the tools it needs (Bash, Read, Write, etc.). Click "always allow" for each so future runs auto-approve. You can also click **Run now** on the task to test the whole flow before waiting for the first scheduled fire.
+
+**Other scheduling options (and when NOT to use them for this loop):**
+
+- **`/loop`** (session-scoped, in the CLI): runs locally and has full file access, but only fires while the Claude Code session is open. Useful for short-lived polling within a working session, not for a weekly cadence.
+- **Cloud scheduled tasks** (the `/schedule` skill that creates remote triggers): runs in Anthropic's cloud, **not** on your machine. Cannot access `~/.octave/predictions/<MCC>.json` and cannot run `bq query` against local credentials. Don't use for this loop until prediction storage moves to a shared remote location.
+
+**Or just run it manually.** If you'd rather not set up a scheduled task, just invoke `/octave:ads resonance` from local Claude Code on your chosen cadence. A calendar reminder enforces the cadence. The loop reads the prediction file, evaluates pending cards, generates new ones, and writes back — same behavior either way.
 
 ---
 

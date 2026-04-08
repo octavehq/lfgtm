@@ -1,0 +1,53 @@
+{
+  "_comment": "STARTER TEMPLATE for ~/.octave/predictions/<MCC_ID>.json. The resonance loop copies this file to that location on first run, replaces the REPLACE_WITH_* placeholders with real values from the user's BigQuery setup, and starts appending real predictions to the empty `predictions` array. The `_example_card` field below is reference-only — the loop never reads it, it's just there to show the canonical shape of a prediction card. See skills/ads/references/prediction-cards.md for the full schema and the prediction type taxonomy.",
+  "schema_version": "0.2",
+  "account": {
+    "mcc_id": "REPLACE_WITH_YOUR_MCC_ID",
+    "mcc_name": "REPLACE_WITH_HUMAN_READABLE_NAME",
+    "data_source": "bigquery:REPLACE_WITH_GCP_PROJECT.REPLACE_WITH_DATASET"
+  },
+  "predictions": [],
+  "calibration": {
+    "total_predictions": 0,
+    "evaluated": 0,
+    "pending": 0,
+    "confirmed": 0,
+    "refuted": 0,
+    "inconclusive_favorable": 0,
+    "inconclusive_unfavorable": 0,
+    "by_type": {},
+    "lessons": [
+      "STRUCTURAL PREDICTIONS GENERALIZE; UNIT-SPECIFIC ONES DON'T. Prefer claims about properties of the auction over claims about named units.",
+      "DON'T PREDICT REGRESSION-TO-MEAN ON UNITS BELOW THE VOLUME GATE. Use exposure-projection predictions instead — those can be confirmed even at low volume.",
+      "INCONCLUSIVE_FAVORABLE / INCONCLUSIVE_UNFAVORABLE is a real distinction. Track direction separately so the volume gate can be calibrated over time.",
+      "FIELD STABILITY IS A FIRST-CLASS CONSIDERATION. Always generate one field-stability prediction per run."
+    ]
+  },
+  "_example_card": {
+    "_comment": "Reference-only example showing the canonical structure of a cpc-efficiency-gap prediction card (the strongest type). The loop never reads this field — it's here so a future LLM session can see the expected shape when generating new predictions. Delete this field if you find it visually distracting; the loop won't notice.",
+    "id": "P-YYYY-MM-DD-001",
+    "generated_at": "YYYY-MM-DDTHH:MM:SSZ",
+    "generated_by": "resonance loop run, training window YYYY-MM-DD to YYYY-MM-DD (N days)",
+    "mode": "ad-group",
+    "is_structural": true,
+    "claim": "The CPC ratio between the highest-CPC ad group and the lowest-CPC ad group (with >= 10 clicks each) will persist at >= 3x for the next 7 days",
+    "type": "cpc-efficiency-gap",
+    "evaluation_window": "YYYY-MM-DD to YYYY-MM-DD",
+    "evidence_at_prediction": {
+      "high_cpc_ad_group": {"name": "...", "cpc_usd": 15.00, "clicks": 20},
+      "low_cpc_ad_group": {"name": "...", "cpc_usd": 3.00, "clicks": 60},
+      "ratio_at_prediction": 5.00,
+      "training_window": "YYYY-MM-DD to YYYY-MM-DD"
+    },
+    "confirms": "ratio of (max ad-group CPC) / (min ad-group CPC, with >= 10 clicks each) >= 3.0 in evaluation window",
+    "refutes": "ratio < 2.0 in evaluation window, both ad groups having >= 10 clicks",
+    "inconclusive": "fewer than 2 ad groups have >= 10 clicks in the evaluation window",
+    "evaluation_sql": "-- Stats-only query, no dim joins — immune to the daily-snapshot dim-table inflation bug (Gotcha #4). SELECT MAX(cpc_usd) / NULLIF(MIN(cpc_usd), 0) AS ratio, COUNTIF(clicks >= 10) AS qualifying_ad_groups FROM (SELECT ad_group_id, ROUND(SAFE_DIVIDE(SUM(metrics_cost_micros) / 1000000, SUM(metrics_clicks)), 2) AS cpc_usd, SUM(metrics_clicks) AS clicks FROM `<project>.<dataset>.ads_AdGroupBasicStats_<MCC>` WHERE _DATA_DATE BETWEEN '<window_start>' AND '<window_end>' GROUP BY ad_group_id HAVING clicks >= 10)",
+    "confidence": "MEDIUM",
+    "rationale": "CPC gaps are usually structural — they reflect Quality Score / keyword-creative match rather than transient bidding noise. Predictions of this type have generalized to brand new ad groups in past backtests.",
+    "action_if_confirmed": "Promote the underlying source card hypothesis to higher confidence. Recommend pausing or reworking the high-CPC ad group.",
+    "action_if_refuted": "Investigate what changed. The CPC gap may have been a transient auction artifact rather than structural.",
+    "action_if_inconclusive": "Re-evaluate next run when more click volume has accumulated.",
+    "status": "PENDING"
+  }
+}

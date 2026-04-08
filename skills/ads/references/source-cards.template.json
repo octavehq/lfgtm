@@ -1,0 +1,93 @@
+{
+  "_comment": "STARTER TEMPLATE for ~/.octave/source_cards/<workspace_slug>/<campaign_slug>.json. Step 2G writes this file with empty headlines_by_variant; Step 3C fills it in after creative generation. The resonance loop's Path A reads this file to map BigQuery performance back to derivation chains. The _example field below is reference-only — the loop never reads it.",
+  "schema_version": "0.1",
+  "campaign_metadata": {
+    "workspace_slug": "REPLACE_WITH_OCTAVE_WORKSPACE_SLUG",
+    "campaign_slug": "REPLACE_WITH_CAMPAIGN_SLUG",
+    "campaign_name": "Human-readable campaign name",
+    "generated_at": "YYYY-MM-DDTHH:MM:SSZ",
+    "generated_by": "/octave:ads campaign generation",
+    "platform": "Google Search | Google Display | Meta | LinkedIn",
+    "objective": "Lead Generation | Brand Awareness | Competitive Displacement | Product Launch",
+    "personas": [],
+    "segments": [],
+    "campaign_angle": "The angle from Step 0, in one sentence"
+  },
+  "source_cards": [],
+  "headlines_by_variant": {},
+  "descriptions_by_variant": {},
+  "_example": {
+    "_comment": "Reference-only example showing the canonical structure. The loop never reads this field.",
+    "campaign_metadata": {
+      "workspace_slug": "acme-marketing",
+      "campaign_slug": "vp-engineering-enterprise-finserv-2026-04-08",
+      "campaign_name": "Compliance Automation — VP Engineering Q1 Push",
+      "generated_at": "2026-04-08T14:30:00Z",
+      "generated_by": "/octave:ads campaign generation",
+      "platform": "Google Search",
+      "objective": "Lead Generation",
+      "personas": ["VP Engineering"],
+      "segments": ["Enterprise FinServ"],
+      "campaign_angle": "Acme automates the manual audit prep workflow that VP Engineering teams currently do by hand, turning weeks into hours"
+    },
+    "source_cards": [
+      {
+        "variant_type": "pain-focused",
+        "ad_set": "VP Engineering — Enterprise FinServ",
+        "card_type": "Pain Language Audit",
+        "fields": {
+          "raw_prospect_language": [
+            "we spend three weeks every quarter just preparing for the audit",
+            "the audit prep process is killing my team",
+            "I have engineers doing compliance copy-paste work"
+          ],
+          "emotional_core": "Frustration that highly-paid engineers are spending weeks on rote compliance work that should be automated",
+          "specific_dysfunction": "Manual audit prep — gathering evidence, formatting it, cross-referencing controls — done by hand every quarter",
+          "headline_derivation": "Prospect said 'three weeks every quarter just for the audit' → emotional core is wasted engineering time → dysfunction is manual audit prep → headline candidate: 'Still Prepping Audits By Hand?'",
+          "data_tier": "FIELD"
+        }
+      },
+      {
+        "variant_type": "outcome-focused",
+        "ad_set": "VP Engineering — Enterprise FinServ",
+        "card_type": "Proof Chain Card",
+        "fields": {
+          "best_claim": "Audit prep cycles cut from 3 weeks to 2 days",
+          "source_proof_point": "pp_acme_finserv_audit_velocity",
+          "confidence_tier": "Named-anonymized + metric",
+          "headline_candidate": "Audit Prep: 3 Weeks → 2 Days"
+        }
+      }
+    ],
+    "headlines_by_variant": {
+      "VP Engineering — Enterprise FinServ": {
+        "pain-focused": [
+          "Still Prepping Audits By Hand?",
+          "Manual Audit Prep Is Killing You",
+          "Audit Prep Shouldn't Take Weeks",
+          "Stop Manual Compliance Work",
+          "Book a Demo Today"
+        ],
+        "outcome-focused": [
+          "Audit Prep: 3 Weeks → 2 Days",
+          "Cut Compliance Cycles 90%",
+          "From Weeks to Hours",
+          "FinServ Audit Automation",
+          "See the Transformation"
+        ]
+      }
+    },
+    "descriptions_by_variant": {
+      "VP Engineering — Enterprise FinServ": {
+        "pain-focused": [
+          "Your engineers spend weeks every quarter on manual audit prep. Acme automates the entire workflow.",
+          "Stop wasting engineering time on compliance copy-paste. Get audit-ready in days, not weeks."
+        ],
+        "outcome-focused": [
+          "A FinServ engineering team cut audit prep from 3 weeks to 2 days with Acme. Same controls, same evidence, automated.",
+          "Stop letting compliance eat your engineering quarter. Book a demo today."
+        ]
+      }
+    }
+  }
+}

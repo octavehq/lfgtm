@@ -70,6 +70,7 @@ You can use any name that starts with `octave-` (e.g. `octave-acme`). Skills det
 | `/octave:campaign` | Plan and generate multi-channel campaign content |
 | `/octave:launch` | Product and feature launch planning with full content kit |
 | `/octave:battlecard` | Competitive intelligence — battlecards, displacement, trap questions |
+| `/octave:ads` | Build platform-ready ad campaigns with audience targeting, creative variants, and negative keywords. Resonance loop pulls performance from MCP, BigQuery Data Transfer, direct API, or manual paste — and writes falsifiable prediction cards that get scored against future data, accumulating a verifiable track record over time. |
 
 ### Research & Prospecting Skills
 
@@ -411,6 +412,24 @@ Practice selling with role-play simulations and knowledge quizzes:
 /octave:train quiz --competitor "Acme"           # Competitive knowledge check
 ```
 
+### /octave:ads
+Build platform-ready ad campaign plans grounded in your library intelligence:
+- Ad sets structured by persona, segment, or ICP
+- 8 creative variant types: pain-focused, outcome, social proof, competitive, question-based, data-driven, status quo, authority
+- Source cards with full derivation chains from library data to headline
+- Audience targeting with positive/negative keywords and exclusions
+- Landing page recommendations from your resources
+- Export as CSV for Google Ads, Meta, or LinkedIn bulk upload
+- Visual campaign deck as self-contained HTML
+- Resonance loop: feed performance data back to update library, playbooks, and sales language
+
+```
+/octave:ads                                              # Interactive — full campaign builder
+/octave:ads "compliance automation for VP Engineering"   # Campaign with angle
+/octave:ads "competitive displacement vs Acme"           # Competitive campaign
+/octave:ads "Q1 product launch"                          # Launch campaign
+```
+
 ### /octave:deal-coach
 Methodology-driven deal coaching built around Resonate → Elevate → Compel:
 - Role play with stage-specific coaching agents and scored conversations
@@ -558,6 +577,8 @@ The plugin uses the single Octave MCP server you configure (e.g. `octave-acme`).
 ├── skills/                      # Skill definitions
 │   ├── SKILL-GUIDE.md          # Best practices for writing skills
 │   ├── abm/SKILL.md            # Account-based planning
+│   ├── ads/SKILL.md            # Ad campaign builder
+│   │   └── references/         # HTML deck template, Google Ads CSV format
 │   ├── analyzer/SKILL.md       # Conversation analysis
 │   ├── audit/SKILL.md          # Library health check
 │   ├── battlecard/SKILL.md     # Competitive intelligence (text)

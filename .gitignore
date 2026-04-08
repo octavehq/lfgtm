@@ -41,3 +41,7 @@ PLAN.MD
 
 # Deck builder temp files (style previews, exports)
 .octave-decks/
+
+# Resonance loop prediction cards (canonical location is $HOME/.octave/predictions/, but defense in depth)
+.octave/
+predictions/
