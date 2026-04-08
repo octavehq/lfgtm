@@ -360,3 +360,4 @@ Runs audit then walks through each issue for resolution.
 - `/octave:brainstorm` - Generate ideas to fill gaps
 - `/octave:icp-refine` - Refine ICP definitions from deal data
 - `/octave:enablement` - Generate enablement content from library
+- `/octave:qual-doctor` - Diagnose and tune qualification agents when scoring is off

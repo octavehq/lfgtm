@@ -29,6 +29,7 @@ Real-world examples of how to use the Octave Claude Code plugin for common GTM w
 | See what objections are trending | `/octave:insights --type objections` |
 | Understand why you're losing deals | `/octave:wins-losses --status lost` |
 | Run a saved agent | `/octave:explore-agents run "Enterprise Outreach" --to john@acme.com` |
+| Tune a qualification agent | `/octave:qual-doctor` |
 | Run a multi-step workflow | `/octave:workflow run "Full Outbound Pipeline" --company acme.com` |
 
 ---
@@ -802,6 +803,57 @@ RECOMMENDED UPDATES
 # Get agent suggestions
 /octave:explore-agents suggest "I need to re-engage a stalled deal"
 ```
+
+### Tuning Qualification Agents
+
+When your qualification agent scores prospects in ways that don't match your gut — good fits scoring too low, bad fits scoring too high, or wrong personas getting matched — use the qual doctor to diagnose and fix it.
+
+```
+# Fully interactive — walks through agent picking, sections, test cases, diagnosis
+/octave:qual-doctor
+```
+
+The qual doctor walks through five phases:
+
+1. **Setup** — pick a saved qualification agent (or raw qualify tool), choose sections to tune (product/segment/persona/playbook), and review current questions and entity descriptions
+2. **Collect test cases** — provide 3-15 known-fit prospects with expected score bands (and expected entity matches for routing+scoring sections). Or ask the skill to find them via `find_similar_*`
+3. **Run + annotate** — executes qualification for each test case, shows the sub-score for the section being tuned, and collects "why" annotations for every mismatch
+4. **Diagnose + fix** — per-mismatch deep dive showing which questions are causing wrong scores, plus cross-case patterns and ranked recommendations. Applies changes via `update_entity` with confirmation
+5. **Verify** — re-runs all test cases to confirm the changes moved scores in the right direction
+
+**Two modes the skill distinguishes automatically:**
+
+- **Score-only mode** — tuning a single entity (e.g., your one product). Only the scoring questions need work.
+- **Routing + Scoring mode** — tuning multiple entities in the same section (e.g., three personas). Both the *selection* and the *score* need to be right. A hybrid role that matches the wrong persona is a routing problem, not a scoring problem — and the fix is different.
+
+**What the skill will never do:**
+
+- Apply changes without your confirmation
+- Show you the overall qualification score when you're only tuning one section (would mislead you about whether your changes are working)
+- Claim to fix something from a single test case (needs patterns across multiple cases)
+- Generate new questions that aren't tied to a specific test case mismatch
+
+Example mismatch report:
+
+```
+WHY Acme Corp scored 8 (you expected 4-6):
+==========================================
+
+GOOD fit questions pushing the score UP:
+  #1 [HIGH]   "500+ employees?"          → YES (HIGH confidence)
+  #5 [HIGH]   "Dedicated security team?"  → YES (MEDIUM confidence)
+
+BAD fit questions that SHOULD have pulled it down but didn't:
+  #12 [MEDIUM] "Fewer than 500 employees?" → NO — correct, they're large
+
+WHAT'S MISSING: You said Acme should be lower because "they use a competitor."
+  → No existing question checks for competitor tool usage.
+  → RECOMMENDATION: Add BAD fit question [HIGH weight]:
+    "Does the company currently use a direct competitor product?"
+  → Expected impact: drops Acme by ~1.5-2 points
+```
+
+The skill also handles cases where the issue isn't a missing question but a missing detail in the entity description itself — e.g., if the description doesn't mention that B2C companies are bad fits, the agent has no context to score B2C companies low.
 
 ### PMM Content Creation
 

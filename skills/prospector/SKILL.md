@@ -446,3 +446,4 @@ DataFlow,dataflow.io,85,SaaS,230,New York,Growth SaaS
 - `/octave:audit` - Ensure library has good ICP definitions
 - `/octave:abm` - Full account plan for top prospects
 - `/octave:icp-refine` - Refine ICP definitions from deal data
+- `/octave:qual-doctor` - Tune the qualification scoring that powers prospector's ICP filters

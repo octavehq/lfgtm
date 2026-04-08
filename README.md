@@ -100,6 +100,7 @@ You can use any name that starts with `octave-` (e.g. `octave-acme`). Skills det
 | `/octave:wins-losses` | Analyze won/lost deals for patterns and learnings |
 | `/octave:icp-refine` | Refine ICP definitions using deal outcome analysis |
 | `/octave:explore-agents` | Browse and run your saved Octave agents |
+| `/octave:qual-doctor` | Diagnose and tune qualification agents — test against known-fit prospects, analyze per-question scoring patterns, and recommend specific changes to questions, weights, and entity descriptions. Handles both score-only and routing+scoring tuning modes. |
 
 ### Document Builder Skills
 

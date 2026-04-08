@@ -479,3 +479,4 @@ Your choice:
 - `/octave:generate` - Generate content with 3-way mode choice (saved agent, Octave default, Claude direct). Its `--mode agent` routes through agent discovery and execution — same agents you manage here.
 - `/octave:research` - Research before running agents
 - `/octave:pmm` - Create content that could become agent templates
+- `/octave:qual-doctor` - Tune qualification agents (a specific agent type) with test-driven diagnosis of their scoring behavior
