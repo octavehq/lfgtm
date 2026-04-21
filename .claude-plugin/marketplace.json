@@ -5,14 +5,14 @@
     "url": "https://octavehq.com"
   },
   "metadata": {
-    "description": "Official Claude Code plugins for Octave - GTM knowledge base integration for positioning, research, content generation, and sales enablement",
+    "description": "Official Octave plugins — GTM knowledge base integration for positioning, research, content generation, and sales enablement",
     "pluginRoot": "./"
   },
   "plugins": [
     {
       "name": "octave",
       "source": "./",
-      "description": "Access Octave's GTM knowledge base directly from Claude Code for positioning, research, content generation, and sales enablement",
+      "description": "Access Octave's GTM knowledge base for positioning, research, content generation, and sales enablement",
       "version": "1.8.0",
       "author": {
         "name": "Octave",
