@@ -1,0 +1,43 @@
+name: Publish Codex build
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out lfgtm (source of truth)
+        uses: actions/checkout@v4
+
+      - name: Build Codex artifact
+        run: ./scripts/build-codex.sh
+
+      - name: Check out lfgtm-codex (target)
+        uses: actions/checkout@v4
+        with:
+          repository: octavehq/lfgtm-codex
+          token: ${{ secrets.CODEX_REPO_PAT }}
+          path: _codex-repo
+
+      - name: Sync artifact into target repo
+        run: |
+          # Wipe everything except .git so deletions propagate, then copy artifact
+          find _codex-repo -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -R build/codex/. _codex-repo/
+
+      - name: Commit and push
+        working-directory: _codex-repo
+        run: |
+          git config user.name  "octave-bot"
+          git config user.email "bot@octavehq.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes."
+            exit 0
+          fi
+          git commit -m "Sync from lfgtm ${{ github.ref_name }}"
+          git tag "${{ github.ref_name }}"
+          git push origin HEAD --tags
