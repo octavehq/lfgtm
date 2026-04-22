@@ -60,53 +60,8 @@ Show all available workflows from both template and user directories.
 3. Parse YAML front matter from each file
 
 **Output Format:**
-```
-AVAILABLE WORKFLOWS
-===================
 
-TEMPLATES (4)
--------------
-
-1. Full Outbound Pipeline
-   Company research → qualify → find contacts → qualify → email outreach
-   Inputs: company_domain (required), persona, num_contacts
-   Run: /octave:workflow run "Full Outbound Pipeline" --company <domain>
-
-2. Account-Based Research
-   Deep research dossier on a target account with contact mapping
-   Inputs: company_domain (required), num_contacts
-   Run: /octave:workflow run "Account-Based Research" --company <domain>
-
-3. Competitive Deal Prep
-   Research + competitive positioning + tailored displacement outreach
-   Inputs: company_domain (required), contact_email (required), competitor_name (required)
-   Run: /octave:workflow run "Competitive Deal Prep" --company <domain> --contact <email> --competitor <name>
-
-4. Persona-Targeted Outreach
-   Find people matching a persona across companies and generate outreach
-   Inputs: persona_name (required), industry, min_company_size
-   Run: /octave:workflow run "Persona-Targeted Outreach" --persona "CTO"
-
----
-
-MY WORKFLOWS (2)
------------------
-
-1. Security Team Outreach
-   Find and reach security decision-makers at target companies
-   Inputs: company_domain (required), num_contacts
-   Run: /octave:workflow run "Security Team Outreach" --company <domain>
-
-2. Partner Channel Mapping
-   Research potential partners and their GTM teams
-   Inputs: company_domain (required)
-   Run: /octave:workflow run "Partner Channel Mapping" --company <domain>
-
----
-
-Use /octave:workflow show <name> for details.
-Use /octave:workflow create to build a new workflow.
-```
+See [list-output-template.md](references/list-output-template.md) for the AVAILABLE WORKFLOWS list output template.
 
 If `~/.octave/workflows/` doesn't exist or is empty, show only templates and note:
 
@@ -556,79 +511,7 @@ Or list all workflows:
 
 ### Workflow File Format Reference
 
-Workflows are `.workflow.md` files with YAML front matter and markdown step definitions.
-
-**Front Matter (YAML):**
-```yaml
----
-name: Workflow Display Name
-description: One-line description of what the workflow does
-author: username          # optional
-tags: [tag1, tag2]        # optional
-inputs:
-  - name: variable_name
-    type: string          # string, number, or boolean
-    required: true        # or false
-    description: Human-readable description
-    default: value        # optional, for non-required inputs
-delivery:                 # optional — where to deliver results
-  destination: outreach | apollo | salesloft | instantly | salesforce | hubspot | pipedrive | google_docs | notion | confluence | gamma | google_slides | slack | email | marketo | mailchimp | local_file | conversation
-  format: csv | markdown | html | plain_text | slide_outline | crm_notes
----
-```
-
-**Steps (Markdown):**
-
-Each step is an `### Step N: Name` heading followed by key-value fields:
-
-**Tool step:**
-```markdown
-### Step N: Step Name
-tool: mcp_tool_name
-params:
-  paramName: "{{variable_or_literal}}"
-  otherParam: "literal value"
-save_as: result_name
-description: What this step does and why.
-```
-
-**Decision step:**
-```markdown
-### Step N: Step Name
-type: decision
-condition: "result_name.field < threshold"
-prompt: |
-  Explanation of the decision.
-  Options:
-  1. First option
-  2. Second option
-  3. Third option
-```
-
-**Output step:**
-```markdown
-### Step N: Step Name
-type: output
-template: |
-  WORKFLOW RESULTS
-  ================
-  Key result: {{saved_result.field}}
-  Other data: {{another_result.field}}
-```
-
-**Available MCP Tools for Steps:**
-
-Any MCP tool from the Octave server can be used in a workflow step:
-
-| Phase | Tools |
-|-------|-------|
-| Research | `find_company`, `find_person`, `find_similar_companies`, `find_similar_people`, `enrich_company`, `enrich_person` |
-| Qualify | `qualify_company`, `qualify_person` |
-| Library | `list_all_entities`, `get_entity`, `get_playbook`, `search_knowledge_base`, `list_value_props` |
-| Generate | `generate_email`, `generate_content`, `generate_call_prep` |
-| Agents | `run_email_agent`, `run_content_agent`, `run_call_prep_agent`, `run_enrich_person_agent`, `run_enrich_company_agent`, `run_qualify_person_agent`, `run_qualify_company_agent` |
-| Write | `create_entity`, `create_playbook`, `update_entity`, `update_playbook` |
-| Deliver | `ListMcpResourcesTool` (discover connected MCP servers), any connected MCP server tools (Google Drive, Salesforce, Slack, etc.), Write tool (local files) |
+See [workflow-file-format.md](references/workflow-file-format.md) for the workflow file format reference (YAML front matter, step types, and available MCP tools table).
 
 ## MCP Tools Used
 

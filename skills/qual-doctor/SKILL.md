@@ -354,59 +354,7 @@ If no mismatches, congratulate the user and skip to Phase 5 (or offer to stress-
 
 For EACH mismatched test case, show the question-level breakdown that explains the score (or the routing decision) using the patterns below.
 
-**Score mismatch example** (score-only mode or right entity, wrong score):
-```
-WHY Acme Corp scored 8 (you expected 4-6):
-==========================================
-
-GOOD fit questions pushing the score UP:
-  #1 [HIGH]   "500+ employees?"           → YES (HIGH confidence)
-  #5 [HIGH]   "Dedicated security team?"   → YES (MEDIUM confidence)
-
-BAD fit questions that SHOULD have pulled it down but didn't:
-  #12 [MEDIUM] "Fewer than 500 employees?" → NO — correct, they're large
-
-WHAT'S MISSING: You said Acme Corp should be lower because "they use a competitor."
-  → No existing question checks for competitor tool usage.
-  → RECOMMENDATION: Add BAD fit question [HIGH weight]:
-    "Does the company currently use a direct competitor product in the same category?"
-  → Expected impact: drops competitor-using companies by ~1.5-2 points
-
-ENTITY DESCRIPTION CHECK: The description says nothing about competitive landscape.
-  → Adding competitive context to the description would help edge case interpretation.
-```
-
-**Routing mismatch example** (wrong entity selected):
-```
-WHY Bob Smith matched "VP of Sales" instead of "RevOps Leader":
-================================================================
-
-The agent scored Bob against BOTH personas and picked the higher score:
-  VP of Sales:    7  ← selected (higher)
-  RevOps Leader:  5  ← expected match
-
-VP of Sales scored higher because:
-  #1 [HIGH] "Manages quota-carrying reps?"  → YES (MEDIUM) — Bob manages 2 SDRs
-  #3 [HIGH] "Owns pipeline number?"         → YES (MEDIUM) — Bob reports on pipeline
-
-RevOps Leader scored lower because:
-  #2 [HIGH] "Owns tech stack decisions?"    → NO (LOW) — couldn't verify
-  #4 [HIGH] "Builds/manages dashboards?"    → NO (LOW) — no evidence found
-
-ROOT CAUSE: Bob has a hybrid role (RevOps + some SDR management). The VP of Sales
-persona's questions are too broad — managing 2 SDRs shouldn't qualify as "manages
-quota-carrying reps" the way a VP with 50 reps does.
-
-RECOMMENDATIONS:
-  1. Sharpen VP of Sales Q1: "Manages a team of 5+ quota-carrying sales reps?"
-     → Stops hybrid ops roles from matching VP of Sales
-  2. Add RevOps Q: "Is the person's primary function building/maintaining revenue
-     systems and processes rather than directly managing sellers?"
-     → Gives RevOps a stronger signal to win the routing contest
-  3. Update RevOps description to mention: "RevOps leaders may manage small teams
-     of SDRs or analysts alongside their systems responsibilities"
-     → Gives the agent context for hybrid roles
-```
+See [per-mismatch-deep-dive-templates.md](references/per-mismatch-deep-dive-templates.md) for the score-mismatch and routing-mismatch deep dive templates.
 
 For each mismatch, surface:
 1. **Which questions are causing the wrong score OR wrong routing** (with actual answers from the response)
@@ -555,61 +503,7 @@ If "Another round": loop back to Phase 4 with new results.
 
 Display final summary:
 
-**Score-only mode:**
-```
-QUAL DOCTOR — COMPLETE
-======================
-Entity:    "Your Product" (product)
-Section:   Offering qualification
-Mode:      Score-only (single entity)
-Changes:   3 applied (1 archived, 1 added, 1 description update)
-Rounds:    2 (initial diagnosis + verification)
-
-Score Improvement:
-  Good fits:     9 → 9  (stable)
-  Borderlines:   8 → 5  (moved into 4-6 band — fixed)
-  Bad fits:      2 → 1  (stable)
-
-Questions: 19 → 19 (1 archived, 1 added)
-  GOOD fit: 11 → 11
-  BAD fit:  8 → 9
-```
-
-**Routing + Scoring mode:**
-```
-QUAL DOCTOR — COMPLETE
-======================
-Section:   Persona qualification
-Mode:      Routing + Scoring (3 personas)
-Entities:  VP of Sales, RevOps Leader, SDR Manager
-Changes:   5 applied across 2 entities
-Rounds:    2 (initial diagnosis + verification)
-
-Routing Improvement:
-  Correct matches:   2/4 → 4/4  (2 routing fixes)
-
-Score Improvement:
-  In-band scores:    2/4 → 4/4  (2 score fixes)
-
-Entity Changes:
-  VP of Sales:     1 question sharpened
-  RevOps Leader:   2 questions added, 1 description update
-  SDR Manager:     1 question reweighted
-```
-
-If the analysis surfaced non-tuning insights, call them out separately:
-```
-ADDITIONAL INSIGHTS
-===================
-- LIBRARY GAP: The agent picked "RevOps Leader" for a marketing person.
-  You may need a more distinct persona for marketing ops roles.
-
-- SECTION INCONSISTENCY: Product scores a company at 9 but Playbook scores it
-  at 2 (too large for playbook ICP). Intentional or misaligned?
-
-- DEEP RESEARCH: 3/5 test cases had LOW confidence on tool-usage questions.
-  Enabling deep research on the agent would improve answer quality.
-```
+See [wrap-up-summary-templates.md](references/wrap-up-summary-templates.md) for the score-only and routing+scoring wrap-up templates plus the additional-insights callout.
 
 ## Cost Reference
 
