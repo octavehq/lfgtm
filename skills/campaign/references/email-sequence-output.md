@@ -1,4 +1,5 @@
-Present as:
+# Email Sequence Output Template
+
 ```
 EMAIL SEQUENCE (4 emails)
 =========================

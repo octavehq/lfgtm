@@ -475,7 +475,7 @@ Want to:
 
 ##### MS-1: Style Selection
 
-Reference the style preset system from `skills/deck/references/STYLE_PRESETS.md`.
+Reference the style preset system from `skills/deck/references/style-presets.md`.
 
 Each coaching stage has a default style preset:
 

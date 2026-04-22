@@ -118,12 +118,12 @@ DARK THEMES
   5. executive-dark    -- Charcoal + gold. Premium boardroom.
   6. octave-brand      -- Octave purple on dark navy.
 
-Or provide a number/name from the full preset list (12 options in STYLE_PRESETS.md).
+Or provide a number/name from the full preset list (12 options in style-presets.md).
 
 Your choice (default: paper-minimal):
 ```
 
-Full CSS variable definitions for each preset are in [STYLE_PRESETS.md](../deck/STYLE_PRESETS.md).
+Full CSS variable definitions for each preset are in [style-presets.md](../deck/references/style-presets.md).
 
 ### Step 4: Generate HTML
 

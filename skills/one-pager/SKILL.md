@@ -99,7 +99,7 @@ See [tool-reference.md](references/tool-reference.md) for list-vs-search guidanc
 
 ### Step 3: Style Selection
 
-One-pagers use the same 12 style presets and brand extraction system as the deck skill. See [STYLE_PRESETS.md](../deck/STYLE_PRESETS.md) for full CSS variable definitions.
+One-pagers use the same 12 style presets and brand extraction system as the deck skill. See [style-presets.md](../deck/references/style-presets.md) for full CSS variable definitions.
 
 Ask the user:
 

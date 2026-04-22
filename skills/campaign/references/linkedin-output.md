@@ -1,4 +1,5 @@
-Present as:
+# LinkedIn Content Output Template
+
 ```
 LINKEDIN CONTENT
 ================

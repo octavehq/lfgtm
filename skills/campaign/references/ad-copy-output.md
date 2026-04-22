@@ -1,4 +1,5 @@
-Present as:
+# Ad Copy Variants Output Template
+
 ```
 AD COPY VARIANTS
 ================

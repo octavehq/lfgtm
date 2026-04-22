@@ -153,7 +153,7 @@ Your choice (number or name, or press Enter for neon-pulse):
 
 If `--style` was provided via flag, skip this prompt and use that preset.
 
-Full CSS variable definitions for each preset are in the deck skill's [STYLE_PRESETS.md](../deck/STYLE_PRESETS.md). Apply the same CSS variable system.
+Full CSS variable definitions for each preset are in the deck skill's [style-presets.md](../deck/references/style-presets.md). Apply the same CSS variable system.
 
 ### Step 4: Generate HTML
 

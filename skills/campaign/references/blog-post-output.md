@@ -1,4 +1,5 @@
-Present as:
+# Blog Post Output Template
+
 ```
 BLOG POST
 =========

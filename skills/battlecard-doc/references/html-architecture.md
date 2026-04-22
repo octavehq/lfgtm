@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=[fonts]&display=swap" rel="stylesheet">
   <style>
-    /* === CSS Variables (from chosen style preset — see STYLE_PRESETS.md) === */
+    /* === CSS Variables (from chosen style preset — see style-presets.md) === */
     :root { /* ... paste chosen preset variables here ... */ }
 
     /* === Reset & Base === */
@@ -173,7 +173,7 @@ For **landscape overview** documents, replace the per-competitor sections with:
 
 1. **Single page, natural scrolling** -- not a slide deck, a vertical reference document
 2. **Sticky sidebar** with section navigation dots (hidden on mobile and print)
-3. **Same CSS variable system as `/octave:deck`** -- apply the preset's `:root` block from STYLE_PRESETS.md
+3. **Same CSS variable system as `/octave:deck`** -- apply the preset's `:root` block from style-presets.md
 4. **Max-width 950px** centered on the page
 5. **Objection handlers as `<details>/<summary>`** -- native HTML expand/collapse, no JS required
 6. **Win/loss scorecard using CSS bars** -- div widths as percentages, green wins, red losses

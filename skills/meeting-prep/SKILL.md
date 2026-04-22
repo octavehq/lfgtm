@@ -253,7 +253,7 @@ Does this look good? I can:
 
 ### Step 3: Style Selection
 
-The battle plan uses the same CSS variable / style preset system as `/octave:deck`. Full preset definitions are in the deck skill's [STYLE_PRESETS.md](../deck/STYLE_PRESETS.md).
+The battle plan uses the same CSS variable / style preset system as `/octave:deck`. Full preset definitions are in the deck skill's [style-presets.md](../deck/references/style-presets.md).
 
 Battle plans default to readability-optimized presets. If `--style` was not provided, ask:
 
