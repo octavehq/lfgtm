@@ -1,3 +1,5 @@
+# Campaign Plan Output Template
+
 ```
 CAMPAIGN PLAN: [Campaign Name]
 ==============================

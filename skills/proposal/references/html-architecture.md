@@ -1,6 +1,6 @@
 # HTML Architecture
 
-The proposal uses the same CSS variable system as `/octave:deck` (see [STYLE_PRESETS.md](../deck/STYLE_PRESETS.md)) but with a document layout instead of slides.
+The proposal uses the same CSS variable system as `/octave:deck` (see [style-presets.md](../../deck/references/style-presets.md)) but with a document layout instead of slides.
 
 **Core structure:**
 

@@ -1,4 +1,5 @@
-Present as:
+# Social Posts Output Template
+
 ```
 SOCIAL POSTS
 ============

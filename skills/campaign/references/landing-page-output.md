@@ -1,4 +1,5 @@
-Present as:
+# Landing Page Copy Output Template
+
 ```
 LANDING PAGE COPY
 =================

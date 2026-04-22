@@ -138,7 +138,7 @@ Use the same tiered brand extraction approach as the deck skill:
 
 **If user chose a style preset:**
 
-Reference the deck skill's [STYLE_PRESETS.md](../deck/STYLE_PRESETS.md). Use the same CSS variable system. Recommended defaults for microsites:
+Reference the deck skill's [style-presets.md](../deck/references/style-presets.md). Use the same CSS variable system. Recommended defaults for microsites:
 
 | Angle | Recommended Preset |
 |-------|--------------------|
