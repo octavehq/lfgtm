@@ -128,57 +128,9 @@ search_knowledge_base({ query: "<campaign topic> objections pain points" })
 
 ### Step 4: Generate Campaign Strategy
 
-Present the campaign plan before generating content:
+Present the campaign plan before generating content.
 
-```
-CAMPAIGN PLAN: [Campaign Name]
-==============================
-
-OBJECTIVE
----------
-[One-sentence goal]
-
-TARGET AUDIENCE
----------------
-Persona: [Persona name]
-Segment: [Segment if applicable]
-Key Pain Points:
-• [Pain point 1 from persona]
-• [Pain point 2 from persona]
-
-STRATEGIC ANGLE
----------------
-Playbook: [Playbook name]
-Lead Value Prop: [Primary value prop]
-Supporting Props:
-• [Value prop 2]
-• [Value prop 3]
-
-PROOF POINTS
-------------
-• [Proof point 1 — metric or customer story]
-• [Proof point 2]
-• [Reference customer if relevant]
-
-COMPETITIVE POSITIONING
------------------------
-[If competitive context exists]
-Key Differentiators:
-• [Differentiator 1]
-• [Differentiator 2]
-
-CHANNEL PLAN
-------------
-| Channel | Timing | Purpose |
-|---------|--------|---------|
-| [Channel 1] | [When] | [Role in campaign] |
-| [Channel 2] | [When] | [Role in campaign] |
-| ... | ... | ... |
-
----
-
-Ready to generate content for each channel? [Y/n]
-```
+See [campaign-plan-output.md](references/campaign-plan-output.md) for the Campaign Plan output template.
 
 ### Step 5: Generate Channel Content
 
@@ -197,41 +149,7 @@ generate_email({
 })
 ```
 
-Present as:
-```
-EMAIL SEQUENCE (4 emails)
-=========================
-
-EMAIL 1: [Subject Line]
-Timing: Day 1
-Purpose: [Hook with primary pain point]
----
-[Email body]
-
----
-
-EMAIL 2: [Subject Line]
-Timing: Day 3
-Purpose: [Social proof / value prop]
----
-[Email body]
-
----
-
-EMAIL 3: [Subject Line]
-Timing: Day 6
-Purpose: [Differentiator / insight]
----
-[Email body]
-
----
-
-EMAIL 4: [Subject Line]
-Timing: Day 10
-Purpose: [Direct ask / breakup]
----
-[Email body]
-```
+See [email-sequence-output.md](references/email-sequence-output.md) for the Email Sequence output template.
 
 ---
 
@@ -247,28 +165,7 @@ generate_content({
 })
 ```
 
-Present as:
-```
-LINKEDIN CONTENT
-================
-
-CONNECTION REQUEST (300 chars)
-------------------------------
-[Message]
-
-FOLLOW-UP MESSAGE
------------------
-[Message after they accept]
-
-LINKEDIN POST (for rep to publish)
------------------------------------
-[Post draft — thought leadership angle related to campaign theme]
-
-ENGAGEMENT COMMENTS (templates)
--------------------------------
-If they post about [topic]: "[Comment]"
-If they share [content type]: "[Comment]"
-```
+See [linkedin-output.md](references/linkedin-output.md) for the LinkedIn Content output template.
 
 ---
 
@@ -283,26 +180,7 @@ generate_content({
 })
 ```
 
-Present as:
-```
-AD COPY VARIANTS
-================
-
-VARIANT 1: Pain-Led
-Headline: [30 chars]
-Body: [90 chars]
-CTA: [15 chars]
-
-VARIANT 2: Proof-Led
-Headline: [30 chars]
-Body: [90 chars]
-CTA: [15 chars]
-
-VARIANT 3: Insight-Led
-Headline: [30 chars]
-Body: [90 chars]
-CTA: [15 chars]
-```
+See [ad-copy-output.md](references/ad-copy-output.md) for the Ad Copy Variants output template.
 
 ---
 
@@ -317,27 +195,7 @@ generate_content({
 })
 ```
 
-Present as:
-```
-SOCIAL POSTS
-============
-
-POST 1: Stat/Insight
-[Post body]
-#hashtag1 #hashtag2
-
-POST 2: Question
-[Post body]
-
-POST 3: Mini Case Study
-[Post body]
-
-POST 4: Hot Take
-[Post body]
-
-POST 5: Educational Tip
-[Post body]
-```
+See [social-posts-output.md](references/social-posts-output.md) for the Social Posts output template.
 
 ---
 
@@ -353,23 +211,7 @@ generate_content({
 })
 ```
 
-Present as:
-```
-BLOG POST
-=========
-
-Title: [Title]
-Meta Description: [155 chars]
-Target Persona: [Persona]
-
----
-
-[Full blog post content with sections]
-
----
-
-Internal CTA: [What to link to / landing page]
-```
+See [blog-post-output.md](references/blog-post-output.md) for the Blog Post output template.
 
 ---
 
@@ -385,51 +227,7 @@ generate_content({
 })
 ```
 
-Present as:
-```
-LANDING PAGE COPY
-=================
-
-HERO
-----
-Headline: [Headline]
-Subheadline: [Subheadline]
-CTA Button: [CTA text]
-
-PROBLEM
--------
-[Problem statement copy]
-
-SOLUTION
---------
-[Solution overview]
-
-KEY BENEFITS
-------------
-✓ [Benefit 1]: [Description]
-✓ [Benefit 2]: [Description]
-✓ [Benefit 3]: [Description]
-
-SOCIAL PROOF
-------------
-"[Customer quote]" — [Name, Title, Company]
-Metrics: [Key stats]
-Logos: [Suggest which reference customers]
-
-FAQ
----
-Q: [Question 1]
-A: [Answer]
-
-Q: [Question 2]
-A: [Answer]
-
-FINAL CTA
----------
-Headline: [Closing headline]
-CTA Button: [CTA text]
-Supporting: [Urgency/value text]
-```
+See [landing-page-output.md](references/landing-page-output.md) for the Landing Page Copy output template.
 
 ### Step 6: Present Campaign Summary
 

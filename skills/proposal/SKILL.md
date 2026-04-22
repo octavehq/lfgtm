@@ -135,151 +135,13 @@ This turns a generic proposal into "here's what we heard from you, and here's ex
 
 ---
 
-#### Company & Contact Research
-
-| What you need | Tool | When to use |
-|---------------|------|-------------|
-| Company profile | `enrich_company({ companyDomain })` | Almost always — gives industry, size, tech stack, signals |
-| Champion profile | `enrich_person({ person: { email, firstName, lastName, companyDomain } })` | When champion is known — tailor language to their role |
-| Key stakeholders | `find_person({ searchMode: "people", companyDomain, fuzzyTitles })` | When you need to understand the buying committee |
-| ICP fit scoring | `qualify_company({ companyDomain })` | When you need to quantify "why us" for this account |
-| Person qualification | `qualify_person({ person: { ... } })` | When champion fit matters for framing |
-
----
-
-#### Playbook & Messaging
-
-| What you need | Tool | When to use |
-|---------------|------|-------------|
-| All playbooks | `list_all_entities({ entityType: "playbook" })` | Quick scan to find the right playbook |
-| Matching playbook | `search_knowledge_base({ query: "<industry> <persona>", entityTypes: ["playbook"] })` | Find the best-fit playbook for this account |
-| Playbook details | `get_playbook({ oId, includeValueProps: true })` | Full playbook content + value props — drives the proposal narrative |
-| Value props | `list_value_props({ playbookOId })` | Fetch value props for the selected playbook |
-
----
-
-#### Proof Points & Social Proof
-
-This is critical for proposals. Buyers share these documents internally — social proof is what gets budget approved.
-
-| What you need | Tool | When to use |
-|---------------|------|-------------|
-| All proof points | `list_entities({ entityType: "proof_point" })` | Fetch all proof points with full data — metrics, quotes, logos |
-| All references | `list_entities({ entityType: "reference" })` | Fetch customer references with full details |
-| Proof by topic | `search_knowledge_base({ query: "<industry> results", entityTypes: ["proof_point", "reference"] })` | Proof points relevant to their industry or use case |
-| Uploaded case studies | `search_resources({ query: "case study" })` | Existing case study documents or PDFs |
-
----
-
-#### Competitive Context
-
-| What you need | Tool | When to use |
-|---------------|------|-------------|
-| Competitor profiles | `search_knowledge_base({ query: "<competitor>", entityTypes: ["competitor"] })` | When a competitor is in the deal |
-| Competitor deep dive | `get_entity({ oId })` | Full competitor strengths, weaknesses, positioning |
-| Products for comparison | `list_entities({ entityType: "product" })` | When you need feature-level differentiation |
-| Competitive resources | `search_resources({ query: "<competitor>" })` | Uploaded battlecards, analyst reports |
-
----
-
-#### Conversation History & Deal Intel
-
-| What you need | Tool | When to use |
-|---------------|------|-------------|
-| Recent findings | `list_findings({ query: "<company>", startDate: "<relevant period>" })` | What was said in calls — objections, priorities, feature requests |
-| Deal events | `list_events({ filters: { accounts: ["<account_oId>"] } })` | Timeline of the relationship |
-| Event details | `get_event_detail({ eventOId })` | Deep dive on a specific call or meeting |
-| Synthesized prep | `generate_call_prep({ companyDomain })` | Comprehensive brief to work from |
-
----
-
-#### Existing Resources
-
-| What you need | Tool | When to use |
-|---------------|------|-------------|
-| All resources | `list_resources()` | Browse uploaded docs, URLs, Drive files |
-| Search resources | `search_resources({ query: "<topic>" })` | Find existing proposals, pricing docs, case studies |
+See [octave-tool-reference.md](references/octave-tool-reference.md) for the full tool reference tables (company/contact research, playbooks, proof points, competitive context, conversation history, and resources).
 
 ---
 
 **Output of this step:** Present a structured proposal outline to the user for approval before generating.
 
-```
-PROPOSAL OUTLINE: [Title]
-==========================
-
-Target: [Company name]
-Champion: [Name, Title]
-Stage: [Deal stage]
-Key Concerns: [Listed concerns]
-Include Pricing: [Yes / No / TBD]
-
----
-
-SECTIONS TO INCLUDE
---------------------
-
-1. COVER PAGE
-   - "Prepared for [Company]"
-   - Date, your company branding
-
-2. TABLE OF CONTENTS
-   - Clickable section navigation
-
-3. EXECUTIVE SUMMARY
-   - The situation, the opportunity, what you're proposing
-   - Expected outcomes
-
-4. THE CHALLENGE
-   - [Specific pain point 1 — grounded in conversation data]
-   - [Specific pain point 2 — from enrichment signals]
-   - Cost of inaction
-
-5. OUR SOLUTION
-   - [Capability 1 mapped to pain point 1]
-   - [Capability 2 mapped to pain point 2]
-   - [Capability 3 — additional value]
-
-6. WHY US
-   - [Differentiator 1]
-   - [Differentiator 2]
-   - [Competitive advantage if competitor in deal]
-
-7. PROOF OF RESULTS
-   - [Case study 1 — same industry/size]
-   - [Case study 2 — similar use case]
-   - [Key metrics]
-
-8. IMPLEMENTATION PLAN
-   - Phases, timeline, milestones
-   - What's needed from them
-
-9. INVESTMENT
-   - [Pricing / ROI framing / TBD placeholder]
-
-10. NEXT STEPS
-    - Specific actions, dates, owners
-
-11. APPENDIX (optional)
-    - Technical details, security, compliance
-
----
-
-Octave Sources Used:
-- Company profile: [Company] — [key insights]
-- Playbook: [Playbook name] — [messaging angle]
-- Proof points: [N] references pulled
-- Competitive intel: [If applicable]
-- Findings: [N] recent signals
-
----
-
-Does this outline look good? I can:
-1. Proceed to style selection and generation
-2. Add / remove / reorder sections
-3. Go deeper on any section
-4. Change the narrative angle
-```
+See [proposal-outline-template.md](references/proposal-outline-template.md) for the structured proposal outline template.
 
 **Wait for user approval before proceeding.**
 
@@ -309,30 +171,7 @@ Your choice:
 
 **If user picks "Show me all 12 options":**
 
-```
-STYLE PRESETS
-=============
-
-DARK THEMES
-  1. midnight-pro      — Dark navy, white text, blue accents. Executive feel.
-  2. executive-dark    — Charcoal + gold. Premium boardroom aesthetic.
-  3. octave-brand      — Octave purple on dark navy. Product-aligned.
-  4. electric-studio   — Pure black + electric blue. Tech-forward.
-  5. neon-pulse        — Dark + neon green/cyan. Developer/hacker energy.
-  6. dark-botanical    — Dark + warm gold/rose. Elegant and premium.
-
-LIGHT THEMES
-  7. swiss-modern      — White + red accent. Bauhaus minimal.
-  8. soft-light        — Warm white + sage green. Calm and approachable.
-  9. paper-minimal     — Off-white + black type. Editorial simplicity.
-
-VIBRANT THEMES
-  10. solar-flare      — Deep orange gradients. Bold and energetic.
-  11. aurora-gradient   — Purple-to-teal gradients. Visionary and modern.
-  12. monochrome-bold  — High-contrast B&W. Statement typography.
-
-Your choice (number or name):
-```
+See [style-presets.md](references/style-presets.md) for the full list of 12 style presets grouped by theme.
 
 Full CSS variable definitions for each preset are in the deck skill's [STYLE_PRESETS.md](../deck/STYLE_PRESETS.md).
 
@@ -370,141 +209,11 @@ Not all sections appear in every proposal. Stage determines what's included:
 
 #### Document Sections — Full Proposal
 
-**1. Cover Page**
-- Title: "Proposal for [Company]" or a more compelling headline
-- Subtitle: "Prepared by [Your Company]"
-- Date
-- Your company logo (if brand was extracted)
-- Champion name and title (if known)
-- Confidential notice
-
-**2. Table of Contents**
-- Clickable anchor links to each section
-- Section numbers and titles
-- Sticky sidebar navigation on wider screens
-
-**3. Executive Summary**
-- 3-4 paragraphs, each with a clear purpose:
-  - The situation: what's happening in their business/industry
-  - The opportunity: the gap between where they are and where they could be
-  - What you're proposing: your solution in one clear statement
-  - Expected outcomes: measurable results they can expect
-- This section should stand alone — many executives read only this
-
-**4. The Challenge**
-- Their specific pain points, grounded in conversation data if available
-- Industry context — why this matters now
-- Cost of inaction — what happens if they do nothing
-- 2-3 challenge areas, each with a heading and 2-3 supporting points
-
-**5. Our Solution**
-- How you solve their specific problems, mapped to the challenges above
-- 3-4 key capabilities, each with:
-  - A heading
-  - A description of what it does
-  - How it specifically addresses their pain point
-- Visual: capability cards or a numbered list
-
-**6. Why Us**
-- Differentiators that matter to *them* (not generic features)
-- If competitor is in the deal: honest, respectful comparison
-- Unique strengths: technology, approach, team, track record
-- Avoid feature checklists — frame as business advantages
-
-**7. Proof of Results**
-- Case studies grouped by relevance to their situation
-- For each: company name, challenge, solution, results (metrics)
-- Customer quotes if available from proof points
-- Logo wall of recognizable customers
-- Industry-specific proof prioritized
-
-**8. Implementation Plan**
-- Timeline with phases: onboarding, configuration, rollout, optimization
-- Milestones and deliverables per phase
-- What's needed from them (data, access, stakeholders)
-- Time to first value
-- Visual: timeline or process steps
-
-**9. Investment**
-- If pricing included: pricing table with tiers or packages
-- ROI framing: "For [investment], you get [value]"
-- Comparison: cost vs. cost of current process / inaction
-- Payment terms or structure if relevant
-- If TBD: placeholder section with "Investment details to be discussed based on scope"
-
-**10. Next Steps**
-- Specific actions with owners and dates
-- 3-5 concrete steps: "Schedule technical review", "Finalize scope", etc.
-- Contact information
-- Call to action: make it easy to say yes
-
-**11. Appendix (optional)**
-- Technical specifications
-- Integration details
-- Security and compliance certifications
-- Team bios
-- Detailed feature breakdown
-- Terms and conditions reference
+See [document-sections.md](references/document-sections.md) for the full specification of each of the 11 proposal sections.
 
 #### HTML Architecture
 
-The proposal uses the same CSS variable system as `/octave:deck` (see [STYLE_PRESETS.md](../deck/STYLE_PRESETS.md)) but with a document layout instead of slides.
-
-**Core structure:**
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>[Proposal Title] - [Company Name]</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=[fonts]&display=swap" rel="stylesheet">
-  <style>
-    /* CSS Variables from chosen preset — :root { ... } */
-    /* Reset & Base — smooth scroll, body with --font-body, --bg, --text-primary, line-height: 1.7 */
-    /* Document Layout — .proposal-wrapper: flex, max-width 1100px, margin auto */
-    /* Sidebar TOC — .toc-sidebar: width 220px, sticky, top 2rem; links with active state via --brand-primary */
-    /* Main Content — .proposal-content: max-width 850px, flex 1, clamp padding */
-    /* Sections — .proposal-section: margin-bottom clamp, scroll-margin-top for anchor offset */
-    /* Cover Page — .cover-page: min-height 100vh, flex center, text-align center */
-    /* Typography — h1-h3 with clamp() font sizes, --font-display; p with --text-secondary */
-    /* Components — .card, .metric-card, .big-number, .quote-block, .timeline-step, .step-number, .pill, .pricing-table, .logo-grid */
-    /* Print Styles (critical) — hide sidebar, full-width content, page-break-after on cover, page-break-inside avoid on sections/cards */
-    /* Responsive — hide sidebar below 900px */
-    /* prefers-reduced-motion — disable transitions */
-  </style>
-</head>
-<body>
-  <div class="proposal-wrapper">
-    <nav class="toc-sidebar">
-      <h4>Contents</h4>
-      <a href="#executive-summary">Executive Summary</a>
-      <a href="#the-challenge">The Challenge</a>
-      <!-- ... one link per section -->
-    </nav>
-    <main class="proposal-content">
-      <section class="cover-page" id="cover">...</section>
-      <section class="proposal-section" id="executive-summary">...</section>
-      <!-- Continue for each section -->
-    </main>
-  </div>
-  <script>
-    // Intersection Observer for active TOC highlighting
-    // Smooth scroll behavior
-  </script>
-</body>
-</html>
-```
-
-**Print styles are non-negotiable for proposals.** Buyers print these documents. Always include:
-- `page-break-after: always` on cover page
-- `page-break-inside: avoid` on sections and cards
-- `page-break-after: avoid` on h2 (keep headings with their content)
-- Hide sidebar, expand content to full width
-- Set body font-size to 11pt for readability
+See [html-architecture.md](references/html-architecture.md) for the core HTML structure scaffold and required print styles.
 
 #### Key Differences from Deck HTML
 
@@ -551,45 +260,7 @@ After generating the HTML file:
 1. **Open the proposal** in the default browser
 2. **Present a summary:**
 
-```
-PROPOSAL READY
-==============
-
-Folder: .octave-proposals/<name>-<date>/
-File:   .octave-proposals/<name>-<date>/<name>.html
-Sections: [N] sections included
-Style:  [Preset name or "Custom Brand"]
-Stage:  [Deal stage]
-Size:   [file size]
-
-Included Sections:
-- Cover Page
-- Table of Contents
-- Executive Summary
-- The Challenge
-- Our Solution
-- Why Us
-- Proof of Results
-- Implementation Plan
-- Investment
-- Next Steps
-
-Navigation:
-- Scroll to read — sticky sidebar shows your position
-- Click any TOC item to jump to that section
-- Print: Cmd+P / Ctrl+P — page breaks between sections
-
----
-
-Want me to:
-1. Adjust specific sections — go deeper, change tone, add detail
-2. Add pricing — provide numbers and I'll format the investment section
-3. Change the style — different preset or brand colors
-4. Create a version for a different stakeholder (e.g., technical vs. executive)
-5. Export as PDF — print instructions for full fidelity
-6. Create a companion deck — presentation version of this proposal
-7. Done
-```
+See [delivery-summary.md](references/delivery-summary.md) for the PROPOSAL READY summary template.
 
 **Stakeholder variants:** If the user asks for a version for a different audience (e.g., "make one for the CTO"), adjust:
 - Emphasis: shift from business value to technical architecture
