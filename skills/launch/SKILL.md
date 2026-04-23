@@ -99,7 +99,7 @@ search_knowledge_base({
 })
 
 # Get brand voice
-list_brand_voices()
+list_all_entities(entityType: "brand_voice")
 ```
 
 ### Step 3: Generate Launch Plan
@@ -248,7 +248,7 @@ For the full interactive mode selector, use `/octave:generate`.
 - `get_entity` - Full entity details
 - `get_playbook` - Playbook with value props
 - `search_knowledge_base` - Proof points, references, competitive intel
-- `list_brand_voices` - Brand voice consistency
+- `list_all_entities` (entityType: "brand_voice") - Brand voice consistency
 
 ### Content Generation
 - `generate_content` - Blog, social, one-pager, FAQ, talking points

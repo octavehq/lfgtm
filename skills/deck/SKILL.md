@@ -753,7 +753,7 @@ for i, slide in enumerate(prs.slides):
 - `generate_email` - Generate email content (for follow-up slides)
 
 ### Brand & Style
-- `list_brand_voices` - Available brand voices in workspace
+- `list_all_entities` (entityType: "brand_voice") - Available brand voices in workspace
 - `list_writing_styles` - Available writing styles in workspace
 
 ## Error Handling

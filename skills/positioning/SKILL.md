@@ -121,7 +121,7 @@ Every section needs data from the library. Gather it all up front:
 | Playbook + value props | `get_playbook({ oId, includeValueProps: true })` | 1, 2, 4, 5, 8 |
 | Proof points | `list_entities({ entityType: "proof_point" })` | 2, 3, 5 |
 | References | `list_entities({ entityType: "reference" })` | 2, 3 |
-| Brand voice | `list_brand_voices()` | 8 (homepage tone) |
+| Brand voice | `list_all_entities(entityType: "brand_voice")` | 8 (homepage tone) |
 | Competitive positioning | `search_knowledge_base({ query: "<product> differentiation competitive advantage", entityTypes: ["competitor", "playbook"] })` | 2, 3, 6 |
 | What resonates | `list_findings({ query: "value propositions positive reactions resonated", startDate: "<90 days ago>", eventFilters: { sentiments: ["POSITIVE"] } })` | 2, 5 |
 | What falls flat | `list_findings({ query: "objections pushback concerns", startDate: "<90 days ago>", eventFilters: { sentiments: ["NEGATIVE"] } })` | 3, 5 |
@@ -365,7 +365,7 @@ add_value_props({
 
 ### Intelligence & Signals
 - `list_findings` — Conversation findings: what resonates (positive) and what falls flat (negative)
-- `list_brand_voices` — Brand voice for homepage messaging tone
+- `list_all_entities` (entityType: "brand_voice") — Brand voice for homepage messaging tone
 
 ### Content Generation
 - `generate_content` — Synthesize library data into framework structures

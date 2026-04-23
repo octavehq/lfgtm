@@ -510,14 +510,16 @@ The plugin uses the single Octave MCP server you configure (e.g. `octave-acme`).
 - `create_entity` - Create new entity (AI-generated) - excludes playbooks
 - `update_entity` - Update entity (AI-refined) - excludes playbooks
 - `delete_entity` - Delete any entity type (soft delete)
+- `link_entities_to_offering` - Link or unlink library entities to a specific offering (product/service)
 - `create_playbook` - Create new playbook with dedicated schema
 - `update_playbook` - Update existing playbook
 - `add_value_props` - Add value props to playbook
 - `update_value_props` - Update/archive value props
 
 ### Configuration
-- `list_brand_voices` - List all brand voice configurations
 - `list_writing_styles` - List all writing style configurations
+
+> Brand voices are retrieved via the generic entity tools: `list_all_entities({ entityType: "brand_voice" })` or `list_entities({ entityType: "brand_voice" })`.
 
 ### Resources
 - `list_resources` - List global resources (documents, websites) with filtering
@@ -546,6 +548,12 @@ The plugin uses the single Octave MCP server you configure (e.g. `octave-acme`).
 - `find_crm_records` - Search for CRM records (accounts, contacts, leads, opportunities)
 - `find_crm_activities` - Fetch activities (notes, tasks, calls, emails) for a CRM record
 - `generate_crm_context` - Generate synthesized CRM context summary for a person or company
+
+### Pipeline Analytics
+- `list_pipeline_overview` - Deals grouped by stage with counts, total value, and per-deal detail
+- `list_deal_health` - Assess open deals for stalled stages, expired close dates, single-threading, regressions
+- `get_deal_deep_dive` - Full deal context: stage history, close-date changes, activity, benchmarks, competitive intel
+- `get_pipeline_metrics` - Stage velocity, cycle time, win/loss conversion rates, deal counts
 
 ### Agents
 - `list_agents` - List saved agents

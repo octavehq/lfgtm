@@ -35,22 +35,28 @@ You have access to the Octave MCP server which provides:
 ### Read Operations
 - `list_all_entities` - Quick list of entities with basic fields (name, oId, type)
 - `list_entities` - Detailed list with pagination, supports filtering by entity type
-- `get_entity` - Get full details for core library entities by oId (persona, product/service, playbook, segment, competitor, use-case, proof-point, reference)
+- `get_entity` - Get full details for any library entity by oId (type is inferred from the oId prefix)
 - `get_playbook` - Get playbook with associated personas and value propositions
 - `list_value_props` - List value propositions for a specific playbook
 - `search_knowledge_base` - Semantic search across all library content (personas, playbooks, products, use cases, etc.)
-- `list_brand_voices` - List all brand voice configurations in the workspace
 - `list_writing_styles` - List all writing style configurations in the workspace
+
+> **Brand voices:** there is no dedicated `list_brand_voices` tool. Use `list_all_entities({ entityType: "brand_voice" })` for discovery or `list_entities({ entityType: "brand_voice" })` for paginated detail.
 
 **Entity Types:**
 - `persona` - Buyer personas (prefix: `pe_`)
-- `product` - Products and services/offerings (prefix: `px_`) - Note: Services are a type of product
+- `product` - Products/offerings (prefix: `px_`)
+- `service` - Services (prefix: `sc_`)
+- `solution` - Workspace-scoped solution offerings (prefix: `sv_`)
 - `playbook` - Messaging playbooks (prefix: `pb_`)
 - `segment` - Market segments (prefix: `sg_`)
 - `use_case` - Use cases (prefix: `uu_`)
 - `competitor` - Competitive intelligence (prefix: `cp_`)
+- `alternative` - Non-direct alternatives customers consider (prefix: `ao_`)
+- `buying_trigger` - Buying triggers / intent signals (prefix: `bq_`)
 - `proof_point` - Case studies and proof points (prefix: `pp_`)
 - `reference` - Reference customers (prefix: `re_`)
+- `hypothesis` - Value propositions (prefix: `hy_`) — managed via playbook value-prop tools rather than `create_entity`
 - `brand_voice` - Brand voice guidelines (prefix: `bv_`)
 - `writing_style` - Writing style and email recipes (prefix: `ws_`)
 
@@ -73,6 +79,7 @@ You have access to the Octave MCP server which provides:
 - `create_entity` - Create any entity type except playbooks (AI-generated based on instructions and sources)
 - `update_entity` - Update any entity type except playbooks (AI-refined based on instructions)
 - `delete_entity` - Delete any entity type (soft delete)
+- `link_entities_to_offering` - Link or unlink library entities (personas, use cases, competitors, proof points, references, etc.) to a specific offering (product or service) by mixed oId arrays
 - `create_playbook` - Create a new playbook with dedicated schema (requires offering selection)
 - `update_playbook` - Update an existing playbook with natural language instructions
 - `add_value_props` - Add new value propositions to a playbook for a specific persona
@@ -108,6 +115,12 @@ You have access to the Octave MCP server which provides:
 - `find_crm_records` - Search for CRM records (accounts, contacts, leads, opportunities) from the connected CRM (Salesforce or HubSpot)
 - `find_crm_activities` - Fetch activities (notes, tasks, calls, emails) associated with a CRM record
 - `generate_crm_context` - Generate a synthesized CRM context summary for a person or company using LLM
+
+### Pipeline Analytics
+- `list_pipeline_overview` - Get pipeline overview with deals grouped by stage (counts, total value per stage, individual deals)
+- `list_deal_health` - Assess health of all open deals (expired close dates, single-threaded deals, stalled stages, activity gaps, regressions)
+- `get_deal_deep_dive` - Get full context for a single deal (stage history, close-date changes, contact info, recent activity, velocity benchmarks, competitive intel)
+- `get_pipeline_metrics` - Pipeline performance metrics (average time per stage, cycle time, win/loss conversion rates, deal counts)
 
 ## Octave Library Taxonomy
 
@@ -186,7 +199,7 @@ Products (use entity type `product`):
 - **Disqualification Questions** - Red flags that indicate poor fit
 
 ### Services
-Services (use entity type `service`, share the `px_` prefix with products):
+Services (use entity type `service`, prefix `sc_`):
 - **Description** - What the service does
 - **Deliverables** - Key deliverables of the service
 - **Competencies** - Key competencies required

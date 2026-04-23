@@ -278,7 +278,7 @@ get_playbook({ oId: "<playbook_oId>", includeValueProps: true })
 search_knowledge_base({ query: "<topic>", entityTypes: ["proof_point", "reference"] })
 
 # Get brand voice
-list_brand_voices()
+list_all_entities(entityType: "brand_voice")
 
 # Get competitive positioning if relevant
 search_knowledge_base({ query: "<topic>", entityTypes: ["competitor"] })
@@ -371,7 +371,7 @@ Your choice:
 - `search_knowledge_base` - Find relevant messaging, proof points, personas
 - `get_entity` - Get full entity details (persona, product, competitor)
 - `get_playbook` - Get playbook with value props
-- `list_brand_voices` - Get brand voice for consistency
+- `list_all_entities` (entityType: "brand_voice") - Get brand voice for consistency
 
 ### Octave Generation
 - `generate_email` - Email sequence generation (Octave Default mode)
