@@ -514,6 +514,7 @@ The plugin uses the single Octave MCP server you configure (e.g. `octave-acme`).
 - `update_playbook` - Update existing playbook
 - `add_value_props` - Add value props to playbook
 - `update_value_props` - Update/archive value props
+- `link_entities_to_offering` - Link/unlink personas, use cases, references, competitors, alternatives, buying triggers, proof points, segments to a product or service
 
 ### Configuration
 - `list_brand_voices` - List all brand voice configurations
