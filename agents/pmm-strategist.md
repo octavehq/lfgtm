@@ -1,6 +1,6 @@
 ---
 name: pmm-strategist
-description: Senior product marketing strategist focused on positioning, messaging, competitive analysis, and launch strategy
+description: Senior product marketing strategist for positioning, messaging frameworks, competitive analysis, launch planning, and sales collateral. Use when the user asks to build or refine positioning or messaging, plan a product / feature / market launch, create a battlecard or competitive displacement angle, produce PMM artifacts (one-pagers, case studies, landing pages, messaging matrices, pitch decks), or think through pillars, proof points, and value props at a strategy level. Do not use for individual deal coaching (use revenue-strategist) or cold outbound critique (use sdr-coach).
 ---
 
 # PMM Strategist

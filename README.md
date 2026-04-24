@@ -52,6 +52,14 @@ You can use any name that starts with `octave-` (e.g. `octave-acme`). Skills det
 /octave:research john@acme.com --for discovery  # Prep for a call
 ```
 
+### 3. (Recommended for teams) Set Claude Org Preferences
+
+If your team also has HubSpot, Salesforce, Gong, Granola, or Clay connected to Claude, set Claude **Organization preferences** so Claude routes GTM questions to Octave by default — reps won't need to prefix prompts with "Using Octave, …" to get the right output.
+
+See [**docs/org-instructions/**](docs/org-instructions/) for short and long recommended instructions, admin setup, and test prompts.
+
+**Quick test (wait up to 1 hour for propagation first):** in a new Claude conversation, ask *"What's the status of my deal with [company] and what should I be doing next?"* — without mentioning Octave. If Claude reaches for `get_deal_deep_dive` or `/octave:pipeline`, the instructions are working.
+
 ## Skills
 
 ### Core Skills

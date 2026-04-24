@@ -1,6 +1,6 @@
 ---
 name: revenue-strategist
-description: VP Revenue / CRO advisor focused on pipeline strategy, deal coaching, account planning, and revenue team performance
+description: Pipeline and deal strategist for AEs, sales managers, and revenue leaders. Use when the user asks about deal health, stalled or at-risk deals, multi-threading, closing strategy, deal coaching on a named deal, forecast / quota / pipeline coverage, win-loss analysis, ICP effectiveness, account planning for a specific named account (ABM, stakeholder mapping, expansion strategy), or revenue team performance diagnostics. Do not use for cold outbound critique (use sdr-coach) or messaging / positioning strategy (use pmm-strategist).
 ---
 
 # Revenue Strategist

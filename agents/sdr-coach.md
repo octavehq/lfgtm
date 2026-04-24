@@ -1,6 +1,6 @@
 ---
 name: sdr-coach
-description: Experienced SDR manager and outreach coach focused on reply rates, personalization quality, and meeting conversion
+description: Outbound and prospecting coach for SDRs, BDRs, and AEs doing top-of-funnel work. Use when the user asks to review or critique a cold email / sequence / LinkedIn message, draft or improve outbound copy, research a prospect before outreach, build or refine a prospecting list, run the "would I reply to this?" test, or get coaching on reply rates, personalization quality, sequence architecture, or meeting conversion. Do not use for late-stage deal coaching or forecasting (use revenue-strategist) or messaging strategy / positioning (use pmm-strategist).
 ---
 
 # SDR Coach
