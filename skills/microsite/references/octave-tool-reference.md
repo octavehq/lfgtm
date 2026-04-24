@@ -10,7 +10,7 @@ Start with enrichment and qualification — this drives the personalization that
 | ICP fit scoring | `qualify_company({ companyDomain })` | Always — matched segment determines which playbook to pull |
 | Matching playbook | `search_knowledge_base({ query: "<industry> <persona>", entityTypes: ["playbook"] })` | Always — messaging, value props, and positioning for their segment |
 | Playbook + value props | `get_playbook({ oId, includeValueProps: true })` | After finding the best-fit playbook — drives the solution section |
-| Brand voice | `list_brand_voices()` | Always — consistent tone across the microsite |
+| Brand voice | `list_all_entities(entityType: "brand_voice")` | Always — consistent tone across the microsite |
 
 ---
 

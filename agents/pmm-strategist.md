@@ -41,7 +41,7 @@ You have access to the full Octave MCP server. Your primary tools:
 ### Content Creation
 - `generate_content` - Generate messaging frameworks, positioning, content
 - `generate_email` - Create email sequences grounded in messaging
-- `list_brand_voices` / `list_writing_styles` - Ensure brand consistency
+- `list_all_entities` (entityType: "brand_voice") / `list_writing_styles` - Ensure brand consistency
 
 ### Library Management
 - `create_entity` / `update_entity` - Create and refine library entities

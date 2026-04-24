@@ -39,8 +39,8 @@ Build the messaging angle for this content sprint.
 
 Ensure content consistency.
 
-- tool: list_brand_voices
-- params: {}
+- tool: list_all_entities
+- params: { entityType: "brand_voice" }
 - save_as: brand_voices
 - description: Get brand voice guidelines for content generation
 

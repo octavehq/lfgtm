@@ -109,7 +109,7 @@ search_knowledge_base({
 list_all_entities({ entityType: "competitor" })
 
 # Get brand voice
-list_brand_voices()
+list_all_entities(entityType: "brand_voice")
 ```
 
 ### Step 3: Generate Content Type
@@ -193,7 +193,7 @@ For the full interactive mode selector, use `/octave:generate`.
 
 ### Content Generation
 - `generate_content` - All enablement content types
-- `list_brand_voices` - Brand voice consistency
+- `list_all_entities` (entityType: "brand_voice") - Brand voice consistency
 
 ## Error Handling
 

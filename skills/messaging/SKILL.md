@@ -91,7 +91,7 @@ search_knowledge_base({
 })
 
 # Get brand voice
-list_brand_voices()
+list_all_entities(entityType: "brand_voice")
 
 # Get conversation insights for what resonates
 list_findings({
@@ -167,7 +167,7 @@ update_entity({
 - `get_playbook` - Get playbook with value props
 - `list_value_props` - Get existing value propositions
 - `search_knowledge_base` - Find proof points, references, competitive intel
-- `list_brand_voices` - Brand voice for tone consistency
+- `list_all_entities` (entityType: "brand_voice") - Brand voice for tone consistency
 - `list_findings` - What resonates in real conversations
 
 ### Content Generation

@@ -40,7 +40,7 @@ AskUserQuestion({
 
 Generate platform-ready ad campaign plans grounded in your Octave library intelligence. Creates one ad set per persona or ICP, with creative variants generated from real prospect language extracted from calls and emails.
 
-**MCP Server**: This skill requires the Octave MCP server. Look for available MCP tools that match the Octave tool names (e.g., `list_all_entities`, `list_findings`, `search_knowledge_base`, `get_entity`, `list_brand_voices`). The MCP server prefix varies by workspace — it may be `{octave_mcp}__`, `mcp__octave_myworkspace__`, or another name. If multiple Octave-like MCP servers are available and you're unsure which to use, ask the user which workspace to target.
+**MCP Server**: This skill requires the Octave MCP server. Look for available MCP tools that match the Octave tool names (e.g., `list_all_entities`, `list_findings`, `search_knowledge_base`, `get_entity`). The MCP server prefix varies by workspace — it may be `{octave_mcp}__`, `mcp__octave_myworkspace__`, or another name. If multiple Octave-like MCP servers are available and you're unsure which to use, ask the user which workspace to target.
 
 ---
 
@@ -159,7 +159,7 @@ Ask about voice and tone for the creative:
 
 If they choose "Use my Octave brand voice", fetch it in Step 2:
 ```
-→ {octave_mcp}__list_brand_voices()
+→ {octave_mcp}__list_all_entities(entityType: "brand_voice")
 → {octave_mcp}__get_entity(oId: "{brand_voice_oId}")  // fetch full voice guidelines (tone, word choice, style rules)
 ```
 

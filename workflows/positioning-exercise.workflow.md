@@ -121,7 +121,8 @@ Deep data pull for the selected product. All data gathered here feeds into all 8
 - save_as: positive_findings
 - description: What resonates in real conversations — grounds Anchors and Awareness Funnel
 
-- tool: list_brand_voices
+- tool: list_all_entities
+- params: { entityType: "brand_voice" }
 - save_as: brand_voices
 - description: Brand voice for Homepage Messaging tone consistency
 

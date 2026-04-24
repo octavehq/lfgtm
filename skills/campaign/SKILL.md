@@ -117,7 +117,7 @@ search_knowledge_base({ query: "<campaign topic>", entityTypes: ["proof_point", 
 get_entity({ oId: "<competitor_oId>" })
 
 # Get brand voice
-list_brand_voices()
+list_all_entities(entityType: "brand_voice")
 
 # Get writing style
 list_writing_styles()
@@ -282,7 +282,7 @@ For the full interactive mode selector, use `/octave:generate`.
 - `get_playbook` - Get playbook with value props
 - `list_value_props` - Get value propositions
 - `search_knowledge_base` - Find proof points, references, messaging
-- `list_brand_voices` - Get brand voice for consistency
+- `list_all_entities` (entityType: "brand_voice") - Get brand voice for consistency
 - `list_writing_styles` - Get writing style guidelines
 
 ### Content Generation
