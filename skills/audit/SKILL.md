@@ -287,10 +287,11 @@ The goal is to tell a story about what the library's shape means for agent capab
 #### Completeness Checks (WARNING)
 
 **Personas:**
-- [ ] Has pain points defined (not empty)
-- [ ] Has key objectives defined
-- [ ] Has primary responsibilities defined
 - [ ] Has description (>50 chars)
+- [ ] Has painPoints defined (not empty)
+- [ ] Has keyObjectives defined
+- [ ] Has primaryResponsibilities defined
+- [ ] Has buyingRole defined (purchase-decision function + sophistication level)
 
 **Playbooks:**
 - [ ] Has strategic narrative
@@ -301,36 +302,61 @@ The goal is to tell a story about what the library's shape means for agent capab
 
 **Products:**
 - [ ] Has description
-- [ ] Has key capabilities
-- [ ] Has differentiators
+- [ ] Has distinctCapabilities defined (outcome-oriented, not mechanisms)
+- [ ] Has keyFeatures defined (named, often branded components — the "how")
+- [ ] Has differentiatedValue defined
+
+**Solutions:**
+- [ ] Has summary / description
+- [ ] Has distinctCapabilities defined
+- [ ] Has keyComponents defined
+- [ ] Has differentiatedValue defined
+
+**Use Cases:**
+- [ ] Has description
+- [ ] Has scenarios defined
+- [ ] Has desiredOutcomes defined
+- [ ] Has strategicImpact defined (quantifiable revenue / cost / risk / efficiency impact)
 
 **Segments:**
 - [ ] Has description
-- [ ] Has firmographic characteristics
+- [ ] Has firmographics object populated (industry, businessModel, geography, revenue, employees)
+- [ ] Has strategicFit defined (why this segment matters to us)
+- [ ] Has operatingCharacteristics defined (org structure, maturity, operating model, culture)
+- [ ] Has buyingDynamics defined (how the segment makes purchasing decisions)
+- [ ] Has strategicPriorities and marketPressures defined
 
 **Competitors:**
-- [ ] Has strengths defined
-- [ ] Has weaknesses defined
-- [ ] Has differentiation points
+- [ ] Has howTheyPosition defined (their narrative, messaging, market story)
+- [ ] Has ourKeyDifferentiators defined (concrete, observable points of differentiation)
+- [ ] Has competitorStrengths defined (where they genuinely excel)
+- [ ] Has competitorWeaknesses defined (where they fall short)
+- [ ] Has reasonsWeWin and reasonsWeLose defined
 
 **Alternatives:**
 - [ ] Has whereItWorks and whereItBreaks defined
 - [ ] Has behavioral description (not just a tool/category name)
 
 **Buying Triggers:**
-- [ ] Has whoFeelsThisMost defined
-- [ ] Has howWeHelpInThisMoment defined
 - [ ] Has whyThisCreatesUrgency defined
-- [ ] Has whatsTheCostOfInaction defined
+- [ ] Has whoFeelsThisMost defined
+- [ ] Has costOfInaction defined
+- [ ] Has howWeHelpInThisMoment defined
 - [ ] A trigger with just a name and one-line description gives agents nothing to work with
 
 **Proof Points:**
-- [ ] Has quantified metric/statistic
-- [ ] Has source/validation
+- [ ] Has theProof defined (the actual fact, statistic, claim, metric — with source and date when available)
+- [ ] Has whatItSupports defined (which value claims this proof backs up)
+- [ ] Has howWeTalkAboutThis defined (different ways to present it)
+- [ ] Has whyItMatters defined (the strategic frame: what objection this neutralizes)
 
 **References:**
-- [ ] Has success metrics
-- [ ] Has use case context
+- [ ] Has businessModel defined (how the customer operates commercially)
+- [ ] Has theirChallenge defined (what was broken before they came to us)
+- [ ] Has howTheyUseUs defined (offerings adopted, role we play day-to-day)
+- [ ] Has whyTheyChoseUs defined (decision rationale; alternatives considered)
+- [ ] Has impactTheySaw defined (qualitative shifts and quantifiable metrics)
+- [ ] Has stakeholdersInvolved defined (champions, roles, why they cared)
 
 #### Qualifying Questions Audit (WARNING)
 
