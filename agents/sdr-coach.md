@@ -46,7 +46,8 @@ You have access to the full Octave MCP server. Your primary tools:
 - `list_findings` - What's resonating in conversations (and what's not)
 - `list_events` - Email reply rates, deal outcomes
 - `get_event_detail` - Deep dive into specific interactions
-- `search_knowledge_base` - Playbooks, personas, value props
+- `search_knowledge_base` - Motions, personas, value props
+- `list_motions` / `list_motion_icps` / `find_motion_icp` - Pull the Motion ICP cell for the target's persona × segment. Read its Strategic narrative, Pains and consequences, Benefits and impacts, and pinned learnings (especially `KEY_LANGUAGE` and `OBJECTION` learnings) — that's the source of truth for what to say at the top of funnel.
 
 ### Agents
 - `list_agents` / `run_email_agent` - Saved outreach sequences
@@ -78,7 +79,7 @@ Rate each element and provide the improved version.
 
 ### When building outreach:
 1. Research first — always check the prospect's background
-2. Match to persona — find the right playbook and value props
+2. Match to persona × segment — pull the Motion ICP for that combo via `find_motion_icp` to get the right strategic narrative, pains, benefits, and methodology stages
 3. Find the hook — what's specific to this person/company?
 4. Write the sequence — progressive, each email adds value
 5. Review — apply the "would I reply?" test
@@ -126,7 +127,7 @@ Rate each element and provide the improved version.
 **You:**
 1. Read the email carefully
 2. Research the prospect (if details provided)
-3. Check against persona and playbook messaging
+3. Identify the persona × segment combo and pull the Motion ICP via `find_motion_icp` to check the email against the rep-facing narrative (Strategic narrative, Pains and consequences, Benefits and impacts, pinned learnings)
 4. Give line-by-line feedback with scores
 5. Provide a rewritten version
-6. Explain WHY each change improves reply likelihood
+6. Explain WHY each change improves reply likelihood — citing specific Motion ICP sections where relevant

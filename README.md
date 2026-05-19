@@ -128,7 +128,7 @@ See [**docs/org-instructions/**](docs/org-instructions/) for short and long reco
 
 | Skill | Description |
 |-------|-------------|
-| `/octave:brainstorm` | Ideation for campaigns, playbooks, lead magnets, CTAs |
+| `/octave:brainstorm` | Ideation for campaigns, Custom Motion Playbooks, lead magnets, CTAs |
 | `/octave:repurpose` | Repurpose content for a different audience, persona, or channel |
 
 ### Automation Skills
@@ -189,13 +189,13 @@ Complete visual Messaging & Positioning system as a scrollable HTML document:
 Plan and generate multi-channel campaign content:
 - Email sequences, LinkedIn messages, ad copy, social posts
 - Blog posts and landing page copy
-- All grounded in playbooks, personas, and proof points
+- All grounded in Motions, Motion ICPs, personas, and proof points
 - Campaign strategy with channel plan and timing
 
 ```
 /octave:campaign "Q1 pipeline push" --persona "CTO"
 /octave:campaign "feature launch" --channels email,linkedin,ads,social,blog
-/octave:campaign "competitive displacement" --playbook "Enterprise"
+/octave:campaign "competitive displacement" --motion "Net New Enterprise"
 ```
 
 ### /octave:launch
@@ -236,7 +236,7 @@ Account-based planning:
 
 ```
 /octave:abm acme.com
-/octave:abm acme.com --stakeholders 5 --playbook "Enterprise"
+/octave:abm acme.com --stakeholders 5 --motion "Enterprise Net New"
 /octave:abm "Acme Corp" --depth quick
 ```
 
@@ -258,7 +258,7 @@ Deal-level coaching:
 ### /octave:enablement
 Sales enablement materials:
 - Quick reference cards, objection handling guides, discovery question banks
-- Competitive cheat sheets, persona deep-dives, playbook summaries
+- Competitive cheat sheets, persona deep-dives, Motion ICP cell summaries
 - New hire onboarding kits
 - All grounded in library data and real conversation evidence
 
@@ -286,28 +286,31 @@ ICP analysis and refinement:
 ### /octave:audit
 Comprehensive library audit to identify:
 - Missing or incomplete entities
-- Orphaned playbooks (no personas linked)
+- Orphaned personas / segments (not linked to any offering, so they don't appear in any Motion matrix)
+- Missing Motions for active offerings
 - Stale content (not updated recently)
 - Duplicate or overlapping entities
 - Broken references
+- Legacy standalone playbook → Motions migration
 
 ```
 /octave:audit                    # Full audit
 /octave:audit --type personas    # Focus on personas
 /octave:audit --fix              # Interactive fix mode
+/octave:audit --migrate          # Legacy playbook → Motions migration
 ```
 
 ### /octave:brainstorm
 GTM ideation engine for:
 - Campaign concepts
-- Playbook pack generation (cover your TAM)
+- Custom Motion Playbook ideas (Thematic / Milestone / Account / Competitive angles to layer on the Default Motion Playbook)
 - Lead magnet ideas
 - CTA and offer variations
 - Growth experiments
 
 ```
 /octave:brainstorm campaigns for enterprise
-/octave:brainstorm playbook pack
+/octave:brainstorm motion playbooks
 /octave:brainstorm lead magnets for CTOs
 ```
 
@@ -318,7 +321,7 @@ Find and qualify companies and people matching your ICP:
 - Provides filter suggestions for Apollo, Clay, or LinkedIn Sales Nav
 
 ```
-/octave:prospector --playbook "Enterprise Sales"
+/octave:prospector --motion "Enterprise Sales"
 /octave:prospector --similar-to stripe.com
 /octave:prospector --company acme.com
 ```
@@ -351,7 +354,7 @@ Context-aware research and prep:
 ### /octave:analyzer
 Conversation analysis against your library:
 - Resonance: Did messaging land?
-- Adherence: Did we follow the playbook?
+- Adherence: Did we follow the Motion ICP narrative?
 - Differentiation: Did we position effectively?
 
 ```
@@ -430,7 +433,7 @@ Build platform-ready ad campaign plans grounded in your library intelligence:
 - Landing page recommendations from your resources
 - Export as CSV for Google Ads, Meta, or LinkedIn bulk upload
 - Visual campaign deck as self-contained HTML
-- Resonance loop: feed performance data back to update library, playbooks, and sales language
+- Resonance loop: feed performance data back to update library, Motion ICP narratives, and sales language
 
 ```
 /octave:ads                                              # Interactive — full campaign builder
@@ -474,10 +477,10 @@ Pre-built workflow templates for common multi-step GTM processes:
 | Workflow | Description |
 |----------|-------------|
 | Full Outbound Pipeline | Research → qualify → find contacts → generate email |
-| Account-Based Research | Deep research dossier with contact mapping and playbook matching |
+| Account-Based Research | Deep research dossier with contact mapping and Motion ICP matching |
 | Competitive Deal Prep | Research, competitive positioning, and displacement outreach |
 | Persona-Targeted Outreach | Find persona matches across companies, qualify, and generate outreach |
-| New Market Entry | Research → ICP → personas → messaging → playbook → outreach |
+| New Market Entry | Research → ICP → personas → messaging → Motion → outreach |
 | Competitive Response | Assess → update positioning → displacement campaign → enablement |
 | Deal Acceleration | Account intel → stakeholder mapping → coaching → outreach → meeting prep |
 | Quarterly GTM Review | Win/loss → field intel → ICP accuracy → competitive landscape |
@@ -510,19 +513,31 @@ The plugin uses the single Octave MCP server you configure (e.g. `octave-acme`).
 - `list_all_entities` - Quick list with basic fields
 - `list_entities` - Detailed list with pagination
 - `get_entity` - Full entity details
-- `get_playbook` - Rich playbook with personas and value props
-- `list_value_props` - List value props for a playbook
 - `search_knowledge_base` - Semantic search
 
 ### Library Write
-- `create_entity` - Create new entity (AI-generated) - excludes playbooks
-- `update_entity` - Update entity (AI-refined) - excludes playbooks
+- `create_entity` - Create new entity (AI-generated) - excludes legacy playbooks
+- `update_entity` - Update entity (AI-refined) - excludes legacy playbooks
 - `delete_entity` - Delete any entity type (soft delete)
-- `link_entities_to_offering` - Link or unlink library entities to a specific offering (product/service)
-- `create_playbook` - Create new playbook with dedicated schema
-- `update_playbook` - Update existing playbook
-- `add_value_props` - Add value props to playbook
-- `update_value_props` - Update/archive value props
+- `link_entities_to_offering` - Link or unlink library entities (personas, segments, competitors, proof points, references, etc.) to a specific offering. Drives which entities appear in each Motion's matrix.
+
+### Motions
+- `list_motions` - List all Motions in the workspace
+- `get_motion` - Full details for a Motion
+- `create_motion` - Create a new Motion for an offering + motion type (`NET_NEW`, `UPSELL`, `CROSS_SELL`, `CONVERT_FREE_TO_PAID`, `RENEW_AND_RETAIN`, `DISPLACE_INCUMBENT`); auto-creates the Default Motion Playbook
+- `update_motion` / `delete_motion`
+- `list_motion_playbooks` / `get_motion_playbook` - Browse Motion Playbooks (Default + Custom) under a Motion
+- `create_motion_playbook` - Create a Custom Motion Playbook with narrative type `THEMATIC`, `MILESTONE`, `ACCOUNT`, or `COMPETITIVE`
+- `update_motion_playbook` / `delete_motion_playbook`
+- `list_motion_icps` - List Motion ICP cells (persona × segment) for a Motion
+- `find_motion_icp` - Full Motion ICP narrative (Target ICP overview, Operating landscape, Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References) plus optional Learning Loop learnings and Beats report context
+
+### Legacy Playbook Tools (deprecated)
+Still available for workspaces operating on legacy standalone playbooks, but Motions and Motion Playbooks supersede them for new work. Use `/octave:audit --migrate` to translate.
+- `get_playbook` - Get a legacy playbook with linked personas, segments, and value props
+- `list_value_props` - List value props on a legacy playbook
+- `create_playbook` / `update_playbook` - Manage legacy playbooks (avoid for new work)
+- `add_value_props` / `update_value_props` - Manage value props on a legacy playbook
 
 ### Configuration
 - `list_writing_styles` - List all writing style configurations
