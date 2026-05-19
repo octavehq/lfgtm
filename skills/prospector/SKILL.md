@@ -5,7 +5,7 @@ description: Find, enrich, and qualify prospects against your library's ICP crit
 
 # /octave:prospector - ICP-Fit Prospecting
 
-Find companies and people that match your Ideal Customer Profile. Uses your library's segments, personas, and playbooks to search for and score prospects. Returns qualified prospect lists with fit reasoning, recommended approaches, and filter suggestions for scaling in Apollo, Clay, or LinkedIn Sales Navigator.
+Find companies and people that match your Ideal Customer Profile. Uses your library's segments, personas, and Motion ICP cells to search for and score prospects. Returns qualified prospect lists with fit reasoning, recommended approaches, and filter suggestions for scaling in Apollo, Clay, or LinkedIn Sales Navigator.
 
 ## Usage
 
@@ -15,7 +15,7 @@ Find companies and people that match your Ideal Customer Profile. Uses your libr
 
 ## Options
 
-- `--playbook <name>` - Scope to a specific playbook's ICP criteria
+- `--motion <name>` - Scope to a specific Motion's ICP cells (persona × segment matrix)
 - `--segment <name>` - Filter by market segment
 - `--persona <name>` - Target specific persona type
 - `--company <domain>` - Find people at a specific company
@@ -26,7 +26,7 @@ Find companies and people that match your Ideal Customer Profile. Uses your libr
 
 ```
 /octave:prospector                                    # Interactive mode
-/octave:prospector --playbook "Enterprise Sales"     # Use playbook ICP
+/octave:prospector --motion "Enterprise Outbound"    # Use Motion ICP cells
 /octave:prospector --segment "Healthcare"            # Healthcare companies
 /octave:prospector --persona "CTO" --segment "SaaS"  # CTOs at SaaS companies
 /octave:prospector --similar-to stripe.com           # Companies like Stripe
@@ -44,7 +44,7 @@ If no options provided, ask:
 ```
 What kind of prospects are you looking for?
 
-1. Companies that fit a playbook's ICP
+1. Companies that fit a Motion's ICP cells (persona × segment matrix)
 2. People at a specific company
 3. Companies similar to a reference account
 4. Open search (I'll help you define criteria)
@@ -56,16 +56,18 @@ Your choice:
 
 Use MCP tools to gather ICP criteria from your library:
 
-**From Playbook:**
+**From Motion / Motion ICP cells:**
 ```
-get_playbook({ oId: "<playbook_oId>", includeValueProps: true })
+list_motions()
+list_motion_icps({ motionOId: "<motion_oId>" })
+find_motion_icp({ motionIcpOId: "<motion_icp_oId>", includeLearnings: true })
 ```
 
-Extract:
-- Target segment characteristics
-- Buyer persona titles and seniority
-- Product fit criteria
-- Qualifying questions (invert to search criteria)
+Extract from the Motion ICP cell narrative (Target ICP overview, Operating landscape, Strategic narrative):
+- Target segment characteristics (firmographics, industry, signals)
+- Buyer persona titles, seniority, department
+- Pains and consequences (invert to search signals — companies showing these pains)
+- Methodology cues (engagement triggers, qualifying signals)
 
 **From Segment:**
 ```
@@ -111,7 +113,8 @@ Person Criteria:
 Derived from:
 - Segment: "Scaling SaaS Companies"
 - Persona: "CTO - Enterprise Tech"
-- Playbook: "Enterprise DevOps Sale"
+- Motion: "Enterprise Outbound — DevOps"
+- Motion ICP cell: "CTO × Scaling SaaS"
 
 Proceed with this search? (or adjust criteria)
 ```
@@ -167,7 +170,7 @@ For each result, calculate ICP fit:
 ```
 qualify_company({
   companyDomain: "<domain>",
-  additionalContext: "Evaluating fit for [playbook/segment]"
+  additionalContext: "Evaluating fit for [Motion / Motion ICP cell / segment]"
 })
 ```
 
@@ -175,7 +178,7 @@ qualify_company({
 ```
 qualify_person({
   person: { linkedInProfile: "<url>" },
-  additionalContext: "Evaluating fit for [persona] in [playbook]"
+  additionalContext: "Evaluating fit for [persona] in [Motion ICP cell]"
 })
 ```
 
@@ -234,7 +237,8 @@ Suggest running `/octave:generate email` or `/octave:research` for selected pros
 | Segment characteristics | Keywords, technologies |
 | Persona job titles | fuzzyTitles, exactTitles |
 | Persona seniority | Seniority filter |
-| Playbook qualifying questions | Inverse as search signals |
+| Motion ICP cell pains | Invert as search signals (companies exhibiting these pains) |
+| Motion ICP cell methodology | Engagement triggers, qualifying signals |
 | Product fit criteria | Technology stack, business model |
 
 ## MCP Tools Used
@@ -252,7 +256,9 @@ Suggest running `/octave:generate email` or `/octave:research` for selected pros
 - `qualify_person` - ICP scoring for person
 
 ### Library Context
-- `get_playbook` - Get playbook ICP criteria
+- `list_motions` - List Motions in the workspace
+- `list_motion_icps` - List Motion ICP cells (persona × segment) for a Motion
+- `find_motion_icp` - Fetch a Motion ICP cell narrative + Learning Loop learnings (drives ICP criteria)
 - `get_entity` - Get segment/persona details
 - `search_knowledge_base` - Find relevant messaging
 
@@ -277,9 +283,9 @@ Companies (10 results)
 Outputs CSV-compatible format:
 
 ```
-Company,Domain,Score,Industry,Employees,Location,Recommended Playbook
-TechCorp,techcorp.com,92,SaaS,450,San Francisco,Enterprise DevOps
-DataFlow,dataflow.io,85,SaaS,230,New York,Growth SaaS
+Company,Domain,Score,Industry,Employees,Location,Recommended Motion ICP Cell
+TechCorp,techcorp.com,92,SaaS,450,San Francisco,Enterprise Outbound — CTO × Scaling SaaS
+DataFlow,dataflow.io,85,SaaS,230,New York,Growth Outbound — CTO × Growth SaaS
 ...
 ```
 
@@ -295,11 +301,11 @@ DataFlow,dataflow.io,85,SaaS,230,New York,Growth SaaS
 >
 > Current filters: [show active filters]
 
-**Missing Library Context:**
-> Playbook "[name]" not found in your library.
+**Missing Motion Context:**
+> Motion "[name]" not found in your workspace.
 >
-> Available playbooks:
-> - Enterprise Sales
+> Available Motions:
+> - Enterprise Outbound
 > - SMB Quick Close
 > - Healthcare Vertical
 >

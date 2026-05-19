@@ -83,7 +83,7 @@ What to improve:
 - [Specific gap with coaching]
 
 Ideal approach:
-"[Best response from playbook + conversation evidence]"
+"[Best response from Motion ICP narrative + conversation evidence]"
 
 Why this works better:
 [Explanation tied to persona pain points and value props]
@@ -95,4 +95,4 @@ Same as rapid fire, but after each answer, enter a coaching dialogue:
 - Ask follow-up questions
 - Challenge their reasoning
 - Share what works from conversation data
-- Connect to playbook guidance
+- Connect to Motion ICP narrative guidance

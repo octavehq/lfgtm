@@ -111,5 +111,5 @@ Questions to avoid:
 
 ---
 
-Sources: [Personas, playbooks, conversation findings, deal outcomes]
+Sources: [Personas, Motion ICP narratives, conversation findings, deal outcomes]
 ```

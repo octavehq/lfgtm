@@ -4,9 +4,12 @@
 
 | Tool | Purpose | Use when... |
 |------|---------|-------------|
-| `list_all_entities({ entityType })` | Fetch all entities of a type (minimal fields) | You want a quick inventory -- "show me all our playbooks" |
+| `list_all_entities({ entityType })` | Fetch all entities of a type (minimal fields) | You want a quick inventory -- "show me all our personas" |
 | `list_entities({ entityType })` | Fetch entities with full data (paginated) | You need the actual content -- "get full proof point details" |
 | `get_entity({ oId })` | Deep dive on one specific entity | You found something relevant and need the complete picture |
+| `list_motions()` | List Motions in the workspace | You want the Motion-era equivalent of "show me all our playbooks" |
+| `list_motion_icps({ motionOId })` | The persona × segment matrix under a Motion | You want to see which Motion ICP cells cover this audience |
+| `find_motion_icp({ motionIcpOId })` | Full Motion ICP cell narrative | You need the Strategic narrative / Pains / Benefits for a specific persona × segment |
 | `search_knowledge_base({ query })` | Semantic search across library + resources | You have a concept or question -- "how do we position for healthcare?" |
 | `list_resources()` / `search_resources({ query })` | Uploaded docs, URLs, Google Drive files | You need reference material, uploaded assets, or source docs |
 
@@ -34,9 +37,10 @@ Start with company and person enrichment, then pull positioning context:
 | Person deep-dive | `enrich_person({ person: { email, firstName, lastName, companyDomain } })` | When a specific person is the recipient |
 | Key contacts | `find_person({ searchMode: "people", companyDomain, fuzzyTitles })` | When you need to identify the right stakeholder(s) |
 | ICP fit scoring | `qualify_company({ companyDomain })` | When you need to frame "why us" for this account |
-| Matching playbook | `search_knowledge_base({ query: "<industry> <persona>", entityTypes: ["playbook"] })` | To find the best-fit messaging framework |
-| Playbook + value props | `get_playbook({ oId, includeValueProps: true })` | After finding a relevant playbook -- gets full content + value props |
-| Value props | `list_value_props({ playbookOId })` | Fetch value props for a specific playbook |
+| Motions for offering | `list_motions()` | Find the Motion(s) covering this offering |
+| Motion ICP matrix | `list_motion_icps({ motionOId })` | Pick the persona × segment cell that matches this account |
+| Motion ICP cell narrative | `find_motion_icp({ motionIcpOId, includeLearnings: true })` | Drives the "why us / our approach" section (Strategic narrative, Benefits and impacts) |
+| Custom Motion Playbooks | `list_motion_playbooks({ motionOId })` + `get_motion_playbook` | Pull Thematic / Milestone / Account / Competitive angles layered on the Motion |
 | Proof points | `list_entities({ entityType: "proof_point" })` | Fetch proof points with full data -- metrics, quotes, logos |
 | References | `list_entities({ entityType: "reference" })` | Fetch customer references with full details |
 | Topic-specific proof | `search_knowledge_base({ query: "<industry> results", entityTypes: ["proof_point", "reference"] })` | When you need proof points *about* a specific topic or industry |
@@ -55,8 +59,9 @@ When the target is a segment description rather than a specific company:
 
 | What you need | Tool | When to use |
 |---------------|------|-------------|
-| Matching playbook | `search_knowledge_base({ query: "<segment description>", entityTypes: ["playbook"] })` | Find the playbook for this segment |
-| Playbook + value props | `get_playbook({ oId, includeValueProps: true })` | Full messaging framework for the segment |
+| Motions for offering | `list_motions()` | Find the Motion(s) covering offerings that target this segment |
+| Motion ICP cells for segment | `list_motion_icps({ motionOId })` | Identify cells where this segment is the segment side of the persona × segment intersection |
+| Motion ICP cell narrative | `find_motion_icp({ motionIcpOId, includeLearnings: true })` | Full per-cell narrative for the segment-specific buyer |
 | Personas | `list_entities({ entityType: "persona" })` | Understand who the typical buyer is in this segment |
 | Segments | `list_all_entities({ entityType: "segment" })` | Quick scan to match the description to a defined segment |
 | Proof points | `list_entities({ entityType: "proof_point" })` | Fetch proof points relevant to this segment |

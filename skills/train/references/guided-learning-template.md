@@ -38,7 +38,7 @@ LESSON 3: How to Open
 
 LESSON 4: Value Props That Work
 ---------------------------------
-[Top value props from playbook, with proof points]
+[Top value props from the Motion ICP's Benefits and impacts section, with proof points]
 
 From the field:
 - [What's been resonating in real conversations]

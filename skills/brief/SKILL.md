@@ -5,7 +5,7 @@ description: Account dossier and call prep document rendered as a scannable HTML
 
 # /octave:brief - Account Dossier & Call Prep Builder
 
-Build beautiful, self-contained HTML account briefs powered by your Octave GTM intelligence. Designed to sit on your second monitor during a call or to review before a meeting. Unlike plain-text research, briefs render as scannable, styled reference documents with sticky navigation, collapsible sections, and print-friendly layout — grounded in real enrichment data, playbook strategy, proof points, and conversation intel.
+Build beautiful, self-contained HTML account briefs powered by your Octave GTM intelligence. Designed to sit on your second monitor during a call or to review before a meeting. Unlike plain-text research, briefs render as scannable, styled reference documents with sticky navigation, collapsible sections, and print-friendly layout — grounded in real enrichment data, Motion ICP narrative, proof points, and conversation intel.
 
 This is an **internal** document for the sales team, not customer-facing collateral.
 
@@ -37,7 +37,7 @@ This is an **internal** document for the sales team, not customer-facing collate
 
 | Occasion | Output Focus |
 |----------|--------------|
-| `discovery` | Company snapshot, ICP fit, discovery questions, playbook strategy, qualification checklist |
+| `discovery` | Company snapshot, ICP fit, discovery questions, Motion ICP narrative, qualification checklist |
 | `demo` | Stakeholder cards, value props, proof points, competitive landmines, demo flow |
 | `follow-up` | Recent signals from calls, deal timeline, open items, next steps |
 | `qbr` | Deal timeline, recent signals, proof points, value delivered, renewal/expansion angles |
@@ -81,7 +81,7 @@ Each occasion changes which sections are emphasized and which are de-emphasized 
 
 Based on the target and occasion, use Octave MCP tools to build a complete intelligence picture. **Tell the user what you're researching and why.**
 
-**Call as many tools as needed to build a thorough brief.** The best briefs layer multiple sources — company enrichment + person enrichment + playbook messaging + proof points + conversation intel all combine to create a document grounded in real data. Don't stop at one tool when several would give you a stronger brief.
+**Call as many tools as needed to build a thorough brief.** The best briefs layer multiple sources — company enrichment + person enrichment + Motion ICP narrative + proof points + conversation intel all combine to create a document grounded in real data. Don't stop at one tool when several would give you a stronger brief.
 
 Not every tool applies to every brief. Use your judgment about which are relevant to *this specific* situation. The tables below show what's available — pick the combination that gives you the richest context for the occasion and target.
 
@@ -120,8 +120,9 @@ Start with person and company enrichment, then pull positioning context:
 | ICP fit (person) | `qualify_person({ person: { ... } })` | When you need persona match and fit assessment |
 | ICP fit (company) | `qualify_company({ companyDomain })` | When you need segment match and ICP scoring |
 | Additional contacts | `find_person({ searchMode: "people", companyDomain, fuzzyTitles })` | When you want to map the broader buying committee |
-| Matching playbook | `get_playbook({ oId, includeValueProps: true })` | After identifying relevant playbook — full strategy + value props |
-| Playbook search | `search_knowledge_base({ query: "<industry> <persona>", entityTypes: ["playbook"] })` | When you need the best-fit playbook by concept |
+| Find Motion | `list_motions()` | List all Motions to find the relevant offering + motion type |
+| Persona × segment matrix | `list_motion_icps({ motionOId })` | See the persona × segment cells available under a Motion |
+| Motion ICP narrative | `find_motion_icp({ motionIcpOId, includeLearnings: true })` | Pull the full Target ICP overview, Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References, and Learning Loop learnings for the target persona × segment |
 | Proof points | `list_entities({ entityType: "proof_point" })` | Fetch all proof points with full data — metrics, quotes, logos |
 | References | `list_entities({ entityType: "reference" })` | Customer references with full details |
 | Competitive context | `search_knowledge_base({ query: "<signals>", entityTypes: ["competitor"] })` | When competitor is mentioned or likely in the deal |
@@ -141,9 +142,10 @@ Start with company enrichment and contact discovery:
 | ICP fit scoring | `qualify_company({ companyDomain })` | Always — segment match, fit score, fit reasons |
 | Key contacts | `find_person({ searchMode: "people", companyDomain, fuzzyTitles })` | Find stakeholders to populate the Stakeholders section |
 | Enrich contacts | `enrich_person({ person: { ... } })` | Deep dive on each key contact found |
-| All playbooks | `list_all_entities({ entityType: "playbook" })` | Quick scan to find the right strategic approach |
-| Playbook details | `get_playbook({ oId, includeValueProps: true })` | Full content + value props for the matching playbook |
-| Value props | `list_value_props({ playbookOId })` | Fetch value props for the recommended playbook |
+| All Motions | `list_motions()` | Quick scan to find the right Motion (offering + motion type) |
+| Motion ICP matrix | `list_motion_icps({ motionOId })` | See the persona × segment matrix under a Motion |
+| Motion ICP narrative | `find_motion_icp({ motionIcpOId, includeLearnings: true })` | Full Target ICP overview, Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References, plus Learning Loop learnings for the target cell |
+| Custom Motion Playbook details | `get_motion_playbook({ motionPlaybookOId })` | When a Custom Motion Playbook (Thematic / Milestone / Account / Competitive) layers on the relevant Motion |
 | All competitors | `list_all_entities({ entityType: "competitor" })` | Quick scan of competitive landscape |
 | Competitor details | `get_entity({ oId })` | Deep dive on a specific relevant competitor |
 | Proof points | `list_entities({ entityType: "proof_point" })` | Full proof points for the evidence section |
@@ -357,8 +359,11 @@ Want me to:
 - `list_all_entities` — Quick scan of all entities of a type (minimal fields, no pagination)
 - `list_entities` — Fetch entities with full data and pagination (proof points, references, etc.)
 - `get_entity` — Deep dive on one specific entity
-- `get_playbook` — Retrieve a playbook with full content and value props
-- `list_value_props` — Value propositions for a specific playbook
+- `list_motions` — List all Motions in the workspace
+- `list_motion_playbooks` — List Motion Playbooks (Default + Custom) under a Motion
+- `get_motion_playbook` — Full details for a Motion Playbook
+- `list_motion_icps` — List Motion ICP cells (persona × segment intersections) for a Motion
+- `find_motion_icp` — Full Motion ICP cell narrative (Target ICP overview, Operating landscape, Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References) plus Learning Loop learnings
 
 ### Library — Searching
 - `search_knowledge_base` — Semantic search across library entities and resources
@@ -399,15 +404,15 @@ Want me to:
 > 2. Search for them on LinkedIn (provide URL)
 > 3. Create a brief based on their title and company alone
 
-**No Matching Playbook:**
-> No playbook matches this audience profile directly.
+**No Matching Motion ICP:**
+> No Motion ICP cell matches this audience profile directly.
 >
-> I'll use your general value props and positioning from the knowledge base. Consider creating a playbook for this segment: `/octave:library create playbook`
+> I'll use general positioning from the knowledge base. Consider creating a Motion for this offering, or layering a Custom Motion Playbook (Thematic / Milestone / Account / Competitive) onto an existing Motion to cover this segment.
 
 **No Findings Data:**
 > No conversation signals found for [company/person].
 >
-> This may be a new prospect with no prior interactions. I'll skip the Recent Signals and Deal Timeline sections and focus on enrichment data, playbook strategy, and proof points instead.
+> This may be a new prospect with no prior interactions. I'll skip the Recent Signals and Deal Timeline sections and focus on enrichment data, Motion ICP narrative, and proof points instead.
 
 **No Proof Points:**
 > No proof points found in your library.

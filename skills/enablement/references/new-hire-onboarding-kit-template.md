@@ -55,7 +55,7 @@ Common loss factors:
 
 6. PLAYBOOKS
 ------------
-[For each playbook: 2-3 sentence summary and when to use]
+[For each Motion / Motion Playbook: 2-3 sentence summary and when to use]
 
 ---
 

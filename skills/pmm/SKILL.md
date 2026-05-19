@@ -301,7 +301,7 @@ For the full interactive mode selector, use `/octave:generate`.
 | Blog Post | Topic, angle, persona | Use cases, proof points, messaging |
 | Datasheet | Product | Product (features, specs, capabilities) |
 | FAQ | Product/topic | Common objections, use cases |
-| Sales Deck | Product, persona, playbook | Playbook (narrative, value props), product |
+| Sales Deck | Offering, persona, Motion | Motion ICP narrative (Strategic narrative, Benefits and impacts), offering |
 
 ## Error Handling
 

@@ -5,7 +5,7 @@ description: Build messaging frameworks, positioning statements, messaging matri
 
 # /octave:messaging - Messaging Framework Builder
 
-Generate structured messaging frameworks — positioning statements, messaging matrices, elevator pitches, and narrative arcs — all derived from your library's products, personas, playbooks, and competitive intelligence.
+Generate structured messaging frameworks — positioning statements, messaging matrices, elevator pitches, and narrative arcs — all derived from your library's products, personas, Motion ICP cells, and competitive intelligence.
 
 ## Usage
 
@@ -74,9 +74,10 @@ list_all_entities({ entityType: "competitor" })
 # Get full product details
 get_entity({ oId: "<product_oId>" })
 
-# Get all playbooks and value props
-list_all_entities({ entityType: "playbook" })
-get_playbook({ oId: "<playbook_oId>", includeValueProps: true })
+# Get the Motion(s) and Motion ICP narratives for this offering
+list_motions()
+list_motion_icps({ motionOId: "<motion_oId>" })
+find_motion_icp({ motionIcpOId: "<motion_icp_oId>", includeLearnings: true })  # per persona × segment narrative
 
 # Get proof points for evidence
 search_knowledge_base({
@@ -136,7 +137,7 @@ What would you like to do next?
 
 1. Generate another messaging artifact
 2. Create a persona-specific version
-3. Save key messages to a playbook as value props
+3. Save key messages back into Motion ICP narratives (Strategic narrative, Benefits and impacts, etc.)
 4. Generate campaign content from this messaging
 5. Export this framework
 6. Done
@@ -144,11 +145,12 @@ What would you like to do next?
 
 If the user wants to save messaging back to the library:
 ```
-# Update playbook value props
-add_value_props({
-  playbookOId: "<playbook_oId>",
-  instructions: "<key messages to add>",
-  numValuesPerPersona: 3
+# Fold the new messaging into the relevant Motion Playbook's Motion ICP narrative sections
+# (Strategic narrative, Benefits and impacts, Pains and consequences) for the targeted
+# persona × segment cells.
+update_motion_playbook({
+  motionPlaybookOId: "<motion_playbook_oId>",
+  instructions: "Update Strategic narrative and Benefits and impacts for the [persona] × [segment] cell(s) to incorporate: <key messages>"
 })
 
 # Or update product positioning
@@ -164,17 +166,20 @@ update_entity({
 ### Library Context
 - `list_all_entities` - List products, personas, segments, use cases, competitors
 - `get_entity` - Get full entity details
-- `get_playbook` - Get playbook with value props
-- `list_value_props` - Get existing value propositions
 - `search_knowledge_base` - Find proof points, references, competitive intel
 - `list_all_entities` (entityType: "brand_voice") - Brand voice for tone consistency
 - `list_findings` - What resonates in real conversations
+
+### Motions
+- `list_motions` - Motions for the offering
+- `list_motion_icps` - Persona × segment matrix
+- `find_motion_icp` - Per-cell narrative + Learning Loop learnings
 
 ### Content Generation
 - `generate_content` - Generate messaging artifacts
 
 ### Library Updates
-- `add_value_props` - Save new value props to playbooks
+- `update_motion_playbook` - Save messaging into Motion Playbook narrative sections (Strategic narrative, Benefits and impacts, Pains and consequences) for the targeted Motion ICP cells
 - `update_entity` - Update product positioning
 
 ## Error Handling

@@ -46,7 +46,7 @@ KEY MOMENTS
 -----------
 
 Moment: "[Quote from the conversation]"
-Assessment: [What worked or didn't, with reference to playbook guidance]
+Assessment: [What worked or didn't, with reference to Motion ICP narrative guidance]
 
 Moment: "[Another quote]"
 Assessment: [Feedback]
@@ -55,9 +55,9 @@ Assessment: [Feedback]
 
 OBJECTIONS ENCOUNTERED
 -----------------------
-| Objection | Your Response | Ideal Response (from playbook) |
+| Objection | Your Response | Ideal Response (from Motion ICP narrative) |
 |-----------|--------------|-------------------------------|
-| "[Objection 1]" | [What they said] | [What the playbook suggests] |
+| "[Objection 1]" | [What they said] | [What the Motion ICP narrative suggests] |
 | "[Objection 2]" | [What they said] | [Better approach] |
 
 ---

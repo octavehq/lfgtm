@@ -88,7 +88,7 @@ If a specific section was requested, confirm and proceed directly.
 
 Gather all library intelligence in a single pass. **Tell the user what you're researching and why.** All 8 sections share the same data pool — gather once, render many.
 
-**Call as many tools as needed to build a complete picture.** The best positioning systems come from layering multiple sources — product details + persona definitions + playbook messaging + competitive context + proof points + conversation evidence all combine to create frameworks grounded in real data.
+**Call as many tools as needed to build a complete picture.** The best positioning systems come from layering multiple sources — product details + persona definitions + Motion ICP cell narratives + competitive context + proof points + conversation evidence all combine to create frameworks grounded in real data.
 
 **List vs Search — when to use which:**
 
@@ -117,12 +117,15 @@ Every section needs data from the library. Gather it all up front:
 | All use cases | `list_entities({ entityType: "use_case" })` | 1, 3, 6, 7 |
 | All competitors | `list_all_entities({ entityType: "competitor" })` | 2, 3, 6 |
 | Competitor details | `get_entity({ oId })` | 3, 6 |
-| All playbooks | `list_all_entities({ entityType: "playbook" })` | 1, 2, 4, 5, 8 |
-| Playbook + value props | `get_playbook({ oId, includeValueProps: true })` | 1, 2, 4, 5, 8 |
+| All Motions | `list_motions()` | 1, 2, 4, 5, 8 |
+| Motion Playbooks under a Motion | `list_motion_playbooks({ motionOId })` | 1, 2, 4, 5, 8 |
+| Full Motion Playbook | `get_motion_playbook({ motionPlaybookOId })` | 1, 2, 4, 5, 8 |
+| Persona × segment matrix | `list_motion_icps({ motionOId })` | 1, 3, 4, 5, 8 |
+| Motion ICP cell narrative | `find_motion_icp({ motionIcpOId, includeLearnings: true })` | 1, 2, 4, 5, 8 |
 | Proof points | `list_entities({ entityType: "proof_point" })` | 2, 3, 5 |
 | References | `list_entities({ entityType: "reference" })` | 2, 3 |
 | Brand voice | `list_all_entities(entityType: "brand_voice")` | 8 (homepage tone) |
-| Competitive positioning | `search_knowledge_base({ query: "<product> differentiation competitive advantage", entityTypes: ["competitor", "playbook"] })` | 2, 3, 6 |
+| Competitive positioning | `search_knowledge_base({ query: "<product> differentiation competitive advantage", entityTypes: ["competitor"] })` | 2, 3, 6 |
 | What resonates | `list_findings({ query: "value propositions positive reactions resonated", startDate: "<90 days ago>", eventFilters: { sentiments: ["POSITIVE"] } })` | 2, 5 |
 | What falls flat | `list_findings({ query: "objections pushback concerns", startDate: "<90 days ago>", eventFilters: { sentiments: ["NEGATIVE"] } })` | 3, 5 |
 
@@ -140,7 +143,7 @@ Target Segments: [List]
 Target Personas: [List with roles]
 Use Cases: [List]
 Competitors: [List]
-Playbooks: [N] with [N] value props
+Motions: [N] with [N] Motion ICP cells across Default + Custom Motion Playbooks
 Proof Points: [N] available
 Conversation Evidence: [N] positive findings, [N] negative findings
 
@@ -183,7 +186,7 @@ Octave Sources Used:
 - Segments: [list]
 - Use Cases: [list]
 - Competitors: [list]
-- Playbooks: [list] with [N] value props
+- Motions: [list] with [N] Motion ICP cells
 - Proof Points: [N]
 - Conversation Findings: [N]
 
@@ -342,22 +345,29 @@ update_entity({
   instructions: "Update positioning to: [primary positioning anchor]. Category: [category]. Primary value prop: [primary VP]."
 })
 
-# Add or update value props in playbook
-add_value_props({
-  playbookOId: "<playbook_oId>",
-  instructions: "<persona-specific value props from the message framework>",
-  numValuesPerPersona: 3
+# Fold the positioning system into Motion Playbook narrative sections (Strategic narrative,
+# Benefits and impacts, Pains and consequences) for the Motion ICP cells in scope.
+# A positioning exercise typically updates the Default Motion Playbook of the offering's Motion,
+# touching every persona × segment cell to reflect the new anchors and persona messaging.
+update_motion_playbook({
+  motionPlaybookOId: "<motion_playbook_oId>",
+  instructions: "Update Strategic narrative and Benefits and impacts across all Motion ICP cells to reflect: primary anchor = [...], persona-specific messages = [...]."
 })
 ```
 
 ## MCP Tools Used
 
 ### Library — Fetching Entities
-- `list_all_entities` — Quick scan of all entities of a type (products, personas, segments, use cases, competitors, playbooks)
+- `list_all_entities` — Quick scan of all entities of a type (products, personas, segments, use cases, competitors)
 - `list_entities` — Fetch entities with full data and pagination (personas, proof points, references, use cases)
 - `get_entity` — Deep dive on one specific entity (product, competitor)
-- `get_playbook` — Retrieve a playbook with full content and value props
-- `list_value_props` — Value propositions for a specific playbook
+
+### Motions
+- `list_motions` — Motions for the offering
+- `list_motion_playbooks` — Default + Custom Motion Playbooks under a Motion
+- `get_motion_playbook` — Full Motion Playbook details
+- `list_motion_icps` — Persona × segment matrix
+- `find_motion_icp` — Per-cell narrative + Learning Loop learnings
 
 ### Library — Searching
 - `search_knowledge_base` — Semantic search across library entities and resources (competitive positioning, differentiation)
@@ -372,7 +382,7 @@ add_value_props({
 
 ### Library Updates (Post-Generation)
 - `update_entity` — Save positioning statements back to product entity
-- `add_value_props` — Save value props to playbooks
+- `update_motion_playbook` — Fold positioning into Motion Playbook narrative sections (Strategic narrative, Benefits and impacts, Pains and consequences) across the Motion's ICP cells
 
 ## Error Handling
 
@@ -394,10 +404,10 @@ add_value_props({
 > Sections 6 (Use Case Canvas) and 7 (Use Case Lifecycle) require use cases. I'll skip them and generate the other 6 sections.
 > Run `/octave:library create use_case` to add use cases.
 
-**No Playbooks or Value Props:**
-> No playbooks or value propositions found.
+**No Motions or Motion ICP Cells:**
+> No Motions or Motion ICP cells found.
 >
-> The Message Framework and Persona Messaging sections will use product-level information only. For richer output, create a playbook with value propositions.
+> The Message Framework and Persona Messaging sections will use product-level information only. For richer output, create a Motion in the Motion builder (which auto-generates a Default Motion Playbook covering the persona × segment matrix), then re-run this skill.
 
 **No Competitors Found:**
 > No competitors in your library.

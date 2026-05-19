@@ -44,9 +44,9 @@ COVERAGE GAPS
 -------------
 [Identify persona × use case combinations with weak or missing messaging]
 ⚠ [Persona X] × [Use Case Y]: No proof points available
-⚠ [Persona X] × [Use Case Z]: No playbook coverage
+⚠ [Persona X] × [Use Case Z]: No Motion ICP narrative coverage
 
 ---
 
-Sources: [Personas, use cases, playbooks, proof points]
+Sources: [Personas, use cases, Motion ICPs, proof points]
 ```

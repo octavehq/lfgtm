@@ -5,12 +5,12 @@ description: Plan and generate multi-channel campaign content including email se
 
 # /octave:campaign - Campaign Architect
 
-Plan and generate integrated campaign content across channels — emails, LinkedIn, ads, social, blog, and landing pages — all grounded in your library's personas, playbooks, competitive positioning, and proof points.
+Plan and generate integrated campaign content across channels — emails, LinkedIn, ads, social, blog, and landing pages — all grounded in your library's personas, Motion ICP narratives, competitive positioning, and proof points.
 
 ## Usage
 
 ```
-/octave:campaign [topic] [--channels <list>] [--persona <name>] [--playbook <name>]
+/octave:campaign [topic] [--channels <list>] [--persona <name>] [--motion <name>]
 ```
 
 ## Examples
@@ -19,7 +19,7 @@ Plan and generate integrated campaign content across channels — emails, Linked
 /octave:campaign                                             # Interactive mode
 /octave:campaign "AI feature launch"                         # Campaign around a topic
 /octave:campaign "Q1 pipeline push" --persona "VP Engineering"
-/octave:campaign "competitive displacement" --playbook "Enterprise" --channels email,linkedin,ads
+/octave:campaign "competitive displacement" --motion "Enterprise Outbound" --channels email,linkedin,ads
 /octave:campaign "customer expansion" --channels email,social
 ```
 
@@ -80,7 +80,7 @@ Let's shape this campaign. A few questions:
    [List products from library]
 
 3. Key message or angle?
-   [Suggest based on playbook value props or "custom"]
+   [Suggest based on the matched Motion ICP narrative (Strategic narrative, Benefits and impacts) or "custom"]
 
 4. Which channels?
    [email, linkedin, ads, social, blog, landing-page]
@@ -106,9 +106,10 @@ get_entity({ oId: "<persona_oId>" })
 # Get product details
 get_entity({ oId: "<product_oId>" })
 
-# Get matching playbook and value props
-search_knowledge_base({ query: "<campaign topic> <persona>", entityTypes: ["playbook"] })
-get_playbook({ oId: "<playbook_oId>", includeValueProps: true })
+# Find the right Motion and Motion ICP cell for this campaign
+list_motions()
+list_motion_icps({ motionOId: "<motion_oId>" })
+find_motion_icp({ motionIcpOId: "<motion_icp_oId>", includeLearnings: true })
 
 # Get proof points for credibility
 search_knowledge_base({ query: "<campaign topic>", entityTypes: ["proof_point", "reference"] })
@@ -277,10 +278,13 @@ For the full interactive mode selector, use `/octave:generate`.
 ## MCP Tools Used
 
 ### Library Context
-- `list_all_entities` - List available personas, products, playbooks
+- `list_all_entities` - List available personas, products
 - `get_entity` - Get full entity details
-- `get_playbook` - Get playbook with value props
-- `list_value_props` - Get value propositions
+- `list_motions` - List all Motions in the workspace
+- `list_motion_icps` - List Motion ICP cells (persona × segment intersections) for a Motion
+- `find_motion_icp` - Get full Motion ICP cell narrative (Target ICP overview, Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References) plus Learning Loop learnings
+- `list_motion_playbooks` - List Default + Custom Motion Playbooks under a Motion (when a Thematic / Milestone / Account / Competitive angle applies)
+- `get_motion_playbook` - Full details for a Motion Playbook
 - `search_knowledge_base` - Find proof points, references, messaging
 - `list_all_entities` (entityType: "brand_voice") - Get brand voice for consistency
 - `list_writing_styles` - Get writing style guidelines
@@ -297,11 +301,11 @@ For the full interactive mode selector, use `/octave:generate`.
 > Campaigns work best when grounded in persona intelligence.
 > Run `/octave:library create persona` to add one, or I can generate generic campaign content.
 
-**No Playbooks Found:**
-> No playbooks found matching this campaign topic.
+**No Matching Motion ICP:**
+> No Motion ICP cell matches this campaign topic and persona.
 >
 > I'll use your product and persona information to ground the messaging.
-> For better results, create a playbook: `/octave:library create playbook`
+> For better results, create a Motion for this offering, or layer a Custom Motion Playbook (Thematic / Milestone / Account / Competitive) onto an existing Motion that covers this segment.
 
 **Single Channel Request:**
 > If the user only wants one channel (e.g., "just emails"), generate that channel

@@ -47,7 +47,10 @@
 | All segments | `list_all_entities({ entityType: "segment" })` | Segment breakdown analysis |
 | All personas | `list_all_entities({ entityType: "persona" })` | Persona win rate analysis |
 | Proof points | `list_entities({ entityType: "proof_point" })` | Evidence for "what's working" section |
-| Playbook strategies | `search_knowledge_base({ query: "win loss competitive positioning" })` | Recommendations grounded in existing playbooks |
+| All Motions | `list_motions()` | Inventory of Motions for Motion-level win rate analysis |
+| Motion ICP cells | `list_motion_icps({ motionOId })` | Cell-level breakdown (persona × segment) |
+| Motion ICP narrative | `find_motion_icp({ motionIcpOId, includeLearnings: true })` | Recommendations grounded in Motion ICP narrative + Learning Loop learnings |
+| Positioning context | `search_knowledge_base({ query: "win loss competitive positioning" })` | Semantic search for positioning across the library |
 | Uploaded deal data | `search_resources({ query: "deal data CRM export" })` | Supplementary deal data from uploaded files |
 
 ---
@@ -59,4 +62,4 @@
 | Competitor profile | `get_entity({ oId })` | Full competitor context |
 | Deals vs competitor | `list_events({ filters: { eventTypes: ["DEAL_WON", "DEAL_LOST"], competitors: ["<oId>"] } })` | Win/loss record against this competitor |
 | Findings mentioning competitor | `list_findings({ entityMatches: { competitorOIds: ["<oId>"] }, startDate })` | Real objections and mentions from calls |
-| Competitive positioning | `search_knowledge_base({ query: "<competitor> differentiation", entityTypes: ["playbook", "competitor"] })` | Existing positioning guidance |
+| Competitive positioning | `search_knowledge_base({ query: "<competitor> differentiation", entityTypes: ["competitor"] })` | Existing positioning guidance |

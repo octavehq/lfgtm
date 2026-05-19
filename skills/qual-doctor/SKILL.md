@@ -75,10 +75,10 @@ Mode:       Company qualification
 Run via:    "Qualify Company Agent" (ca_xxx)
 Model:      PULSE
 Sections:
-  Product  → BEST_MATCH (scores, contributes to overall)
-  Segment  → BEST_MATCH (scores, contributes to overall)
-  Playbook → BEST_MATCH (scores, DOES NOT contribute to overall)
-  Persona  → OFF
+  Product → BEST_MATCH (scores, contributes to overall)
+  Segment → BEST_MATCH (scores, contributes to overall)
+  Motion  → BEST_MATCH (scores, DOES NOT contribute to overall)
+  Persona → OFF
 ```
 
 For raw tools, all sections are active by default.
@@ -94,7 +94,7 @@ AskUserQuestion({
     options: [
       { label: "Product/Offering", description: "Tune product-fit scoring (does this company need our product?)" },
       { label: "Segment", description: "Tune segment matching + scoring" },
-      { label: "Playbook", description: "Tune playbook ICP matching + scoring" },
+      { label: "Motion", description: "Tune Motion ICP matching + scoring (persona × segment cells)" },
       { label: "All active sections", description: "Tune all sections that are enabled" }
     ],
     multiSelect: true
@@ -110,12 +110,12 @@ For each selected section, list the entities in the library:
 - Product/Offering → `list_all_entities({ entityType: "product" })`
 - Persona → `list_all_entities({ entityType: "persona" })`
 - Segment → `list_all_entities({ entityType: "segment" })`
-- Playbook → `list_all_entities({ entityType: "playbook" })`
+- Motion → `list_motions()` (then `list_motion_icps({ motionOId })` to see the persona × segment cells the agent matches against)
 
 **Determine tuning mode based on entity count:**
 
 - **Single entity** (e.g., 1 product): **Score-only mode** — we're tuning the scoring questions on that one entity. Routing is trivial since there's only one option.
-- **Multiple entities** (e.g., 3 personas, 2 segments): **Routing + Scoring mode** — we're tuning both *which entity gets matched* AND *the score it receives*. This is the more common case for personas, segments, and playbooks.
+- **Multiple entities** (e.g., 3 personas, 2 segments): **Routing + Scoring mode** — we're tuning both *which entity gets matched* AND *the score it receives*. This is the more common case for personas, segments, and Motion ICP cells.
 
 For **Routing + Scoring mode**, show all entities with brief descriptions so the user understands the routing landscape:
 
@@ -199,7 +199,7 @@ For person qual: name + company + domain (and job title if known)
 **For Routing + Scoring mode** (multi-entity sections), also ask which entity each test case should match:
 
 ```
-I also need to know which [persona/segment/playbook] each test case should be
+I also need to know which [persona/segment/motion] each test case should be
 routed to. For each, tell me:
 - The expected entity match (which one SHOULD be selected)
 - The expected score band (how well they should score against that entity)
@@ -238,7 +238,7 @@ Calculate credits per run from the agent config (or raw tool defaults):
 | Base (includes product/offering) | 1 | Always included |
 | + Segment section | +1 | `entities.segment.strategy === "BEST_MATCH"` |
 | + Persona section | +1 | `entities.persona.strategy === "BEST_MATCH"` |
-| + Playbook section | +1 | `entities.playbook.strategy === "BEST_MATCH"` |
+| + Motion section | +1 | `entities.motion.strategy === "BEST_MATCH"` |
 | + High effort mode | +4 | `tools.highEffortMode.enabled === true` |
 | + Deep research | +8 | `tools.parallelWebSearch.enabled === true` |
 | + CRM activity | +10 | `tools.crmActivity.enabled === true` |
@@ -281,7 +281,7 @@ or
 qualify_person({ person: { firstName: "...", lastName: "...", jobTitle: "...", companyDomain: "..." } })
 ```
 
-Show progress. **IMPORTANT: Always show the SUB-SCORE for the section being tuned, NOT the overall score.** If tuning product fit, show the product section score. The overall score is influenced by other sections (segment, playbook, persona) that we're not tuning right now — showing it would be misleading.
+Show progress. **IMPORTANT: Always show the SUB-SCORE for the section being tuned, NOT the overall score.** If tuning product fit, show the product section score. The overall score is influenced by other sections (segment, motion, persona) that we're not tuning right now — showing it would be misleading.
 
 ```
 Running qualification...
@@ -292,7 +292,7 @@ Running qualification...
 
 **Store the full response for each test case** — especially the per-question `answers[]` array within the target section's `qualification` object. Extract the section-level score from the target section, not the top-level overall score.
 
-**For persona/segment/playbook sections**, also store which entity was selected to evaluate selection accuracy separately.
+**For persona/segment/motion sections**, also store which entity was selected to evaluate selection accuracy separately.
 
 #### Present Results Grid
 
@@ -514,7 +514,7 @@ Credits per qualification run = sum of active components:
 | Base (includes product/offering) | 1 |
 | + Segment section | +1 |
 | + Persona section | +1 |
-| + Playbook section | +1 |
+| + Motion section | +1 |
 | + High effort mode | +4 |
 | + Deep research | +8 |
 | + CRM activity | +10 |

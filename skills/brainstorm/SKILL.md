@@ -1,11 +1,11 @@
 ---
 name: brainstorm
-description: Brainstorm campaigns, playbook ideas, lead magnets, CTAs, and growth experiments using your GTM library. Use when user says "brainstorm ideas", "campaign ideas", "growth experiments", "what content should we create", or asks for creative ideation.
+description: Brainstorm campaigns, Custom Motion Playbook angles, lead magnets, CTAs, and growth experiments using your GTM library. Use when user says "brainstorm ideas", "campaign ideas", "growth experiments", "what content should we create", or asks for creative ideation.
 ---
 
 # /octave:brainstorm - GTM Ideation Engine
 
-Interactive brainstorming for campaigns, playbook concepts, lead magnets, CTAs, offers, and growth experiments—all grounded in your Octave library context.
+Interactive brainstorming for campaigns, Custom Motion Playbook angles (Thematic / Milestone / Account / Competitive), lead magnets, CTAs, offers, and growth experiments—all grounded in your Octave library context.
 
 ## Usage
 
@@ -19,7 +19,7 @@ Interactive brainstorming for campaigns, playbook concepts, lead magnets, CTAs, 
 /octave:brainstorm                           # Open-ended, asks what to brainstorm
 /octave:brainstorm campaigns for enterprise  # Campaign ideas for enterprise segment
 /octave:brainstorm lead magnets              # Content offer ideas
-/octave:brainstorm playbook pack             # Generate playbook concepts for TAM
+/octave:brainstorm motion playbook pack      # Generate Custom Motion Playbook angles for TAM
 /octave:brainstorm CTAs for CFOs             # Call-to-action ideas for persona
 ```
 
@@ -35,7 +35,7 @@ If no topic provided, ask:
 What would you like to brainstorm?
 
 1. Campaign Ideas - Outreach campaigns for specific segments/personas
-2. Playbook Concepts - New playbook ideas to cover your TAM
+2. Motion Playbook Concepts - Custom Motion Playbook angles (Thematic / Milestone / Account / Competitive) to layer on existing Motions, or new Motions for offerings that don't have one
 3. Lead Magnets - Content offers to attract prospects
 4. CTAs & Offers - Calls-to-action and promotional offers
 5. Growth Experiments - Test ideas to improve conversion
@@ -60,17 +60,18 @@ Use MCP tools based on brainstorm type:
 ```
 - list_all_entities({ entityType: "segment" })
 - list_all_entities({ entityType: "persona" })
-- list_all_entities({ entityType: "playbook" })
+- list_motions()
 - list_all_entities({ entityType: "use_case" })
 ```
 
-**For Playbook Concepts:**
+**For Motion Playbook Concepts:**
 ```
 - list_all_entities({ entityType: "segment" })
 - list_all_entities({ entityType: "persona" })
 - list_all_entities({ entityType: "product" })
 - list_all_entities({ entityType: "use_case" })
-- list_all_entities({ entityType: "playbook" })  # To see existing coverage
+- list_motions()                                  # See existing Motions
+- list_motion_playbooks({ motionOId: "<motion_oId>" })  # See existing Default + Custom Motion Playbooks
 ```
 
 **For Lead Magnets:**
@@ -90,7 +91,7 @@ Use MCP tools based on brainstorm type:
 
 **For Growth Experiments:**
 ```
-- list_all_entities({ entityType: "playbook" })
+- list_motions()
 - list_all_entities({ entityType: "segment" })
 - list_all_entities({ entityType: "persona" })
 ```
@@ -111,16 +112,16 @@ Let me tailor these campaign ideas. Quick questions:
 (Answer any/all, or say "surprise me")
 ```
 
-**For Playbook Pack:**
+**For Motion Playbook Pack:**
 ```
-To generate playbook concepts for your TAM:
+To generate Custom Motion Playbook angles (and possibly new Motions) for your TAM:
 
 1. What verticals/industries should we cover?
 2. Company size focus? (SMB, Mid-market, Enterprise, All)
 3. Any specific use cases to emphasize?
-4. Gaps you've noticed in current playbook coverage?
+4. Gaps you've noticed in current Motion coverage (offerings without a Motion, or Motions that need a Thematic / Milestone / Account / Competitive angle)?
 
-(Share what you know, or I'll analyze your library for gaps)
+(Share what you know, or I'll analyze your Motions for gaps)
 ```
 
 ### Step 4: Generate Ideas
@@ -133,7 +134,7 @@ See [campaign-ideas-output.md](references/campaign-ideas-output.md) for the Camp
 
 ---
 
-See [playbook-pack-output.md](references/playbook-pack-output.md) for the Playbook Pack output template.
+See [playbook-pack-output.md](references/playbook-pack-output.md) for the Motion Playbook Pack output template.
 
 ---
 
@@ -160,34 +161,40 @@ Your choice:
 ```
 
 **If "Save to library":**
-- Campaign → Create as playbook with campaign details in notes
+- Campaign → Capture as a Custom Motion Playbook angle (Thematic / Account / Competitive) on the right Motion
 - Lead Magnet → Create as collateral or resource reference
-- Playbook concept → Use `create_playbook` to generate full playbook
+- Motion Playbook concept → Use `create_motion_playbook` to create a Custom Motion Playbook on the relevant Motion (or recommend a new Motion if the offering doesn't have one)
 
-**For Playbook Creation:**
+**For Custom Motion Playbook Creation:**
 
-1. **First, get available offerings:**
+1. **First, list Motions to find the parent Motion:**
    ```
-   list_all_entities({ entityType: "product" })
+   list_motions()
    ```
 
-2. **Ask user which product/service this playbook is for:**
+2. **Ask user which Motion this Custom Motion Playbook belongs to:**
    ```
-   Which product or service is this playbook for?
+   Which Motion is this Custom Motion Playbook for?
 
-   1. [Product A] (px_abc123)
-   2. [Product B] (px_def456)
+   1. [Motion A] (mt_abc123) — offering: Product A, motion type: Outbound
+   2. [Motion B] (mt_def456) — offering: Product B, motion type: Inbound
 
    Your choice:
    ```
 
-3. **Create the playbook:**
+3. **Pick the narrative type and create:**
+   - `THEMATIC` — a thematic spin (event, season, narrative wedge)
+   - `MILESTONE` — milestone-based (funding, hiring spike, product launch)
+   - `ACCOUNT` — named-account angle
+   - `COMPETITIVE` — displacement / competitive wedge
+
    ```
-   create_playbook({
+   create_motion_playbook({
+     motionOId: "<motion_oId>",
+     narrativeType: "THEMATIC",
      name: "Healthcare Digital Transformation",
-     description: "Sales playbook for healthcare digital transformation targeting CTO/VP IT personas",
-     instructions: "Create a sales playbook for healthcare digital transformation. Target CTO/VP IT personas in healthcare organizations. Focus on HIPAA compliance, interoperability, and patient outcomes. Use the strategic angle of 'secure, compliant foundation for healthcare innovation'.",
-     productOId: "<selected product oId>",
+     description: "Custom Motion Playbook angle for healthcare digital transformation targeting CTO/VP IT personas",
+     instructions: "Layer a healthcare digital transformation angle on top of this Motion. Target CTO/VP IT personas in healthcare organizations. Focus on HIPAA compliance, interoperability, and patient outcomes. Strategic angle: 'secure, compliant foundation for healthcare innovation'.",
      keyContext: "<relevant context from the brainstorm>"
    })
    ```
@@ -197,23 +204,25 @@ Your choice:
 ### Read Operations
 - `list_all_entities` - Get entities for context
 - `get_entity` - Deep dive on specific entities
-- `get_playbook` - Understand existing playbook coverage
+- `list_motions` - See existing Motions
+- `list_motion_playbooks` - Understand existing Motion Playbook coverage (Default + Custom) on a Motion
+- `get_motion_playbook` - Pull narrative details for an existing Motion Playbook
 - `search_knowledge_base` - Find relevant messaging and proof points
 
 ### Write Operations
-- `create_entity` - Create new entities (except playbooks) from ideas
-- `create_playbook` - Create new playbooks with offering association
-- `add_value_props` - Add value props to new playbooks
+- `create_entity` - Create new entities from ideas
+- `create_motion_playbook` - Create Custom Motion Playbooks (Thematic / Milestone / Account / Competitive) layered on an existing Motion
+- `update_motion_playbook` - Edit narrative sections of an existing Motion Playbook
 
 ## Brainstorm Modes Summary
 
 | Mode | Output | Key Inputs |
 |------|--------|------------|
 | Campaigns | 3-5 campaign concepts with hooks, sequences, rationale | Segment, persona, channel |
-| Playbook Pack | 3-7 playbook concepts covering TAM gaps | Current coverage, target markets |
+| Motion Playbook Pack | 3-7 Custom Motion Playbook angles (Thematic / Milestone / Account / Competitive) covering TAM gaps | Current Motion coverage, target markets |
 | Lead Magnets | 3-5 content offer ideas with mechanics | Persona pain points, buying stage |
 | CTAs & Offers | Tiered CTA options + promotional offers | Persona, funnel stage |
-| Growth Experiments | Test hypotheses with success metrics | Current playbooks, conversion goals |
+| Growth Experiments | Test hypotheses with success metrics | Current Motions, conversion goals |
 | Messaging Angles | Alternative positioning approaches | Product, competitors, personas |
 
 ## Error Handling

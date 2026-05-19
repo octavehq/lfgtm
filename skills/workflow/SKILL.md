@@ -526,7 +526,7 @@ This skill dynamically invokes MCP tools based on workflow step definitions. Any
 - `qualify_company` / `qualify_person` - Qualification steps
 - `find_person` / `find_company` - Discovery steps
 - `generate_email` / `generate_content` - Generation steps
-- `get_entity` / `get_playbook` - Library lookup steps
+- `get_entity` / `list_motions` / `list_motion_playbooks` / `get_motion_playbook` / `list_motion_icps` / `find_motion_icp` - Library lookup steps
 - `search_knowledge_base` - Context gathering steps
 - `run_email_agent` / `run_content_agent` - Agent execution steps
 

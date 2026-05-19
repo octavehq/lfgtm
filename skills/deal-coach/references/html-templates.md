@@ -968,7 +968,7 @@ Strategic messaging points with the two-layer pattern: **strategic point** (bold
     <div class="msg-block">
       <p class="msg-point">[N]. [Practical topic — what the talk track is about, in deal language]</p>
       <p style="color: var(--text-secondary); font-size: clamp(0.8rem, 1.1vw, 0.9rem); margin-bottom: 0.5rem;">[When to use this + 1 sentence of context — e.g., "Use early in the conversation to set the stage." or "Use to build urgency after the scale problem lands."]</p>
-      <div class="msg-quote">"[Sample language — shorter than old talk tracks. One way to express the point, grounded in playbook messaging.]"</div>
+      <div class="msg-quote">"[Sample language — shorter than old talk tracks. One way to express the point, grounded in Motion ICP narrative.]"</div>
       <!-- Evidence inline (0-2 proof points per message). Include usage note: deploy now / save for later / already shared -->
       <div class="msg-evidence">
         <span class="msg-evidence-metric">[Metric — e.g., 29%]</span>

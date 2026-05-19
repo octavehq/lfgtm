@@ -27,7 +27,7 @@ STRENGTHS
 
 GAPS TO FOCUS ON
 -----------------
-- [Topic they struggled with] — Review: [specific library entity or playbook section]
+- [Topic they struggled with] — Review: [specific library entity or Motion ICP narrative section]
 - [Another gap] — Practice: [specific recommendation]
 
 ---
@@ -36,7 +36,7 @@ RECOMMENDED NEXT STEPS
 -----------------------
 1. Review [specific entity] in your library: /octave:library show [entity]
 2. Role-play [specific scenario] to practice: /octave:train roleplay --scenario [type]
-3. Read the [playbook name] playbook for [gap area]
+3. Read the [Motion ICP cell] narrative for [gap area]
 
 ---
 

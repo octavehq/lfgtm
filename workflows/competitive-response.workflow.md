@@ -20,15 +20,25 @@ React to competitive changes with updated positioning, displacement campaigns, a
 
 ### Step 1: Get Competitor Intelligence
 
-Pull existing competitive intel from the library.
+Pull existing competitive intel from the library. Use a Motion-centric lookup for competitive narrative content.
 
 - tool: search_knowledge_base
 - params:
   - query: "{{competitor_name}} competitive positioning differentiation"
-  - entityTypes: ["competitor", "playbook", "proof_point"]
+  - entityTypes: ["competitor", "proof_point"]
   - limit: 15
 - save_as: competitor_intel
-- description: Gather all existing competitive intelligence
+- description: Gather competitor entities and proof points
+
+- tool: list_motions
+- save_as: motions
+- description: List Motions to discover Custom Motion Playbooks for this competitor
+
+- tool: list_motion_playbooks
+- params:
+  - motionOId: "{{motions[0].oId}}"
+- save_as: motion_playbooks
+- description: Find Custom Motion Playbooks (filter for `narrativeType === "COMPETITIVE"` matching {{competitor_name}}); fetch each via `get_motion_playbook` for full competitive narrative content
 
 ### Step 2: Analyze Recent Competitive Encounters
 

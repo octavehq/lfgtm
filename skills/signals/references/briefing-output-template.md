@@ -44,7 +44,7 @@ EMERGING PATTERNS ([N])
 Objections Trending Up:
   ↑ "[Objection theme]" — [N] instances this period (up from [M] last period)
     Affected personas: [Persona list]
-    In playbook: [Yes/No — if No, flag as gap]
+    In Motion ICP narrative: [Yes/No — if No, flag as gap]
     Suggested: /octave:enablement objections --topic "[topic]"
 
 Objections Trending Down:
@@ -107,7 +107,7 @@ Stale Content:
 - "[Proof point]" — last cited [N] days ago
 
 Library Gaps Detected:
-- Objection "[X]" raised [N] times but no playbook response exists
+- Objection "[X]" raised [N] times but no Motion ICP / Objection entity response exists
 - Competitor "[Y]" mentioned [N] times but no battlecard exists
 - Persona "[Z]" appeared in [N] deals but isn't in library
 

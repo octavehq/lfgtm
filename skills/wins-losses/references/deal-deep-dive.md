@@ -110,7 +110,7 @@ Update Competitor A battlecard:
 Update CTO persona:
 • Add concern: "Justifying premium pricing"
 
-Update Enterprise playbook:
+Update Enterprise Motion ICP narrative:
 • Add: CFO engagement requirement by Day 30
 • Add: Budget qualification in discovery
 

@@ -26,8 +26,8 @@ OBJECTION BREAKDOWN
    ✓ 2x offered pilot/proof of value
    ✗ 3x no documented response
 
-   Playbook Guidance Available: Partial
-   → Missing: TCO comparison, hidden cost analysis
+   Motion ICP Guidance Available: Partial
+   → Missing: TCO comparison, hidden cost analysis (in Benefits and impacts / Strategic narrative)
 
 2. IMPLEMENTATION CONCERNS (6 instances - 26%)
    ━━━━━━━━━━━━━━━━━━━━━━━━━ 26%
@@ -42,7 +42,7 @@ OBJECTION BREAKDOWN
    ✓ 4x mentioned typical timeline
    ✓ 2x referenced quick-start option
 
-   Playbook Guidance Available: Yes ✓
+   Motion ICP Guidance Available: Yes ✓
 
 3. STAKEHOLDER/TIMING (5 instances - 22%)
    ━━━━━━━━━━━━━━━━━━━━━ 22%
@@ -82,13 +82,13 @@ RECOMMENDATIONS
 ---------------
 
 1. HIGH PRIORITY: Improve pricing objection handling
-   - Current playbook response rate: 62%
-   - Add: TCO comparison framework
-   - Add: "Hidden costs of status quo" talking points
+   - Current Motion ICP response rate: 62%
+   - Add: TCO comparison framework to Motion ICP Benefits and impacts
+   - Add: "Hidden costs of status quo" talking points to Pains and consequences
 
 2. MEDIUM PRIORITY: Stakeholder objection strategy
    - Low success rate (40%)
-   - Add: Multi-threading guide to playbooks
+   - Add: Multi-threading guide to relevant Motion ICP Methodology sections
    - Add: Executive sponsor identification questions
 
 3. TRACK: Feature requests
@@ -98,7 +98,7 @@ RECOMMENDATIONS
 ---
 
 Want me to:
-1. Draft objection handling language for playbooks
+1. Draft objection handling language for Motion ICP narratives and Objection entities
 2. Show specific conversations with these objections
 3. Compare to last month's objections
 4. Update library with recommendations

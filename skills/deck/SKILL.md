@@ -5,7 +5,7 @@ description: Octave-powered presentation builder that researches, structures, an
 
 # /octave:deck - Octave-Powered Deck Builder
 
-Build compelling, self-contained HTML presentations powered by your Octave GTM knowledge base. Unlike generic slide builders, this skill leverages your library's personas, competitors, playbooks, proof points, and real conversation data to research, structure, and generate presentations grounded in your actual go-to-market intelligence.
+Build compelling, self-contained HTML presentations powered by your Octave GTM knowledge base. Unlike generic slide builders, this skill leverages your library's personas, competitors, Motion ICP narratives, proof points, and real conversation data to research, structure, and generate presentations grounded in your actual go-to-market intelligence.
 
 > HTML presentation engine inspired by [frontend-slides](https://github.com/zarazhangrui/frontend-slides) by Zara Zhang (MIT license).
 
@@ -140,7 +140,7 @@ Use the recommended default as the pre-selected option. If the user picks "Custo
 
 Based on purpose, goal, and audience, use Octave MCP tools to build rich context for the deck. **Always tell the user what you're researching and why.**
 
-**Call as many tools as needed to build a complete picture.** The best decks come from layering multiple sources — company enrichment + playbook messaging + proof points + conversation intel all combine to create slides grounded in real data. Don't stop at one tool when three would give you a stronger narrative.
+**Call as many tools as needed to build a complete picture.** The best decks come from layering multiple sources — company enrichment + Motion ICP narrative + proof points + conversation intel all combine to create slides grounded in real data. Don't stop at one tool when three would give you a stronger narrative.
 
 That said, not every tool applies to every deck. Use your judgment about which are relevant to *this specific* situation. The tables below show what's available — pick the combination that gives you the richest context for the deck type and audience.
 
@@ -178,10 +178,11 @@ Start with company and person enrichment, then pull positioning context as neede
 | Key contacts | `find_person({ searchMode: "people", companyDomain, fuzzyTitles })` | When audience includes unknown stakeholders |
 | Person deep-dive | `enrich_person({ person: { email, firstName, lastName, companyDomain } })` | When a specific person is the target audience |
 | ICP fit scoring | `qualify_company({ companyDomain })` | When you need to frame "why us" for this account |
-| All playbooks | `list_all_entities({ entityType: "playbook" })` | Quick scan of available playbooks to find the right one |
-| Matching playbook | `search_knowledge_base({ query: "<industry> <persona>", entityTypes: ["playbook"] })` | When you have a concept and need the best-fit playbook |
-| Playbook details | `get_playbook({ oId, includeValueProps: true })` | After finding a relevant playbook — gets full content + value props |
-| Value props | `list_value_props({ playbookOId })` | Fetch value props for a specific playbook (requires playbook oId) |
+| All Motions | `list_motions()` | Quick scan of Motions to find the right one for this account |
+| Motion Playbooks | `list_motion_playbooks({ motionOId })` | Default + Custom Motion Playbooks for the selected Motion |
+| Motion Playbook details | `get_motion_playbook({ motionPlaybookOId })` | Full Motion Playbook narrative content |
+| Motion ICP cells | `list_motion_icps({ motionOId })` | Persona × segment cells under a Motion |
+| Motion ICP narrative | `find_motion_icp({ motionIcpOId, includeLearnings: true })` | Cell-level Target ICP / Strategic narrative / Pains / Benefits / Methodology / References + Learning Loop learnings |
 | All proof points | `list_entities({ entityType: "proof_point" })` | Fetch actual proof points with full data — metrics, quotes, logos |
 | All references | `list_entities({ entityType: "reference" })` | Fetch customer references with full details |
 | Find proof points by topic | `search_knowledge_base({ query: "<industry> results", entityTypes: ["proof_point", "reference"] })` | When you need proof points *about* a specific topic or industry |
@@ -205,10 +206,12 @@ Pull from the library to ground the deck in your actual GTM data:
 | Products | `list_all_entities({ entityType: "product" })` | Quick scan of product capabilities |
 | Use cases | `list_all_entities({ entityType: "use_case" })` | When deck covers how customers use the product |
 | Entity details | `get_entity({ oId })` | Deep dive on any specific entity found above |
-| Positioning by topic | `search_knowledge_base({ query: "<topic>", entityTypes: ["playbook", "product"] })` | When you have a concept and need relevant positioning |
+| Positioning by topic | `search_knowledge_base({ query: "<topic>", entityTypes: ["product"] })` | When you have a concept and need relevant positioning |
+| Motions | `list_motions()` | Available Motions to ground the deck in |
+| Motion Playbooks | `list_motion_playbooks({ motionOId })` and `get_motion_playbook({ motionPlaybookOId })` | Default + Custom Motion Playbook narrative content |
+| Motion ICP narratives | `list_motion_icps({ motionOId })` then `find_motion_icp({ motionIcpOId })` | Persona × segment narrative grounded in the library |
 | Proof points | `list_entities({ entityType: "proof_point" })` | Fetch all proof points with full data for credibility slides |
 | References | `list_entities({ entityType: "reference" })` | Fetch customer references for social proof slides |
-| Value props | `list_value_props({ playbookOId })` | Value props for a specific playbook |
 | Uploaded docs | `search_resources({ query: "<topic>" })` | Find uploaded strategy docs, market research, or assets |
 | Market signals | `list_findings({ query: "<topic>", startDate: "<90 days ago>" })` | Recent conversation-based trends |
 | Deal outcomes | `list_events({ startDate: "<90 days ago>", filters: { eventTypes: ["DEAL_WON", "DEAL_LOST"] } })` | Pipeline, revenue, or win/loss data |
@@ -224,32 +227,33 @@ Focus on the specific competitor(s) and evidence from real deals:
 | All competitors | `list_all_entities({ entityType: "competitor" })` | Quick scan of all competitors |
 | Competitor full data | `list_entities({ entityType: "competitor" })` | Full competitor profiles — strengths, weaknesses, positioning |
 | Competitor deep dive | `get_entity({ oId })` | Everything about one specific competitor |
-| Competitive positioning | `search_knowledge_base({ query: "<competitor> differentiation", entityTypes: ["playbook", "competitor"] })` | When you have a concept — "how do we beat them on security?" |
+| Competitive positioning | `search_knowledge_base({ query: "<competitor> differentiation", entityTypes: ["competitor"] })` | When you have a concept — "how do we beat them on security?" |
 | Our products | `list_entities({ entityType: "product" })` | Full product data for side-by-side comparison slides |
 | Proof points (competitive wins) | `list_entities({ entityType: "proof_point" })` | Fetch all proof points — filter for competitive wins |
 | Win/loss data | `list_events({ filters: { eventTypes: ["DEAL_WON", "DEAL_LOST"], competitors: ["<oId>"] } })` | Real deal outcomes against this competitor |
 | Conversation evidence | `list_findings({ query: "<competitor>", eventFilters: { competitors: ["<oId>"] } })` | Real objections and mentions from calls |
-| Value props | `list_value_props({ playbookOId })` | Differentiators from a specific playbook |
+| Custom Motion Playbooks (COMPETITIVE) | `list_motions()` then `list_motion_playbooks({ motionOId })` filtered by `narrativeType === "COMPETITIVE"` | Competitive narrative layered onto each Motion |
+| Motion Playbook details | `get_motion_playbook({ motionPlaybookOId })` | Full competitive narrative content |
 | Competitive resources | `search_resources({ query: "<competitor>" })` | Uploaded battlecards, analyst reports, or competitive docs |
 
 ---
 
 #### For Enablement Decks (training, sales kickoff)
 
-Mix playbook content with real deal examples:
+Mix Motion ICP narrative content with real deal examples:
 
 | What you need | Tool | When to use |
 |---------------|------|-------------|
-| All playbooks | `list_all_entities({ entityType: "playbook" })` | Scan available playbooks to decide which to teach |
-| Playbook full content | `get_playbook({ oId, includeValueProps: true })` | Full playbook with value props for training slides |
-| Playbook by topic | `search_knowledge_base({ query: "<topic>", entityTypes: ["playbook"] })` | When you need the playbook most relevant to a concept |
+| All Motions | `list_motions()` | Scan available Motions to decide which to teach |
+| Motion Playbooks | `list_motion_playbooks({ motionOId })` and `get_motion_playbook({ motionPlaybookOId })` | Default + Custom Motion Playbook content for training slides |
+| Motion ICP narratives | `list_motion_icps({ motionOId })` then `find_motion_icp({ motionIcpOId, includeLearnings: true })` | Cell-level narratives + Learning Loop learnings for training slides |
 | Personas | `list_entities({ entityType: "persona" })` | Full persona data for "know your buyer" slides |
 | Competitors | `list_entities({ entityType: "competitor" })` | Full competitor data for competitive handling slides |
 | All proof points | `list_entities({ entityType: "proof_point" })` | Fetch proof points with full data for example slides |
 | Proof points by topic | `search_knowledge_base({ query: "results metrics", entityTypes: ["proof_point", "reference"] })` | When you need proof points *about* specific outcomes |
 | Recent wins | `list_events({ filters: { eventTypes: ["DEAL_WON"] } })` | Success stories to use as examples |
 | Win details | `get_event_detail({ eventOId })` | Deep dive on a notable win for a case study slide |
-| Training resources | `search_resources({ query: "<topic>" })` | Uploaded enablement docs, playbook PDFs, or training assets |
+| Training resources | `search_resources({ query: "<topic>" })` | Uploaded enablement docs, Motion Playbook reference PDFs, or training assets |
 
 ---
 
@@ -300,7 +304,7 @@ Slide 3: [Solution Overview]
 
 Octave Sources Used:
 • Company profile: [Company name] — [key insights]
-• Playbook: [Playbook name] — [key messaging angle]
+• Motion / Motion ICP: [Motion name + persona × segment cell] — [key messaging angle]
 • Proof points: [N] references pulled
 • Competitive intel: [If applicable]
 • Findings: [N] recent signals
@@ -734,8 +738,11 @@ for i, slide in enumerate(prs.slides):
 - `list_all_entities` - Quick scan of all entities of a type (minimal fields, no pagination)
 - `list_entities` - Fetch entities with full data and pagination (proof points, references, personas, etc.)
 - `get_entity` - Deep dive on one specific entity
-- `get_playbook` - Retrieve a playbook with full content and value props
-- `list_value_props` - Value propositions for a specific playbook
+- `list_motions` - List Motions in the workspace
+- `list_motion_playbooks` - List Motion Playbooks under a Motion (Default + Custom)
+- `get_motion_playbook` - Full details for a Motion Playbook
+- `list_motion_icps` - List Motion ICP cells (persona × segment) for a Motion
+- `find_motion_icp` - Motion ICP narrative + Learning Loop learnings
 
 ### Library — Searching
 - `search_knowledge_base` - Semantic search across library entities and resources
@@ -773,10 +780,10 @@ for i, slide in enumerate(prs.slides):
 > 2. Try a different domain or email
 > 3. Provide the content manually and I'll build the deck
 
-**No Matching Playbook:**
-> No playbook matches this audience profile directly.
+**No Matching Motion ICP:**
+> No Motion ICP cell matches this audience profile directly.
 >
-> I'll use your general value props and positioning. After the deck is built, consider creating a playbook for this segment: `/octave:library create playbook`
+> I'll use your general positioning. After the deck is built, consider adding the missing persona × segment cell to a Motion (or creating a new Motion).
 
 **PPTX Extraction Failed:**
 > Could not parse the PPTX file.

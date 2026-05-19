@@ -167,7 +167,7 @@ Apply these updates?
 
 1. Apply segment updates
 2. Apply persona updates
-3. Apply playbook updates
+3. Apply Motion Playbook narrative updates (via update_motion_playbook)
 4. Apply all updates
 5. Review specific recommendation first
 6. Export report only

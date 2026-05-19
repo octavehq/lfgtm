@@ -98,7 +98,7 @@ Your choice:
 
 Based on the target, angle, and CTA, use Octave MCP tools to build deep personalization context. **Always tell the user what you're researching and why.**
 
-**Call as many tools as needed.** The more you know about the account, the more personalized the microsite. A great microsite layers company enrichment + playbook messaging + proof points + competitive intel into a narrative that feels hand-crafted. Don't stop at one tool when four would give you a stronger page.
+**Call as many tools as needed.** The more you know about the account, the more personalized the microsite. A great microsite layers company enrichment + Motion ICP cell narrative + proof points + competitive intel into a narrative that feels hand-crafted. Don't stop at one tool when four would give you a stronger page.
 
 **List vs Search — when to use which:**
 
@@ -311,8 +311,13 @@ Want me to:
 - `list_all_entities` - Quick scan of all entities of a type (minimal fields, no pagination)
 - `list_entities` - Fetch entities with full data and pagination (proof points, references, etc.)
 - `get_entity` - Deep dive on one specific entity
-- `get_playbook` - Retrieve a playbook with full content and value props
-- `list_value_props` - Value propositions for a specific playbook
+
+### Motions
+- `list_motions` - Motions for the offering
+- `list_motion_playbooks` - Default + Custom Motion Playbooks under a Motion
+- `get_motion_playbook` - Full Motion Playbook details
+- `list_motion_icps` - Persona × segment matrix for a Motion
+- `find_motion_icp` - Full per-cell narrative + Learning Loop learnings
 
 ### Library -- Searching
 - `search_knowledge_base` - Semantic search across library entities and resources
@@ -345,7 +350,7 @@ Want me to:
 > I couldn't find detailed intelligence for [target].
 >
 > Options:
-> 1. Proceed with general positioning from your library — I'll use your best-fit playbook
+> 1. Proceed with general positioning from your library — I'll use your best-fit Motion ICP cell
 > 2. Try a different domain or email
 > 3. Provide company details manually (industry, size, challenges) and I'll personalize from that
 
@@ -365,10 +370,10 @@ Want me to:
 > 2. Use general competitive positioning without naming the competitor
 > 3. Provide competitor details manually and I'll build the narrative
 
-**No Matching Playbook:**
-> No playbook matches this audience profile directly.
+**No Matching Motion ICP Cell:**
+> No Motion ICP cell matches this audience profile directly.
 >
-> I'll use your general value props and positioning. After the microsite is built, consider creating a playbook for this segment: `/octave:library create playbook`
+> I'll use your general positioning. After the microsite is built, consider layering a Custom Motion Playbook (Thematic / Milestone / Account / Competitive) on the relevant Motion for this angle: `/octave:library create motion-playbook`
 
 **Browser-Use Unavailable (Brand Extraction):**
 > Browser automation isn't available for brand extraction.

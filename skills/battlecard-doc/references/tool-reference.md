@@ -20,8 +20,10 @@
 |---------------|------|-------------|
 | Competitor full profile | `get_entity({ oId: "<competitor_oId>" })` | Always -- the core source |
 | All competitors (context) | `list_all_entities({ entityType: "competitor" })` | Quick scan of landscape around this competitor |
-| Competitive positioning | `search_knowledge_base({ query: "<competitor> positioning", entityTypes: ["playbook", "competitor"] })` | Messaging angles and playbook positioning |
-| Playbook with value props | `get_playbook({ oId, includeValueProps: true })` | After finding a relevant playbook -- gets differentiators |
+| Competitive positioning | `search_knowledge_base({ query: "<competitor> positioning", entityTypes: ["competitor"] })` | Messaging angles from competitor entities |
+| Custom Motion Playbooks (COMPETITIVE) | `list_motions()` then `list_motion_playbooks({ motionOId })` filtered by `narrativeType === "COMPETITIVE"` and matching competitor | Find competitive Custom Motion Playbooks layered onto each Motion |
+| Motion Playbook details | `get_motion_playbook({ motionPlaybookOId })` | Full competitive narrative + differentiators |
+| Motion ICP cells | `list_motion_icps({ motionOId })` then `find_motion_icp({ motionIcpOId, includeLearnings: true })` | Persona × segment narrative + learnings to anchor positioning |
 | Your products | `list_entities({ entityType: "product" })` | Product capabilities for side-by-side comparison |
 | Product deep dive | `get_entity({ oId: "<product_oId>" })` | Granular feature details for comparison |
 | Competitive wins | `list_events({ startDate: "<180d ago>", filters: { eventTypes: ["DEAL_WON"], competitors: ["<oId>"] } })` | Real deal outcomes -- wins against this competitor |
@@ -42,7 +44,9 @@
 | All competitors | `list_all_entities({ entityType: "competitor" })` | Always -- the full inventory |
 | Competitor full data | `list_entities({ entityType: "competitor" })` | Full profiles for every competitor |
 | Per-competitor deep dive | `get_entity({ oId })` | Detailed data for each competitor card |
-| Competitive playbooks | `search_knowledge_base({ query: "competitive positioning", entityTypes: ["playbook"] })` | Cross-competitor positioning themes |
+| All Motions | `list_motions()` | Inventory of Motions across the workspace |
+| Custom Motion Playbooks (COMPETITIVE) | `list_motion_playbooks({ motionOId })` filtered by `narrativeType === "COMPETITIVE"` | Cross-competitor positioning themes layered onto each Motion |
+| Motion ICP narratives | `find_motion_icp({ motionIcpOId, includeLearnings: true })` | Persona × segment narratives + Learning Loop learnings |
 | Your products | `list_entities({ entityType: "product" })` | Product capabilities for comparison context |
 | All deal outcomes | `list_events({ startDate: "<180d ago>", filters: { eventTypes: ["DEAL_WON", "DEAL_LOST"] } })` | Win rates across all competitors |
 | Conversation evidence | `list_findings({ query: "competitive", startDate: "<90d ago>" })` | Cross-competitor objection patterns |

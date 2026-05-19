@@ -1,6 +1,6 @@
 ---
 name: Account-Based Research
-description: Deep research dossier on a target account with contact mapping and playbook matching
+description: Deep research dossier on a target account with contact mapping and Motion ICP matching
 author: octave
 tags: [research, abm, account]
 inputs:
@@ -17,7 +17,7 @@ inputs:
 
 # Account-Based Research
 
-Build a comprehensive research dossier on a target account. Includes company intelligence, ICP scoring, key contact mapping with enrichment, and matched playbook recommendations. Produces a full account brief without generating outreach.
+Build a comprehensive research dossier on a target account. Includes company intelligence, ICP scoring, key contact mapping with enrichment, and matched Motion ICP recommendations. Produces a full account brief without generating outreach.
 
 ## Steps
 
@@ -72,14 +72,29 @@ description: Score each contact against persona fit criteria. Identify which lib
 
 Run this for each enriched contact. Present qualification scores and persona mappings.
 
-### Step 6: Match Playbooks
-tool: search_knowledge_base
-params:
-  query: "playbook for {{company_profile.industry}} {{company_profile.description}} targeting {{matched_personas}}"
-save_as: matched_playbooks
-description: Search the library for playbooks that best match this account based on their industry, use cases, and the personas identified.
+### Step 6: Match Motion ICPs
+tool: list_motions
+save_as: available_motions
+description: List Motions available in the workspace to identify which Motion best matches the offering being sold into this account.
 
-Present the top matching playbooks with reasoning.
+Then for the selected Motion:
+
+tool: list_motion_icps
+params:
+  motionOId: "{{selected_motion_oId}}"
+save_as: motion_icp_matrix
+description: Get the persona × segment matrix for this Motion.
+
+For each persona matched in Step 5, fetch the Motion ICP cell that intersects with the company's segment:
+
+tool: find_motion_icp
+params:
+  motionIcpOId: "{{persona_segment_motion_icp_oId}}"
+  includeLearnings: true
+save_as: matched_motion_icps
+description: Pull the full Motion ICP narrative (Target ICP overview, Operating landscape, Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References) plus Learning Loop learnings for each relevant persona × segment cell.
+
+Present the matched Motion ICP cells with their strategic narrative and which personas they map to.
 
 ### Step 7: Account Brief
 type: output
@@ -120,16 +135,18 @@ template: |
      Buying Role: {{qualification.buyingRole}}
   {{/each}}
 
-  RECOMMENDED PLAYBOOKS
-  ---------------------
-  {{#each matched_playbooks}}
-  - {{name}}: {{description}}
-    Approach: {{approachAngle}}
+  RECOMMENDED MOTION ICPs
+  -----------------------
+  {{#each matched_motion_icps}}
+  - {{persona}} × {{segment}} (Motion: {{motion_name}})
+    Strategic narrative: {{strategic_narrative_summary}}
+    Top pains: {{pains_summary}}
+    Top benefits: {{benefits_summary}}
   {{/each}}
 
   RECOMMENDED NEXT STEPS
   ----------------------
-  1. Use a matched playbook to generate outreach
+  1. Use a matched Motion ICP narrative to generate outreach
   2. Run /octave:workflow run "Full Outbound Pipeline" --company {{company_domain}}
   3. Generate call prep for an upcoming meeting
   4. Research similar companies for account expansion

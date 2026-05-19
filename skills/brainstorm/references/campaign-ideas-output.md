@@ -19,7 +19,7 @@ Here's how three companies eliminated it."
 Why This Works:
 - Addresses pain point: "Manual processes consuming team time" (from your VP Ops persona)
 - Supported by proof point: "Acme Corp reduced manual work by 85%"
-- Aligns with playbook: "Operational Efficiency"
+- Aligns with Motion: "Operational Efficiency"
 
 Sequence Outline:
 1. Pain agitation (the hidden cost)
@@ -51,7 +51,7 @@ Why This Works:
 Next Steps:
 1. Pick a campaign to develop further
 2. Generate the full email sequence (/octave:generate)
-3. Save as a new playbook (/octave:library create playbook)
+3. Save as a new Custom Motion Playbook (/octave:library create motion-playbook)
 
 Which campaign interests you most?
 ```

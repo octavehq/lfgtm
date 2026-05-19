@@ -30,8 +30,8 @@ TOP OBJECTIONS (12 instances)
    Companies: Acme, CloudBase
    Trend: ↓ Decreasing
 
-Library Gap: Objection #1 not addressed in current playbooks
-→ Suggestion: Add pricing justification to Enterprise playbook
+Library Gap: Objection #1 not addressed in current Motion ICP narratives
+→ Suggestion: Add pricing justification to the Strategic narrative of the relevant Enterprise Motion ICP cells
 
 ---
 
@@ -92,7 +92,7 @@ RECOMMENDATIONS
 Library Updates Suggested:
 1. ADD: "Integration complexity concerns" to CTO persona objections
 2. ADD: "Data silos" as pain point to VP Engineering persona
-3. UPDATE: Enterprise playbook with pricing justification talk track
+3. UPDATE: Enterprise Motion ICP narrative with pricing justification talk track
 
 Content Gaps Identified:
 1. Need Healthcare industry references (requested 2x)

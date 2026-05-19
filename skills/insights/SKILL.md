@@ -189,7 +189,7 @@ your team spends on manual work. At $X/hour, that's $Y annually..."
 Apply these updates?
 1. Yes, update both
 2. Update persona only
-3. Update playbook only
+3. Update Motion ICP narrative only
 4. Let me customize first
 5. Skip
 ```
@@ -216,11 +216,13 @@ If yes, use `update_entity` to apply.
 - `get_event_detail` - Get detailed event info with transcript/content
 
 ### Library Context
-- `get_entity` - Get persona/playbook details
+- `get_entity` - Get persona / segment / competitor / objection details
+- `list_motions` / `list_motion_icps` / `find_motion_icp` - Pull the Motion ICP narrative (Target ICP overview, Operating landscape, Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References) for persona × segment context
 - `search_knowledge_base` - Find related library content
 
 ### Library Updates
-- `update_entity` - Apply suggested updates
+- `update_entity` - Apply suggested updates to library entities (personas, segments, objections, etc.)
+- `update_motion_playbook` - Edit Motion ICP narrative sections (Strategic narrative, Benefits and impacts, Pains and consequences) with field-informed refinements
 
 ## Error Handling
 

@@ -46,11 +46,9 @@ Check that all required entity types exist before generating frameworks.
 - save_as: competitors
 - description: Check competitors — enriches Positioning Strategy and Use Case Canvas
 
-- tool: list_all_entities
-- params:
-  - entityType: "playbook"
-- save_as: playbooks
-- description: Check playbooks — source of value propositions for Message Framework and Anchors
+- tool: list_motions
+- save_as: motions
+- description: Check Motions — the Default Motion Playbook covers persona × segment as Motion ICP cells, and any Custom Motion Playbooks layer thematic/account/competitive narratives on top. Motion ICPs are the source of positioning narrative for the Message Framework and Anchors.
 
 ### Step 2: Review Library Gaps
 
@@ -64,7 +62,7 @@ Check that all required entity types exist before generating frameworks.
   Personas:   {{personas.length}} {{personas.length === 0 ? '⚠ Sections 1,4,8 will be limited' : '✓'}}
   Use Cases:  {{use_cases.length}} {{use_cases.length === 0 ? '⚠ Sections 6,7 will be skipped' : '✓'}}
   Competitors: {{competitors.length}} {{competitors.length === 0 ? '— Sections 3,6 won't have competitive context' : '✓'}}
-  Playbooks:  {{playbooks.length}} {{playbooks.length === 0 ? '⚠ Value props will be limited' : '✓'}}
+  Motions:    {{motions.length}} {{motions.length === 0 ? '⚠ Positioning narrative will be limited (no Motion ICP cells to anchor messaging)' : '✓'}}
 
   Options:
   1. Proceed with what we have (skip sections with insufficient data)
@@ -99,12 +97,24 @@ Deep data pull for the selected product. All data gathered here feeds into all 8
 - save_as: use_case_details
 - description: Full use case data — descriptions, workflows, outcomes
 
-- tool: get_playbook
+- tool: list_motion_icps
 - params:
-  - oId: "{{primary_playbook_oId}}"
-  - includeValueProps: true
-- save_as: playbook_with_vps
-- description: Primary playbook with all value propositions — feeds Message Framework and Anchors
+  - motionOId: "{{primary_motion_oId}}"
+- save_as: motion_icps
+- description: List Motion ICP cells (persona × segment intersections) under the primary Motion
+
+- tool: find_motion_icp
+- params:
+  - motionIcpOId: "{{primary_motion_icp_oId}}"
+  - includeLearnings: true
+- save_as: primary_motion_icp_narrative
+- description: Primary Motion ICP narrative — Target ICP overview, Operating landscape, Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References, plus Learning Loop learnings. Feeds Message Framework and Anchors.
+
+- tool: list_motion_playbooks
+- params:
+  - motionOId: "{{primary_motion_oId}}"
+- save_as: motion_playbooks
+- description: List Motion Playbooks (Default + any Custom). Fetch each Custom Motion Playbook via `get_motion_playbook` for thematic/account/competitive narrative content that overlays the persona × segment matrix.
 
 - tool: list_entities
 - params:
@@ -168,13 +178,12 @@ Save key positioning outputs back to the Octave library for reuse across other s
 - save_as: updated_product
 - description: Save positioning statements to the product entity
 
-- tool: add_value_props
+- tool: update_motion_playbook
 - params:
-  - playbookOId: "{{primary_playbook_oId}}"
-  - instructions: "Add or update value propositions from the positioning exercise: {{persona_value_props_summary}}"
-  - numValuesPerPersona: 3
-- save_as: updated_vps
-- description: Save persona-specific value propositions to the playbook
+  - motionPlaybookOId: "{{primary_motion_playbook_oId}}"
+  - instructions: "Update the Motion Playbook narrative sections (Strategic narrative, Benefits and impacts, Methodology) for each Motion ICP cell to reflect the positioning exercise outputs: {{persona_value_props_summary}}. Keep the persona × segment matrix intact — edit narrative content per ICP cell, not the cell structure itself."
+- save_as: updated_motion_playbook
+- description: Save positioning back to the primary Motion Playbook by editing narrative sections across its Motion ICP cells
 
 ### Step 7: Results
 
@@ -198,7 +207,7 @@ Save key positioning outputs back to the Octave library for reuse across other s
 
   Library Updates:
   - Product positioning: {{updated_product ? 'Updated ✓' : 'Skipped'}}
-  - Playbook value props: {{updated_vps ? 'Updated ✓' : 'Skipped'}}
+  - Motion Playbook narrative sections: {{updated_motion_playbook ? 'Updated ✓' : 'Skipped'}}
 
   ---
 

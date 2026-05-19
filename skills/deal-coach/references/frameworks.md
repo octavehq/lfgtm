@@ -22,7 +22,7 @@ Every coaching output — whether a role play scorecard, microsite section, deck
 |-------|------|---------|
 | **Buyer Mindset** | String | Where the buyer's head is — their psychology, fears, motivations, and decision frame at this stage |
 | **Value Propositions** | Array | Which value props from the seller's library should be deployed, and why they fit this stage |
-| **Talking Points** | Array | Specific things to say — grounded in deal context, playbook messaging, and proof points |
+| **Talking Points** | Array | Specific things to say — grounded in deal context, Motion ICP narrative, and proof points |
 
 ---
 

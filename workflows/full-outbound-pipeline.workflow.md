@@ -13,10 +13,10 @@ inputs:
     required: false
     description: Target persona name from library (e.g., "CTO")
     default: auto-detect
-  - name: playbook
+  - name: motion
     type: string
     required: false
-    description: Playbook name or oId to use for messaging context
+    description: Motion name or oId to use for messaging context (the Motion ICP for the target persona × segment is the source of narrative)
     default: auto-detect
   - name: num_contacts
     type: number
@@ -44,7 +44,7 @@ Present the company overview and key signals to the user.
 tool: qualify_company
 params:
   companyDomain: "{{company_domain}}"
-  additionalContext: "Evaluate fit against our segments and playbooks"
+  additionalContext: "Evaluate fit against our segments and the Motion ICP cells linked to this offering"
 save_as: company_qualification
 description: Score the company against ICP criteria from your library segments. Identifies which segments they match and overall fit.
 
@@ -113,7 +113,7 @@ tool: qualify_person
 params:
   person:
     linkedInProfile: "{{selected_contact.linkedInProfile}}"
-  additionalContext: "Evaluate fit for {{persona}} persona in context of {{playbook}} playbook"
+  additionalContext: "Evaluate fit for {{persona}} persona in context of the {{motion}} Motion (and the persona × segment Motion ICP narrative)"
 save_as: person_qualification
 description: Score the selected contact against persona fit criteria including seniority, responsibilities, and decision-making authority.
 
@@ -156,7 +156,7 @@ template: |
   Personalization used:
   - Company: {{company_profile.name}} ({{company_profile.employees}} employees)
   - Matched persona: {{persona}}
-  - Playbook: {{playbook}}
+  - Motion: {{motion}}
 
   ---
 

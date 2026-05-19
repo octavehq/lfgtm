@@ -1,6 +1,6 @@
 ---
 name: New Market Entry
-description: Research, define ICP, build personas and playbooks, create messaging, and launch outreach for a new market
+description: Research, define ICP, build personas and Motions, create messaging, and launch outreach for a new market
 author: octave
 tags: [strategy, expansion, market, messaging]
 inputs:
@@ -109,19 +109,21 @@ Generate a messaging framework for the new market.
 - save_as: messaging_framework
 - description: Create the messaging foundation for this market
 
-### Step 8: Create Playbook
+### Step 8: Create Custom Motion Playbook for the New Market
 
-Generate a playbook for the new market.
+Layer a Custom Motion Playbook onto an existing Motion (or create a new Motion via the Motions UI first if none fits). The Custom Motion Playbook captures the strategic angle for entering {{market_description}}.
 
-- tool: create_playbook
+In Motions-era Octave, when a Motion is created (typically via the UI) it auto-creates a Default Motion Playbook covering the persona × segment matrix as Motion ICP cells. For a market-entry deliverable, create a Custom Motion Playbook with narrative type `THEMATIC` (general angle), `ACCOUNT` (account-focused), or `COMPETITIVE` (displacement) — pick the narrativeType that matches the entry intent.
+
+- tool: create_motion_playbook
 - params:
-  - name: "{{market_description}} Playbook"
-  - description: "Playbook for selling into {{market_description}}"
-  - instructions: "Create a sales playbook for {{market_description}}. Use the messaging framework, persona, and segment data to build comprehensive guidance including discovery questions, value propositions, objection handling, and competitive positioning."
-  - personaOIds: ["{{new_persona.oId}}"]
-  - segmentOId: "{{new_segment.oId}}"
-- save_as: new_playbook
-- description: Build the sales playbook for this market
+  - motionOId: "{{target_motion_oId}}"
+  - narrativeType: "THEMATIC"
+  - name: "{{market_description}} Market Entry"
+  - description: "Custom Motion Playbook for entering {{market_description}}"
+  - instructions: "Create a Custom Motion Playbook for {{market_description}}. Use the messaging framework, persona, and segment data to build narrative content: target ICP overview, strategic narrative, pains and consequences, benefits and impacts, methodology, references."
+- save_as: new_motion_playbook
+- description: Build a Custom Motion Playbook for this market. If no Motion exists yet for the offering, ask the user to create one first (creating a Motion auto-generates the Default Motion Playbook with the persona × segment matrix).
 
 ### Step 9: Find Initial Prospects
 
@@ -149,7 +151,7 @@ Create an initial outreach campaign brief.
     ----------------
     ✓ Segment: {{new_segment.name}}
     ✓ Persona: {{new_persona.name}}
-    ✓ Playbook: {{new_playbook.name}}
+    ✓ Custom Motion Playbook: {{new_motion_playbook.name}}
 
     MESSAGING FRAMEWORK
     -------------------
@@ -161,8 +163,9 @@ Create an initial outreach campaign brief.
 
     NEXT STEPS
     ----------
-    1. Review and refine the segment, persona, and playbook in your library
-    2. Run /octave:campaign to generate multi-channel content
-    3. Run /octave:enablement to create team training materials
-    4. Run /octave:abm on top prospect companies for account plans
-    5. Use /octave:generate to create personalized outreach for each prospect
+    1. Review and refine the segment, persona, and Custom Motion Playbook in your library
+    2. Make sure the new persona × segment cell exists in the Default Motion Playbook's Motion ICP matrix (if not, add it via the Motion UI so it gets a Motion ICP narrative)
+    3. Run /octave:campaign to generate multi-channel content
+    4. Run /octave:enablement to create team training materials
+    5. Run /octave:abm on top prospect companies for account plans
+    6. Use /octave:generate to create personalized outreach for each prospect

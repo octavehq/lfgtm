@@ -120,11 +120,10 @@ Based on the repurposing goal, fetch relevant context:
 # Get persona details
 get_entity({ oId: "<selected_persona_oId>" })
 
-# Get relevant playbook for messaging guidance
-search_knowledge_base({
-  query: "<persona name> messaging value proposition",
-  entityTypes: ["playbook"]
-})
+# Find the Motion ICP cell for this persona × segment for messaging guidance
+list_motions()
+list_motion_icps({ motionOId: "<motion_oId>" })
+find_motion_icp({ motionIcpOId: "<motion_icp_oId>", includeLearnings: true })
 
 # Get brand voice if adjusting tone
 list_all_entities(entityType: "brand_voice")
@@ -144,11 +143,10 @@ search_knowledge_base({
   entityTypes: ["persona"]
 })
 
-# Get relevant playbooks
-search_knowledge_base({
-  query: "<segment name>",
-  entityTypes: ["playbook"]
-})
+# Find Motion ICP cells that cover this segment
+list_motions()
+list_motion_icps({ motionOId: "<motion_oId>" })
+find_motion_icp({ motionIcpOId: "<motion_icp_oId>", includeLearnings: true })
 ```
 
 **For Format/Channel Changes:**
@@ -188,7 +186,7 @@ Key Changes:
 
 Context I'll Use:
 - Persona: [Name] - [Key pain points to address]
-- Playbook: [Name] - [Key messaging angle]
+- Motion ICP: [Persona × Segment] - [Strategic narrative angle]
 - Brand Voice: [Name] - [Tone characteristics]
 
 Proceed with repurposing? (yes / adjust plan):
@@ -226,7 +224,7 @@ generate_content({
     Maintain the core message while adapting language, examples, and emphasis
     to resonate with the target audience.
   `,
-  customContext: "[Relevant playbook messaging, proof points, etc.]"
+  customContext: "[Relevant Motion ICP narrative, proof points, etc.]"
 })
 ```
 
@@ -249,7 +247,7 @@ CHANGES MADE
 CONTEXT APPLIED
 ---------------
 - Persona pain points addressed: [List]
-- Messaging angle: [From playbook]
+- Messaging angle: [From Motion ICP narrative]
 - Tone: [From brand voice]
 
 ---
@@ -293,7 +291,9 @@ See [common-scenarios.md](references/common-scenarios.md) for the four common re
 - `list_all_entities` (entityType: "brand_voice") - Get available brand voice configurations
 - `list_writing_styles` - Get available writing style configurations
 - `get_entity` - Get full details for persona and segment entities by oId
-- `get_playbook` - Get messaging guidance and value props
+- `list_motions` - List Motions in the workspace
+- `list_motion_icps` - List Motion ICP cells (persona × segment) for a Motion
+- `find_motion_icp` - Fetch a Motion ICP narrative + Learning Loop learnings
 - `search_knowledge_base` - Find relevant proof points, messaging, examples
 
 ### Write Operations
@@ -370,7 +370,7 @@ Use WebFetch to extract content, then proceed with repurposing.
 ## Related Skills
 
 - `/octave:generate` - Generate new content from scratch
-- `/octave:library` - Manage personas, playbooks, and other context
+- `/octave:library` - Manage personas, Motions, Motion Playbooks, and other context
 - `/octave:brainstorm` - Brainstorm content ideas
 - `/octave:pmm` - Create marketing collateral
 - `/octave:campaign` - Multi-channel campaign content

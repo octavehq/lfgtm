@@ -52,7 +52,7 @@ params:
 save_as: positioning
 description: Search for relevant proof points, case studies, and messaging that specifically addresses competitive situations with this competitor.
 
-Pull from proof points, references, and playbooks that mention the competitor. Present the most relevant competitive positioning angles.
+Pull from proof points, references, and Custom Motion Playbooks (narrative type `COMPETITIVE`) that mention the competitor. Present the most relevant competitive positioning angles.
 
 ### Step 4: Research Contact
 tool: enrich_person
@@ -146,5 +146,5 @@ template: |
   Next steps:
   1. Copy emails to outreach tool
   2. Generate call prep (/octave:generate call-prep)
-  3. Create a competitive playbook (/octave:library create playbook)
+  3. Create a Custom Motion Playbook with narrative type `COMPETITIVE` (/octave:library create motion-playbook)
   4. Research the deal further (/octave:research)

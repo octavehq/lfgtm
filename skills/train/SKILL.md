@@ -5,7 +5,7 @@ description: Practice selling with role-play simulations, knowledge quizzes, and
 
 # /octave:train - Sales Training Ground
 
-Practice and learn your GTM playbook through interactive role-play simulations and knowledge quizzes — all grounded in your real library data. Role-play against buyer personas with realistic objections, or quiz yourself on value props, competitive positioning, and discovery techniques.
+Practice and learn your GTM playbooks and Motion ICPs through interactive role-play simulations and knowledge quizzes — all grounded in your real library data. Role-play against buyer personas with realistic objections, or quiz yourself on value props, competitive positioning, and discovery techniques.
 
 ## Usage
 
@@ -41,7 +41,7 @@ AskUserQuestion({
     options: [
       { label: "Role-Play", description: "Simulate a sales conversation — I'll play the buyer and give you feedback" },
       { label: "Quiz", description: "Test your knowledge of personas, objections, value props, and competitive positioning" },
-      { label: "Guided Learning", description: "Walk me through a topic from your playbook — teach me like I'm a new hire" }
+      { label: "Guided Learning", description: "Walk me through a topic from your Motion ICP narrative — teach me like I'm a new hire" }
     ],
     multiSelect: false
   }]
@@ -114,9 +114,10 @@ AskUserQuestion({
 # Get full persona details
 get_entity({ oId: "<persona_oId>" })
 
-# Get matching playbook with value props
-search_knowledge_base({ query: "<persona name> <scenario>", entityTypes: ["playbook"] })
-get_playbook({ oId: "<playbook_oId>", includeValueProps: true })
+# Find the matching Motion ICP cell (persona × segment) for messaging context
+list_motions()
+list_motion_icps({ motionOId: "<motion_oId>" })
+find_motion_icp({ motionIcpOId: "<motion_icp_oId>", includeLearnings: true })
 
 # Get real objections from conversations (to make role-play realistic)
 list_findings({
@@ -183,7 +184,7 @@ AskUserQuestion({
     header: "Quiz topic",
     options: [
       { label: "Personas", description: "Pain points, priorities, buying triggers, and how to sell to each persona" },
-      { label: "Objection handling", description: "Common objections and how to respond — from your playbook and real conversations" },
+      { label: "Objection handling", description: "Common objections and how to respond — from your Motion ICP narratives and real conversations" },
       { label: "Competitive positioning", description: "Differentiators, trap questions, and counters for each competitor" },
       { label: "Full GTM review", description: "Mix of everything — personas, products, value props, objections, competitors" }
     ],
@@ -221,7 +222,9 @@ list_findings({
   query: "objections pushback concerns pricing",
   startDate: "<180 days ago>"
 })
-get_playbook({ oId: "<playbook_oId>", includeValueProps: true })
+list_motions()
+list_motion_icps({ motionOId: "<motion_oId>" })
+find_motion_icp({ motionIcpOId: "<motion_icp_oId>", includeLearnings: true })
 
 # For Competitive:
 list_all_entities({ entityType: "competitor" })
@@ -259,7 +262,7 @@ AskUserQuestion({
     options: [
       { label: "A persona", description: "Deep walkthrough of how to sell to a specific buyer type" },
       { label: "A competitor", description: "Learn competitive positioning, differentiators, and counters" },
-      { label: "A playbook", description: "Walk through a playbook's strategy, value props, and objection handling" },
+      { label: "A Motion", description: "Walk through a Motion's Default Motion Playbook (persona × segment matrix) plus any Custom Motion Playbooks" },
       { label: "Your product", description: "Master your product's capabilities, use cases, and proof points" }
     ],
     multiSelect: false
@@ -275,8 +278,10 @@ Fetch the relevant entity and present it as a structured training walkthrough:
 # Load the entity
 get_entity({ oId: "<entity_oId>" })
 
-# Load related playbook
-get_playbook({ oId: "<playbook_oId>", includeValueProps: true })
+# Load related Motion + ICP cell
+list_motions()
+list_motion_icps({ motionOId: "<motion_oId>" })
+find_motion_icp({ motionIcpOId: "<motion_icp_oId>", includeLearnings: true })
 
 # Load real conversation examples
 list_findings({
@@ -295,8 +300,11 @@ See [guided-learning-template.md](references/guided-learning-template.md) for th
 ### Library Context
 - `list_all_entities` - List personas, products, competitors, use cases
 - `get_entity` - Full entity details (persona pain points, competitor weaknesses, etc.)
-- `get_playbook` - Playbook with value props, discovery questions, objection handling
-- `list_value_props` - Value propositions by persona
+- `list_motions` - List Motions in the workspace
+- `list_motion_playbooks` - List Motion Playbooks under a Motion (Default + Custom)
+- `get_motion_playbook` - Full details for a Motion Playbook
+- `list_motion_icps` - List Motion ICP cells (persona × segment) for a Motion
+- `find_motion_icp` - Motion ICP narrative (Target ICP overview, Strategic narrative, Pains/Benefits, Methodology, References) + Learning Loop learnings
 - `search_knowledge_base` - Proof points, references, messaging
 
 ### Conversation Evidence

@@ -117,11 +117,11 @@ AskUserQuestion({
     options: [
       {
         label: "Specific Deal",
-        description: "Ground coaching in a real account — uses CRM data, findings, events, and your playbook to make coaching deal-specific."
+        description: "Ground coaching in a real account — uses CRM data, findings, events, and the matched Motion ICP narrative to make coaching deal-specific."
       },
       {
         label: "Generic Practice",
-        description: "Practice the methodology with library-level data only (personas, playbook, proof points). No specific account context."
+        description: "Practice the methodology with library-level data only (personas, Motion ICP narrative, proof points). No specific account context."
       }
     ],
     multiSelect: false
@@ -175,9 +175,17 @@ list_all_entities({ entityType: "competitor" })
 list_all_entities({ entityType: "proofPoint" })
 ```
 
-**Playbook (after knowledge base search returns):**
+**Motion ICP (after enrichment / persona / segment inference):**
 ```
-get_playbook({ oId: "<matched_playbook_oId>" })
+list_motions()
+list_motion_icps({ motionOId: "<motion_oId>" })
+find_motion_icp({ motionIcpOId: "<matched_motion_icp_oId>", includeLearnings: true })
+```
+
+If a Custom Motion Playbook (Thematic / Milestone / Account / Competitive) applies, also fetch its narrative:
+```
+list_motion_playbooks({ motionOId: "<motion_oId>" })
+get_motion_playbook({ motionPlaybookOId: "<custom_motion_playbook_oId>" })
 ```
 
 If any tool call fails, note the gap and continue. Coach with available data and flag missing context.
@@ -187,14 +195,16 @@ If any tool call fails, note the gap and continue. Coach with available data and
 For generic mode, gather library-level data only:
 
 ```
-search_knowledge_base({ query: "playbook" })
 list_all_entities({ entityType: "persona" })
 list_all_entities({ entityType: "competitor" })
 list_all_entities({ entityType: "proofPoint" })
 ```
 
+Then load the Default Motion Playbook narrative for the most relevant Motion:
 ```
-get_playbook({ oId: "<default_playbook_oId>" })
+list_motions()
+list_motion_icps({ motionOId: "<motion_oId>" })
+find_motion_icp({ motionIcpOId: "<representative_motion_icp_oId>", includeLearnings: true })
 ```
 
 #### 2d. Load coaching reference files
@@ -419,7 +429,7 @@ Load the coaching agent's rubric and grounding map for the selected stage.
 
 For deal-specific mode, map all Octave data to coaching output fields using `references/messaging-narratives.md`.
 
-For generic mode, use playbook-level data to create a representative scenario.
+For generic mode, use the Default Motion Playbook narrative data (Motion ICP cell) to create a representative scenario.
 
 Prepare buyer behavior rules based on stage:
 
@@ -524,7 +534,7 @@ See [mode-output-templates.md](references/mode-output-templates.md) for the micr
 Use templates from `references/html-templates.md` to generate a self-contained HTML file.
 
 **Content grounding rules** (from `references/messaging-narratives.md`):
-- Every Value Proposition must reference specific playbook messaging — never generic claims
+- Every Value Proposition must reference specific Motion ICP narrative content (Strategic narrative / Benefits and impacts) — never generic claims
 - Every proof point must cite a specific library entity, appear inline in the section it supports, and include a usage note (deploy now / save for later / already shared)
 - Every Talking Point must be grounded in the deal context (if available) and connected to the Buyer Mindset
 - Every objection response must be grounded in the specific decision the buyer is making — not generic competitive objections
@@ -722,7 +732,7 @@ AskUserQuestion({
 
 ##### QZ-2: Load Quiz Material
 
-Load coaching content from reference files. If deal-specific, ground questions in actual deal data. If generic, use playbook-level data.
+Load coaching content from reference files. If deal-specific, ground questions in actual deal data. If generic, use Motion ICP narrative data (the Default Motion Playbook).
 
 Build question bank by category:
 
@@ -851,13 +861,17 @@ This directory should be in `.gitignore`.
 ### Library — Fetching
 | Tool | Purpose |
 |------|---------|
-| `get_playbook` | Full playbook with value props, messaging, positioning |
+| `list_motions` | List all Motions in the workspace |
+| `list_motion_playbooks` | List Motion Playbooks (Default + Custom) under a Motion |
+| `get_motion_playbook` | Full details for a Motion Playbook |
+| `list_motion_icps` | List Motion ICP cells (persona × segment intersections) for a Motion |
+| `find_motion_icp` | Full Motion ICP cell narrative (Target ICP overview, Operating landscape, Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References) plus Learning Loop learnings |
 | `get_entity` | Individual entity details (persona, competitor, proof point) |
 
 ### Library — Searching
 | Tool | Purpose |
 |------|---------|
-| `search_knowledge_base` | Find matching playbooks, guides, research |
+| `search_knowledge_base` | Find matching guides and research |
 | `search_resources` | Find relevant resources (docs, presentations) |
 | `list_all_entities` | List personas, competitors, proof points, references |
 | `list_findings` | Objections, pain points, competitor mentions from conversations |
@@ -874,7 +888,7 @@ This directory should be in `.gitignore`.
 
 > **No CRM data found:** "I couldn't find CRM records for [domain]. I'll proceed with library-level data only. Stage inference will rely on findings and events. You can also manually select a stage."
 
-> **No playbook found:** "No matching playbook found. I'll use general coaching methodology without playbook-specific grounding. Talk tracks will reference the framework but won't include your specific messaging. Consider running `/octave:library` to check your playbook setup."
+> **No Motion ICP found:** "No matching Motion ICP cell found. I'll use general coaching methodology without Motion-specific grounding. Talk tracks will reference the framework but won't include your specific Strategic narrative, Benefits and impacts, or Methodology content. Consider creating a Motion for this offering, or layering a Custom Motion Playbook (Thematic / Milestone / Account / Competitive) onto an existing Motion."
 
 > **No findings/events:** "No conversation findings or events found for [domain]. Stage inference will rely primarily on CRM stage. For more accurate coaching, ensure conversation data is synced to Octave."
 
