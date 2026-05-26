@@ -128,7 +128,7 @@ If the files are not found, fall back to general sales coaching best practices.
 
 Based on the target and meeting type, use Octave MCP tools to build a complete intelligence picture. **Tell the user what you're researching and why.**
 
-**Call as many tools as needed to build a thorough battle plan.** The best meeting preps layer multiple sources — company enrichment + person enrichment + playbook messaging + proof points + conversation intel + coaching frameworks all combine to create a document grounded in real data. Don't stop at one tool when several would give you a stronger prep.
+**Call as many tools as needed to build a thorough battle plan.** The best meeting preps layer multiple sources — company enrichment + person enrichment + Motion ICP cell narrative + proof points + conversation intel + coaching frameworks all combine to create a document grounded in real data. Don't stop at one tool when several would give you a stronger prep.
 
 Not every tool applies to every meeting. Use your judgment about which are relevant to *this specific* situation. The tables below show what's available — pick the combination that gives you the richest context for the meeting type and target.
 
@@ -165,8 +165,10 @@ Start with person and company enrichment, then pull positioning context:
 | ICP fit (person) | `qualify_person({ person: { ... } })` | When you need persona match and fit assessment |
 | ICP fit (company) | `qualify_company({ companyDomain })` | When you need segment match and ICP scoring |
 | Additional contacts | `find_person({ searchMode: "people", companyDomain, fuzzyTitles })` | When you want to map the broader buying committee |
-| Matching playbook | `get_playbook({ oId, includeValueProps: true })` | After identifying relevant playbook — full strategy + value props |
-| Playbook search | `search_knowledge_base({ query: "<industry> <persona>", entityTypes: ["playbook"] })` | When you need the best-fit playbook by concept |
+| Motions for the offering | `list_motions()` | Always — find the Motion(s) covering this offering / motion type |
+| Persona × segment matrix | `list_motion_icps({ motionOId })` | See which Motion ICP cells exist; pick the one matching this person/company |
+| Motion ICP cell narrative | `find_motion_icp({ motionIcpOId, includeLearnings: true })` | Full cell narrative (Target ICP overview, Operating landscape, Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References) + Learning Loop learnings |
+| Custom Motion Playbook | `list_motion_playbooks({ motionOId })` + `get_motion_playbook` | Pull Thematic / Milestone / Account / Competitive angles layered on the Motion |
 | Proof points | `list_entities({ entityType: "proof_point" })` | Fetch all proof points with full data — metrics, quotes, logos |
 | References | `list_entities({ entityType: "reference" })` | Customer references with full details |
 | Competitive context | `search_knowledge_base({ query: "<signals>", entityTypes: ["competitor"] })` | When competitor is mentioned or likely in the deal |
@@ -186,9 +188,10 @@ Start with company enrichment and contact discovery:
 | ICP fit scoring | `qualify_company({ companyDomain })` | Always — segment match, fit score, fit reasons |
 | Key contacts | `find_person({ searchMode: "people", companyDomain, fuzzyTitles })` | Find stakeholders to populate the Stakeholder Map |
 | Enrich contacts | `enrich_person({ person: { ... } })` | Deep dive on each key contact found |
-| All playbooks | `list_all_entities({ entityType: "playbook" })` | Quick scan to find the right strategic approach |
-| Playbook details | `get_playbook({ oId, includeValueProps: true })` | Full content + value props for the matching playbook |
-| Value props | `list_value_props({ playbookOId })` | Fetch value props for the recommended playbook |
+| All Motions | `list_motions()` | Quick scan to find the right Motion(s) for this offering |
+| Motion Playbooks | `list_motion_playbooks({ motionOId })` | Default + Custom Motion Playbooks under the Motion |
+| Motion ICP matrix | `list_motion_icps({ motionOId })` | The persona × segment grid — pick the cells that match this account's buying committee |
+| Motion ICP cell narrative | `find_motion_icp({ motionIcpOId, includeLearnings: true })` | Full per-cell narrative + Learning Loop learnings |
 | All competitors | `list_all_entities({ entityType: "competitor" })` | Quick scan of competitive landscape |
 | Competitor details | `get_entity({ oId })` | Deep dive on a specific relevant competitor |
 | Proof points | `list_entities({ entityType: "proof_point" })` | Full proof points for the evidence section |
@@ -234,7 +237,8 @@ SECTIONS TO INCLUDE
 Octave Sources Used:
 - Company enrichment: [Company] — [key insights]
 - Person enrichment: [Person] — [persona match]
-- Playbook: [Playbook name] — [strategic angle]
+- Motion: [Motion name] — [strategic angle]
+- Motion ICP cell: [Persona × Segment] — [narrative summary]
 - Proof points: [N] references pulled
 - Findings: [N] recent signals (or "none found — skipped")
 - Competitive: [If applicable]
@@ -333,7 +337,7 @@ Pain points organized by stakeholder or by theme, drawn from:
 - User-provided context (transcript, notes, email thread)
 - Octave enrichment data
 - Findings from prior conversations
-- Persona pain points from matching playbook
+- Persona pain points from the matching Motion ICP cell (Pains and consequences)
 
 Each pain point: the pain (their words when possible), the business impact, your response.
 
@@ -530,8 +534,13 @@ Want me to:
 - `list_all_entities` — Quick scan of all entities of a type (minimal fields, no pagination)
 - `list_entities` — Fetch entities with full data and pagination (proof points, references, etc.)
 - `get_entity` — Deep dive on one specific entity
-- `get_playbook` — Retrieve a playbook with full content and value props
-- `list_value_props` — Value propositions for a specific playbook
+
+### Motions
+- `list_motions` — Motions for the offering / motion type
+- `list_motion_playbooks` — Default + Custom Motion Playbooks under a Motion
+- `get_motion_playbook` — Full Motion Playbook details
+- `list_motion_icps` — Persona × segment matrix for a Motion
+- `find_motion_icp` — Full per-cell narrative + Learning Loop learnings
 
 ### Library — Searching
 - `search_knowledge_base` — Semantic search across library entities and resources
@@ -584,10 +593,10 @@ Want me to:
 >
 > Tip: Adding attendee names and roles before the meeting makes the belief stack and talk tracks much sharper.
 
-**No Matching Playbook:**
-> No playbook matches this audience profile directly.
+**No Matching Motion ICP Cell:**
+> No Motion ICP cell matches this audience profile directly.
 >
-> I'll use general value props and positioning from the knowledge base, combined with coaching frameworks. Consider creating a playbook for this segment: `/octave:library create playbook`
+> I'll use general positioning from the knowledge base combined with coaching frameworks. Consider layering a Custom Motion Playbook (Thematic / Milestone / Account / Competitive) for this angle: `/octave:library create motion-playbook`
 
 ## Related Skills
 

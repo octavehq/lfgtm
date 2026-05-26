@@ -93,16 +93,26 @@ Get findings from past conversations.
 - save_as: deal_insights
 - description: Extract objections, pain points, and signals from past interactions
 
-### Step 7: Match Playbook
+### Step 7: Match Motion ICP
 
-Find the best playbook for this deal.
+Find the relevant Motion ICP cell (persona × segment intersection) for this deal.
 
-- tool: search_knowledge_base
+- tool: list_motions
+- save_as: motions
+- description: List Motions in the workspace
+
+- tool: list_motion_icps
 - params:
-  - query: "{{company_profile.industry}} {{primary_contact.jobTitle}} {{deal_context}}"
-  - entityTypes: ["playbook"]
-- save_as: matched_playbook
-- description: Identify the most relevant playbook for this deal
+  - motionOId: "{{motions[0].oId}}"
+- save_as: motion_icps
+- description: List Motion ICP cells under the most relevant Motion (Default + any Custom)
+
+- tool: find_motion_icp
+- params:
+  - motionIcpOId: "{{motion_icps[0].oId}}"
+  - includeLearnings: true
+- save_as: matched_motion_icp
+- description: Fetch the Motion ICP narrative + Learning Loop learnings matching {{company_profile.industry}} × {{primary_contact.jobTitle}}
 
 ### Step 8: Deal Health Review
 
@@ -119,7 +129,7 @@ Assess the deal and decide on strategy.
     Past Interactions: {{conversation_history.count}}
     Key Insights: {{deal_insights.summary}}
 
-    Playbook: {{matched_playbook.name}}
+    Motion ICP: {{matched_motion_icp.name}}
 - options:
   - label: Multi-thread (engage more stakeholders)
     value: multi_thread
@@ -143,7 +153,7 @@ Create tailored outreach for additional stakeholders.
     - jobTitle: "{{stakeholders[0].title}}"
   - numEmails: 3
   - sequenceType: "WARM_OUTBOUND"
-  - allEmailsContext: "Existing deal at {{company_profile.name}}. Already engaged with {{primary_contact.name}}. Key insights from conversations: {{deal_insights}}. Use {{matched_playbook.name}} messaging."
+  - allEmailsContext: "Existing deal at {{company_profile.name}}. Already engaged with {{primary_contact.name}}. Key insights from conversations: {{deal_insights}}. Use the {{matched_motion_icp.name}} Motion ICP narrative for messaging."
 - save_as: stakeholder_outreach
 - description: Generate personalized outreach for new stakeholders
 

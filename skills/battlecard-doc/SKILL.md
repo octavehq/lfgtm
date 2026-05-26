@@ -112,7 +112,8 @@ Octave Sources Used:
 - Deals analyzed: [N] wins, [N] losses
 - Conversation mentions: [N] findings
 - Proof points: [N] relevant
-- Playbooks: [list]
+- Motions / Motion ICPs: [list of Motions and ICP cells]
+- Custom Motion Playbooks (COMPETITIVE narrative): [list]
 
 ---
 
@@ -243,14 +244,17 @@ To save as PDF:
 - `list_all_entities` (competitor) -- List all competitors for selection or landscape
 - `list_entities` (competitor) -- Full competitor profiles with data
 - `get_entity` -- Deep dive on a specific competitor
-- `search_knowledge_base` -- Competitive positioning, playbook matching, proof point discovery
+- `search_knowledge_base` -- Competitive positioning, Motion ICP matching, proof point discovery
 - `list_findings` -- Real conversation mentions, objections, competitor references from calls
 - `list_events` -- Deal win/loss outcomes against specific competitors
 - `get_event_detail` -- Deep dive into specific competitive deals for evidence
 
 ### Library (Fetching / Searching)
-- `get_playbook` -- Competitive playbooks with value props
-- `list_value_props` -- Value propositions per playbook
+- `list_motions` -- List Motions in the workspace
+- `list_motion_playbooks` -- Find Custom Motion Playbooks with narrative type COMPETITIVE
+- `get_motion_playbook` -- Full details for a Custom Motion Playbook (competitive narrative)
+- `list_motion_icps` -- Motion ICP cells (persona × segment) under a Motion
+- `find_motion_icp` -- Motion ICP narrative + Learning Loop learnings
 - `list_entities` (product) -- Product capabilities for comparison
 - `list_entities` (proof_point) -- Competitive win proof points and switching stories
 - `list_entities` (reference) -- Customer references who switched from competitors
@@ -284,7 +288,7 @@ To save as PDF:
 >
 > Options:
 > 1. Create the competitor entity first: `/octave:library create competitor "[name]"`
-> 2. I'll generate a basic battlecard from available information (playbooks, conversations, web research)
+> 2. I'll generate a basic battlecard from available information (Motion ICPs, conversations, web research)
 
 **Octave Connection Failed:**
 > Could not connect to your Octave workspace.

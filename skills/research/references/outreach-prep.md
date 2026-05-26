@@ -39,7 +39,7 @@ RECOMMENDED PLAYBOOK
 
 For this [Persona], lead with:
 • Primary pain point: "[Pain point most likely to resonate]"
-• Value prop: "[Value prop from playbook]"
+• Value prop: "[Value prop from the Motion ICP Benefits and impacts section]"
 • Proof point: "[Most relevant social proof]"
 
 ---

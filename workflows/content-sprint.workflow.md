@@ -30,10 +30,10 @@ Build the messaging angle for this content sprint.
 - tool: search_knowledge_base
 - params:
   - query: "{{theme}}"
-  - entityTypes: ["playbook", "persona", "use_case", "proof_point"]
+  - entityTypes: ["persona", "use_case", "proof_point"]
   - limit: 15
 - save_as: theme_context
-- description: Find all relevant library context for the theme
+- description: Find personas, use cases, and proof points for the theme. Layer in Motion ICP narrative separately via `list_motions` + `list_motion_icps` + `find_motion_icp` if a Motion is relevant to this theme.
 
 ### Step 2: Get Brand Voice
 

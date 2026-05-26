@@ -101,9 +101,9 @@ Discovery Questions:
 ┌─────────────────────────────────────────────────┐
 │ Recommended Question          │ Asked? │ Answer │
 ├─────────────────────────────────────────────────┤
-│ [Question 1 from playbook]    │ ✓ Yes  │ [Summary] │
-│ [Question 2 from playbook]    │ ✗ No   │ -         │
-│ [Question 3 from playbook]    │ ✗ No   │ -         │
+│ [Question 1 from Motion ICP Methodology] │ ✓ Yes  │ [Summary] │
+│ [Question 2 from Motion ICP Methodology] │ ✗ No   │ -         │
+│ [Question 3 from Motion ICP Methodology] │ ✗ No   │ -         │
 └─────────────────────────────────────────────────┘
 
 Recommendations:

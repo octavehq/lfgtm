@@ -151,11 +151,11 @@ update_entity({
   instructions: "<specific updates>"
 })
 
-# Update playbook value props
-update_value_props({
-  playbookOId: "<playbook_oId>",
-  updates: [{ oId: "<vp_oId>", details: "<updated details>" }],
-  reasoning: "Updated based on ICP refinement analysis: [evidence]"
+# Update Motion Playbook narrative sections (Strategic narrative, Pains and consequences, Benefits and impacts, etc.)
+# for the Motion ICP cell that corresponds to the refined persona × segment.
+update_motion_playbook({
+  motionPlaybookOId: "<motion_playbook_oId>",
+  instructions: "Update Strategic narrative and Pains and consequences for the [persona] × [segment] Motion ICP based on ICP refinement findings: [evidence]"
 })
 
 # Create new persona if recommended
@@ -193,8 +193,13 @@ What would you like to do next?
 
 ### Library Updates
 - `update_entity` - Update segments, personas
-- `update_value_props` - Update playbook value props
+- `update_motion_playbook` - Edit Motion Playbook narrative sections (Strategic narrative, Pains and consequences, Benefits and impacts, etc.) for a Motion ICP cell
 - `create_entity` - New personas or segments
+
+### Motions
+- `list_motions` - List Motions in the workspace
+- `list_motion_icps` - List Motion ICP cells (persona × segment) for a Motion
+- `find_motion_icp` - Fetch a Motion ICP cell narrative + Learning Loop learnings
 
 ### Intelligence
 - `search_knowledge_base` - Cross-reference patterns

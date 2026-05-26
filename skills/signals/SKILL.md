@@ -18,7 +18,7 @@ Your daily command center. Surfaces the deals that moved, objections trending up
 - `--period <range>` - Lookback window (today, 3d, week, 2w — default: week)
 - `--focus <area>` - Zoom into one section (deals, patterns, pipeline, content)
 - `--segment <name>` - Filter by segment
-- `--playbook <name>` - Filter by playbook
+- `--motion <name>` - Filter by Motion
 
 ## Examples
 
@@ -94,7 +94,7 @@ list_all_entities({})
 Process the raw data into four signal categories. **Prioritize by urgency** — things that need action today come first.
 
 **Signal Priority Rules:**
-1. **CRITICAL** — Champion went silent, competitor entered a deal, deal moved backward, new objection not in playbook
+1. **CRITICAL** — Champion went silent, competitor entered a deal, deal moved backward, new objection not in Motion ICP / Objection entity
 2. **HIGH** — Deal advanced (opportunity to accelerate), objection frequency spiking, stakeholder engagement dropped
 3. **MEDIUM** — New patterns emerging, content performance shifts, pipeline health changes
 4. **INFO** — Positive confirmations, stable trends, wins
@@ -119,7 +119,7 @@ When `--focus` is specified, show only that section with expanded detail:
 
 **`--focus pipeline`**: Show Pipeline Health with deal-level detail — list every deal that moved, every deal at risk, every new deal.
 
-**`--focus content`**: Show Content Performance with usage rankings across all proof points, value props, and playbooks.
+**`--focus content`**: Show Content Performance with usage rankings across all proof points, value props, and Motion ICPs.
 
 ### Step 5: Drill Down
 
@@ -139,11 +139,10 @@ When user wants to act on a detected gap:
 
 **Library Gap → Create/Update:**
 ```
-# If objection not in playbook
-update_entity({
-  entityType: "<type>",
-  oId: "<oId>",
-  instructions: "Add objection handling for: [detected objection]"
+# If objection not in a Motion ICP cell, update that cell's narrative
+update_motion_playbook({
+  motionPlaybookOId: "<motion_playbook_oId>",
+  instructions: "Add objection handling for: [detected objection] to the relevant Motion ICP narrative section"
 })
 
 # If competitor not tracked
@@ -190,10 +189,10 @@ Suggest the appropriate follow-up skill based on signal type:
 ### Library Gap Signals
 | Signal | Detection | Priority |
 |--------|-----------|----------|
-| Unaddressed objection | Objection finding with no matching playbook content | HIGH |
+| Unaddressed objection | Objection finding with no matching Motion ICP narrative content | HIGH |
 | Unknown competitor | Competitor mention with no competitor entity in library | HIGH |
 | Missing persona | Person qualified to a persona type not in library | MEDIUM |
-| Stale playbook | Playbook with 0 event associations in 30+ days | MEDIUM |
+| Stale Motion ICP | Motion ICP cell with 0 event associations in 30+ days | MEDIUM |
 
 ## MCP Tools Used
 
@@ -204,13 +203,17 @@ Suggest the appropriate follow-up skill based on signal type:
 
 ### Library Context
 - `list_all_entities` - Full library inventory for gap detection
+- `list_motions` - List Motions in the workspace
+- `list_motion_playbooks` - List Motion Playbooks under a Motion
+- `list_motion_icps` - List Motion ICP cells under a Motion
+- `find_motion_icp` - Fetch Motion ICP narrative + Learning Loop learnings
 - `search_knowledge_base` - Match findings to library content
 - `get_entity` - Get entity details for context
-- `get_playbook` - Get playbook details for gap analysis
 
 ### Library Updates
 - `update_entity` - Apply detected gap fixes
 - `create_entity` - Create new entities for detected gaps
+- `update_motion_playbook` - Edit Motion Playbook narrative sections (e.g., add objection handling to a Motion ICP)
 
 ## Error Handling
 

@@ -74,14 +74,15 @@ Your choice:
 # Get competitor entity
 get_entity({ oId: "<competitor_oId>" })
 
-# Search for playbooks that mention this competitor
-search_knowledge_base({
-  query: "<competitor name> competitive positioning",
-  entityTypes: ["playbook"]
-})
+# Find Custom Motion Playbooks for this competitor (narrative type COMPETITIVE)
+list_motions()
+list_motion_playbooks({ motionOId: "<motion_oId>" })
+# Filter for narrativeType === "COMPETITIVE" and matching competitor
+get_motion_playbook({ motionPlaybookOId: "<motion_playbook_oId>" })
 
-# Get relevant playbook with value props
-get_playbook({ oId: "<playbook_oId>", includeValueProps: true })
+# Also pull the Default Motion Playbook's Motion ICPs for general positioning
+list_motion_icps({ motionOId: "<motion_oId>" })
+find_motion_icp({ motionIcpOId: "<motion_icp_oId>", includeLearnings: true })
 
 # Search for proof points (especially competitive wins)
 search_knowledge_base({
@@ -192,8 +193,11 @@ For the full interactive mode selector, use `/octave:generate`.
 - `get_event_detail` - Deep dive into specific competitive deals
 
 ### Library Context
-- `get_playbook` - Competitive playbooks and value props
-- `list_value_props` - Value propositions per persona
+- `list_motions` - List Motions in the workspace
+- `list_motion_playbooks` - Surface Custom Motion Playbooks (narrative type COMPETITIVE) layered onto each Motion
+- `get_motion_playbook` - Full details for a Custom Motion Playbook (competitive narrative)
+- `list_motion_icps` - List Motion ICP cells (persona × segment) for a Motion
+- `find_motion_icp` - Motion ICP narrative + Learning Loop learnings
 - `get_entity` (product) - Product capabilities for comparison
 
 ### Content Generation

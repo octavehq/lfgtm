@@ -64,7 +64,7 @@ OBJECTIONS TO PREPARE FOR
 → [Implementation story, time to value proof point]
 
 "What's the pricing?"
-→ [Response strategy per playbook]
+→ [Response strategy per Motion ICP narrative]
 
 ---
 

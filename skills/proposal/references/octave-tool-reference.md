@@ -12,14 +12,15 @@
 
 ---
 
-#### Playbook & Messaging
+#### Motions & Messaging
 
 | What you need | Tool | When to use |
 |---------------|------|-------------|
-| All playbooks | `list_all_entities({ entityType: "playbook" })` | Quick scan to find the right playbook |
-| Matching playbook | `search_knowledge_base({ query: "<industry> <persona>", entityTypes: ["playbook"] })` | Find the best-fit playbook for this account |
-| Playbook details | `get_playbook({ oId, includeValueProps: true })` | Full playbook content + value props — drives the proposal narrative |
-| Value props | `list_value_props({ playbookOId })` | Fetch value props for the selected playbook |
+| All Motions | `list_motions()` | Quick scan to find the right Motion(s) for this offering |
+| Motion Playbooks | `list_motion_playbooks({ motionOId })` | Default + Custom Motion Playbooks under the Motion |
+| Motion Playbook details | `get_motion_playbook({ motionPlaybookOId })` | Full Motion Playbook content — drives the proposal narrative |
+| Motion ICP matrix | `list_motion_icps({ motionOId })` | Find the persona × segment cell that matches the account |
+| Motion ICP cell narrative | `find_motion_icp({ motionIcpOId, includeLearnings: true })` | Full per-cell narrative (Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References) + Learning Loop learnings |
 
 ---
 
@@ -42,6 +43,7 @@ This is critical for proposals. Buyers share these documents internally — soci
 |---------------|------|-------------|
 | Competitor profiles | `search_knowledge_base({ query: "<competitor>", entityTypes: ["competitor"] })` | When a competitor is in the deal |
 | Competitor deep dive | `get_entity({ oId })` | Full competitor strengths, weaknesses, positioning |
+| Competitive Motion Playbook | `list_motion_playbooks({ motionOId })` + `get_motion_playbook` on any `COMPETITIVE` narrative-type playbook | Pull a dedicated competitive Custom Motion Playbook if one exists |
 | Products for comparison | `list_entities({ entityType: "product" })` | When you need feature-level differentiation |
 | Competitive resources | `search_resources({ query: "<competitor>" })` | Uploaded battlecards, analyst reports |
 

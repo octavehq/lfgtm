@@ -42,7 +42,7 @@ RECOMMENDED PLAYBOOK
 --------------------
 [Playbook name]
 
-Strategic Angle: [Approach angle from playbook]
+Strategic Angle: [Strategic narrative from the Motion ICP]
 
 Key Themes to Explore:
 1. [Theme based on persona pain points]
@@ -69,7 +69,7 @@ Pain Point Exploration:
   → Listen for: [Competitor mentions, gaps]
 
 Qualification:
-• "[Budget/authority question from playbook]"
+• "[Budget/authority question from the Motion ICP Methodology section]"
 • "[Timeline question]"
 • "[Decision process question]"
 

@@ -22,9 +22,9 @@ PROPOSED SECTIONS
    - [Pain point 2 from enrichment/findings]
 
 3. OUR APPROACH
-   - [Value prop 1 from playbook, tailored]
-   - [Value prop 2 from playbook, tailored]
-   - [Value prop 3 from playbook, tailored]
+   - [Value prop 1 from the Motion ICP Benefits and impacts section, tailored]
+   - [Value prop 2 from the Motion ICP Benefits and impacts section, tailored]
+   - [Value prop 3 from the Motion ICP Benefits and impacts section, tailored]
 
 4. KEY DIFFERENTIATORS
    - [Differentiator 1 — brief description]

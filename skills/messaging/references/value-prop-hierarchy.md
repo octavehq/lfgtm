@@ -57,5 +57,5 @@ Value props that fall flat:
 
 ---
 
-Sources: [Products, playbooks, value props, proof points, conversation findings]
+Sources: [Offerings, Motion ICPs, value props from Motion ICP narratives, proof points, conversation findings]
 ```

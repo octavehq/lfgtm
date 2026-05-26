@@ -73,12 +73,10 @@ get_entity({ oId: "<product_oId>" })
 list_all_entities({ entityType: "persona" })
 get_entity({ oId: "<primary_persona_oId>" })
 
-# Get relevant playbooks
-search_knowledge_base({
-  query: "<launch topic> <product>",
-  entityTypes: ["playbook"]
-})
-get_playbook({ oId: "<playbook_oId>", includeValueProps: true })
+# Get the relevant Motion(s) and Motion ICP cells for this offering
+list_motions()
+list_motion_icps({ motionOId: "<motion_oId>" })  # the persona × segment matrix
+find_motion_icp({ motionIcpOId: "<motion_icp_oId>", includeLearnings: true })  # full cell narrative per target persona × segment
 
 # Get proof points
 search_knowledge_base({
@@ -189,7 +187,7 @@ LAUNCH CONTENT KIT SUMMARY
 Sources Used:
 - Product: [name]
 - Personas: [list]
-- Playbook: [name]
+- Motion: [name] (with [N] Motion ICP cells)
 - Proof Points: [list]
 - Brand Voice: [name]
 
@@ -226,10 +224,21 @@ update_entity({
   instructions: "Add [new feature/capability] to product description and capabilities."
 })
 
-# Add new value props to playbooks
-add_value_props({
-  playbookOId: "<playbook_oId>",
-  instructions: "Add value props related to [launch topic]"
+# Layer the launch into Motion Playbook narratives. Either:
+#  - Update the Default Motion Playbook narrative for an existing Motion (Strategic narrative,
+#    Benefits and impacts, Pains and consequences) to reflect the new launch positioning, or
+#  - Create a Custom Motion Playbook (THEMATIC / MILESTONE / ACCOUNT / COMPETITIVE) for the launch.
+update_motion_playbook({
+  motionPlaybookOId: "<motion_playbook_oId>",
+  instructions: "Fold [launch topic] into Strategic narrative and Benefits and impacts for the affected Motion ICP cells."
+})
+
+# Or, for launches that warrant a dedicated angle:
+create_motion_playbook({
+  motionOId: "<motion_oId>",
+  narrativeType: "THEMATIC",  # or MILESTONE / ACCOUNT / COMPETITIVE
+  name: "<launch-themed Motion Playbook name>",
+  instructions: "<launch positioning, target audiences, supporting proof>"
 })
 ```
 
@@ -246,9 +255,15 @@ For the full interactive mode selector, use `/octave:generate`.
 ### Library Context
 - `list_all_entities` - List products, personas, use cases
 - `get_entity` - Full entity details
-- `get_playbook` - Playbook with value props
 - `search_knowledge_base` - Proof points, references, competitive intel
 - `list_all_entities` (entityType: "brand_voice") - Brand voice consistency
+
+### Motions
+- `list_motions` - Motions for the offering
+- `list_motion_playbooks` - Default + Custom Motion Playbooks under a Motion
+- `get_motion_playbook` - Full Motion Playbook details
+- `list_motion_icps` - Persona × segment matrix
+- `find_motion_icp` - Per-cell narrative + Learning Loop learnings
 
 ### Content Generation
 - `generate_content` - Blog, social, one-pager, FAQ, talking points
@@ -257,7 +272,8 @@ For the full interactive mode selector, use `/octave:generate`.
 ### Library Updates
 - `create_entity` - New use cases from launch
 - `update_entity` - Update product with new capabilities
-- `add_value_props` - New value props for playbooks
+- `create_motion_playbook` - Dedicated Custom Motion Playbook for the launch angle
+- `update_motion_playbook` - Update Strategic narrative / Benefits and impacts to reflect launch positioning
 
 ## Error Handling
 

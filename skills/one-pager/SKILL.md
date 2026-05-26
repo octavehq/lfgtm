@@ -5,7 +5,7 @@ description: Personalized one-pager / leave-behind generator rendered as self-co
 
 # /octave:one-pager - Personalized One-Pager Builder
 
-Generate personalized, self-contained HTML one-pager documents (leave-behinds) powered by your Octave GTM knowledge base. Unlike generic templates, this skill enriches every section with real account intelligence -- company signals, persona pain points, playbook messaging, and proof points -- to create a document that feels written specifically for the recipient.
+Generate personalized, self-contained HTML one-pager documents (leave-behinds) powered by your Octave GTM knowledge base. Unlike generic templates, this skill enriches every section with real account intelligence -- company signals, persona pain points, Motion ICP cell narrative, and proof points -- to create a document that feels written specifically for the recipient.
 
 One-pagers are single scrollable pages designed to be sent after a demo, meeting, or call. They summarize why your product is a fit for this specific account. Think of it as the document you email or print, not present.
 
@@ -87,7 +87,7 @@ Your choice:
 
 Based on target, occasion, and tone, use Octave MCP tools to build rich context for the one-pager. **Always tell the user what you're researching and why.**
 
-**Call as many tools as needed to build a complete picture.** The best one-pagers come from layering multiple sources -- company enrichment + playbook messaging + proof points + conversation intel all combine to create a document that feels genuinely personalized. Don't stop at one tool when three would give you a stronger narrative.
+**Call as many tools as needed to build a complete picture.** The best one-pagers come from layering multiple sources -- company enrichment + Motion ICP cell narrative + proof points + conversation intel all combine to create a document that feels genuinely personalized. Don't stop at one tool when three would give you a stronger narrative.
 
 That said, not every tool applies to every one-pager. Use your judgment about which are relevant to *this specific* situation. The tables below show what's available -- pick the combination that gives you the richest context for the occasion and target.
 
@@ -228,8 +228,13 @@ Want me to:
 - `list_all_entities` - Quick scan of all entities of a type (minimal fields, no pagination)
 - `list_entities` - Fetch entities with full data and pagination (proof points, references, personas, etc.)
 - `get_entity` - Deep dive on one specific entity
-- `get_playbook` - Retrieve a playbook with full content and value props
-- `list_value_props` - Value propositions for a specific playbook
+
+### Motions
+- `list_motions` - Motions for the offering
+- `list_motion_playbooks` - Default + Custom Motion Playbooks under a Motion
+- `get_motion_playbook` - Full Motion Playbook details
+- `list_motion_icps` - Persona × segment matrix for a Motion
+- `find_motion_icp` - Full per-cell narrative + Learning Loop learnings
 
 ### Library -- Searching
 - `search_knowledge_base` - Semantic search across library entities and resources
@@ -266,10 +271,10 @@ Want me to:
 > 2. Try a different domain or email
 > 3. Provide the content manually and I'll build the one-pager
 
-**No Matching Playbook:**
-> No playbook matches this audience profile directly.
+**No Matching Motion ICP Cell:**
+> No Motion ICP cell matches this audience profile directly.
 >
-> I'll use your general value props and positioning. After the one-pager is built, consider creating a playbook for this segment: `/octave:library create playbook`
+> I'll use your general positioning. After the one-pager is built, consider layering a Custom Motion Playbook (Thematic / Milestone / Account / Competitive) on the relevant Motion for this angle: `/octave:library create motion-playbook`
 
 **No Proof Points Available:**
 > No proof points found matching this account's industry or segment.

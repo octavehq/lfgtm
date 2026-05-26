@@ -123,5 +123,5 @@ Want me to:
 1. Create versions for specific personas
 2. Generate elevator pitches from this framework
 3. Build a messaging matrix
-4. Save key messages as value props in a playbook
+4. Save key messages into Motion ICP narrative sections (Strategic narrative, Benefits and impacts) via update_motion_playbook
 ```

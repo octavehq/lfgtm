@@ -235,7 +235,7 @@ Also fetch competitive mentions from conversations:
   )
 ```
 
-Additionally, search the knowledge base for library-level intelligence (entity descriptions, hypotheses, playbooks):
+Additionally, search the knowledge base for library-level intelligence (entity descriptions, Motion ICP narratives, hypotheses):
 ```
 → {octave_mcp}__search_knowledge_base(
     query: "{persona name} pain points challenges objections",
@@ -985,7 +985,7 @@ The reverse-inference process for legacy campaigns:
 1. **Cluster headlines by inferred variant type.** Read the headline pool of each ad and tag it with the closest matching variant type from Step 3 (pain-focused, outcome-focused, social-proof, competitive, question-based, data-driven, status-quo, authority, brand-only). Most legacy ads will be brand-only or generic-benefit; that's a finding in itself.
 2. **Look at headline structure and pinning.** A pinned HEADLINE_1 tells you what the ad creator believed was the lead message. A pool of 15 headlines with no pinning tells you Google was given full optimization latitude. A pool of 5 brand headlines tells you the creator never tested angles at all.
 3. **Trace winners backward to *speculative* source cards.** If "Still Prepping Audits By Hand?" wins, the implicit Pain Language Audit might be: emotional core = visceral frustration with manual compliance work; specific dysfunction = audit preparation as an unautomated weeks-long process; data tier = INFERRED (no underlying field finding cited). Mark these reverse-inferred cards clearly so the user knows they're hypotheses, not derivations.
-4. **The library-update recommendations are weaker in Path B.** You're recommending changes to personas/playbooks based on what *appears* to resonate from external creative — not from creative whose grounding you can verify. Lower the confidence tier on every recommendation by one level (HIGH → MEDIUM, MEDIUM → LOW).
+4. **The library-update recommendations are weaker in Path B.** You're recommending changes to personas/Motion ICP narratives based on what *appears* to resonate from external creative — not from creative whose grounding you can verify. Lower the confidence tier on every recommendation by one level (HIGH → MEDIUM, MEDIUM → LOW).
 5. **Recommend that the next campaign go through `/octave:ads`** so the next loop iteration can use Path A. The strongest version of the resonance loop requires that the campaign and the analysis share a vocabulary.
 
 #### 6B.3: Build the resonance map
@@ -1082,7 +1082,7 @@ AskUserQuestion({
     options: [
       {
         label: "Apply all",
-        description: "Update personas, playbooks, and value props based on ad performance evidence"
+        description: "Update personas and Motion Playbook narratives based on ad performance evidence"
       },
       {
         label: "Let me pick",
@@ -1102,11 +1102,10 @@ AskUserQuestion({
 })
 ```
 
-If they choose to apply updates, use the appropriate MCP tools:
+If they choose to apply updates, use the appropriate MCP tools. For Motion Playbook narrative edits (Strategic narrative, Benefits and impacts, Pains and consequences sections inside a Motion ICP cell), use `update_motion_playbook`:
 ```
 → {octave_mcp}__update_entity(oId: "{persona_oId}", instructions: "{update}")
-→ {octave_mcp}__update_playbook(oId: "{playbook_oId}", instructions: "{update}")
-→ {octave_mcp}__update_value_props(oId: "{playbook_oId}", instructions: "{update}")
+→ {octave_mcp}__update_motion_playbook(motionPlaybookOId: "{motion_playbook_oId}", instructions: "{update}")
 ```
 
 ### 6D: Feed Winning Language to Sales
@@ -1305,7 +1304,7 @@ If the schema version of an existing file is NEWER than what the current loop kn
 
 ### Sourcing & Attribution Rules
 - **Prospect language is gold** — Always prefer language extracted from real calls/emails over generic marketing copy. If the knowledge base search returns prospect quotes, use their exact phrasing (adjusted for length).
-- **Cite your sources** — For every piece of creative, note whether it came from prospect language (calls/emails), library entities (persona, playbook, use case), proof points, or was generated fresh. This transparency helps the user evaluate quality and builds trust in the methodology.
+- **Cite your sources** — For every piece of creative, note whether it came from prospect language (calls/emails), library entities (persona, Motion ICP narrative, use case), proof points, or was generated fresh. This transparency helps the user evaluate quality and builds trust in the methodology.
 - **One theme per ad set** — Each ad set should have a clear thematic focus (one primary use case). Don't mix unrelated value props in the same ad set. Variants within the set test different ANGLES on the same theme.
 
 ### Targeting Rules

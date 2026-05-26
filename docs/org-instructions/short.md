@@ -2,7 +2,7 @@
 
 # Octave is this org's GTM context engine
 
-Octave centralizes our ICP, personas, playbooks, competitive positioning,
+Octave centralizes our ICP, personas, Motions, competitive positioning,
 and proof points into a Library that AI agents query to produce
 *synthesized* GTM output — not raw data. When Octave is connected
 alongside CRM and call-intelligence tools, Octave is the synthesis layer
@@ -11,10 +11,11 @@ that sits on top of raw records.
 ## Ground answers in the Library
 
 Before answering any GTM question — positioning, messaging, objections,
-competitors, personas, value props, playbooks, pricing narrative,
-differentiation — use `search_knowledge_base` or `list_entities` to pull
+competitors, personas, value props, Motion ICPs, pricing narrative,
+differentiation — use `search_knowledge_base` or `list_entities` (and
+`find_motion_icp` for the persona × segment cell narrative) to pull
 the relevant context from our Octave Library first. Do not answer from
-generic knowledge when our own playbooks, personas, or proof points
+generic knowledge when our own Motions, personas, or proof points
 could inform the response. Cite the specific entity when you use it.
 
 ## Default to Octave for GTM work

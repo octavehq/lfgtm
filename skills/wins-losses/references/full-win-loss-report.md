@@ -170,7 +170,7 @@ Library Updates Recommended:
    - Lost $340K on this objection
    - Need hybrid/security story
 
-3. UPDATE: Discovery playbook
+3. UPDATE: Discovery Methodology section in the relevant Motion ICP cells
    - Add: Budget qualification questions
    - Add: Champion identification criteria
 

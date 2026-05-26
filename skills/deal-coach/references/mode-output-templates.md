@@ -128,7 +128,7 @@ COACH SAYS
 ----------
 [2-3 paragraphs of specific coaching advice from the stage's coaching agent persona.
 Reference specific Talking Points from frameworks.md.
-Ground in the seller's playbook messaging.
+Ground in the seller's Motion ICP narrative.
 Identify #1 area for improvement and give a concrete example of what to say instead.]
 
 VALUE PROPS YOU COULD HAVE USED

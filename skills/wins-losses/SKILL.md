@@ -167,8 +167,8 @@ IMMEDIATE ACTIONS
 1. Create Competitor A TCO battlecard section
    → /octave:pmm battlecard --competitor "Competitor A" --focus pricing
 
-2. Update discovery checklist with budget qualification
-   → /octave:library update pb_xxx --add "Budget qualification by meeting 2"
+2. Update Motion ICP discovery guidance with budget qualification
+   → update_motion_playbook with new methodology/objection content for the relevant Motion ICP cell
 
 3. Review current pipeline for similar patterns
    → /octave:research --for pipeline-review
@@ -191,11 +191,14 @@ Would you like me to execute any of these?
 
 ### Library Context
 - `get_entity` - Get competitor, persona details
-- `get_playbook` - Get playbook for recommendations
+- `list_motions` - List Motions in the workspace
+- `list_motion_icps` - List Motion ICP cells under a Motion
+- `find_motion_icp` - Motion ICP narrative + Learning Loop learnings
 - `search_knowledge_base` - Find related content
 
 ### Library Updates
 - `update_entity` - Apply recommendations to library
+- `update_motion_playbook` - Edit Motion Playbook narrative sections based on win/loss findings
 
 ## Error Handling
 

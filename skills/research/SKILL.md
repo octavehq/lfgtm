@@ -87,7 +87,7 @@ enrich_company({ companyDomain: "<domain>" })
 # Match to personas
 qualify_person({
   person: { ... },
-  additionalContext: "Match to our buyer personas and playbooks"
+  additionalContext: "Match to our buyer personas and Motion ICP cells"
 })
 ```
 
@@ -99,7 +99,7 @@ enrich_company({ companyDomain: "<domain>" })
 # Qualify against ICP
 qualify_company({
   companyDomain: "<domain>",
-  additionalContext: "Evaluate fit against our segments and playbooks"
+  additionalContext: "Evaluate fit against our segments and Motion ICP cells"
 })
 
 # Find key contacts
@@ -115,11 +115,10 @@ find_person({
 
 Use MCP tools:
 ```
-# Find matching playbook
-search_knowledge_base({
-  query: "<company industry> <persona title> <identified pain points>",
-  entityTypes: ["playbook"]
-})
+# Find the matching Motion ICP cell (persona × segment intersection)
+list_motions()
+list_motion_icps({ motionOId: "<motion_oId>" })
+find_motion_icp({ motionIcpOId: "<motion_icp_oId>", includeLearnings: true })
 
 # Get relevant proof points
 search_knowledge_base({
@@ -176,7 +175,9 @@ What would you like to do next?
 - `generate_call_prep` - Generate full call prep materials
 
 ### Library Context
-- `get_playbook` - Get recommended playbook
+- `list_motions` - List Motions in the workspace
+- `list_motion_icps` - List Motion ICP cells under a Motion
+- `find_motion_icp` - Fetch the matching Motion ICP narrative + Learning Loop learnings
 - `get_entity` - Get persona, competitor details
 - `search_knowledge_base` - Find proof points, references, messaging
 
@@ -198,14 +199,14 @@ What would you like to do next?
 > 2. Provide the company website URL
 > 3. Search by company name instead
 
-**No Matching Playbook:**
-> No playbook matches this profile exactly.
+**No Matching Motion ICP:**
+> No Motion ICP cell matches this profile exactly.
 >
 > Closest matches:
-> - [Playbook 1] (60% fit)
-> - [Playbook 2] (45% fit)
+> - [Motion ICP 1] (60% fit)
+> - [Motion ICP 2] (45% fit)
 >
-> I'll use [Playbook 1] as a guide, but you may want to create a more specific playbook.
+> I'll use [Motion ICP 1] as a guide, but you may want to add the missing persona × segment cell to a Motion (or create a new Motion).
 
 ## Related Skills
 

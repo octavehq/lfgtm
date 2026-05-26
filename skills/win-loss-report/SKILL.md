@@ -204,7 +204,10 @@ Want me to:
 - `list_all_entities` - Quick inventory of competitors, segments, personas
 - `list_entities` - Full entity data for proof points, references
 - `get_entity` - Deep dive on specific competitors, personas
-- `search_knowledge_base` - Semantic search for playbook strategies, positioning
+- `list_motions` - List Motions in the workspace
+- `list_motion_icps` - List Motion ICP cells (persona × segment) under a Motion
+- `find_motion_icp` - Motion ICP narrative + Learning Loop learnings
+- `search_knowledge_base` - Semantic search for positioning content
 - `search_resources` - Uploaded CRM exports, deal data files
 
 ## Error Handling

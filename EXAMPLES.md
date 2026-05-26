@@ -54,8 +54,8 @@ Shows your current Octave MCP server connection status.
 # List all personas
 /octave:library list personas
 
-# List playbooks with details
-/octave:library list playbooks --detailed
+# List Motions with details
+/octave:library list motions --detailed
 
 # Search across everything
 /octave:library search "enterprise security"
@@ -73,11 +73,14 @@ Shows your current Octave MCP server connection status.
 # Create with context
 /octave:library create persona "DevOps Engineer" --sources "https://example.com/devops-guide"
 
-# Create a new playbook (will prompt for offering selection)
-/octave:library create playbook "Healthcare Vertical"
+# Create a new Motion (will prompt for offering + motion type)
+/octave:library create motion "Healthcare Net New"
+
+# Create a Custom Motion Playbook on an existing Motion (Thematic / Milestone / Account / Competitive angle)
+/octave:library create motion-playbook --motion "Healthcare Net New" --narrative-type COMPETITIVE
 ```
 
-When creating a playbook, you'll be asked to select which product/service it's associated with.
+When creating a Motion, you'll be asked to select which offering (Product, Service, or Solution) it covers and which motion type to use (`NET_NEW`, `UPSELL`, etc.). The Default Motion Playbook covering the full persona × segment matrix is auto-created.
 
 ### Update Existing Entities
 
@@ -85,8 +88,8 @@ When creating a playbook, you'll be asked to select which product/service it's a
 # Update a persona
 /octave:library update pe_abc123 --instructions "Add AI adoption as a key priority"
 
-# Update playbook value props
-/octave:library update pb_xyz789 --instructions "Make the CTO value prop focus more on cost savings"
+# Edit a Motion Playbook narrative (e.g. refine the Benefits and impacts section in the CTO × Enterprise Motion ICP)
+/octave:library update motion-playbook mp_xyz789 --instructions "In the CTO × Enterprise cell, sharpen the cost-savings angle in Benefits and impacts"
 ```
 
 ### Audit Your Library
@@ -109,7 +112,7 @@ Library Audit Report
 Health Score: 72/100
 
 CRITICAL ISSUES (2)
-- Playbook "Enterprise Sales" has no linked personas
+- No Motion created for the "Enterprise Platform" offering
 - No proof points defined for Healthcare segment
 
 WARNINGS (5)
@@ -132,7 +135,7 @@ Run /octave:audit --fix to address issues interactively.
 
 Returns:
 - Person and company profile
-- Matched persona and playbook
+- Matched persona × segment Motion ICP (with Strategic narrative, Pains and consequences, Methodology stages)
 - Recommended discovery questions
 - Pain points to probe
 - Potential objections to prepare for
@@ -195,14 +198,14 @@ Returns:
 /octave:campaign "Q1 pipeline push" --persona "VP Engineering" --channels email,linkedin,ads,social
 
 # Competitive displacement campaign
-/octave:campaign "competitive displacement" --playbook "Enterprise"
+/octave:campaign "competitive displacement" --motion "Enterprise Net New"
 ```
 
 Example flow:
 ```
 /octave:campaign "Q1 pipeline push" --persona "CTO"
 
-[Gathers library intelligence: persona, playbooks, proof points, brand voice]
+[Gathers library intelligence: persona, Motion ICPs, proof points, brand voice]
 
 CAMPAIGN PLAN: Q1 Pipeline Acceleration
 ========================================
@@ -281,7 +284,7 @@ See `skills/ads/references/performance-data-sources.md` for setup steps, smoke t
 
 The resonance loop:
 - Maps winning variants back to their source cards to identify what resonated and why
-- Generates library update recommendations (persona pain points, playbook openers, value prop framing)
+- Generates library update recommendations (persona pain points, Motion ICP narrative openers, value prop framing)
 - Produces a sales intelligence brief with winning language for discovery calls
 - Recommends next campaign iterations based on what worked
 
@@ -525,8 +528,8 @@ TRAP QUESTIONS
 # Map more stakeholders
 /octave:abm acme.com --stakeholders 8
 
-# Use specific playbook
-/octave:abm acme.com --playbook "Enterprise"
+# Use specific Motion
+/octave:abm acme.com --motion "Enterprise Net New"
 ```
 
 Example output:
@@ -700,8 +703,8 @@ CONTENT KIT
 # Persona deep-dive for reps
 /octave:enablement persona-guide --persona "CTO"
 
-# Playbook quick reference
-/octave:enablement playbook-summary --playbook "Enterprise"
+# Motion ICP quick reference
+/octave:enablement motion-icp-summary --motion "Enterprise Net New"
 ```
 
 Example objection guide:
@@ -781,8 +784,8 @@ RECOMMENDED UPDATES
 # Basic email
 /octave:generate email --to "John Smith at Acme" --about "reducing deployment time"
 
-# With persona context
-/octave:generate email --to "john@acme.com" --persona "CTO" --playbook "Enterprise DevOps"
+# With persona context (pulls the Motion ICP for CTO × Enterprise from the "Enterprise DevOps" Motion)
+/octave:generate email --to "john@acme.com" --persona "CTO" --motion "Enterprise DevOps"
 
 # LinkedIn message
 /octave:generate linkedin --to "Sarah Chen, VP Eng" --about "developer productivity"
@@ -815,7 +818,7 @@ When your qualification agent scores prospects in ways that don't match your gut
 
 The qual doctor walks through five phases:
 
-1. **Setup** — pick a saved qualification agent (or raw qualify tool), choose sections to tune (product/segment/persona/playbook), and review current questions and entity descriptions
+1. **Setup** — pick a saved qualification agent (or raw qualify tool), choose sections to tune (product/segment/persona), and review current questions and entity descriptions
 2. **Collect test cases** — provide 3-15 known-fit prospects with expected score bands (and expected entity matches for routing+scoring sections). Or ask the skill to find them via `find_similar_*`
 3. **Run + annotate** — executes qualification for each test case, shows the sub-score for the section being tuned, and collects "why" annotations for every mismatch
 4. **Diagnose + fix** — per-mismatch deep dive showing which questions are causing wrong scores, plus cross-case patterns and ranked recommendations. Applies changes via `update_entity` with confirmation
@@ -891,8 +894,8 @@ The skill also handles cases where the issue isn't a missing question but a miss
 ### Find ICP-Fit Companies
 
 ```
-# Using a playbook's ICP
-/octave:prospector --playbook "Enterprise Sales"
+# Using a Motion's ICP
+/octave:prospector --motion "Enterprise Net New"
 
 # Filter by segment
 /octave:prospector --segment "Healthcare"
@@ -921,11 +924,13 @@ The skill also handles cases where the issue isn't a missing question but a miss
 /octave:brainstorm campaigns for enterprise
 ```
 
-### Playbook Pack Generation
+### Custom Motion Playbook Ideas
 
 ```
-/octave:brainstorm playbook pack
+/octave:brainstorm motion playbooks
 ```
+
+Generates angles for Custom Motion Playbooks (`THEMATIC`, `MILESTONE`, `ACCOUNT`, `COMPETITIVE`) to layer on top of your existing Default Motion Playbook(s).
 
 ### Lead Magnet Ideas
 
@@ -945,7 +950,7 @@ The skill also handles cases where the issue isn't a missing question but a miss
 
 Then paste your email thread. Returns:
 - Resonance analysis (what landed, what didn't)
-- Adherence analysis (did you follow the playbook?)
+- Adherence analysis (did you follow the Motion ICP narrative?)
 - Differentiation analysis (competitive positioning)
 - Action items and follow-up suggestions
 - Draft follow-up message
@@ -1094,8 +1099,8 @@ Shows both template workflows (shipped with the plugin) and your custom workflow
 # 1. Research attendees and company
 /octave:research john@acme.com --for discovery
 
-# 2. Review relevant playbook
-/octave:library show pb_enterprise
+# 2. Review the relevant Motion ICP (persona × segment cell)
+/octave:library show mi_cto_enterprise
 
 # 3. Check recent insights for this persona
 /octave:insights --persona "CTO"
@@ -1187,7 +1192,7 @@ Shows both template workflows (shipped with the plugin) and your custom workflow
 
 ### Content Generation Quality
 
-- Reference specific personas and playbooks for consistency
+- Reference specific personas and Motion ICPs for consistency
 - Use saved agents for repeatable, high-quality output
 - Review and customize generated content before sending
 - Use `/octave:messaging` to build frameworks before `/octave:campaign`

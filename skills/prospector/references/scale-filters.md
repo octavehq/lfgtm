@@ -67,5 +67,5 @@ Would you like me to:
 1. Research any of these companies in depth
 2. Find contacts at specific companies
 3. Generate outreach for top prospects
-4. Save these criteria to a playbook
+4. Save these criteria to a Motion (which becomes the targeting source for agents)
 ```

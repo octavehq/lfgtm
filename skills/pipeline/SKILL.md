@@ -5,7 +5,7 @@ description: Deal-level coaching with diagnosis, stakeholder strategy, and next-
 
 # /octave:pipeline - Deal Coach
 
-Deal-level coaching and strategy. Diagnose stalled deals, plan multi-threading, counter competitive threats, engage executives, and generate deal-specific next steps — all informed by your library's playbooks and real conversation data.
+Deal-level coaching and strategy. Diagnose stalled deals, plan multi-threading, counter competitive threats, engage executives, and generate deal-specific next steps — all informed by your library's Motion ICP narratives and real conversation data.
 
 ## Usage
 
@@ -104,12 +104,14 @@ list_findings({
   }
 })
 
-# Match to playbook
-search_knowledge_base({
-  query: "<company industry> <persona> <deal context>",
-  entityTypes: ["playbook"]
-})
-get_playbook({ oId: "<playbook_oId>", includeValueProps: true })
+# Match to Motion ICP cell for this deal's persona × segment
+list_motions()  # find the Motion for the offering being sold (and motion type, e.g. NET_NEW)
+list_motion_icps({ motionOId: "<motion_oId>" })  # see the persona × segment matrix
+find_motion_icp({ motionIcpOId: "<motion_icp_oId>", includeLearnings: true })  # full cell narrative + Learning Loop learnings
+
+# If a Custom Motion Playbook (COMPETITIVE / MILESTONE / ACCOUNT / THEMATIC) is more relevant:
+list_motion_playbooks({ motionOId: "<motion_oId>" })
+get_motion_playbook({ motionPlaybookOId: "<mp_oId>" })
 
 # Get competitive intel if relevant
 search_knowledge_base({
@@ -174,7 +176,9 @@ What would you like to do next?
 - `list_events` - Conversation and deal history
 - `list_findings` - Extracted insights from interactions
 - `get_event_detail` - Deep dive into specific interactions
-- `search_knowledge_base` - Playbooks, competitors, proof points
+- `search_knowledge_base` - Competitors, proof points, references
+- `list_motions` / `list_motion_icps` / `find_motion_icp` - Pull the Motion ICP cell for this deal's persona × segment (Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References, plus Learning Loop learnings)
+- `list_motion_playbooks` / `get_motion_playbook` - Pull Custom Motion Playbooks (`COMPETITIVE`, `MILESTONE`, `ACCOUNT`, `THEMATIC`) when a specific angle fits the deal better than the Default Motion Playbook
 
 ### Content Generation
 - `generate_email` - Outreach and follow-up drafts
@@ -197,11 +201,13 @@ What would you like to do next?
 > 2. I'll search for stakeholders at the company
 > 3. Proceed with company-level coaching
 
-**No Matching Playbook:**
-> No playbook matches this deal perfectly.
+**No Matching Motion ICP:**
+> No Motion ICP cell matches this deal's persona × segment perfectly.
 >
-> Using closest match: [Playbook name]
-> Consider creating a playbook for this scenario: `/octave:library create playbook`
+> Using closest match: [Motion ICP cell]
+> If this is a recurring scenario, consider creating a Custom Motion Playbook
+> (`THEMATIC`, `MILESTONE`, `ACCOUNT`, or `COMPETITIVE`) layered on the relevant Motion:
+> `/octave:library create motion-playbook`
 
 ## Related Skills
 

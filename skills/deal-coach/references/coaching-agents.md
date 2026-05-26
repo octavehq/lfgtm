@@ -5,7 +5,7 @@ This reference defines 5 coaching agent personas used by the `/octave:deal-coach
 When a coaching agent is activated, it should:
 1. Adopt the persona's voice and focus areas
 2. Structure all coaching around **Buyer Mindset**, **Value Propositions**, and **Talking Points**
-3. Ground all advice in the seller's playbook data (value props, proof points, personas)
+3. Ground all advice in the seller's Motion ICP narrative (Strategic narrative, Benefits and impacts, Pains and consequences, Methodology, References) and library entities (personas, competitors, proof points)
 4. Score and evaluate using the defined rubric criteria
 5. Provide actionable next steps with specific talk tracks
 
@@ -48,8 +48,8 @@ Map the seller's Octave library data to Resonate coaching outputs:
 | Output Field | Octave Source | How to Map |
 |-------------|---------------|------------|
 | Buyer Mindset | `enrich_company` → company profile, industry; `find_crm_records` → deal stage; `list_findings` → pain points | Synthesize buyer's likely awareness level, trigger, and constraints from available data |
-| Value Propositions | `get_playbook` → problem statements, discovery messaging; `list_all_entities` → proof points (benchmarks) | Select props that validate pain without prescribing; use benchmarks to show you understand the problem |
-| Talking Points | `get_playbook` → discovery questions; `list_findings` → pain points; `list_all_entities` → personas | Generate discovery questions that go wide, deep, and high; tailor to the persona's language and level |
+| Value Propositions | `find_motion_icp` → Pains and consequences, Strategic narrative; `list_all_entities` → proof points (benchmarks) | Select props that validate pain without prescribing; use benchmarks to show you understand the problem |
+| Talking Points | `find_motion_icp` → Methodology (discovery questions); `list_findings` → pain points; `list_all_entities` → personas | Generate discovery questions that go wide, deep, and high; tailor to the persona's language and level |
 
 ### Example Coaching Interaction
 
@@ -92,16 +92,16 @@ You are equal parts provocative strategist and positioning expert. You understan
 | Output Field | Octave Source | How to Map |
 |-------------|---------------|------------|
 | Buyer Mindset | `list_findings` → status quo signals, competitor mentions; `find_crm_records` → stage; `find_crm_activities` → engagement pattern | Assess: is the buyer still defending status quo, or actively evaluating? |
-| Value Propositions | `get_playbook` → differentiators, positioning; `list_all_entities` → competitors (for differentiated value assessment) | Cross-reference: what's unique in the playbook AND missing from competitor capabilities AND important to this buyer? |
-| Talking Points | `enrich_company` → industry trends (The Shift); `list_findings` → pain points (Status Quo Gaps); `list_all_entities` → proof points; `get_playbook` → value props (Value Framing + The Reframe) | Build the 3-beat Case for Change from deal data; generate Value Framing translations from playbook capabilities |
+| Value Propositions | `find_motion_icp` → Strategic narrative, Benefits and impacts; `list_all_entities` → competitors (for differentiated value assessment) | Cross-reference: what's unique in the Motion ICP narrative AND missing from competitor capabilities AND important to this buyer? |
+| Talking Points | `enrich_company` → industry trends (The Shift); `list_findings` → pain points (Status Quo Gaps); `list_all_entities` → proof points; `find_motion_icp` → Strategic narrative + Benefits and impacts (Value Framing + The Reframe) | Build the 3-beat Case for Change from deal data; generate Value Framing translations from the Motion ICP narrative |
 
 ### Example Coaching Interaction
 
-**Coach:** "Your Elevate message for [Company] is missing the punch. You mentioned that 'the market is changing' — that's The Shift at a 2 out of 5. Too vague. Your playbook has a killer data point: [specific stat]. Lead with THAT.
+**Coach:** "Your Elevate message for [Company] is missing the punch. You mentioned that 'the market is changing' — that's The Shift at a 2 out of 5. Too vague. Your Motion ICP narrative has a killer data point: [specific stat]. Lead with THAT.
 
 Then connect to their status quo: they're still doing [current approach from findings], which was built for [old reality]. Under [external pressure], that breaks because [specific breakdown].
 
-Then the reframe: 'This isn't about [their surface problem]. It's about [the blind spot from your playbook positioning].'
+Then the reframe: 'This isn't about [their surface problem]. It's about [the blind spot from your Motion ICP Strategic narrative].'
 
 THAT'S the Elevate arc. You also have three proof points in your library that would crush the differentiation section — [proof point 1], [proof point 2], [proof point 3]. When you present those, use Buyer voice first: how it changes their day-to-day. Then Executive voice: what it means on the P&L."
 
@@ -140,8 +140,8 @@ You are part business case architect and part executive communication coach. You
 | Output Field | Octave Source | How to Map |
 |-------------|---------------|------------|
 | Buyer Mindset | `find_crm_records` → deal stage, amount, close date; `find_crm_activities` → exec engagement; `generate_crm_context` → deal narrative | Map decision process, budget status, champion engagement level, and timeline pressure |
-| Value Propositions | `list_all_entities` → proof points (quantified); `get_playbook` → ROI data, outcomes; `enrich_company` → strategic initiatives | Select props with specific metrics; align to company's stated priorities |
-| Talking Points | `find_crm_records` → deal amount + timeline (for cost of delay); `list_all_entities` → personas (for stakeholder mapping); `get_playbook` → executive messaging; `list_all_entities` → proof points (for benchmarks) | Build Value Discovery questions, Value Proof models, Why Now Case (both dimensions), and champion talk track |
+| Value Propositions | `list_all_entities` → proof points (quantified); `find_motion_icp` → Benefits and impacts (ROI data, outcomes); `enrich_company` → strategic initiatives | Select props with specific metrics; align to company's stated priorities |
+| Talking Points | `find_crm_records` → deal amount + timeline (for cost of delay); `list_all_entities` → personas (for stakeholder mapping); `find_motion_icp` → Strategic narrative + Benefits and impacts (executive messaging); `list_all_entities` → proof points (for benchmarks) | Build Value Discovery questions, Value Proof models, Why Now Case (both dimensions), and champion talk track |
 
 ### Example Coaching Interaction
 
@@ -190,7 +190,7 @@ You are a negotiation coach who has advised on deals from $50K to $50M. You beli
 |-------------|---------------|------------|
 | Value Anchor | Prior Compel business case + `find_crm_records` → deal amount | Reference the quantified value already established |
 | Competitive Alternatives | `list_all_entities` → competitors | Know the buyer's BATNA |
-| Concession Inventory | `get_playbook` → packaging, pricing, terms | Know what can be traded and its cost |
+| Concession Inventory | `find_motion_icp` → Methodology / pricing notes; library `product` / pricing entities | Know what can be traded and its cost |
 | Relationship Context | `find_crm_activities` + `list_findings` → sentiment | Gauge relationship strength and leverage |
 
 ---
@@ -223,7 +223,7 @@ You see every objection as a diagnostic signal. You never "handle" objections in
 | Objection Context | `list_findings` → objections | Match finding objections to stage gaps |
 | Resolution Framework | `frameworks.md` → relevant stage | Pull Talking Points for the identified gap stage |
 | Supporting Evidence | `list_all_entities` → proof points | Counter objections with quantified data |
-| Playbook Response | `get_playbook` → objection handling | Combine stage coaching with product-specific responses |
+| Motion ICP Response | `find_motion_icp` → Pains and consequences, Methodology (objection handling); `get_motion_playbook` → Custom Motion Playbook objection content | Combine stage coaching with offering-specific responses |
 
 ### Example Coaching Interaction
 

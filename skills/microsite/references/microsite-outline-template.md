@@ -24,9 +24,9 @@ SECTION OUTLINE
    • [Key point grounded in research]
 
 3. [SECTION 3 NAME]
-   • [Content informed by playbook/value props]
-   • [Content informed by playbook/value props]
-   • [Content informed by playbook/value props]
+   • [Content informed by Motion ICP narrative]
+   • [Content informed by Motion ICP narrative]
+   • [Content informed by Motion ICP narrative]
 
 4. [SECTION 4 NAME]
    • [Proof point 1 — metric, company, quote]

@@ -68,8 +68,8 @@ Any MCP tool from the Octave server can be used in a workflow step:
 |-------|-------|
 | Research | `find_company`, `find_person`, `find_similar_companies`, `find_similar_people`, `enrich_company`, `enrich_person` |
 | Qualify | `qualify_company`, `qualify_person` |
-| Library | `list_all_entities`, `get_entity`, `get_playbook`, `search_knowledge_base`, `list_value_props` |
+| Library | `list_all_entities`, `get_entity`, `list_motions`, `list_motion_playbooks`, `get_motion_playbook`, `list_motion_icps`, `find_motion_icp`, `search_knowledge_base` |
 | Generate | `generate_email`, `generate_content`, `generate_call_prep` |
 | Agents | `run_email_agent`, `run_content_agent`, `run_call_prep_agent`, `run_enrich_person_agent`, `run_enrich_company_agent`, `run_qualify_person_agent`, `run_qualify_company_agent` |
-| Write | `create_entity`, `create_playbook`, `update_entity`, `update_playbook` |
+| Write | `create_entity`, `create_motion_playbook`, `update_entity`, `update_motion_playbook` |
 | Deliver | `ListMcpResourcesTool` (discover connected MCP servers), any connected MCP server tools (Google Drive, Salesforce, Slack, etc.), Write tool (local files) |

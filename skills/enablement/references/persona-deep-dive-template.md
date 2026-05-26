@@ -53,5 +53,5 @@ FROM REAL CONVERSATIONS
 
 ---
 
-Sources: [Persona entity, playbooks, conversation findings]
+Sources: [Persona entity, Motion ICP narratives, conversation findings]
 ```

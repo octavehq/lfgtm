@@ -49,8 +49,8 @@ ADDITIONAL INSIGHTS
 - LIBRARY GAP: The agent picked "RevOps Leader" for a marketing person.
   You may need a more distinct persona for marketing ops roles.
 
-- SECTION INCONSISTENCY: Product scores a company at 9 but Playbook scores it
-  at 2 (too large for playbook ICP). Intentional or misaligned?
+- SECTION INCONSISTENCY: Product scores a company at 9 but the Motion ICP scores it
+  at 2 (too large for the Motion ICP). Intentional or misaligned?
 
 - DEEP RESEARCH: 3/5 test cases had LOW confidence on tool-usage questions.
   Enabling deep research on the agent would improve answer quality.

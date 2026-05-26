@@ -5,12 +5,12 @@ description: Account-based planning with stakeholder mapping, persona matching, 
 
 # /octave:abm - Account Planner
 
-Create comprehensive account plans for target accounts by combining deep research, stakeholder mapping, persona matching, and coordinated outreach — all grounded in your library's playbooks and proof points.
+Create comprehensive account plans for target accounts by combining deep research, stakeholder mapping, persona matching, and coordinated outreach — all grounded in your library's Motion ICP cells and proof points.
 
 ## Usage
 
 ```
-/octave:abm <company> [--stakeholders <N>] [--playbook <name>] [--depth quick|full]
+/octave:abm <company> [--stakeholders <N>] [--motion <name>] [--depth quick|full]
 ```
 
 ## Examples
@@ -18,7 +18,7 @@ Create comprehensive account plans for target accounts by combining deep researc
 ```
 /octave:abm acme.com                                      # Full account plan
 /octave:abm acme.com --stakeholders 5                     # Map top 5 stakeholders
-/octave:abm acme.com --playbook "Enterprise"              # Use specific playbook
+/octave:abm acme.com --motion "Enterprise Expansion"      # Scope to a specific Motion's ICP matrix
 /octave:abm acme.com --depth quick                        # Quick assessment only
 /octave:abm "Acme Corp"                                   # Search by company name
 ```
@@ -48,7 +48,7 @@ enrich_company({ companyDomain: "<domain>" })
 # Qualify against ICP
 qualify_company({
   companyDomain: "<domain>",
-  additionalContext: "Evaluate fit against all segments. Identify which segment, use cases, and playbooks are most relevant."
+  additionalContext: "Evaluate fit against all segments. Identify which segment, use cases, and Motion ICP cells are most relevant."
 })
 ```
 
@@ -99,17 +99,17 @@ qualify_person({
 })
 ```
 
-### Step 4: Match Playbooks and Gather Intelligence
+### Step 4: Match Motion ICP Cell and Gather Intelligence
 
 ```
-# Find best-fit playbook
-search_knowledge_base({
-  query: "<company industry> <company size> <identified personas>",
-  entityTypes: ["playbook"]
-})
+# Find the right Motion for this account (offering + motion type)
+list_motions()
 
-# Get playbook with value props
-get_playbook({ oId: "<playbook_oId>", includeValueProps: true })
+# See the persona × segment matrix for the matched Motion
+list_motion_icps({ motionOId: "<motion_oId>" })
+
+# Fetch the narrative for the target persona × segment cell
+find_motion_icp({ motionIcpOId: "<motion_icp_oId>", includeLearnings: true })
 
 # Find relevant proof points (industry, size match)
 search_knowledge_base({
@@ -149,7 +149,7 @@ generate_email({
   },
   numEmails: 4,
   sequenceType: "COLD_OUTBOUND",
-  allEmailsContext: "Account plan context: [company signals, persona match, value props, proof points]",
+  allEmailsContext: "Account plan context: [company signals, persona match, Motion ICP narrative, proof points]",
   allEmailsInstructions: "Personalized to [company] specifically. Reference [relevant signals]. Use [proof points] progressively."
 })
 ```
@@ -166,8 +166,9 @@ generate_email({
 
 ### Library Context
 - `list_all_entities` (persona) - Get persona definitions for stakeholder matching
-- `get_playbook` - Get recommended playbook
-- `list_value_props` - Persona-specific value props
+- `list_motions` - List all Motions in the workspace
+- `list_motion_icps` - List Motion ICP cells (persona × segment intersections) for a Motion
+- `find_motion_icp` - Full Motion ICP cell narrative (Target ICP overview, Operating landscape, Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References) plus Learning Loop learnings
 - `search_knowledge_base` - Proof points, references, competitive intel
 - `list_events` - Existing conversation history with account
 

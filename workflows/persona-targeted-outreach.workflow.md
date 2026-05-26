@@ -47,15 +47,25 @@ If the user provided a persona name rather than an oId, first use `list_all_enti
 
 Present the persona overview to confirm this is the right target.
 
-### Step 2: Find Matching Playbook
-tool: search_knowledge_base
-params:
-  query: "playbook for {{persona.name}} persona"
-  entityTypes: ["playbook"]
-save_as: matched_playbook
-description: Find the best playbook for this persona to use for messaging context.
+### Step 2: Find Matching Motion ICP
+tool: list_motions
+save_as: motions
+description: List Motions in the workspace.
 
-If a matching playbook is found, use `get_playbook` to fetch its full details including value props. Present the playbook match. If no playbook found, note that outreach will use persona-level messaging only.
+tool: list_motion_icps
+params:
+  motionOId: "{{motions[0].oId}}"
+save_as: motion_icps
+description: List Motion ICP cells (persona × segment intersections) under the relevant Motion.
+
+tool: find_motion_icp
+params:
+  motionIcpOId: "{{motion_icp_for_persona.oId}}"
+  includeLearnings: true
+save_as: matched_motion_icp
+description: Identify the Motion ICP cell whose persona aligns with {{persona.name}} and fetch its narrative (Target ICP overview, Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References) + Learning Loop learnings.
+
+Present the matched Motion ICP cell. If no matching cell is found, note that outreach will use persona-level messaging only and recommend adding the missing persona × segment cell to the Motion.
 
 ### Step 3: Find Matching People
 tool: find_person
@@ -138,7 +148,7 @@ params:
     linkedInProfile: "{{prospect.linkedInProfile}}"
     companyName: "{{prospect.companyName}}"
     title: "{{prospect.title}}"
-  allEmailsContext: "Targeting {{persona.name}} persona. Pain points: {{persona.painPoints}}. Value props: {{matched_playbook.valueProps}}. Person background: {{prospect.enrichment.summary}}"
+  allEmailsContext: "Targeting {{persona.name}} persona. Pain points: {{persona.painPoints}}. Motion ICP narrative (strategic narrative + benefits + methodology): {{matched_motion_icp}}. Person background: {{prospect.enrichment.summary}}"
   numEmails: 4
 save_as: email_sequences
 description: Generate personalized email sequences for each selected prospect, using persona messaging and individual enrichment data.
@@ -152,7 +162,7 @@ template: |
   ====================================
 
   Persona: {{persona.name}}
-  Playbook: {{matched_playbook.name}}
+  Motion ICP: {{matched_motion_icp.name}}
   Prospects Targeted: {{selected_prospects.length}}
 
   ---

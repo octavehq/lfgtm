@@ -23,7 +23,7 @@ Generate consumable sales enablement materials — quick reference cards, object
 /octave:enablement competitive-sheet                      # Competitive cheat sheet
 /octave:enablement onboarding                             # New hire enablement kit
 /octave:enablement persona-guide                          # Persona deep-dive for reps
-/octave:enablement playbook-summary                       # Playbook quick reference
+/octave:enablement motion-summary                         # Motion ICP quick reference
 ```
 
 ## Instructions
@@ -48,7 +48,7 @@ COMPETITIVE
 TEAM DEVELOPMENT
 5. New Hire Onboarding Kit - Library walkthrough + essentials for new reps
 6. Persona Deep-Dive - Everything a rep needs to know about selling to a persona
-7. Playbook Quick Reference - Condensed playbook for quick consumption
+7. Motion ICP Quick Reference - Condensed Motion ICP narrative for quick consumption
 
 Your choice:
 ```
@@ -60,7 +60,7 @@ What's the focus?
 1. Specific persona: [List personas]
 2. Specific product: [List products]
 3. Specific competitor: [List competitors]
-4. Specific playbook: [List playbooks]
+4. Specific Motion / Motion ICP cell: [List Motions and ICP cells]
 5. General / all
 ```
 
@@ -72,8 +72,10 @@ Enablement materials are unique because they blend library data with conversatio
 # Get the focus entity
 get_entity({ oId: "<entity_oId>" })
 
-# Get related playbook
-get_playbook({ oId: "<playbook_oId>", includeValueProps: true })
+# Get the related Motion + Motion ICP cell (persona × segment)
+list_motions()
+list_motion_icps({ motionOId: "<motion_oId>" })
+find_motion_icp({ motionIcpOId: "<motion_icp_oId>", includeLearnings: true })
 
 # Get real objections from conversations
 list_findings({
@@ -152,9 +154,9 @@ See [persona-deep-dive-template.md](references/persona-deep-dive-template.md) fo
 
 ---
 
-#### Type: Playbook Quick Reference
+#### Type: Motion ICP Quick Reference
 
-See [playbook-quick-reference-template.md](references/playbook-quick-reference-template.md) for the PLAYBOOK QUICK REFERENCE output template.
+See [motion-icp-quick-reference-template.md](references/motion-icp-quick-reference-template.md) for the MOTION ICP QUICK REFERENCE output template (condensed Motion ICP narrative — Target ICP overview, Strategic narrative, Pains/Benefits, Methodology highlights — for quick rep consumption).
 
 ### Step 4: Offer Follow-Up Actions
 
@@ -182,8 +184,11 @@ For the full interactive mode selector, use `/octave:generate`.
 ### Library Context
 - `list_all_entities` - All entity types for comprehensive coverage
 - `get_entity` - Full entity details
-- `get_playbook` - Playbook with value props
-- `list_value_props` - Value propositions
+- `list_motions` - List Motions in the workspace
+- `list_motion_playbooks` - List Motion Playbooks under a Motion (Default + Custom)
+- `get_motion_playbook` - Full details for a Motion Playbook
+- `list_motion_icps` - List Motion ICP cells (persona × segment) for a Motion
+- `find_motion_icp` - Motion ICP narrative + Learning Loop learnings
 - `search_knowledge_base` - Proof points, references, messaging
 
 ### Conversation Evidence

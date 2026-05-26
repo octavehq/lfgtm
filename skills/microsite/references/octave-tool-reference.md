@@ -7,9 +7,11 @@ Start with enrichment and qualification — this drives the personalization that
 | What you need | Tool | When to use |
 |---------------|------|-------------|
 | Company profile | `enrich_company({ companyDomain })` | Always — industry, size, tech stack, signals power the entire page |
-| ICP fit scoring | `qualify_company({ companyDomain })` | Always — matched segment determines which playbook to pull |
-| Matching playbook | `search_knowledge_base({ query: "<industry> <persona>", entityTypes: ["playbook"] })` | Always — messaging, value props, and positioning for their segment |
-| Playbook + value props | `get_playbook({ oId, includeValueProps: true })` | After finding the best-fit playbook — drives the solution section |
+| ICP fit scoring | `qualify_company({ companyDomain })` | Always — matched segment determines which Motion ICP cell to pull |
+| Motions for offering | `list_motions()` | Always — find the Motion(s) covering this offering / motion type |
+| Persona × segment matrix | `list_motion_icps({ motionOId })` | Always — pick the Motion ICP cell that matches their persona × segment |
+| Motion ICP cell narrative | `find_motion_icp({ motionIcpOId, includeLearnings: true })` | After identifying the cell — drives the solution section (Strategic narrative, Benefits and impacts, Pains and consequences) |
+| Custom Motion Playbooks | `list_motion_playbooks({ motionOId })` + `get_motion_playbook` | Pull any Thematic / Milestone / Account / Competitive angles layered on the Motion |
 | Brand voice | `list_all_entities(entityType: "brand_voice")` | Always — consistent tone across the microsite |
 
 ---
@@ -47,7 +49,8 @@ When the angle is competitive displacement:
 |---------------|------|-------------|
 | All competitors | `list_all_entities({ entityType: "competitor" })` | Quick scan of competitive landscape |
 | Competitor details | `get_entity({ oId })` | Deep dive on the specific competitor they likely use |
-| Competitive positioning | `search_knowledge_base({ query: "<competitor> differentiation", entityTypes: ["playbook", "competitor"] })` | Messaging angles for competitive deals |
+| Competitive positioning | `search_knowledge_base({ query: "<competitor> differentiation", entityTypes: ["competitor"] })` | Messaging angles for competitive deals |
+| Competitive Motion Playbook | `list_motion_playbooks({ motionOId })` then `get_motion_playbook` on any `COMPETITIVE` narrative-type playbook | Pull a dedicated competitive Custom Motion Playbook if one exists for the relevant competitor |
 | Competitive wins | `list_findings({ query: "<competitor>" })` | Real conversation intel about competitive situations |
 
 ---

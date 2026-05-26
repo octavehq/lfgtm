@@ -109,13 +109,11 @@ Check competitive activity.
 
 ### Step 9: Library Health Check
 
-Assess library coverage and freshness.
+Assess library coverage and freshness via Motions and their Motion Playbooks.
 
-- tool: list_all_entities
-- params:
-  - entityType: "playbook"
-- save_as: playbooks
-- description: Check playbook coverage and identify gaps
+- tool: list_motions
+- save_as: motions
+- description: Check Motion coverage and identify gaps (a Motion auto-creates a Default Motion Playbook covering the persona × segment matrix; Custom Motion Playbooks layer thematic/account/competitive narratives on top)
 
 ### Step 10: Review and Prioritize
 
@@ -149,7 +147,7 @@ Generate the comprehensive review.
 - tool: generate_content
 - params:
   - instructions: "Generate a comprehensive quarterly GTM review report. Include: Executive summary, Win/loss analysis with patterns, Field intelligence trends, ICP accuracy assessment, Competitive landscape changes, Messaging effectiveness, Recommended actions for next quarter. Be data-driven — cite specific numbers and patterns."
-  - customContext: "Deal outcomes: {{deal_outcomes}}. Win factors: {{win_factors}}. Loss factors: {{loss_factors}}. Field intel: {{field_intel}}. Positive signals: {{positive_signals}}. Current segments: {{current_segments}}. Personas: {{current_personas}}. Competitors: {{competitors}}. Playbooks: {{playbooks}}."
+  - customContext: "Deal outcomes: {{deal_outcomes}}. Win factors: {{win_factors}}. Loss factors: {{loss_factors}}. Field intel: {{field_intel}}. Positive signals: {{positive_signals}}. Current segments: {{current_segments}}. Personas: {{current_personas}}. Competitors: {{competitors}}. Motions: {{motions}}."
 - save_as: quarterly_report
 - description: Generate the full quarterly GTM review
 
