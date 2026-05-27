@@ -15,6 +15,7 @@ User runs `/octave:library` with subcommands:
 - `/octave:library show <oId>` - Show full entity details
 - `/octave:library create <type> "<name>"` - Create new entity
 - `/octave:library update <oId>` - Update existing entity
+- `/octave:library history [<oId>]` - Browse revision history across the library or for a single entity
 
 Or natural language like:
 - "Show me all personas"
@@ -486,6 +487,28 @@ User: "Add a competitive displacement Motion Playbook for [Competitor] under our
    })
 ```
 
+### Subcommand: history
+
+Browse the audit trail for library entities — who changed what, when, and what the diff looked like.
+
+**Usage:**
+```
+/octave:library history                          # recent revisions across the workspace
+/octave:library history pe_abc123                # all revisions for one entity
+/octave:library history --type persona           # recent revisions, filtered by entity type
+/octave:library history --since 2026-04-01       # revisions on or after a date
+/octave:library history rv_xyz789 --diff         # full snapshot + diff for one revision
+```
+
+**Actions:**
+- For a list of revisions: use `list_revisions` with any combination of `entityTypes`, `entityOIds`, `startDate`, `endDate`, `authorOId`, `includeRestored`, `limit`, `offset`. The list returns lightweight summaries (revisionOId, entity, action, author, timestamp) — no field-level diff.
+- For a specific revision's full snapshot and diff: use `get_revision({ revisionOId, diffOnly: false })`. Pass `diffOnly: true` to skip the full snapshot and only return the change set.
+
+**Use this when:**
+- The user asks "what changed recently?", "who edited this persona?", "show me the history of this segment", "did anyone touch the library last week?"
+- You suspect an entity was edited out from under an agent's expectations (e.g. a persona's pain points were rewritten and an email agent is now producing odd copy)
+- Auditing — see CLEANUP MODE in `/octave:audit` — wants to know whether stale-looking content is actually stale or was recently revised
+
 ### Legacy playbooks (deprecated)
 
 The legacy `get_playbook`, `list_value_props`, `create_playbook`, `update_playbook`, `add_value_props`, and `update_value_props` tools remain available for backwards compatibility with workspaces still operating on standalone playbooks. New workflows should prefer the Motion / Motion Playbook / Motion ICP tools above; legacy playbook tools should only be used when explicitly working with a workspace that hasn't migrated to Motions.
@@ -506,6 +529,10 @@ The legacy `get_playbook`, `list_value_props`, `create_playbook`, `update_playbo
 - `get_motion_playbook` - Full Motion Playbook details
 - `list_motion_icps` - Persona × segment matrix (Motion ICP cells) for a Motion
 - `find_motion_icp` - Full Motion ICP cell narrative (Target ICP overview, Operating landscape, Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References) + Learning Loop learnings
+
+### Revision / Audit Trail Operations
+- `list_revisions` - List entity revisions across the workspace; filter by `entityTypes`, `entityOIds`, `startDate`, `endDate`, `authorOId`, `includeRestored`, with `limit` / `offset` paging. Returns lightweight summaries (no field-level diff).
+- `get_revision` - Full snapshot + diff for a single revision; pass `diffOnly: true` to skip the snapshot and return only the change set.
 
 ### Write Operations
 - `create_entity` - Create new library entity (calls generate endpoints)

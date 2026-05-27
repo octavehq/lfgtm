@@ -57,6 +57,13 @@ Then use `get_entity` for entities that need deeper inspection (qualifying quest
 
 If `--type` is specified, only fetch that type (but still need related types for relationship checks).
 
+**Optional — surface what's changed recently.** When the user is asking about staleness ("what hasn't been touched in a while?", "show me what's been changing"), or you suspect an entity is mid-edit, use the revision tools:
+
+- `list_revisions({ startDate, entityTypes, limit })` — recent edits across the workspace (or filtered by entity type / author). Returns lightweight summaries (no field-level diff).
+- `get_revision({ revisionOId, diffOnly: true })` — full diff for a specific revision when you need to know exactly what changed.
+
+This is especially useful in **CLEANUP MODE** below, where staleness (e.g. competitors not updated in 30+ days) and recent churn (e.g. a persona that was rewritten twice last week) are both audit signals.
+
 ### Step 2: Determine Mode
 
 After gathering the library state, ask the user:
@@ -615,6 +622,7 @@ If the library has 0 proof points AND 0 references, don't just flag it as "missi
 
 - [ ] Entities updated within last 90 days (flag if older)
 - [ ] Competitor info updated within last 30 days (competitive intel goes stale fast)
+- [ ] Use `list_revisions({ startDate, entityTypes })` to see what's actually been edited recently — an entity with an old `updatedAt` but no revision activity is genuinely stale; one with recent revisions is being actively maintained. Use `get_revision({ revisionOId, diffOnly: true })` to inspect a specific change if a revision looks suspicious (e.g. a competitor's strengths were silently rewritten).
 
 #### Duplicate Detection (WARNING)
 
