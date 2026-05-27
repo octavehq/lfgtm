@@ -330,7 +330,7 @@ Navigation:
 - Scroll naturally to read through sections
 - Click nav dots on the right edge to jump to sections
 - Click section headers to collapse/expand
-- Print-friendly: Cmd+P / Ctrl+P for clean PDF output
+- PDF (recommended): bash "${CLAUDE_PLUGIN_ROOT:-.}"/scripts/export-pdf.sh .octave-briefs/<brief-name>-<date>/<brief-name>.html  — or Cmd+P / Ctrl+P -> Save as PDF
 
 ---
 

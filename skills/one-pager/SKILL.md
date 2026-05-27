@@ -107,7 +107,7 @@ Ask the user:
 How would you like to style the one-pager?
 
 1. Pick from presets — 12 styles from dark executive to light minimal
-2. Use my brand — extract from my website or provide brand assets
+2. Use a brand — mine (the sender) or the recipient's; extract from a website or provide assets
 3. Auto-pick — I'll choose based on the occasion and tone
 4. Surprise me
 
@@ -116,7 +116,7 @@ Your choice:
 
 **Option 1: Preset Picker** -- Show the same preset table from the deck skill (see `/octave:deck` Step 4, Option 2).
 
-**Option 2: Brand Extraction** -- Follow the same brand discovery flow from the deck skill (see `/octave:deck` Step 3). Supports browser-use tier, WebFetch tier, and manual fallback. Confirm brand config with user before proceeding.
+**Option 2: Brand Extraction** -- Follow the same brand discovery flow from the deck skill (see `/octave:deck` Step 3): Tier 1 `get_external_brand_assets` (colors + logo, with a customer-logo sanity check), Tier 2 `scrape_website` with `includeScreenshot` for fonts + components, then browser-use / WebFetch / manual fallbacks. Confirm brand config with user before proceeding.
 
 **Option 3: Auto-Pick** -- Map occasion + tone to recommended presets:
 
@@ -194,7 +194,7 @@ Size:   [file size]
 
 Viewing:
 - Open in any browser -- single scrollable page
-- Print-friendly -- Cmd+P / Ctrl+P for clean printout
+- PDF (recommended): bash "${CLAUDE_PLUGIN_ROOT:-.}"/scripts/export-pdf.sh .octave-one-pagers/<name>-<date>/<name>.html  — or Cmd+P / Ctrl+P -> Save as PDF
 - Email as attachment or save as PDF
 
 Customization tips:
