@@ -84,15 +84,18 @@ Your choice:
 **Brand — "Use your company's brand styling?"**
 
 ```
-Should the microsite use your company's brand?
+Whose brand should the microsite reflect?
 
-1. Yes — extract from my website (provide URL)
-2. Yes — I'll provide brand assets (colors, fonts, logo)
-3. No — I'll pick from style presets
-4. Use Octave brand styling
+1. My brand (the sender) — extract from my website (give the URL)
+2. The recipient's brand — mirror the target account's look for maximum ABM personalization (give *their* URL)
+3. I'll provide brand assets directly (colors, fonts, logo)
+4. No brand — pick from style presets
+5. Use Octave brand styling
 
 Your choice:
 ```
+
+> **This choice decides which website we fetch for styling** — your domain (option 1) or the target account's domain (option 2). It's separate from the recipient *context* below, which always personalizes the content regardless of whose brand styles the page.
 
 ### Step 2: Octave Context Gathering
 
@@ -130,11 +133,15 @@ Two layers of brand apply to microsites:
 
 **If user chose brand extraction in Step 1:**
 
-Use the same tiered brand extraction approach as the deck skill:
+Use the same tiered brand extraction approach as the deck skill (see `/octave:deck` Step 3 for full detail):
 
-1. **Tier 1: browser-use** (best quality) — open the website, screenshot, extract computed styles (colors, fonts, logos) via JS eval, confirm with user
-2. **Tier 2: WebFetch** (fallback) — fetch homepage HTML/CSS, parse CSS custom properties, font-family declarations, logo URLs, and meta theme-color
-3. **Tier 3: Manual** (if neither works) — ask user to provide hex colors, font names, and logo files directly
+1. **Tier 1: `get_external_brand_assets`** (first-party, fast) — one call returns brand colors, logo variants, and backdrop images. Sanity-check the result: a strip of varied logos is usually a "trusted by" **customer wall**, not the brand's own logo, and `brandName` can grab a customer — prefer the favicon/nav wordmark and verify against the domain.
+2. **Tier 2: `scrape_website`** (`{ format: "html", includeScreenshot: true }`) — pull the homepage **and one representative page**; read fonts + CSS custom properties from the html, and the **component/layout vocabulary** (button shapes, card radii, spacing, gradients, section patterns) from the screenshot. Microsites especially benefit — the goal is to *look like the sender's site*, not just borrow its colors.
+3. **Tier 3: browser-use** (fallback) — open the site, screenshot, extract computed styles via JS eval.
+4. **Tier 4: WebFetch** (fallback) — parse homepage HTML/CSS for CSS custom properties, font-family, logo URLs, meta theme-color.
+5. **Tier 5: Manual** — ask user for hex colors, font names, and logo files directly.
+
+Confirm the brand config with the user before proceeding.
 
 **If user chose a style preset:**
 
@@ -283,9 +290,10 @@ Style:  [Preset name or "Custom Brand"]
 Size:   [file size]
 
 How to share:
+• Live URL (recommended): bash "${CLAUDE_PLUGIN_ROOT:-.}"/scripts/deploy.sh .octave-microsites/<company>-<date>/  — deploys to Vercel and returns a public link to drop in your outreach
+• PDF: bash "${CLAUDE_PLUGIN_ROOT:-.}"/scripts/export-pdf.sh .octave-microsites/<company>-<date>/<company>-microsite.html  — or Cmd+P / Ctrl+P -> Save as PDF
 • Host on any static file server, S3 bucket, or Netlify drop
 • Or send the HTML file directly as an attachment
-• Best shared as a link in your outreach email
 
 ---
 

@@ -26,7 +26,7 @@ Included Sections:
 Navigation:
 - Scroll to read — sticky sidebar shows your position
 - Click any TOC item to jump to that section
-- Print: Cmd+P / Ctrl+P — page breaks between sections
+- PDF (recommended): bash "${CLAUDE_PLUGIN_ROOT:-.}"/scripts/export-pdf.sh .octave-proposals/<name>-<date>/<name>.html  — or Cmd+P / Ctrl+P -> Save as PDF (page breaks between sections)
 
 ---
 

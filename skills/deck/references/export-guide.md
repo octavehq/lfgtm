@@ -1,21 +1,22 @@
 # Deck Export Guide
 
-## Export Options
+## Export & Share Options
 
-When the user selects "Export to another format," present options:
+When the user selects "Export or share," present options:
 
 ```
-EXPORT OPTIONS
-==============
+EXPORT & SHARE OPTIONS
+======================
 
                         Styling  Editable  Notes
-1. PDF              *****  No        Print of HTML — full visual fidelity
-2. LinkedIn Carousel*****  No        Portrait PDF (1080x1350) — full fidelity
-3. PPTX             **     Yes       Text + basic colors only (no gradients/animations/clamp)
-4. Google Slides    **     Yes       Via PPTX import — same limitations
-5. Gamma            *      Yes       Text outline only — Gamma applies its own styling
-6. Markdown         *      Yes       Plain text structure only
-7. Keep as HTML     *****  Yes       Already saved, full fidelity + editable
+1. PDF              *****  No        Headless render — full visual fidelity, one slide/page
+2. Live URL (Vercel)*****  No        Deploy to a public link — works on any device
+3. LinkedIn Carousel*****  No        Portrait PDF (1080x1350) — full fidelity
+4. PPTX             **     Yes       Text + basic colors only (no gradients/animations)
+5. Google Slides    **     Yes       Via PPTX import — same limitations
+6. Gamma            *      Yes       Text outline only — Gamma applies its own styling
+7. Markdown         *      Yes       Plain text structure only
+8. Keep as HTML     *****  Yes       Already saved, full fidelity + editable
 
 Your choice:
 ```
@@ -24,23 +25,49 @@ Your choice:
 
 ## PDF Export
 
-Use browser-use if available, otherwise instruct the user:
+**Preferred: the `export-pdf.sh` script** (headless Playwright capture — no manual print dialog, one clean slide per page). The script auto-installs Playwright/Chromium into a temp dir on first run (~150MB, ~30–60s), then cleans up.
 
-**With browser-use:**
 ```
-1. browser-use open [presentation-file-path]
-2. browser-use eval "window.print()"
-   # User selects "Save as PDF" in the print dialog
-```
+bash "${CLAUDE_PLUGIN_ROOT:-.}"/scripts/export-pdf.sh <path-to-deck>.html
+# → writes <path-to-deck>.pdf next to the HTML and opens it
 
-**Without browser-use:**
+# Smaller file (1280×720 capture, ~50–70% smaller):
+bash "${CLAUDE_PLUGIN_ROOT:-.}"/scripts/export-pdf.sh <path-to-deck>.html --compact
 ```
-To save as PDF:
+(`${CLAUDE_PLUGIN_ROOT}` resolves to the installed plugin dir; the `:-.` fallback runs it from the repo root in dev.)
+
+Requirements & gotchas:
+- Node.js must be installed (`brew install node` or nodejs.org).
+- Slides must use `class="slide"` (our scaffold does).
+- Images must use **relative paths** (`src="assets/x.png"`), not absolute filesystem paths.
+- Animations are flattened to their final visual state (it's a static export).
+
+**Fallback (no Node, or script unavailable):** the deck's `@media print` (from `viewport-base.css`) already lays out one slide per page, so the browser print dialog works directly:
+```
 1. Open [file path] in your browser
 2. Press Cmd+P (Mac) or Ctrl+P (Windows)
-3. Select "Save as PDF" as the destination
-4. Set margins to "None" for best results
+3. Destination: "Save as PDF"; Margins: "None"; Background graphics: ON
 ```
+(Or, with browser-use available: `browser-use open [file]` then `browser-use eval "window.print()"`.)
+
+---
+
+## Live URL (Vercel Deploy)
+
+For sharing a deck as a link that works on any device, use the `deploy.sh` script. It checks/installs the Vercel CLI, guides login if needed, resolves local assets, and prints a permanent public URL.
+
+```
+bash "${CLAUDE_PLUGIN_ROOT:-.}"/scripts/deploy.sh <path-to-deck-folder>/   # deploys the whole folder (assets travel with it)
+# or
+bash "${CLAUDE_PLUGIN_ROOT:-.}"/scripts/deploy.sh <path-to-deck>.html      # single file → temp index.html
+```
+
+Gotchas:
+- Requires a Vercel account (free); the script walks the user through `vercel login` / signup.
+- Deploy the **folder** (not just the HTML) when the deck references local images, so assets resolve.
+- Redeploying the same project updates the same URL. Take it down from vercel.com/dashboard.
+
+> These two scripts are generic — they work for any self-contained HTML output, so the same `export-pdf.sh` / `deploy.sh` commands apply to one-pagers, proposals, microsites, briefs, and reports too.
 
 ---
 

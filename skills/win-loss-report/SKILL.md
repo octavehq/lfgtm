@@ -177,7 +177,7 @@ Key Findings:
 Navigation:
 - Scroll to navigate between sections
 - Sidebar dots show your position
-- Print-friendly (Cmd+P / Ctrl+P for PDF export)
+- PDF (recommended): bash "${CLAUDE_PLUGIN_ROOT:-.}"/scripts/export-pdf.sh .octave-reports/win-loss-<date>/win-loss-report.html  — or Cmd+P / Ctrl+P -> Save as PDF
 
 ---
 

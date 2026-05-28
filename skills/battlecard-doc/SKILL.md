@@ -231,6 +231,10 @@ Want me to:
 
 ```
 To save as PDF:
+
+PDF (recommended): bash "${CLAUDE_PLUGIN_ROOT:-.}"/scripts/export-pdf.sh .octave-decks/battlecard-<competitor>-<date>/battlecard-<competitor>.html
+  — or use the manual print dialog below:
+
 1. Open the file in your browser (should already be open)
 2. Press Cmd+P (Mac) or Ctrl+P (Windows)
 3. Select "Save as PDF" as the destination

@@ -2,9 +2,11 @@
 
 Use these templates for each slide type in the outline. Mix types for visual variety.
 
-**Title Slide:**
+> **Fixed-canvas authoring.** Every `<section class="slide">` lives inside `.deck-stage` and is authored at **1920×1080** (see [html-scaffold.md](html-scaffold.md)). Size content in **px against that canvas**, never `clamp()`/`vw`/`vh`. The semantic classes below (`heading-1`, `body-text`, `slide-inner`, etc.) are defined in the scaffold at authored px sizes. The **first slide** must carry `class="slide slide-title active visible"` so it shows and animates on load; all other slides are just `class="slide"` and become visible as the controller navigates.
+
+**Title Slide (first slide — note `active visible`):**
 ```html
-<section class="slide slide-title" data-slide="0">
+<section class="slide slide-title active visible" data-slide="0">
   <div class="slide-inner flex-center flex-col">
     <span class="pill animate-in">[Category/Tag]</span>
     <h1 class="heading-1 animate-in">[Main Title]</h1>
@@ -147,7 +149,7 @@ Use these templates for each slide type in the outline. Mix types for visual var
   <div class="slide-inner">
     <h2 class="heading-2 animate-in">[Image Title]</h2>
     <div class="image-container mt-md animate-in">
-      <img src="[image-url-or-path]" alt="[Description]" style="max-width: 100%; max-height: 55vh; object-fit: contain;" />
+      <img src="[image-url-or-path]" alt="[Description]" style="max-width: 100%; max-height: 720px; object-fit: contain;" />
     </div>
     <p class="body-text text-secondary animate-in mt-sm">[Caption or context]</p>
   </div>

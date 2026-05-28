@@ -320,7 +320,7 @@ Navigation:
 - Scroll through all 8 frameworks
 - Sidebar dots on the right track your position
 - Click section headers to collapse/expand
-- Print-friendly: Cmd+P / Ctrl+P for clean PDF
+- PDF (recommended): bash "${CLAUDE_PLUGIN_ROOT:-.}"/scripts/export-pdf.sh .octave-positioning/<product>-<date>/positioning-system.html  — or Cmd+P / Ctrl+P -> Save as PDF
 
 ---
 

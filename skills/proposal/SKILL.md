@@ -163,7 +163,7 @@ How would you like to style the proposal?
 
 1. Use recommended — [preset name] (best for [audience])
 2. Pick from presets — show me all 12 options
-3. Use my brand — extract from a website or provide brand assets
+3. Use a brand — yours or the customer's; extract from a website or provide assets
 4. Surprise me — auto-pick based on context
 
 Your choice:
@@ -175,7 +175,7 @@ See [style-presets.md](references/style-presets.md) for the full list of 12 styl
 
 Full CSS variable definitions for each preset are in the deck skill's [style-presets.md](../deck/references/style-presets.md).
 
-**Brand extraction is encouraged for proposals.** A proposal that carries the customer's or your own brand colors looks significantly more professional and intentional. Follow the same brand discovery flow as `/octave:deck` Step 3 (browser-use > WebFetch > manual fallback).
+**Brand extraction is encouraged for proposals.** A proposal that carries the customer's or your own brand colors looks significantly more professional and intentional. Follow the same brand discovery flow as `/octave:deck` Step 3: `get_external_brand_assets` (Tier 1: colors + logo, with a customer-logo sanity check) → `scrape_website` with `includeScreenshot` (Tier 2: fonts + components) → browser-use → WebFetch → manual.
 
 ### Step 4: Generate HTML
 
@@ -272,6 +272,9 @@ See [delivery-summary.md](references/delivery-summary.md) for the PROPOSAL READY
 
 ```
 To save as PDF (recommended for sharing):
+
+PDF (recommended): bash "${CLAUDE_PLUGIN_ROOT:-.}"/scripts/export-pdf.sh .octave-proposals/<name>-<date>/<name>.html
+  — or use the manual print dialog below:
 
 1. Open the proposal in your browser (already open)
 2. Press Cmd+P (Mac) or Ctrl+P (Windows)
