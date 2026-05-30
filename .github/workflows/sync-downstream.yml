@@ -1,0 +1,62 @@
+name: Sync downstream plugins
+
+# lfgtm is the source of truth. On every push to main we build the
+# Codex and Cursor artifacts and mirror each into its own public repo
+# (lfgtm-codex, lfgtm-cursor). No tags / releases — the mirrors track main.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - flavor: codex
+            repo: octavehq/lfgtm-codex
+            build: ./scripts/build-codex.sh
+            artifact: build/codex
+          - flavor: cursor
+            repo: octavehq/lfgtm-cursor
+            build: ./scripts/build-cursor.sh
+            artifact: build/cursor
+
+    steps:
+      - name: Check out lfgtm (source of truth)
+        uses: actions/checkout@v4
+
+      - name: Build ${{ matrix.flavor }} artifact
+        run: ${{ matrix.build }}
+
+      - name: Check out ${{ matrix.repo }} (target)
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ matrix.repo }}
+          # Reusing CODEX_REPO_PAT for both mirrors. If that PAT is scoped to
+          # only lfgtm-codex, add a CURSOR_REPO_PAT secret and select it per
+          # flavor here.
+          token: ${{ secrets.CODEX_REPO_PAT }}
+          path: _target
+
+      - name: Sync artifact into target repo
+        run: |
+          # Wipe everything except .git so deletions propagate, then copy artifact
+          find _target -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -R ${{ matrix.artifact }}/. _target/
+
+      - name: Commit and push
+        working-directory: _target
+        run: |
+          git config user.name  "octave-bot"
+          git config user.email "bot@octavehq.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes."
+            exit 0
+          fi
+          git commit -m "Sync from lfgtm ${{ github.sha }}"
+          git push origin HEAD

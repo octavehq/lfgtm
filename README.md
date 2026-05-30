@@ -33,6 +33,15 @@ claude plugin list
 
 You should see "octave" in your installed plugins.
 
+### Other AI tools (Codex & Cursor)
+
+This repo is the source of truth. On every push to `main`, the same skills are automatically built and mirrored into editor-specific plugin repos:
+
+- **OpenAI Codex** → [octavehq/lfgtm-codex](https://github.com/octavehq/lfgtm-codex)
+- **Cursor** → [octavehq/lfgtm-cursor](https://github.com/octavehq/lfgtm-cursor)
+
+Install from the matching repo (see its README). Don't edit those repos directly — they're generated and overwritten. File issues and PRs here.
+
 ## Quick Start
 
 ### 1. Configure MCP Server
