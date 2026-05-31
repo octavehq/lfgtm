@@ -14,6 +14,20 @@ Generate personalized, single-page ABM microsites as beautiful self-contained HT
 - vs `/octave:proposal` — proposal is formal and detailed; microsite is concise and designed to generate interest
 - vs `/octave:deck` — deck is for presenting; microsite is for sharing a link
 
+## On-brand styling — use a brand kit if one exists
+
+Before generating, decide whose brand this landing page should match (usually the **target company**; sometimes your own company). Then:
+
+1. Resolve the company to a `<slug>` and check for a cached brand kit at `~/.octave/brands/<slug>/manifest.json`.
+2. **If a kit exists →** offer it: *"I found a saved brand kit for <Company> — want this landing page rendered in their brand?"* If yes, style the output with the kit instead of a generic preset:
+   - inline the kit's `tokens.css` (`:root` + the embedded `@font-face`) **and** `get-brand-components/assets/kit_base.css` into the output `<style>`;
+   - follow `brand-kit.md` → **Signature moves**, and reuse the kit's real **logo**, `images/`, and `icons.json`;
+   - for doc-shaped output you can compose directly with `get-brand-components/scripts/render_kit.py` (hero / split / logos / pricing / cta / footer blocks).
+3. **If no kit exists →** offer to build one first: *"No brand kit for <Company> yet — want me to capture it (~1 min) so this is on-brand?"* → run `/octave:get-brand-components <domain>`, then proceed.
+4. **If the user declines →** generate with the default style/preset.
+
+> The brand kit is the strongest styling signal — when one is available, prefer it over generic `--style` presets. See the `get-brand-components` skill for the kit format, token contract, and renderer.
+
 ## Usage
 
 ```
