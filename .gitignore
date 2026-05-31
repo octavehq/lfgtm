@@ -35,6 +35,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# python (bundled skill scripts: get-brand-components renderer)
+__pycache__/
+*.pyc
+
 # Octave plugin local config
 .claude/config/
 PLAN.MD

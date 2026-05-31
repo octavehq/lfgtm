@@ -17,6 +17,8 @@ Kit dir: ~/.octave/brands/<slug>/ with manifest.json containing a `render` block
 
 Spec: { title, blocks: [ {type: hero|stats|about|quote|section|features|comparison|checklist|cta|footer, ...} ] }
 Emphasis: wrap a word in **double asterisks** -> <span class="hl">.
+comparison: defaults to a gradient-band header table; on light brands (no dark band)
+  it auto-falls back to a soft table; set "variant":"diptych" for the luminous split panel.
 """
 import argparse, base64, html, json, os, pathlib, re, sys
 
@@ -213,12 +215,45 @@ def r_features(b, ctx):
     return f'<div class="feat">{cards}</div>'
 
 
+def _cmp_band(bad, good, rows):  # B1 — gradient-band header table (dark-band brands)
+    head = (f'<div class="head"><div class="c bad">{bad}</div>'
+            f'<div class="c good"><span class="gdot"></span>{good}</div></div>')
+    body = ""
+    for i, r in enumerate(rows):
+        last = " last" if i == len(rows) - 1 else ""
+        body += (f'<div class="r{last}"><div class="c bad"><span class="m">&times;</span>{para(r[0])}</div>'
+                 f'<div class="c good"><span class="m">&#10003;</span>{para(r[1])}</div></div>')
+    return f'<div class="cmp cmp-band">{head}{body}</div>'
+
+
+def _cmp_soft(bad, good, rows):  # B2 — refined soft table (light-brand fallback)
+    body = (f'<div class="r head"><div class="c bad">{bad}</div><div class="c good">{good}</div></div>')
+    for i, r in enumerate(rows):
+        z = " alt" if i % 2 else ""
+        body += (f'<div class="r{z}"><div class="c bad"><span class="m">&times;</span>{para(r[0])}</div>'
+                 f'<div class="c good"><span class="m">&#10003;</span>{para(r[1])}</div></div>')
+    return f'<div class="cmp cmp-soft">{body}</div>'
+
+
+def _cmp_diptych(bad, good, rows):  # D1 — luminous diptych (variant)
+    L = "".join(f'<li><span class="m">&times;</span>{para(r[0])}</li>' for r in rows)
+    R = "".join(f'<li><span class="m">&#10003;</span>{para(r[1])}</li>' for r in rows)
+    return (f'<div class="cmp cmp-diptych"><div class="side left"><div class="lab">{bad}</div><ul>{L}</ul></div>'
+            f'<div class="side right"><div class="lab">{good}</div><ul>{R}</ul></div></div>')
+
+
 def r_comparison(b, ctx):
-    rows = "".join(f'<div class="cmp-c bad"><span class="m">&times;</span>{para(r[0])}</div>'
-                   f'<div class="cmp-c good"><span class="m">&#10003;</span>{para(r[1])}</div>'
-                   for r in b["rows"])
-    return (f'<div class="cmp"><div class="cmp-h bad">{html.escape(b.get("badHead","Without"))}</div>'
-            f'<div class="cmp-h good">{html.escape(b.get("goodHead","With"))}</div>{rows}</div>')
+    """Default B1 gradient-band table; B2 soft table when the kit has no dark band;
+    D1 diptych when the block opts in with variant:"diptych" (falls back to B2 on light brands)."""
+    bad = html.escape(b.get("badHead", "Without"))
+    good = html.escape(b.get("goodHead", "With"))
+    rows = b["rows"]
+    dark = ctx["darkband"]
+    if not dark:
+        return _cmp_soft(bad, good, rows)
+    if b.get("variant") == "diptych":
+        return _cmp_diptych(bad, good, rows)
+    return _cmp_band(bad, good, rows)
 
 
 def r_checklist(b, ctx):

@@ -469,6 +469,17 @@ The same kit + spec can render to **multiple formats** — the brand kit is form
   - Emphasis: wrap a word in `**double asterisks**`. `hero.featured.logoKit` pulls *another* kit's logo (customer logo in a vendor case study).
 - **Real imagery** — store the brand's actual product screenshots / customer logos in the kit's **`images/`** dir (downloaded during the walk) and reference them by relative path; the renderer inlines them as data-URIs (self-contained). Don't fake imagery with gradient placeholders when the real assets exist on the site — extract logo walls and a hero/product shot. (Apply the same logo-verification care: confirm a "customer logo" is real, not a stray asset.) Optional `--brand-texture` token layers a subtle pattern (dot/grid) onto dark bands.
 
+### Imagery is earned, not defaulted
+
+Place a kit's screenshots and logos only where they **truthfully illustrate the specific point** — never because the kit happens to have them. A product shot dropped into a `split` whose copy describes something the screenshot doesn't show, or a logo wall stamped onto every doc (including internal ones like battlecards), reads as filler and undercuts the asset.
+
+- **Screenshots:** use one only when the section is genuinely *about* what it shows, and caption it for what it actually is (e.g. "The Octave platform"), not for the narrative you wish it depicted. If no apt image exists, carry the point with type + icon tiles — don't shoehorn.
+- **Proof:** prefer a **specific, true** callout (a named reference customer matching the audience, with the real result) over a generic logo grid. One earned proof beats a wall of logos.
+- **Don't destroy brand:** `mono` greyscale / hard inversion can erase a logo's identity — only use it when a uniform wall genuinely serves the layout.
+- **Never** use gradient/masonry placeholder tiles as stand-in "content."
+
+The test for every image: *does it make this exact point clearer, or is it decoration the kit made available?* If the latter, cut it. (The earlier "Real imagery" note means *don't fake* imagery with placeholders — it does **not** mean force every real asset into every doc.)
+
 ### The `manifest.render` token contract
 
 For a kit to be renderable it needs a `render` block in `manifest.json`:
@@ -485,6 +496,10 @@ Add `render` when building a kit (Step 6). The verbose `tokens.css` + `component
 If a one-off needs a layout the block types don't cover, you can still inline `tokens.css` + `assets/kit_base.css` and write markup using the `kit_base` classes — but prefer adding a block type to the renderer over hand-CSS, so the fix compounds.
 
 Reference token names are brand-agnostic, so the same spec restyles to any captured brand just by swapping `--kit`.
+
+## Reviewing an asset (optional)
+
+After producing an asset from a kit, you can run an optional QA pass before delivery — layout, brand adherence, narrative coherence, groundedness, and AI-slop. Offer it; don't force it. The rubric and the slop standard ("write like a human") live in [`references/asset-review.md`](references/asset-review.md). The key discipline: **render the output and inspect the pixels** — overflow, misalignment, and white-on-white only show in the render, not the source. (The Document Builder skills that consume this kit offer this pass automatically.)
 
 ## Error Handling
 
