@@ -9,6 +9,24 @@ Generate formal business case and proposal documents powered by your Octave GTM 
 
 The output is a multi-section scrollable HTML document with a sticky table of contents, print-friendly layout, and the same CSS variable / style preset system as `/octave:deck`.
 
+## On-brand styling — use a brand kit if one exists
+
+Before generating, decide whose brand this proposal should match (usually the **target company**; sometimes your own company). Then:
+
+1. Resolve the company to a `<slug>` and check for a cached brand kit at `~/.octave/brands/<slug>/manifest.json`.
+2. **If a kit exists →** offer it: *"I found a saved brand kit for <Company> — want this proposal rendered in their brand?"* If yes, style the output with the kit instead of a generic preset:
+   - inline the kit's `tokens.css` (`:root` + the embedded `@font-face`) **and** `get-brand-components/assets/kit_base.css` into the output `<style>`;
+   - follow `brand-kit.md` → **Signature moves**, and reuse the kit's real **logo**, `images/`, and `icons.json`;
+   - for doc-shaped output you can compose directly with `get-brand-components/scripts/render_kit.py` (hero / split / logos / pricing / cta / footer blocks).
+3. **If no kit exists →** offer to build one first: *"No brand kit for <Company> yet — want me to capture it (~1 min) so this is on-brand?"* → run `/octave:get-brand-components <domain>`, then proceed.
+4. **If the user declines →** generate with the default style/preset.
+
+> The brand kit is the strongest styling signal — when one is available, prefer it over generic `--style` presets. See the `get-brand-components` skill for the kit format, token contract, and renderer.
+
+## Optional review pass
+
+After generating the asset, **offer** an optional review (don't force it): *"Want me to run a quick review pass over this — layout, brand, narrative, groundedness, and AI-slop?"* If yes, follow [`get-brand-components/references/asset-review.md`](../get-brand-components/references/asset-review.md): render/screenshot the output, inspect it across the five dimensions (render the pixels and actually look — overflow and white-on-white only show in the render), report a short scorecard of specific located findings, then fix and re-verify. Skip silently if the user declines.
+
 ## Usage
 
 ```
