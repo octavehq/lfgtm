@@ -13,7 +13,8 @@ If the user declines, skip silently. If they accept, run all five dimensions bel
 
 1. **Render the actual output**, don't review the spec/source. Screenshot it:
    - Docs (one-pager, proposal, brief, microsite, battlecard): full-page PNG via `scripts/render.py --file <out.html> --out <png> --width <docwidth+60>`.
-   - Decks: the fixed 1920×1080 stage means each slide must fit its own canvas. **Measure every slide's content height** (load the deck, set slides to `position:static;height:auto`, read each `.inner` `scrollHeight`); anything `> 1080` is clipped at runtime by `overflow:hidden`. Then screenshot a stacked-verify (all slides `position:static`, natural height) to eyeball them.
+   - Decks: the fixed 1920×1080 stage means each slide must fit its own canvas. **Measure every slide's content height** (load the deck, set slides to `position:static;height:auto`, read each `.inner` `scrollHeight`); anything `> 1080` is clipped at runtime by `overflow:hidden`. Then screenshot a stacked-verify (all slides `position:static`, natural height) to eyeball them. Reveal animations start at `opacity:0`, so drive the headless capture with a virtual-time budget (e.g. Chrome `--virtual-time-budget=2500`) or the screenshot catches a half-faded slide and reads as a false "missing content" defect.
+   - **Shareable decks:** if the deck will be delivered as a link (GCS, email, etc.), embed fonts and images as base64 data URIs so the single HTML renders with no `assets/` folder beside it. Verify by rendering a copy from a directory that has no `assets/`.
 2. **Look at the pixels.** This is a multimodal check — open the screenshots and actually inspect them. The most common defects (overflow, misalignment, white-on-white) are invisible in the source and only show in the render.
 3. **Score each dimension** below: pass, or a list of located findings.
 4. **Fix → re-verify.** Re-render and re-measure the parts you touched.
@@ -29,6 +30,11 @@ Most layout-focused. Check the render, not the code.
 - **Scaling:** images sharp and correctly proportioned; the deck stage scales and letterboxes cleanly at multiple window aspect ratios.
 - **Padding/rhythm:** consistent section padding; no cramped or colliding blocks; even gutters.
 - **Surfaces:** dark text on dark band or white logo on white footer = fail (the renderer picks per-surface assets — confirm it actually did).
+- **Known deck render traps (verify each):**
+  - **Background specificity.** `viewport-base.css` sets `.slide{background:var(--slide-bg)}` and is pasted AFTER the preset CSS, so at equal specificity it overrides a slide's themed background. Theme slide backgrounds with a higher-specificity selector (`.slide.gradient`, `.slide.dark`), or gradient/dark bands silently render as flat `--slide-bg`.
+  - **Equal-height card rows.** In a grid card row the tallest card sets the row height; shorter siblings get a dead band of bottom padding. Balance the copy to similar length, or vertically center the card content.
+  - **Stat numbers with arrows/symbols.** Put spaces around arrows (`6mo → 3wk`, not `6mo→3wk`), set `white-space:nowrap`, and size the number for its column so it does not wrap or cramp. A lone symbol (e.g. a bare `↓`) reads as a glyph, not a metric; give it a worded value or move it to a callout line.
+  - **Brandmark vs eyebrow.** A top-left logo collides with a top-left eyebrow on content slides. Put the brandmark top-right when slide content is left-aligned.
 
 ### 2. Brand adherence
 Against the kit's `brand-kit.md` → **Signature moves** and `manifest.render.tokens`.
@@ -48,7 +54,12 @@ Against the kit's `brand-kit.md` → **Signature moves** and `manifest.render.to
 - **Imagery is earned** (see SKILL.md → "Imagery is earned, not defaulted"): screenshots truthfully illustrate their section; no logo-soup filler; no placeholder tiles posing as content.
 
 ### 5. Slop (write like a human)
-Scan the asset's copy against the ruleset below. Flag specific offending phrases and rewrite. (Format affordances the asset schema requires — e.g. the renderer's `**emphasis**` spans — are exempt; the ruleset targets the prose.)
+Scan the asset's copy against the ruleset below. Flag specific offending phrases and **rewrite them before delivery.** The only exemption is a format token the renderer literally requires (e.g. the `**emphasis**` spans the schema parses). Everything a reader sees as words is prose and must pass, **including deck headlines, captions, and pills.** Two misses get waved through constantly and must instead be fixed, never justified as "headline style":
+
+- **Em dashes are banned in all asset copy, headlines included** (`&mdash;` and the literal `—`). Replace with a comma, colon, period, or two sentences. Hyphenated compounds (`go-to-market`) and arrows (`6mo → 3wk`) are fine.
+- **At most ONE negative-contrast construction in the whole asset.** "It's not X, it's Y", "this isn't about X, it's Y", "The X wasn't the hard part. The Y was." Keep the single strongest one (usually the title hook) and state every other point positively. A second one is a finding to rewrite.
+
+A clean pass here means the offenders were actually rewritten, not listed with a reason to keep them.
 
 ---
 

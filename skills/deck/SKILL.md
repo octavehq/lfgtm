@@ -660,6 +660,11 @@ Whether using a preset or a custom wildcard, the output should look intentional,
 - **Layout:** vary slide types; avoid cookie-cutter "title + 3 bullets" on every slide.
 - **Context:** the design should fit the occasion and audience (a board deck and a hackathon demo should not look alike).
 
+**Copy is held to the same bar as visuals.** Every word a viewer reads (headline, body, caption, pill, metric label) must pass the slop standard in [`get-brand-components/references/asset-review.md`](../get-brand-components/references/asset-review.md) → WRITE_LIKE_A_HUMAN. Two rules break most decks, so treat them as hard rules, not preferences, and fix them in the review pass rather than excusing them as "headline style":
+
+1. **No em dashes in deck copy, headlines included.** Both `&mdash;` and the literal `—`. Use a comma, colon, period, or two sentences. Hyphenated compounds (`go-to-market`) and arrows (`6mo → 3wk`) are fine.
+2. **At most one negative-contrast construction in the whole deck.** "It's not X, it's Y", "this isn't about X, it's Y", "The X wasn't the hard part. The Y was." Keep the single strongest one (usually the title hook); state every other point positively.
+
 #### Inline Editing (included by default)
 
 Add a lightweight in-browser editor so the user can tweak copy without touching code. Do **not** ask about it during intake — include it unless the user requested a locked/export-only deck. Implementation details (the JS-based hover with a 400ms grace period — **not** a CSS `~` sibling selector, which breaks because `pointer-events:none` drops the hover chain — plus the `E` shortcut and stripping edit state on export) are in [html-scaffold.md](references/html-scaffold.md).
