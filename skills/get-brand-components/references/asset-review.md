@@ -3,7 +3,7 @@
 A post-generation QA pass for any asset produced from a brand kit (deck, one-pager, microsite, battlecard, proposal, brief, etc.). It is **opt-in** — offer it, never force it.
 
 **Offer wording (after the asset is generated):**
-> "Want me to run a quick review pass over this — layout, brand, narrative, groundedness, and AI-slop? I'll render it, inspect it, and report what I'd fix."
+> "Want me to run a quick review pass over this — layout, brand, narrative, groundedness/verification, and AI-slop? I'll render it, inspect it, and report what I'd fix."
 
 If the user declines, skip silently. If they accept, run all five dimensions below, then report **one short scorecard** of specific, located findings (e.g. `slide 2: bottom card row clipped`), fix what you can, and **re-verify** (re-render and re-check the dimensions you changed). Don't claim a clean pass without actually rendering and looking.
 
@@ -30,6 +30,10 @@ Most layout-focused. Check the render, not the code.
 - **Scaling:** images sharp and correctly proportioned; the deck stage scales and letterboxes cleanly at multiple window aspect ratios.
 - **Padding/rhythm:** consistent section padding; no cramped or colliding blocks; even gutters.
 - **Surfaces:** dark text on dark band or white logo on white footer = fail (the renderer picks per-surface assets — confirm it actually did).
+- **Logos & brand marks (look at every logo in the render — these fail silently in source):**
+  - **The mark is the real mark.** A logo drawn from an inline SVG path can be silently corrupted: if a generated/edited path has coordinates outside its `viewBox`, it renders as garbled scribbles, not the logo. Never retype a brand's SVG path. Copy it verbatim from a known-good source (or `cp` a shell that already contains it), and confirm in the render that each logo reads as the actual mark. A fast guard is to grep the output for a fingerprint substring of the correct path.
+  - **Resolution.** No low-res raster logo stretched to fill a tile. A 32px favicon blown up to a 150px tile reads as garbage. Prefer a vector (SVG) brand mark (e.g. the company's brand SVG or a simple-icons mark in the brand color); a genuinely high-res PNG is acceptable; a favicon is not.
+  - **No broken image / wrong fallback.** A logo that fails to load or embed shows a broken-image icon. If a real logo cannot be sourced cleanly, fall back to the company name set as clean text, never ship a broken `<img>`, an empty tile, or a wrong-brand-color text block.
 - **Known deck render traps (verify each):**
   - **Background specificity.** `viewport-base.css` sets `.slide{background:var(--slide-bg)}` and is pasted AFTER the preset CSS, so at equal specificity it overrides a slide's themed background. Theme slide backgrounds with a higher-specificity selector (`.slide.gradient`, `.slide.dark`), or gradient/dark bands silently render as flat `--slide-bg`.
   - **Equal-height card rows.** In a grid card row the tallest card sets the row height; shorter siblings get a dead band of bottom padding. Balance the copy to similar length, or vertically center the card content.
@@ -48,9 +52,12 @@ Against the kit's `brand-kit.md` → **Signature moves** and `manifest.render.to
 - No contradictions; each section earns its place; transitions make sense.
 - The title/claim matches what the body actually delivers.
 
-### 4. Groundedness
+### 4. Groundedness & verification
+The single highest-stakes dimension for any asset that names a real person, company, or number — and the one a confident model fails silently. Treat an invented "fact" as a hard defect, not a stylistic nit.
 - Every metric, quote, customer name, and capability traces to **real source material** (the Octave MCP data gathered for this asset, or the kit's real assets). Flag anything invented.
-- No hallucinated proof points, fake logos, or capabilities not in the product data.
+- **People and identities must be verified, not assumed.** Any named person, title, or "who you'll meet" traces to a real Octave/enrichment result (`resolve_profile_from_email`, `enrich_person`, `find_person`). Confirm the person exists, link their real profile, and get the title right. A fabricated contact — a hallucinated seller, a guessed buyer, a wrong title — is the most damaging defect an asset can ship. If a person can't be confirmed, the asset must flag them as unverified, not state them as fact.
+- **News, events, and "recently…" claims carry a date and a source link** (`deep_web_research`, `scrape_website`). No undated, unsourced recency claims.
+- No hallucinated proof points, fake logos, paraphrases passed off as verbatim quotes, or capabilities not in the product data.
 - **Imagery is earned** (see SKILL.md → "Imagery is earned, not defaulted"): screenshots truthfully illustrate their section; no logo-soup filler; no placeholder tiles posing as content.
 
 ### 5. Slop (write like a human)
@@ -103,7 +110,7 @@ REVIEW — <asset name>
 1. Visual ......... <PASS | findings: slide 2 bottom row clipped (content 1314px > 1080); footer padding uneven>
 2. Brand .......... <PASS | findings: heading rendering fallback font, not Alliance>
 3. Narrative ...... <PASS | findings: proof section precedes the problem — reorder>
-4. Groundedness ... <PASS | findings: "10x faster" metric not in source data — cut or source it>
+4. Groundedness ... <PASS | findings: "10x faster" metric not in source data — cut or source it; "Jordan Lee, VP Eng" unverified — confirm or flag>
 5. Slop ........... <PASS | findings: "seamless", "leverage", one "it's not X it's Y" — rewrites below>
 
 Fixing: <what you'll change>  →  re-verify.
