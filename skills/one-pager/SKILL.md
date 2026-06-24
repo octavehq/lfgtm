@@ -27,6 +27,8 @@ Before generating, decide whose brand this one-pager should match (usually the *
 
 After generating the asset, **offer** an optional review (don't force it): *"Want me to run a quick review pass over this — layout, brand, narrative, groundedness, and AI-slop?"* If yes, follow [`get-brand-components/references/asset-review.md`](../get-brand-components/references/asset-review.md): render/screenshot the output, inspect it across the five dimensions (render the pixels and actually look — overflow and white-on-white only show in the render), report a short scorecard of specific located findings, then fix and re-verify. Skip silently if the user declines.
 
+When generating, follow the output rules in [`get-brand-components/references/presentation-principles.md`](../get-brand-components/references/presentation-principles.md) — the generation-time companion to the review pass (label every value, no tool names in the output, confirmed vs hypothesized, lean and deal-specific).
+
 ## Usage
 
 ```
