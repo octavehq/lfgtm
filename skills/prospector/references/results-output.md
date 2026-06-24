@@ -33,7 +33,7 @@ Found 10 companies matching your ICP:
    - Mike Johnson, VP Engineering (Technical evaluator)
    - Lisa Park, Head of DevOps (User buyer)
 
-   Recommended Playbook: "Enterprise DevOps Sale"
+   Recommended Motion: "Enterprise DevOps Sale"
    Recommended Approach: Lead with scalability story
 
 ---

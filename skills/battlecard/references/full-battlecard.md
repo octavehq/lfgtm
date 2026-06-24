@@ -14,8 +14,8 @@ QUICK POSITIONING
 When you hear: "[Competitor name]"
 Lead with: "[Key differentiator in one sentence]"
 
-30-Second Pitch:
-"[Elevator pitch that positions against this competitor]"
+Positioning in 30 seconds (deliver in your own words — don't recite):
+[The 2-3 beats that position us against this competitor]
 
 ---
 
@@ -57,20 +57,25 @@ How to handle:
 
 COMMON OBJECTIONS
 -----------------
+(Title = the risk/situation, not a quote; the prospect's line goes in "You'll hear"; responses are points to adapt.)
 
-"[Competitor] is cheaper"
-→ [Response: value, TCO, hidden costs, proof point]
+They anchor on [Competitor]'s price
+  You'll hear: "[Competitor] is cheaper"
+  → [value, TCO, hidden-cost points + proof]
 
-"[Competitor] has [feature X]"
-→ [Response: why it matters/doesn't, our alternative approach]
+They lean on a feature [Competitor] markets
+  You'll hear: "[Competitor] has [feature X]"
+  → [why it matters or doesn't, our alternative approach]
 
-"We already use [Competitor]"
-→ [Displacement angle: migration story, switching cost offset]
+Incumbent inertia
+  You'll hear: "We already use [Competitor]"
+  → [displacement angle: migration story, switching-cost offset]
 
-"[Competitor] has more [integrations/customers/etc.]"
-→ [Response: quality vs quantity, specific advantage]
+They equate scale with quality
+  You'll hear: "[Competitor] has more [integrations/customers/etc.]"
+  → [quality vs. quantity, the specific advantage]
 
-Evidence: [Cite real objections from conversation data if available]
+Evidence: [cite real objections from conversation data if available]
 
 ---
 
@@ -78,9 +83,9 @@ TRAP QUESTIONS
 --------------
 Ask these to expose their weaknesses:
 
-1. "[Question targeting known weakness]"
+1. "[Question targeting known weakness]"  (ask close to verbatim — trap questions are precision tools)
    Why: [What this reveals]
-   If they say: "[Likely response]" → You say: "[Follow-up]"
+   If they say "[Likely response]": then probe [the follow-up angle]
 
 2. "[Question about scalability/support/depth]"
    Why: [What this reveals]

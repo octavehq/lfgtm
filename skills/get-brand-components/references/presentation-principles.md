@@ -49,3 +49,10 @@ The customer's pain is *their* problem (their world, in their words). Internal d
 ## Two phrasing traps worth calling out
 - **Objections describe the risk, they don't quote the prospect.** Write `They position this as overlap with existing enterprise search`, not `"We already use Glean for this"`. Never put words in the prospect's mouth.
 - **Mark speculation as speculation, everywhere.** "Competition: Datadog" only when intel confirms it; otherwise "Unknown — potential: Datadog." Applies to every field, not just competition.
+
+## Links and chrome
+- **Every link opens in a new tab.** Give every `<a href>` in a generated asset `target="_blank" rel="noopener noreferrer"`. The reader is working from the doc — entity deep-links, LinkedIn, sources, citations should never navigate them away from it.
+- **Style scrollbars to the theme.** A default OS scrollbar against a styled (especially dark) surface reads as broken. Every scrollable region and the page itself gets a themed, thin scrollbar — `scrollbar-width: thin; scrollbar-color: var(--border) transparent;` plus the `::-webkit-scrollbar` equivalent (~8-10px, rounded `--border` thumb, transparent track). Never ship a bare default scrollbar.
+
+## Look like the brand, not like a template
+The output should read as a crafted artifact in the sender's brand, not a generic doc filled into a fixed scaffold. When a brand kit exists (`~/.octave/brands/<slug>/`), inline its real logo and map its tokens to the asset's CSS variables so the palette, type, and logo are the brand's — don't fall back to a default preset when a kit is available. Reference scaffolds are **structure and component patterns to adapt**, not a literal stylesheet to reproduce verbatim; vary layout and styling to fit the brand and the occasion. A reader should be able to tell at a glance whose document this is.

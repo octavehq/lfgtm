@@ -11,7 +11,7 @@ The output is a multi-section scrollable HTML document with a sticky table of co
 
 ## On-brand styling — use a brand kit if one exists
 
-Before generating, decide whose brand this proposal should match (usually the **target company**; sometimes your own company). Then:
+This proposal is **customer-facing** (it goes to the recipient and gets circulated internally), so **offer the recipient's (the target company's) brand** for a personalized feel; the sender's (your own) brand is the standard alternative. "The company" below = whichever they pick (default to offering the recipient's). Then:
 
 1. Resolve the company to a `<slug>` and check for a cached brand kit at `~/.octave/brands/<slug>/manifest.json`.
 2. **If a kit exists →** offer it: *"I found a saved brand kit for <Company> — want this proposal rendered in their brand?"* If yes, style the output with the kit instead of a generic preset:

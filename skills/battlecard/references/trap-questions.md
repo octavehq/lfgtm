@@ -1,5 +1,7 @@
 # Mode: Trap Questions
 
+> Trap questions are the one place near-verbatim phrasing is intended — they're precision instruments. Ask them close to as written; the rest of the battlecard is talking points to adapt.
+
 ```
 TRAP QUESTIONS: vs [Competitor]
 ================================

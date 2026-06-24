@@ -16,7 +16,7 @@ Generate personalized, single-page ABM microsites as beautiful self-contained HT
 
 ## On-brand styling — use a brand kit if one exists
 
-Before generating, decide whose brand this landing page should match (usually the **target company**; sometimes your own company). Then:
+This landing page is **customer-facing and personalized** ("Built for [Company]"), so **default to the recipient's (the target company's) brand** — a page in the prospect's own identity is the whole point of an ABM microsite; the sender's brand is the fallback. "The company" below = the recipient. Then:
 
 1. Resolve the company to a `<slug>` and check for a cached brand kit at `~/.octave/brands/<slug>/manifest.json`.
 2. **If a kit exists →** offer it: *"I found a saved brand kit for <Company> — want this landing page rendered in their brand?"* If yes, style the output with the kit instead of a generic preset:
