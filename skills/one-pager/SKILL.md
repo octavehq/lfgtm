@@ -11,7 +11,7 @@ One-pagers are single scrollable pages designed to be sent after a demo, meeting
 
 ## On-brand styling — use a brand kit if one exists
 
-Before generating, decide whose brand this one-pager should match (usually the **target company**; sometimes your own company). Then:
+This one-pager is **customer-facing** (a leave-behind for the recipient), so **offer the recipient's (the target company's) brand** for a personalized, "built for you" feel; the sender's (your own) brand is the alternative. "The company" below = whichever they pick (default to offering the recipient's). Then:
 
 1. Resolve the company to a `<slug>` and check for a cached brand kit at `~/.octave/brands/<slug>/manifest.json`.
 2. **If a kit exists →** offer it: *"I found a saved brand kit for <Company> — want this one-pager rendered in their brand?"* If yes, style the output with the kit instead of a generic preset:
@@ -23,9 +23,11 @@ Before generating, decide whose brand this one-pager should match (usually the *
 
 > The brand kit is the strongest styling signal — when one is available, prefer it over generic `--style` presets. See the `get-brand-components` skill for the kit format, token contract, and renderer.
 
-## Optional review pass
+## Review pass (runs by default)
 
-After generating the asset, **offer** an optional review (don't force it): *"Want me to run a quick review pass over this — layout, brand, narrative, groundedness, and AI-slop?"* If yes, follow [`get-brand-components/references/asset-review.md`](../get-brand-components/references/asset-review.md): render/screenshot the output, inspect it across the five dimensions (render the pixels and actually look — overflow and white-on-white only show in the render), report a short scorecard of specific located findings, then fix and re-verify. Skip silently if the user declines.
+After generating, **run the review pass by default** — don't wait to be asked. In interactive mode, tell the user at intake that you'll review before finishing (recommended) and that they can opt out with `--skip-review` or "skip review". Follow [`get-brand-components/references/asset-review.md`](../get-brand-components/references/asset-review.md): the always-on **preflight** (em dashes, broken images/logos, link `target`, themed scrollbars, leaked internals) plus the **visual pass** (render/screenshot, inspect the pixels across the dimensions — groundedness/verification matters most — report a short located scorecard, fix, re-verify). The visual pass defaults off only in a `--research fast` run; the preflight always runs.
+
+When generating, follow the output rules in [`get-brand-components/references/presentation-principles.md`](../get-brand-components/references/presentation-principles.md) — the generation-time companion to the review pass (label every value, no tool names in the output, confirmed vs hypothesized, lean and deal-specific).
 
 ## Usage
 

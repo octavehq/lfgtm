@@ -43,8 +43,9 @@ __pycache__/
 .claude/config/
 PLAN.MD
 
-# Deck builder temp files (style previews, exports)
-.octave-decks/
+# Generated asset output dirs (deck, brief, meeting-prep, microsite, one-pager, proposal, battlecard, …)
+# These are per-account artifacts (often brand-rendered), never source — keep them out of the repo.
+.octave-*/
 
 # Resonance loop prediction cards (canonical location is $HOME/.octave/predictions/, but defense in depth)
 .octave/

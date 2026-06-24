@@ -124,6 +124,10 @@ get_entity({ oId: "<product_oId>" })
 
 ### Step 3: Generate Mode-Specific Output
 
+**Output discipline.** A battlecard is an internal seller tool, so follow the shared output rules in [`../get-brand-components/references/presentation-principles.md`](../get-brand-components/references/presentation-principles.md), with two that bite competitive content most:
+- **Talking points, not scripts.** Positioning, objection responses, and the displacement "if they respond" flow are **points the rep adapts**, never word-for-word lines to recite. Objection titles describe the *risk* ("They anchor on price"), never quote the prospect — the actual line goes in "You'll hear". **The one exception: trap questions**, which are precision instruments meant to be asked nearly verbatim. (Email/LinkedIn copy generated via `generate_email` is a written deliverable — that stays written, just keep it human.)
+- **Link cited entities (internal only).** Since this is an internal doc, link each cited competitor, proof point, reference, or objection entity to `https://app.octavehq.com/entity/{oId}` (the `oId` from its tool result) so the rep is one click from the source. Never put these links in a customer-facing asset.
+
 ---
 
 #### Mode: Full Battlecard

@@ -11,7 +11,7 @@ Build compelling, self-contained HTML presentations powered by your Octave GTM k
 
 ## On-brand styling — use a brand kit if one exists
 
-Before generating, decide whose brand this deck should match (usually the **target company**; sometimes your own company). Then:
+This deck is **customer-facing**, so whose brand it wears is a real choice — **offer the recipient's (the target company's) brand** for a personalized, made-for-you feel; the sender's (your own) brand is the standard alternative. "The company" below = whichever they pick (default to offering the recipient's). Then:
 
 1. Resolve the company to a `<slug>` and check for a cached brand kit at `~/.octave/brands/<slug>/manifest.json`.
 2. **If a kit exists →** offer it: *"I found a saved brand kit for <Company> — want this deck rendered in their brand?"* If yes, style the output with the kit instead of a generic preset:
@@ -23,9 +23,11 @@ Before generating, decide whose brand this deck should match (usually the **targ
 
 > The brand kit is the strongest styling signal — when one is available, prefer it over generic `--style` presets. See the `get-brand-components` skill for the kit format, token contract, and renderer.
 
-## Optional review pass
+## Review pass (runs by default)
 
-After generating the asset, **offer** an optional review (don't force it): *"Want me to run a quick review pass over this — layout, brand, narrative, groundedness, and AI-slop?"* If yes, follow [`get-brand-components/references/asset-review.md`](../get-brand-components/references/asset-review.md): render/screenshot the output, inspect it across the five dimensions (render the pixels and actually look — overflow and white-on-white only show in the render), report a short scorecard of specific located findings, then fix and re-verify. Skip silently if the user declines.
+After generating, **run the review pass by default** — don't wait to be asked. In interactive mode, tell the user at intake that you'll review before finishing (recommended) and that they can opt out with `--skip-review` or "skip review". Follow [`get-brand-components/references/asset-review.md`](../get-brand-components/references/asset-review.md): the always-on **preflight** (em dashes, broken images/logos, link `target`, themed scrollbars, leaked internals) plus the **visual pass** (render/screenshot, inspect the pixels across the dimensions — groundedness/verification matters most — report a short located scorecard, fix, re-verify). The visual pass defaults off only in a `--research fast` run; the preflight always runs.
+
+When generating, follow the output rules in [`get-brand-components/references/presentation-principles.md`](../get-brand-components/references/presentation-principles.md) — the generation-time companion to the review pass (label every value, no tool names in the output, confirmed vs hypothesized, lean and deal-specific).
 
 ## Usage
 
@@ -659,6 +661,11 @@ Whether using a preset or a custom wildcard, the output should look intentional,
 - **Color:** commit to a palette with a sharp accent — avoid generic purple-gradient-on-white and timid washes.
 - **Layout:** vary slide types; avoid cookie-cutter "title + 3 bullets" on every slide.
 - **Context:** the design should fit the occasion and audience (a board deck and a hackathon demo should not look alike).
+
+**Copy is held to the same bar as visuals.** Every word a viewer reads (headline, body, caption, pill, metric label) must pass the slop standard in [`get-brand-components/references/asset-review.md`](../get-brand-components/references/asset-review.md) → WRITE_LIKE_A_HUMAN. Two rules break most decks, so treat them as hard rules, not preferences, and fix them in the review pass rather than excusing them as "headline style":
+
+1. **No em dashes in deck copy, headlines included.** Both `&mdash;` and the literal `—`. Use a comma, colon, period, or two sentences. Hyphenated compounds (`go-to-market`) and arrows (`6mo → 3wk`) are fine.
+2. **At most one negative-contrast construction in the whole deck.** "It's not X, it's Y", "this isn't about X, it's Y", "The X wasn't the hard part. The Y was." Keep the single strongest one (usually the title hook); state every other point positively.
 
 #### Inline Editing (included by default)
 

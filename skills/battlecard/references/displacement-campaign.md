@@ -61,12 +61,11 @@ Follow-up: [After connection]
 
 ---
 
-TALK TRACK (if they respond)
------------------------------
-Opening: "[How to start the conversation]"
-Discovery: "[Questions to understand their pain with current tool]"
-Transition: "[How to introduce your solution]"
-Close: "[Specific next step to offer]"
+IF THEY RESPOND — conversation beats (talk to these, don't read them)
+---------------------------------------------------------------------
+Beats to hit: [open on the pain their current tool causes] -> [diagnose with a question or two] -> [introduce the differentiated angle] -> [propose a concrete next step]
+Listen for: [signals they feel the competitor's limitation, or are open to switching]
+Ask for: [the specific advance — eval call, migration scoping, reference intro]
 
 ---
 

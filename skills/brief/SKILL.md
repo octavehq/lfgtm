@@ -14,28 +14,27 @@ This is an **internal** document for the sales team, not customer-facing collate
 - vs `/octave:one-pager` — one-pager is customer-facing; brief is internal prep
 - vs `/octave:deck` — deck is a slide presentation; brief is a scrollable reference document
 
-## On-brand styling — use a brand kit if one exists
+## On-brand styling — internal doc, so default to YOUR brand
 
-Before generating, decide whose brand this brief should match (usually the **target company**; sometimes your own company). Then:
+A brief is an **internal reference doc**, so it should look like the **sender's own brand** (your workspace's company), not the target account's — the prospect's brand is for *customer-facing* assets. Don't ask whose brand; default to your own.
 
-1. Resolve the company to a `<slug>` and check for a cached brand kit at `~/.octave/brands/<slug>/manifest.json`.
-2. **If a kit exists →** offer it: *"I found a saved brand kit for <Company> — want this brief rendered in their brand?"* If yes, style the output with the kit instead of a generic preset:
-   - inline the kit's `tokens.css` (`:root` + the embedded `@font-face`) **and** `get-brand-components/assets/kit_base.css` into the output `<style>`;
-   - follow `brand-kit.md` → **Signature moves**, and reuse the kit's real **logo**, `images/`, and `icons.json`;
-   - for doc-shaped output you can compose directly with `get-brand-components/scripts/render_kit.py` (hero / split / logos / pricing / cta / footer blocks).
-3. **If no kit exists →** offer to build one first: *"No brand kit for <Company> yet — want me to capture it (~1 min) so this is on-brand?"* → run `/octave:get-brand-components <domain>`, then proceed.
-4. **If the user declines →** generate with the default style/preset.
+1. Resolve the **sender** (`get_workspace_company`) to a `<slug>` and check for a cached kit at `~/.octave/brands/<sender-slug>/manifest.json`.
+2. **If the sender's kit exists → use it by default** (no need to ask): inline its `tokens.css` (`:root` + `@font-face`) **and** `get-brand-components/assets/kit_base.css`, follow `brand-kit.md` → **Signature moves**, and reuse the real **logo**.
+3. **If no sender kit is cached →** offer to capture it once (`/octave:get-brand-components <your-domain>`), or fall back to a readable `--style` preset.
+4. Respect an explicit `--style` or brand override (a target-company kit only if the user asks for it).
 
 > The brand kit is the strongest styling signal — when one is available, prefer it over generic `--style` presets. See the `get-brand-components` skill for the kit format, token contract, and renderer.
 
-## Optional review pass
+## Review pass (runs by default)
 
-After generating the asset, **offer** an optional review (don't force it): *"Want me to run a quick review pass over this — layout, brand, narrative, groundedness, and AI-slop?"* If yes, follow [`get-brand-components/references/asset-review.md`](../get-brand-components/references/asset-review.md): render/screenshot the output, inspect it across the five dimensions (render the pixels and actually look — overflow and white-on-white only show in the render), report a short scorecard of specific located findings, then fix and re-verify. Skip silently if the user declines.
+After generating, **run the review pass by default** — don't wait to be asked. In interactive mode, tell the user at intake that you'll review before finishing (recommended) and that they can opt out with `--skip-review` or "skip review". Follow [`get-brand-components/references/asset-review.md`](../get-brand-components/references/asset-review.md): the always-on **preflight** (em dashes, broken images/logos, link `target`, themed scrollbars, leaked internals) plus the **visual pass** (render/screenshot, inspect the pixels across the dimensions — groundedness/verification matters most — report a short located scorecard, fix, re-verify). The visual pass defaults off only in a `--research fast` run; the preflight always runs.
+
+When generating, follow the output rules in [`get-brand-components/references/presentation-principles.md`](../get-brand-components/references/presentation-principles.md) — the generation-time companion to the review pass (label every value, no tool names in the output, confirmed vs hypothesized, lean and deal-specific).
 
 ## Usage
 
 ```
-/octave:brief <target> [--for <occasion>] [--style <preset>]
+/octave:brief <target> [--for <occasion>] [--style <preset>] [--research <deep|standard|fast>]
 ```
 
 ## Examples
@@ -96,6 +95,13 @@ Your choice:
 Each occasion changes which sections are emphasized and which are de-emphasized or omitted. See the section emphasis table in Step 4.
 
 ### Step 2: Octave Context Gathering
+
+The research layers **live external web** (`deep_web_research`, `scrape_website`) + **Octave enrichment** + **the Octave library** (Motions / Motion ICP cells, proof points, references, competitors) + **CRM & conversation intel** (`list_events`, `list_findings`). The mix shifts by situation — a net-new prospect leans on web + enrichment + library; an existing account adds CRM/findings.
+
+**Research depth — default: deep.** Run a deep pass by default; as you start, tell the user in one line and offer to dial down, then proceed:
+> "Running a **deep** research pass for [Company] — live web + market/segment intel, the full Octave library, and CRM history. Want it faster? Say **standard** (recent company news only) or **fast** (Octave + CRM only, no live web)."
+
+`deep` = all layers + broad `deep_web_research` (news + segment/market trends, 3-5 queries) · `standard` = all layers + focused news/macro themes (1-2 queries) · `fast` = Octave + CRM only, no live web. Honor `--research <deep|standard|fast>` or any in-line switch. **Bound it:** cap live web to the query budget, then start writing; silently skip layers with no data.
 
 Based on the target and occasion, use Octave MCP tools to build a complete intelligence picture. **Tell the user what you're researching and why.**
 
@@ -195,7 +201,7 @@ SECTIONS TO INCLUDE
 2. Company Snapshot — industry, size, HQ, funding, tech stack, signals
 3. ICP Fit — fit score, matched segment, key fit reasons
 4. Key Stakeholders — [N] contacts with persona matches
-5. Recommended Playbook — [Playbook name], strategic angle
+5. Recommended Motion & angle — [Motion / ICP cell], strategic angle
 6. Talking Points — [occasion-specific: questions / demo flow / next steps]
 7. Value Props — [N] value props tailored to this account
 8. Competitive Landscape — [Competitor names if detected]
@@ -207,7 +213,7 @@ SECTIONS TO INCLUDE
 Octave Sources Used:
 • Company enrichment: [Company] — [key insights]
 • Person enrichment: [Person] — [persona match]
-• Playbook: [Playbook name] — [strategic angle]
+• Motion: [Motion / ICP cell] — [strategic angle]
 • Proof points: [N] references pulled
 • Findings: [N] recent signals
 • Competitive: [If applicable]
@@ -277,10 +283,10 @@ Not all sections appear in every brief. The occasion determines emphasis:
 
 | Occasion | Emphasized Sections | De-emphasized / Omitted |
 |----------|-------------------|-------------------------|
-| Discovery | Company Snapshot, ICP Fit, Talking Points (questions), Playbook, Qualification | Deal Timeline, Competitive |
+| Discovery | Company Snapshot, ICP Fit, Talking Points (questions), Recommended Motion, Qualification | Deal Timeline, Competitive |
 | Demo | Stakeholders, Value Props, Proof Points, Competitive, Demo Flow | ICP Fit detail |
 | Follow-up | Recent Signals, Deal Timeline, Talking Points (next steps), Open Items | Company Snapshot (condensed) |
-| QBR | Deal Timeline, Recent Signals, Proof Points, Value Delivered | ICP Fit, Playbook |
+| QBR | Deal Timeline, Recent Signals, Proof Points, Value Delivered | ICP Fit, Recommended Motion |
 | Executive | Company Snapshot (concise), Key Stakeholders, Value Props, Strategic Angles | Technical details, granular signals |
 | Deal Review | Deal Timeline, Competitive, Risk Assessment, Stakeholder Map, Next Steps | Company Snapshot (condensed) |
 | General | All sections at equal weight | None |
@@ -289,16 +295,16 @@ Not all sections appear in every brief. The occasion determines emphasis:
 
 1. **Header** — "Account Brief: [Company]" + generation date + occasion badge (pill label like "Discovery Prep" or "QBR Brief")
 2. **Company Snapshot** — Company name, logo (if available), industry, employee count, HQ location, funding stage, tech stack highlights, recent news/signals. Card-based layout.
-3. **ICP Fit** — Fit score with a visual progress bar, matched segment name, 3-5 key fit reasons as checkmarks, any red flags as warnings.
+3. **ICP Fit** — Fit score with a visual progress bar, matched segment name, 3-5 key fit reasons as checkmarks, any red flags as warnings. **Show the composite score *and* the breakdown.** `qualify_company` returns sub-scores (product fit vs segment fit), and the composite can mislead: an account can be a strong *product* fit yet score low because it's **out of the segment definition by size or model** (too large, or B2C). Say which — "out-of-segment-by-size, strong product fit" reads very differently from "bad fit." Don't bury a strong product-fit signal under a low composite; if the account is out-of-segment but strategically worth pursuing, frame the wedge rather than just flashing a red number.
 4. **Key Stakeholders** — Cards for each person: name, title, LinkedIn URL, matched persona, inferred priorities, communication style notes. Highlight the primary contact.
-5. **Recommended Playbook** — Playbook name, strategic angle, key themes to drive. Brief summary of the recommended approach.
+5. **Recommended Motion & angle** — the matching Motion / Motion ICP cell (plus any Custom Motion Playbook that layers on it), the strategic angle, and key themes to drive. Brief summary of the recommended approach.
 6. **Talking Points** — Occasion-specific content:
    - Discovery: open-ended questions organized by category (rapport, pain exploration, qualification, future state)
    - Demo: recommended flow, features to highlight, proof points to weave in
    - Follow-up: recap of what was discussed, open items, proposed next steps
    - QBR: value delivered, metrics to highlight, expansion opportunities
    - Executive: strategic themes, board-level talking points, concise value narrative
-7. **Value Props to Lead With** — 3-4 value props tailored to this account, each with a headline, supporting evidence, and a "say this" phrasing.
+7. **Value Props to Lead With** — 3-4 value props tailored to this account, each with a headline, supporting evidence, and **how to frame it** (the point to make in your own words — not a script to read).
 8. **Competitive Landscape** — If competitors detected: comparison table with key differentiators, landmine questions to ask, traps to avoid. Omit if no competitive signals.
 9. **Proof Points to Reference** — Relevant case studies with metric highlights, customer quotes, and logo. Organized by relevance to this account's industry/size/use case.
 10. **Recent Signals** — From findings: what was said in calls, objections raised, features requested, sentiment indicators. Each signal has a date and source. Omit if no findings data.

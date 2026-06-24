@@ -1,4 +1,6 @@
-# Battle Plan HTML Scaffold
+# Meeting Prep HTML Scaffold
+
+**This is a component-pattern reference, not a fixed stylesheet to reproduce verbatim.** Adapt it: drive the palette, type, and logo from the brand kit (`~/.octave/brands/<slug>/`) so the output reads like the sender's real collateral, not a generic dark template. Two rules hold regardless of brand: **every `<a>` opens in a new tab** (`target="_blank" rel="noopener noreferrer"`), and **scrollbars are themed** (never the bare default OS scrollbar on a styled surface). The `[…]` are placeholders — fill with real values, never literal brackets.
 
 ```html
 <!DOCTYPE html>
@@ -6,7 +8,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Battle Plan: [Company] — [Meeting Type]</title>
+  <title>Meeting Prep: [Company] — [Meeting Type]</title>
   <!-- Google Fonts (preconnect + stylesheet) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,9 +26,19 @@
       font-family: var(--font-body);
       line-height: 1.6;
     }
+    /* Links: brand-colored, and every <a> in the markup carries target="_blank" rel="noopener noreferrer" */
+    a { color: var(--brand-primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* === Themed scrollbars (never the bare default OS bar on a dark surface) === */
+    html { scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 9999px; border: 2px solid var(--bg); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
     /* === Layout === */
-    .battle-plan-container {
+    .prep-container {
       max-width: 900px;
       margin: 0 auto;
       padding: 2rem clamp(1rem, 4vw, 3rem);
@@ -98,9 +110,7 @@
       border-radius: var(--radius-lg);
       padding: clamp(1rem, 2vw, 1.5rem);
     }
-    .card:hover {
-      background: var(--bg-card-hover);
-    }
+    .card:hover { background: var(--bg-card-hover); }
 
     /* === Stakeholder Cards === */
     .stakeholder-card {
@@ -120,6 +130,8 @@
       font-weight: 700;
       flex-shrink: 0;
     }
+    .stakeholder-card a { color: var(--brand-primary); text-decoration: none; }
+    .stakeholder-card a:hover { text-decoration: underline; }
 
     /* === Buying Role Badge === */
     .role-badge {
@@ -131,76 +143,114 @@
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
-    .role-badge.champion { background: var(--success); color: white; }
-    .role-badge.budget-owner { background: var(--brand-primary); color: white; }
-    .role-badge.evaluator { background: var(--secondary); color: white; }
-    .role-badge.gatekeeper { background: var(--warning); color: #1a1a1a; }
+    .role-badge.economic-buyer { background: var(--brand-primary); color: white; }
+    .role-badge.champion       { background: var(--success); color: white; }
+    .role-badge.evaluator      { background: var(--secondary); color: white; }
+    .role-badge.influencer     { background: var(--bg-elevated); color: var(--text-secondary); border: 1px solid var(--border-strong); }
+    .role-badge.blocker        { background: var(--error); color: white; }
 
-    /* === Belief Stack === */
-    .belief-item {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.75rem 1rem;
-      border-radius: var(--radius);
-      margin-bottom: 0.5rem;
+    /* === Unconfirmed flag (grounding) === */
+    .unconfirmed {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.68rem;
+      font-weight: 600;
+      background: transparent;
+      border: 1px dashed var(--warning);
+      color: var(--warning);
     }
-    .belief-status {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-    .belief-status.proven { background: var(--success); }
-    .belief-status.mostly-proven { background: var(--warning); }
-    .belief-status.needs-proof { background: var(--error); }
+    .unconfirmed::before { content: "\26A0 "; }
 
-    /* === Talk Track Cards === */
-    .talk-track {
-      background: var(--bg-elevated);
+    /* === Snapshot strip (deal state — merged, not repeated lower) === */
+    .snapshot-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: clamp(0.75rem, 1.5vw, 1.25rem);
+      margin: 1rem 0;
+    }
+    .snapshot-cell { text-align: center; padding: 0.75rem; }
+    .snapshot-cell .label {
+      font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.25rem;
+    }
+    .snapshot-cell .value { font-family: var(--font-display); font-size: 1.05rem; font-weight: 600; }
+    .outcome-line {
       border-left: 3px solid var(--brand-primary);
-      padding: 1rem 1.25rem;
-      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 0.75rem 1rem; background: var(--bg-elevated);
+      border-radius: 0 var(--radius) var(--radius) 0; margin-top: 1rem;
+    }
+
+    /* === News items (dated + sourced) === */
+    .news-item { padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
+    .news-item .meta { font-size: 0.75rem; color: var(--text-muted); }
+    .news-item .so-what { font-size: 0.85rem; color: var(--text-secondary); font-style: italic; margin-top: 0.25rem; }
+    .news-item a { color: var(--brand-primary); }
+
+    /* === Similar-customer / reference cards === */
+    .reference-card { border-left: 3px solid var(--success); }
+
+    /* === Per-persona block (why-us per persona) === */
+    .persona-block {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: clamp(1rem, 2vw, 1.5rem);
       margin-bottom: 1rem;
     }
-    .talk-track .label {
-      font-size: 0.7rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--brand-primary);
-      margin-bottom: 0.25rem;
-    }
-    .coaching-note {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      font-style: italic;
-      margin-top: 0.5rem;
+    .persona-block h4 { font-family: var(--font-display); margin-bottom: 0.5rem; }
+    .persona-block .lane-label {
+      font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.05em; color: var(--brand-primary); margin: 0.5rem 0 0.25rem;
     }
 
-    /* === Risk/Mitigation Grid === */
-    .risk-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: clamp(0.75rem, 1.5vw, 1.25rem);
+    /* === The Winning Story (numbered beats) === */
+    .story-beat {
+      display: grid; grid-template-columns: 32px 1fr; gap: 0.75rem;
+      padding: 0.6rem 0; align-items: start;
     }
-    .risk-item { border-left: 3px solid var(--error); }
-    .mitigation-item { border-left: 3px solid var(--success); }
+    .story-beat .num {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--brand-primary); color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.85rem;
+    }
 
-    /* === Game Plan Timeline === */
-    .game-plan-phase {
-      display: grid;
-      grid-template-columns: 100px 1fr;
-      gap: 1rem;
-      padding: 1rem 0;
-      border-bottom: 1px solid var(--border);
+    /* === How to Run the Conversation — beats / listen-for / ask-for === */
+    .beat {
+      background: var(--bg-elevated);
+      border-left: 3px solid var(--brand-primary);
+      padding: 0.9rem 1.1rem;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin-bottom: 0.9rem;
     }
-    .phase-time {
-      font-family: var(--font-mono);
-      font-size: 0.85rem;
-      color: var(--brand-primary);
-      font-weight: 600;
+    .beat .point { font-weight: 600; }
+    .beat .listen-for, .beat .ask-for {
+      font-size: 0.82rem; margin-top: 0.4rem; color: var(--text-secondary);
     }
+    .beat .listen-for::before { content: "Listen for — "; color: var(--text-muted); font-weight: 600; }
+    .beat .ask-for::before    { content: "Ask for — ";    color: var(--success);    font-weight: 600; }
+
+    /* === Discovery questions === */
+    .question-item { padding: 0.6rem 0; border-bottom: 1px solid var(--border); }
+    .question-item .reveals { font-size: 0.8rem; color: var(--text-muted); font-style: italic; margin-top: 0.2rem; }
+    .question-item .reveals::before { content: "Reveals: "; }
+
+    /* === Objections === */
+    .objection-item { padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
+    .objection-item .obj { font-weight: 600; }
+    .objection-item .response { font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.25rem; }
+    .objection-item .response::before { content: "\21B3 "; color: var(--success); }
+
+    /* === Competitors / alternatives === */
+    .competitor-row {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem;
+      padding: 0.75rem 0; border-bottom: 1px solid var(--border);
+    }
+    .competitor-row .col-label {
+      font-size: 0.68rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.05em; color: var(--text-muted);
+    }
+    .watch-out { border-left: 3px solid var(--warning); padding: 0.6rem 1rem; margin-top: 0.75rem; }
 
     /* === The Line (featured) === */
     .the-line {
@@ -218,7 +268,7 @@
       color: var(--text-primary);
     }
 
-    /* === Meeting Type Badge === */
+    /* === Meeting Type / Duration Badges === */
     .meeting-badge {
       display: inline-block;
       padding: 0.25rem 0.75rem;
@@ -256,37 +306,12 @@
     .text-secondary { color: var(--text-secondary); }
     .text-muted { color: var(--text-muted); }
 
-    /* === Deal Intel Cards === */
-    .deal-intel-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: clamp(0.75rem, 1.5vw, 1.25rem);
-    }
-    .deal-intel-card {
-      text-align: center;
-      padding: 1rem;
-    }
-    .deal-intel-card .label {
-      font-size: 0.7rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-muted);
-      margin-bottom: 0.25rem;
-    }
-    .deal-intel-card .value {
-      font-family: var(--font-display);
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
-
     /* === Print Styles === */
     @media print {
       .bp-nav { display: none; }
-      .battle-plan-container { max-width: 100%; padding: 1rem; }
-      details.bp-section { open; }
+      .prep-container { max-width: 100%; padding: 1rem; }
       details.bp-section[open] { break-inside: avoid; }
-      .card { break-inside: avoid; }
+      .card, .persona-block, .beat { break-inside: avoid; }
       body { color: #111; background: white; }
       .meeting-badge { border: 1px solid #111; background: transparent; color: #111; }
     }
@@ -294,8 +319,7 @@
     /* === Responsive === */
     @media (max-width: 768px) {
       .grid-2, .grid-3 { grid-template-columns: 1fr; }
-      .risk-grid { grid-template-columns: 1fr; }
-      .game-plan-phase { grid-template-columns: 80px 1fr; }
+      .competitor-row { grid-template-columns: 1fr; }
       .bp-nav { display: none; }
     }
 
@@ -312,86 +336,140 @@
     <!-- Generated by JS: one dot per section -->
   </nav>
 
-  <!-- Main Battle Plan -->
-  <main class="battle-plan-container">
+  <!-- Main Prep -->
+  <main class="prep-container">
 
     <!-- 1. Header -->
     <header class="bp-section">
-      <span class="meeting-badge">[Meeting Type] Battle Plan</span>
+      <span class="meeting-badge">[Meeting Type] Prep</span>
       <span class="duration-badge">[Duration] min</span>
       <h1>[Company Name] — Meeting Prep</h1>
-      <p class="text-secondary">[Date] · [Attendees summary]</p>
+      <p class="text-secondary">
+        [Date] ·
+        <!-- Attendees: each linked to verified LinkedIn; ⚠ unconfirmed flag where needed. Every <a> opens in a new tab. -->
+        <a href="[linkedin]" target="_blank" rel="noopener noreferrer">[Name]</a> ([Role]) ·
+        <a href="[company-website]" target="_blank" rel="noopener noreferrer">[company.com]</a>
+      </p>
     </header>
 
-    <!-- 2. TL;DR -->
-    <section class="bp-section" id="tldr">
-      <h2 class="section-title">TL;DR</h2>
-      <p class="body-text">[2-3 sentence opportunity summary]</p>
+    <!-- 2. Snapshot (merged TL;DR + deal state — do NOT repeat deal intel later) -->
+    <section class="bp-section" id="snapshot">
+      <h2 class="section-title">Snapshot</h2>
+      <p class="body-text">[2-3 sentence situation: who they are, what's at stake, the play]</p>
+      <div class="snapshot-strip">
+        <!-- Only render the cells that are actually known -->
+        <div class="snapshot-cell"><div class="label">Stage</div><div class="value">[…]</div></div>
+        <div class="snapshot-cell"><div class="label">Compelling Event</div><div class="value">[…]</div></div>
+        <div class="snapshot-cell"><div class="label">Champion</div><div class="value">[…]</div></div>
+        <div class="snapshot-cell"><div class="label">Competition</div><div class="value">[…]</div></div>
+        <div class="snapshot-cell"><div class="label">Next Milestone</div><div class="value">[…]</div></div>
+      </div>
+      <div class="outcome-line"><strong>What we want out of this meeting:</strong> [one specific advance]</div>
     </section>
 
-    <!-- 3. Stakeholder Map -->
-    <details class="bp-section" open id="stakeholder-map">
-      <summary>Stakeholder Map</summary>
+    <!-- 3. Why This Company, Why Now -->
+    <details class="bp-section" open id="why-company">
+      <summary>Why This Company, Why Now</summary>
+      <h3>Fit</h3>
+      <!-- segment/ICP match + 3-5 fit reasons -->
+      <h3>Why now</h3>
+      <!-- trigger / compelling event -->
+      <h3>Recent news</h3>
+      <div class="news-item">
+        <div><strong>[Headline]</strong></div>
+        <div class="meta">[Date] · <a href="[source]" target="_blank" rel="noopener noreferrer">[source]</a></div>
+        <div class="so-what">[so-what for this meeting]</div>
+      </div>
+      <h3>Their market</h3>
+      <!-- segment-level intel relevant to our value -->
+      <h3>Similar customers</h3>
       <div class="grid-2">
-        <!-- Stakeholder cards with role badges -->
+        <!-- Internal doc: link the reference entity to its Octave source via /entity/{oId} -->
+        <div class="card reference-card"><a href="https://app.octavehq.com/entity/{re_oId}" target="_blank" rel="noopener noreferrer">[Company like them]</a> — [outcome]</div>
       </div>
     </details>
 
-    <!-- 4. Their Pain -->
-    <details class="bp-section" open id="their-pain">
-      <summary>Their Pain</summary>
-      <!-- Pain points by stakeholder or theme -->
+    <!-- 4. Stakeholders -->
+    <details class="bp-section" open id="stakeholders">
+      <summary>Stakeholders</summary>
+      <div class="grid-2">
+        <div class="card stakeholder-card">
+          <div class="stakeholder-avatar">[Initials]</div>
+          <div>
+            <div><strong><a href="[verified-linkedin]" target="_blank" rel="noopener noreferrer">[Name]</a></strong> — [Title]
+              <span class="role-badge champion">Champion</span>
+              <!-- or: <span class="unconfirmed">Unconfirmed — verify before call</span> -->
+            </div>
+            <div class="text-secondary">[What they care about — role priorities]</div>
+            <div class="text-muted">[How to engage]</div>
+          </div>
+        </div>
+      </div>
     </details>
 
-    <!-- 5. What They Need to Believe -->
-    <details class="bp-section" open id="belief-stack">
-      <summary>What They Need to Believe</summary>
-      <!-- Belief items with status indicators -->
+    <!-- 5. Why [Product] for Each Persona -->
+    <details class="bp-section" open id="why-us-persona">
+      <summary>Why [Product] for Each Persona</summary>
+      <div class="persona-block">
+        <h4>[Persona type — e.g. Engineering Lead]</h4>
+        <div class="lane-label">Why they care</div>
+        <p>[their world + pains this role feels]</p>
+        <div class="lane-label">Why [Product] for them</div>
+        <p>[value framed for this role's outcome]</p>
+        <div class="lane-label">Top use cases</div>
+        <ul><li>[use case]</li></ul>
+      </div>
+      <h3>Top use cases for this company</h3>
+      <ul><li>[account-level use case]</li></ul>
     </details>
 
-    <!-- 6. Positioned Sales Pitch -->
-    <details class="bp-section" open id="sales-pitch">
-      <summary>Positioned Sales Pitch</summary>
-      <!-- 5-step talk track cards -->
+    <!-- 6. The Winning Story -->
+    <details class="bp-section" open id="winning-story">
+      <summary>The Winning Story</summary>
+      <div class="story-beat"><div class="num">1</div><div><strong>Their world today</strong> — […]</div></div>
+      <div class="story-beat"><div class="num">2</div><div><strong>What's breaking</strong> — […]</div></div>
+      <div class="story-beat"><div class="num">3</div><div><strong>Why now</strong> — […]</div></div>
+      <div class="story-beat"><div class="num">4</div><div><strong>Why [Product]</strong> — […]</div></div>
+      <div class="story-beat"><div class="num">5</div><div><strong>Proof</strong> — [similar customer + outcome]</div></div>
     </details>
 
-    <!-- 7. Discovery Questions -->
-    <details class="bp-section" open id="discovery-questions">
+    <!-- 7. How to Run the Conversation (beats — NOT a script, NOT timed) -->
+    <details class="bp-section" open id="run-conversation">
+      <summary>How to Run the Conversation</summary>
+      <div class="beat">
+        <div class="point">[Talking point / beat — an idea, not a quote]</div>
+        <div class="listen-for">[signal / phrase / reaction to watch for]</div>
+        <div class="ask-for">[the specific advance, framed around their problem]</div>
+      </div>
+    </details>
+
+    <!-- 8. Discovery Questions (pain- and situation-led, NOT sales-process) -->
+    <details class="bp-section" open id="discovery">
       <summary>Discovery Questions</summary>
-      <!-- Questions segmented by stakeholder or category -->
-    </details>
-
-    <!-- 8. Landmines & Watch-Outs -->
-    <details class="bp-section" open id="landmines">
-      <summary>Landmines & Watch-Outs</summary>
-      <div class="risk-grid">
-        <!-- Risk/mitigation pairs -->
+      <div class="question-item">
+        <div>[Question that uncovers business pain / use case / who's involved]</div>
+        <div class="reveals">[what a good answer tells you]</div>
       </div>
     </details>
 
-    <!-- 9. Coach's Corner -->
-    <details class="bp-section" open id="coachs-corner">
-      <summary>Coach's Corner</summary>
-      <div class="grid-2">
-        <!-- Strategic coach card + Positioning coach card -->
+    <!-- 9. Objections & Competitors -->
+    <details class="bp-section" open id="objections-competitors">
+      <summary>Objections &amp; Competitors</summary>
+      <h3>Likely objections</h3>
+      <div class="objection-item">
+        <div class="obj">[objection in their words]</div>
+        <div class="response">[grounded response framed around their outcome]</div>
       </div>
-    </details>
-
-    <!-- 10. Meeting Game Plan -->
-    <details class="bp-section" open id="game-plan">
-      <summary>Meeting Game Plan</summary>
-      <!-- Phase timeline matched to duration -->
-    </details>
-
-    <!-- 11. Deal Intelligence -->
-    <details class="bp-section" open id="deal-intel">
-      <summary>Deal Intelligence</summary>
-      <div class="deal-intel-grid">
-        <!-- Budget, Champion, Decision Maker, Compelling Event cards -->
+      <h3>Competitors &amp; alternatives</h3>
+      <div class="competitor-row">
+        <div><span class="col-label">Alternative</span><br>[competitor / status quo / build]</div>
+        <div><span class="col-label">Where they win</span><br>[…]</div>
+        <div><span class="col-label">Where we win</span><br>[the differentiator that matters here]</div>
       </div>
+      <div class="watch-out"><strong>Watch-out:</strong> [landmine to avoid in this conversation]</div>
     </details>
 
-    <!-- 12. The Line -->
+    <!-- 10. The Line -->
     <section class="bp-section" id="the-line">
       <div class="the-line">
         <blockquote>"[One memorable sentence]"</blockquote>
