@@ -1,11 +1,19 @@
-# Asset review pass (optional)
+# Asset review pass (runs by default)
 
-A post-generation QA pass for any asset produced from a brand kit (deck, one-pager, microsite, battlecard, proposal, brief, etc.). It is **opt-in** — offer it, never force it.
+A post-generation QA pass for any asset produced from a brand kit (deck, one-pager, microsite, battlecard, proposal, brief, meeting-prep, etc.). It **runs by default** — the user opts out with `--skip-review` or "skip review". In interactive mode, mention at intake that you'll review before finishing (recommended), so it isn't a surprise at the end. The pass has two parts: an always-on deterministic **preflight**, then the **visual pass**.
 
-**Offer wording (after the asset is generated):**
-> "Want me to run a quick review pass over this — layout, brand, narrative, groundedness/verification, and AI-slop? I'll render it, inspect it, and report what I'd fix."
+## Preflight — always, even when the visual pass is skipped
 
-If the user declines, skip silently. If they accept, run all five dimensions below, then report **one short scorecard** of specific, located findings (e.g. `slide 2: bottom card row clipped`), fix what you can, and **re-verify** (re-render and re-check the dimensions you changed). Don't claim a clean pass without actually rendering and looking.
+A cheap, deterministic sweep that runs **every time** (including in `--research fast` and even if the user skips the *visual* pass — these mechanical defects aren't worth shipping). Scan the rendered output and fix in place:
+- **Em dashes** — banned in asset copy (`—` and `&mdash;`); replace with a comma, colon, period, or two sentences. Generation drifts here constantly (one run shipped 87), so a literal sweep is the reliable backstop, not a re-read.
+- **Broken / failed images and logos** — no `<img>` that fails to load or embed (e.g. a hotlinked Clearbit raster) and no broken-image box. Prefer the brand-kit SVG or a clean wordmark; if a logo can't be sourced cleanly, fall back to text — never ship a broken mark.
+- **Links** — every external `<a>` carries `target="_blank" rel="noopener noreferrer"` (in-page `#` anchors excepted).
+- **Scrollbars** — themed, never the bare default OS scrollbar on a styled surface.
+- **Leaked internals / placeholders** — no tool/function names, version or stream IDs, or unfilled `[…]` brackets in the rendered output.
+
+## Visual pass — default on (off by default only in a `--research fast` run)
+
+The full multimodal render-and-inspect. Default-on for a normal run; if the skill ran in `--research fast`, default it off (still one word to run). Skip only if the user opted out. Run all five dimensions below, then report **one short scorecard** of specific, located findings (e.g. `slide 2: bottom card row clipped`), fix what you can, and **re-verify** (re-render and re-check the dimensions you changed). Don't claim a clean pass without actually rendering and looking.
 
 ---
 

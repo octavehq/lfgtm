@@ -42,9 +42,9 @@ A meeting-prep is **internal seller collateral**, so it should look like the **s
 
 > **Craft it like real collateral, don't fill a template.** The output should look like the sender's brand — inline their real logo, map their tokens, vary layout to fit the occasion. The `html-scaffold.md` is a **component-pattern reference to adapt**, not a fixed stylesheet to reproduce verbatim. A reader should be able to tell at a glance whose document this is. (See `presentation-principles.md` → "Look like the brand, not like a template.")
 
-## Optional review pass
+## Review pass (runs by default)
 
-After generating the asset, **offer** an optional review (don't force it): *"Want me to run a quick review pass over this — groundedness, layout, brand, narrative, and AI-slop?"* If yes, follow [`get-brand-components/references/asset-review.md`](../get-brand-components/references/asset-review.md): render/screenshot the output, inspect it across the dimensions (render the pixels and actually look — overflow and white-on-white only show in the render), report a short scorecard of specific located findings, then fix and re-verify. The **groundedness/verification** dimension matters most here — re-check that every named person, news item, and metric is real and sourced. Skip silently if the user declines.
+After generating, **run the review pass by default** — don't wait to be asked. In interactive mode, tell the user at intake that you'll review before finishing (recommended) and that they can opt out with `--skip-review` or "skip review". Follow [`get-brand-components/references/asset-review.md`](../get-brand-components/references/asset-review.md): the always-on **preflight** (em dashes, broken images/logos, link `target`, themed scrollbars, leaked internals) plus the **visual pass** (render/screenshot, inspect the pixels across the dimensions — groundedness/verification matters most — report a short located scorecard, fix, re-verify). The visual pass defaults off only in a `--research fast` run; the preflight always runs.
 
 ## Usage
 
