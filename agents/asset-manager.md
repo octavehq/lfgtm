@@ -1,6 +1,6 @@
 ---
 name: asset-manager
-description: Publish and manage hosted assets (HTML sites, docs, file bundles) on the Octave assets service. Use when the user wants to publish/host/share a local folder or file online, update a published asset's files or metadata, change visibility (public/private), create or manage private share links (emails/domains), or list/audit what they've published. Do not use for Vercel microsite deploys (use /octave:microsite deploy) or for generating the content itself (use the Document Builder skills).
+description: Publish and manage hosted assets (HTML sites, docs, file bundles) on the Octave assets service. Use when the user wants to publish/host/share a local folder or file online, update a published asset's files or metadata, change visibility (public/private), create or manage private share links (emails/domains), or list/audit what they've published. Do not use for Vercel deploys of microsites (that is /octave:microsite's own deploy step) or for generating the content itself (use the Document Builder skills).
 model: haiku
 color: yellow
 memory: project
