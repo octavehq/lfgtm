@@ -14,6 +14,9 @@
 #   3. Combines all screenshots into a single PDF
 #   4. Cleans up the server and temp files
 #
+# Playwright is cached in ~/.cache/octave-export-pdf (override with
+# OCTAVE_EXPORT_PDF_CACHE) so only the first run downloads anything.
+#
 # The PDF preserves colors, fonts, and layout — but not animations.
 # Perfect for email attachments, printing, or embedding in documents.
 set -euo pipefail
@@ -110,20 +113,25 @@ ok "Node.js found"
 
 # ─── Step 2: Create the export script ─────────────────────
 
-# We use a temporary Node.js script with Playwright to:
+# We use a Node.js script with Playwright to:
 # 1. Start a local server (so fonts load correctly)
 # 2. Navigate to each slide
 # 3. Screenshot each slide at 1920x1080 (16:9 landscape)
 # 4. Combine into a single PDF
+#
+# The script and its Playwright install live in a persistent cache directory
+# so repeat runs skip the download; screenshots go to a per-run temp dir.
 
+CACHE_DIR="${OCTAVE_EXPORT_PDF_CACHE:-$HOME/.cache/octave-export-pdf}"
+mkdir -p "$CACHE_DIR"
 TEMP_DIR=$(mktemp -d)
-TEMP_SCRIPT="$TEMP_DIR/export-slides.mjs"
+EXPORT_SCRIPT_PATH="$CACHE_DIR/export-slides.mjs"
 
 # Figure out which directory to serve (the folder containing the HTML)
 SERVE_DIR=$(dirname "$INPUT_HTML")
 HTML_FILENAME=$(basename "$INPUT_HTML")
 
-cat > "$TEMP_SCRIPT" << 'EXPORT_SCRIPT'
+cat > "$EXPORT_SCRIPT_PATH" << 'EXPORT_SCRIPT'
 // export-slides.mjs — Playwright script to export HTML slides to PDF
 //
 // How it works:
@@ -352,33 +360,40 @@ screenshotPaths.forEach(p => unlinkSync(p));
 console.log(`  ✓ PDF saved to: ${OUTPUT_PDF}`);
 EXPORT_SCRIPT
 
-# ─── Step 3: Install Playwright in temp directory ──────────
-# We install Playwright locally in the temp dir so the Node script can import it.
-# This avoids polluting global packages and ensures the script is self-contained.
+# ─── Step 3: Install Playwright in the cache directory ────
+# Playwright is installed once into a persistent cache directory
+# (~/.cache/octave-export-pdf by default, override with OCTAVE_EXPORT_PDF_CACHE)
+# so repeat exports skip the download. This avoids polluting global packages
+# while keeping the script self-contained.
 
 info "Setting up Playwright (headless browser for screenshots)..."
-info "This may take a moment on first run..."
-echo ""
 
-cd "$TEMP_DIR"
+cd "$CACHE_DIR"
 
 # Create a minimal package.json so npm install works
-cat > "$TEMP_DIR/package.json" << 'PKG'
+if [[ ! -f "$CACHE_DIR/package.json" ]]; then
+    cat > "$CACHE_DIR/package.json" << 'PKG'
 { "name": "slide-export", "private": true, "type": "module" }
 PKG
+fi
 
-# Install Playwright into the temp directory
-npm install playwright &>/dev/null || {
-    err "Failed to install Playwright."
-    err "Try running: npm install playwright"
-    rm -rf "$TEMP_DIR"
-    exit 1
-}
+# Install Playwright into the cache directory (first run only)
+if [[ ! -d "$CACHE_DIR/node_modules/playwright" ]]; then
+    info "Installing Playwright into $CACHE_DIR (first run only)..."
+    npm install playwright &>/dev/null || {
+        err "Failed to install Playwright."
+        err "Try running: cd $CACHE_DIR && npm install playwright"
+        rm -rf "$TEMP_DIR"
+        exit 1
+    }
+else
+    ok "Using cached Playwright from $CACHE_DIR"
+fi
 
-# Ensure Chromium browser binary is downloaded
+# Ensure Chromium browser binary is downloaded (fast no-op when cached)
 npx playwright install chromium 2>/dev/null || {
     err "Failed to install Chromium browser for Playwright."
-    err "Try running manually: npx playwright install chromium"
+    err "Try running manually: cd $CACHE_DIR && npx playwright install chromium"
     rm -rf "$TEMP_DIR"
     exit 1
 }
@@ -392,12 +407,13 @@ SCREENSHOT_DIR="$TEMP_DIR/screenshots"
 info "Exporting slides to PDF..."
 echo ""
 
-# Run from the temp dir so Node can find the locally-installed playwright
+# The script lives next to the cached node_modules, so Node resolves the
+# locally-installed playwright without any global install
 if [[ "$COMPACT" == "true" ]]; then
     info "Using compact mode (1280×720) for smaller file size"
 fi
 
-node "$TEMP_SCRIPT" "$SERVE_DIR" "$HTML_FILENAME" "$OUTPUT_PDF" "$SCREENSHOT_DIR" "$VIEWPORT_W" "$VIEWPORT_H" || {
+node "$EXPORT_SCRIPT_PATH" "$SERVE_DIR" "$HTML_FILENAME" "$OUTPUT_PDF" "$SCREENSHOT_DIR" "$VIEWPORT_W" "$VIEWPORT_H" || {
     err "PDF export failed."
     rm -rf "$TEMP_DIR"
     exit 1
