@@ -43,7 +43,7 @@ params:
 save_as: persona
 description: Fetch the full persona definition from your library including common job titles, pain points, key objectives, and qualification criteria.
 
-If the user provided a persona name rather than an oId, first use `list_all_entities({ entityType: "persona" })` to find the matching persona and get its oId.
+If the user provided a persona name rather than an oId, first use `list_all_entities({ entityType: "persona" })` to find the matching persona and save its oId as persona_oId.
 
 Present the persona overview to confirm this is the right target.
 
@@ -95,8 +95,7 @@ prompt: |
 
   Which prospects should I qualify and generate outreach for?
   (Enter numbers separated by commas, or "all")
-
-Save the selected prospects for subsequent steps.
+save_as: selected_prospects
 
 ### Step 5: Enrich Selected Prospects
 tool: enrich_person
@@ -135,8 +134,7 @@ prompt: |
   2. Top 3 prospects
   3. All qualified prospects (score > 50)
   4. Specific prospects (enter numbers)
-
-Save the final selection.
+save_as: final_selection
 
 ### Step 8: Generate Outreach
 tool: generate_email
@@ -153,7 +151,7 @@ params:
 save_as: email_sequences
 description: Generate personalized email sequences for each selected prospect, using persona messaging and individual enrichment data.
 
-Run this for each prospect selected in Step 7.
+Run this for each prospect in {{final_selection}} and collect the results under email_sequences.
 
 ### Step 9: Results
 type: output
@@ -163,16 +161,16 @@ template: |
 
   Persona: {{persona.name}}
   Motion ICP: {{matched_motion_icp.name}}
-  Prospects Targeted: {{selected_prospects.length}}
+  Prospects Targeted: {{final_selection.length}}
 
   ---
 
-  {{#each selected_prospects}}
+  {{#each final_selection}}
   PROSPECT: {{name}} ({{title}} at {{companyName}})
   Persona Fit: {{qualification.score}}/100
   ─────────────────────────────────────────
 
-  {{email_sequence}}
+  {{email_sequences[@index]}}
 
   ---
   {{/each}}

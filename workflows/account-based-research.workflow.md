@@ -75,7 +75,7 @@ Run this for each enriched contact. Present qualification scores and persona map
 ### Step 6: Match Motion ICPs
 tool: list_motions
 save_as: available_motions
-description: List Motions available in the workspace to identify which Motion best matches the offering being sold into this account.
+description: List Motions available in the workspace to identify which Motion best matches the offering being sold into this account. Pick the best match (or ask the user if ambiguous) and save its oId as selected_motion_oId.
 
 Then for the selected Motion:
 

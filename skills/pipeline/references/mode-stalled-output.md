@@ -1,7 +1,7 @@
 #### Mode: Stalled Deal
 
 ```
-DEAL COACHING: STALLED DEAL
+DEAL STRATEGY: STALLED DEAL
 ============================
 
 Account: [Company]

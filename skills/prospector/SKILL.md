@@ -1,6 +1,7 @@
 ---
 name: prospector
 description: Find, enrich, and qualify prospects against your library's ICP criteria. Use when user says "find prospects", "who should I target", "find VPs at [company]", "build a list", "prospect for", or asks to find people matching ICP. Do NOT use for single-account deep research — use /octave:research instead.
+argument-hint: "[--motion <name>] [--segment <name>] [--persona <name>] [--company <domain>] [--similar-to <domain>] [--count <n>]"
 ---
 
 # /octave:prospector - ICP-Fit Prospecting

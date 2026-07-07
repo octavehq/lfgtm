@@ -1,6 +1,7 @@
 ---
 name: abm
 description: Account-based planning with stakeholder mapping, persona matching, and coordinated outreach strategy. Use when user says "plan for [company]", "account plan", "stakeholder map", "ABM strategy", or mentions targeting a specific named company.
+argument-hint: "<company> [--stakeholders <n>] [--motion <name>] [--depth quick|full]"
 ---
 
 # /octave:abm - Account Planner
@@ -173,9 +174,7 @@ generate_email({
 - `list_events` - Existing conversation history with account
 
 ### Content Generation
-- `generate_email` - Outreach sequences
-- `generate_content` - Account-specific content
-- `generate_call_prep` - Meeting preparation
+- `generate_email` - Outreach sequences (Step 6)
 
 ## Error Handling
 
@@ -209,5 +208,5 @@ generate_email({
 - `/octave:research` - Deep-dive on a specific stakeholder
 - `/octave:campaign` - Generate multi-channel campaign for this account
 - `/octave:battlecard` - Competitive intel if competitor detected
-- `/octave:pipeline` - Coach on deal progression after engagement starts
+- `/octave:pipeline` - Deal-level strategy after engagement starts
 - `/octave:prospector` - Find more accounts like this one

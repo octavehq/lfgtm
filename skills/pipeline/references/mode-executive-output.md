@@ -1,7 +1,7 @@
 #### Mode: Executive Engagement
 
 ```
-DEAL COACHING: EXECUTIVE ENGAGEMENT
+DEAL STRATEGY: EXECUTIVE ENGAGEMENT
 =====================================
 
 Account: [Company]

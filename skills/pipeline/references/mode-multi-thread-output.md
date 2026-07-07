@@ -1,7 +1,7 @@
 #### Mode: Multi-Thread
 
 ```
-DEAL COACHING: MULTI-THREADING
+DEAL STRATEGY: MULTI-THREADING
 ================================
 
 Account: [Company]

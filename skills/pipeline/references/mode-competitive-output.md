@@ -1,7 +1,7 @@
 #### Mode: Competitive
 
 ```
-DEAL COACHING: COMPETITIVE THREAT
+DEAL STRATEGY: COMPETITIVE THREAT
 ===================================
 
 Account: [Company]
