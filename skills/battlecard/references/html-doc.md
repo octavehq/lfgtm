@@ -1,4 +1,119 @@
-# HTML Architecture
+# HTML Battlecard Document (--format doc)
+
+How to render the battlecard intelligence as a self-contained HTML reference document. The content itself comes from the Step 2 research plan and follows the same section logic as [full-battlecard.md](full-battlecard.md) (single competitor) and [competitive-landscape.md](competitive-landscape.md) (landscape) — this file covers the document-specific structure, components, and scaffold.
+
+## Content Brief Template
+
+Present before generating and wait for approval:
+
+```
+BATTLECARD OUTLINE: vs [Competitor]
+====================================
+
+Competitor: [Competitor name]
+Data Sources: [N] deals analyzed, [N] conversation mentions, [N] proof points
+Date Range: Last 180 days
+Win Rate: [X%] ([N] wins / [N] losses)
+
+---
+
+SECTIONS
+--------
+1. Quick Positioning — one-liner + 30-second pitch
+2. Competitor Overview — what they do, target, pricing, key customers
+3. Where We Win — strengths table + real deal evidence
+4. Where They Win — honest assessment + how to counter each
+5. Objection Handlers — organized by category (pricing, feature, relationship, risk)
+6. Trap Questions — discovery questions that expose weaknesses
+7. Landmines to Set — evaluation criteria to plant early
+8. Proof Points — switching stories, competitive wins, metrics
+9. Win/Loss Scorecard — visual scoreboard with win rate and factors
+10. Displacement Playbook — how to unseat them when entrenched
+
+Octave Sources Used:
+- Competitor entity: [name]
+- Deals analyzed: [N] wins, [N] losses
+- Conversation mentions: [N] findings
+- Proof points: [N] relevant
+- Motions / Motion ICPs: [list of Motions and ICP cells]
+- Custom Motion Playbooks (COMPETITIVE narrative): [list]
+
+---
+
+Does this outline look good? I can:
+1. Proceed to style selection and generation
+2. Add/remove sections
+3. Go deeper on any area
+4. Switch to landscape overview
+```
+
+For a "quick reference" variant, trim to Quick Positioning + Objection Handlers + Trap Questions only.
+
+## Single Competitor — Document Sections
+
+**1. Header Banner**
+- "vs [Competitor]" title with your product name
+- Last updated date
+- Data sources badges: "[N] deals | [N] calls | [N] proof points"
+
+**2. Quick Positioning**
+- Highlighted callout box with brand accent border: the risk moment ("When [Competitor] comes up...") and the lead angle
+- One-liner: single strongest differentiator
+- 30-second positioning: the 2-3 beats to hit in your own words — talking points, not a script to recite
+
+**3. Competitor Overview**
+- What they do, target market, pricing, key customers, recent moves
+- Card-based grid layout (2-3 columns)
+
+**4. Where We Win**
+- Comparison table: capability rows with green checkmarks (us) and red crosses (them)
+- Win themes from actual deals: numbered list with quoted conversation evidence
+
+**5. Where They Win (Be Honest)**
+- Their genuine strengths listed honestly
+- For each: a "How to counter/reframe" response
+- Color-code: amber for their strengths, green counter callouts
+
+**6. Objection Handlers**
+- Expandable `<details>/<summary>` accordion elements
+- Organized by category: Pricing, Feature, Relationship, Risk (with category badges)
+- Summary line = the risk or situation ("They anchor on price"), never a quote in the prospect's voice
+- Expanded body: "You'll hear" (the likely prospect line) → response points the rep adapts → proof point
+- Include real conversation evidence when available
+
+**7. Trap Questions**
+- 5-8 discovery questions as numbered cards
+- Each with: the question (ask near-verbatim — trap questions are the one scripted element), why it works, expected response, follow-up
+
+**8. Landmines to Set**
+- Evaluation criteria to plant early that favor you
+- Each with: criterion, why it matters, how it plays to your strength
+
+**9. Proof Points**
+- Customers who switched, competitive win stories, head-to-head metrics
+- Card layout with metric highlights
+
+**10. Win/Loss Scorecard**
+- Visual win rate bar: CSS-based div widths (green for wins, red for losses)
+- Win rate percentage displayed prominently
+- Common win factors (green accent) and loss factors (red accent)
+
+**11. Displacement Playbook**
+- How to unseat entrenched competitors
+- Migration story, switching cost offsets, success timeline
+- Sequential step layout
+
+## Landscape Overview — Document Sections
+
+**1. Header** — "Competitive Landscape" title + date + competitor count
+
+**2. Market Map** — Table: competitor, focus, threat level (color-coded badge), win rate mini-bar
+
+**3. Per-Competitor Cards** — Condensed card per competitor: name, positioning, key differentiator, top objection risk + counter points, win rate bar. Grid layout.
+
+**4. Cross-Competitor Patterns** — Themes across multiple competitors, common objection categories, universal differentiators
+
+## HTML Scaffold
 
 ```html
 <!DOCTYPE html>
@@ -11,7 +126,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=[fonts]&display=swap" rel="stylesheet">
   <style>
-    /* === CSS Variables (from chosen style preset — see style-presets.md) === */
+    /* === CSS Variables (from chosen style preset — see ../../shared/style-presets.md) === */
     :root { /* ... paste chosen preset variables here ... */ }
 
     /* === Reset & Base === */
@@ -109,19 +224,19 @@
     <section class="section" id="section-positioning">
       <h2 class="section-title">Quick Positioning</h2>
       <div class="callout">
-        <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.5rem;">When you hear "[Competitor]", say:</p>
-        <p style="font-size: 1.1rem; font-weight: 600;">"[One-liner]"</p>
+        <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.5rem;">When [Competitor] comes up, lead with:</p>
+        <p style="font-size: 1.1rem; font-weight: 600;">[One-line differentiator — a point to make, not a line to recite]</p>
       </div>
       <div class="card" style="margin-top: 1rem;">
-        <p style="color: var(--text-secondary); font-size: 0.85rem;">30-Second Pitch</p>
-        <p>"[Elevator pitch positioned against this competitor]"</p>
+        <p style="color: var(--text-secondary); font-size: 0.85rem;">Positioning in 30 seconds (in your own words)</p>
+        <p>[The 2-3 beats that position us against this competitor]</p>
       </div>
     </section>
 
     <!-- 3. Competitor Overview (card grid) -->
     <!-- 4. Where We Win (comparison table + deal evidence) -->
     <!-- 5. Where They Win (honest strengths + counter cards) -->
-    <!-- 6. Objection Handlers (details/summary accordion by category) -->
+    <!-- 6. Objection Handlers (details/summary accordion by category; summary = risk title, body = "You'll hear" + response points + proof) -->
     <!-- 7. Trap Questions (numbered step cards) -->
     <!-- 8. Landmines to Set (numbered checklist) -->
     <!-- 9. Proof Points (metric cards) -->
@@ -160,24 +275,56 @@
 </html>
 ```
 
-Populate each placeholder section (`<!-- 3 -->` through `<!-- 11 -->`) with real content from the Octave context gathered in Step 2, using the component patterns shown above.
+Populate each placeholder section (`<!-- 3 -->` through `<!-- 11 -->`) with real content from the Step 2 research, using the component patterns shown above.
 
 For **landscape overview** documents, replace the per-competitor sections with:
-- **Market Map** -- `<table class="comparison-table">` with competitor rows, threat-level badges, and inline score bars
-- **Per-Competitor Cards** -- `<div class="grid-2">` of `.card` elements, each with: name, positioning, differentiator, top objection/counter, win rate mini-bar
-- **Cross-Competitor Patterns** -- themes, universal differentiators, common objections
+- **Market Map** — `<table class="comparison-table">` with competitor rows, threat-level badges, and inline score bars
+- **Per-Competitor Cards** — `<div class="grid-2">` of `.card` elements, each with: name, positioning, differentiator, top objection risk + counter, win rate mini-bar
+- **Cross-Competitor Patterns** — themes, universal differentiators, common objection categories
+
+## Key HTML/CSS Principles
+
+1. **Single page, natural scrolling** — not a slide deck, a vertical reference document
+2. **Sticky sidebar** with section navigation dots (hidden on mobile and print)
+3. **CSS variable system from the shared style presets** — apply the preset's `:root` block from `../../shared/style-presets.md` (or the brand kit tokens when one is used)
+4. **Max-width 950px** centered on the page
+5. **Objection handlers as `<details>/<summary>`** — native HTML expand/collapse, no JS required
+6. **Win/loss scorecard using CSS bars** — div widths as percentages, green wins, red losses
+7. **Color coding:** `--success` (green) for wins/strengths, `--error` (red) for losses/weaknesses, `--warning` (amber) for neutral
+8. **Self-contained** — all CSS inline in `<style>`, only external dependency is Google Fonts
+9. **Responsive** — grids collapse to single column below 768px
+10. **Print-friendly** — sidebar hidden, details preserved
+
+## Delivery Summary Template
+
+```
+BATTLECARD READY
+================
+
+Folder: .octave-battlecards/battlecard-<competitor>-<date>/
+File:   .octave-battlecards/battlecard-<competitor>-<date>/battlecard-<competitor>.html
+Style:  [Preset or brand kit name]
+Size:   [file size]
+
+Competitor: [Competitor name]
+Sections: [N] sections
+Data sources: [N] deals, [N] conversation mentions, [N] proof points
+Win rate: [X%] (last 180 days)
+
+Navigation:
+- Scroll naturally through the document
+- Sidebar dots on the right track your position
+- Click any dot to jump to that section
+- Objection handlers: click to expand/collapse
 
 ---
 
-#### Key HTML/CSS Principles
-
-1. **Single page, natural scrolling** -- not a slide deck, a vertical reference document
-2. **Sticky sidebar** with section navigation dots (hidden on mobile and print)
-3. **Same CSS variable system as `/octave:deck`** -- apply the preset's `:root` block from style-presets.md
-4. **Max-width 950px** centered on the page
-5. **Objection handlers as `<details>/<summary>`** -- native HTML expand/collapse, no JS required
-6. **Win/loss scorecard using CSS bars** -- div widths as percentages, green wins, red losses
-7. **Color coding:** `--success` (green) for wins/strengths, `--error` (red) for losses/weaknesses, `--warning` (amber) for neutral
-8. **Self-contained** -- all CSS inline in `<style>`, only external dependency is Google Fonts
-9. **Responsive** -- grids collapse to single column below 768px
-10. **Print-friendly** -- sidebar hidden, details preserved
+Want me to:
+1. Add more objection handlers
+2. Go deeper on any section
+3. Create displacement outreach for a specific person
+4. Generate a version for a different persona
+5. Create a presentation version (/octave:deck)
+6. Export as PDF
+7. Done
+```

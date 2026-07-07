@@ -1,6 +1,7 @@
 ---
 name: icp-refine
-description: Analyze deal outcomes and conversation patterns to refine ICP definitions and targeting criteria. Use when user says "refine ICP", "who should we target", "update our ICP", "ideal customer profile", or asks why deals are being won or lost.
+description: Compare deal outcomes and conversation evidence against your segment and persona definitions, then update the ICP criteria in your library. Use when user says "refine ICP", "update our ICP", "ideal customer profile", "should we change who we target", or wants segment/persona definitions updated from deal evidence. Do NOT use for win/loss pattern analysis itself — use /octave:wins-losses instead.
+argument-hint: "[--period <days>] [--segment <name>] [--focus wins|losses|both]"
 ---
 
 # /octave:icp-refine - ICP Intelligence
