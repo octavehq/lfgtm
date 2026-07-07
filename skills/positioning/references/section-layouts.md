@@ -1,6 +1,6 @@
 # Section Layouts Reference
 
-Section-specific CSS patterns for the 8 positioning system frameworks. These extend the base styles defined in the main SKILL.md and should be included inline in the generated HTML `<style>` block.
+Section-specific CSS patterns for the 8 positioning system frameworks. These extend the base styles defined in [html-scaffold.md](html-scaffold.md) and should be included inline in the generated HTML `<style>` block.
 
 ---
 

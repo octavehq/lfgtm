@@ -1,6 +1,7 @@
 ---
 name: microsite
 description: Personalized ABM microsite builder that generates self-contained HTML landing pages using GTM intelligence. Use when user says "microsite for [company]", "personalized landing page", "ABM page", or asks for a personalized web page for a target account.
+argument-hint: "<company-or-email> [--angle <approach>] [--style <preset>] [--skip-review]"
 ---
 
 # /octave:microsite - Personalized ABM Microsite Builder
@@ -14,30 +15,18 @@ Generate personalized, single-page ABM microsites as beautiful self-contained HT
 - vs `/octave:proposal` — proposal is formal and detailed; microsite is concise and designed to generate interest
 - vs `/octave:deck` — deck is for presenting; microsite is for sharing a link
 
-## On-brand styling — use a brand kit if one exists
+## On-brand styling
 
-This landing page is **customer-facing and personalized** ("Built for [Company]"), so **default to the recipient's (the target company's) brand** — a page in the prospect's own identity is the whole point of an ABM microsite; the sender's brand is the fallback. "The company" below = the recipient. Then:
-
-1. Resolve the company to a `<slug>` and check for a cached brand kit at `~/.octave/brands/<slug>/manifest.json`.
-2. **If a kit exists →** offer it: *"I found a saved brand kit for <Company> — want this landing page rendered in their brand?"* If yes, style the output with the kit instead of a generic preset:
-   - inline the kit's `tokens.css` (`:root` + the embedded `@font-face`) **and** `get-brand-components/assets/kit_base.css` into the output `<style>`;
-   - follow `brand-kit.md` → **Signature moves**, and reuse the kit's real **logo**, `images/`, and `icons.json`;
-   - for doc-shaped output you can compose directly with `get-brand-components/scripts/render_kit.py` (hero / split / logos / pricing / cta / footer blocks).
-3. **If no kit exists →** offer to build one first: *"No brand kit for <Company> yet — want me to capture it (~1 min) so this is on-brand?"* → run `/octave:get-brand-components <domain>`, then proceed.
-4. **If the user declines →** generate with the default style/preset.
-
-> The brand kit is the strongest styling signal — when one is available, prefer it over generic `--style` presets. See the `get-brand-components` skill for the kit format, token contract, and renderer.
+A microsite is **customer-facing and personalized** ("Built for [Company]"), so **default to the recipient's (the target company's) brand** — a page in the prospect's own identity is the whole point of an ABM microsite; the sender's brand is the fallback. Follow the kit lookup, defaults, and extraction tiers in [../shared/brand-kit-usage.md](../shared/brand-kit-usage.md).
 
 ## Review pass (runs by default)
 
-After generating, **run the review pass by default** — don't wait to be asked. In interactive mode, tell the user at intake that you'll review before finishing (recommended) and that they can opt out with `--skip-review` or "skip review". Follow [`get-brand-components/references/asset-review.md`](../get-brand-components/references/asset-review.md): the always-on **preflight** (em dashes, broken images/logos, link `target`, themed scrollbars, leaked internals) plus the **visual pass** (render/screenshot, inspect the pixels across the dimensions — groundedness/verification matters most — report a short located scorecard, fix, re-verify). The visual pass defaults off only in a `--research fast` run; the preflight always runs.
-
-When generating, follow the output rules in [`get-brand-components/references/presentation-principles.md`](../get-brand-components/references/presentation-principles.md) — the generation-time companion to the review pass (label every value, no tool names in the output, confirmed vs hypothesized, lean and deal-specific).
+Run the default review pass after generating — the always-on preflight plus the visual render-and-inspect pass, per [../shared/review-pass.md](../shared/review-pass.md). Opt out with `--skip-review`. When generating, follow the output rules in [../shared/presentation-principles.md](../shared/presentation-principles.md).
 
 ## Usage
 
 ```
-/octave:microsite <target> [--angle <approach>] [--style <preset>]
+/octave:microsite <target> [--angle <approach>] [--style <preset>] [--skip-review]
 ```
 
 ## Examples
@@ -77,7 +66,7 @@ Target:
 ```
 What angle should the microsite lead with?
 
-1. Pain-point led — address a specific challenge they face
+1. Pain-point led — address a specific challenge they face (default)
 2. Competitive displacement — show a better way than their current approach
 3. Value-led — lead with results and metrics from similar companies
 4. Trigger-based — connect to a recent event, news, or milestone
@@ -91,7 +80,7 @@ Your choice:
 ```
 What action should the microsite drive?
 
-1. Book a demo
+1. Book a demo (default)
 2. See a case study
 3. Watch a video / product tour
 4. Start a free trial
@@ -101,13 +90,16 @@ What action should the microsite drive?
 Your choice:
 ```
 
-**Brand — "Use your company's brand styling?"**
+For link-based CTAs (demo, trial, video), also ask for the destination URL — the button has to point somewhere real. If none is provided, use the sender company's website and flag it in the delivery summary as a placeholder to replace before sending.
+
+**Brand — "Whose brand styles the page?"**
 
 ```
 Whose brand should the microsite reflect?
 
-1. My brand (the sender) — extract from my website (give the URL)
-2. The recipient's brand — mirror the target account's look for maximum ABM personalization (give *their* URL)
+1. The recipient's brand — mirror the target account's look for maximum ABM
+   personalization (default; give *their* URL if no kit is cached)
+2. My brand (the sender) — extract from my website (give the URL)
 3. I'll provide brand assets directly (colors, fonts, logo)
 4. No brand — pick from style presets
 5. Use Octave brand styling
@@ -115,29 +107,15 @@ Whose brand should the microsite reflect?
 Your choice:
 ```
 
-> **This choice decides which website we fetch for styling** — your domain (option 1) or the target account's domain (option 2). It's separate from the recipient *context* below, which always personalizes the content regardless of whose brand styles the page.
+> **This choice decides which website we fetch for styling** — the target account's domain (option 1, the default) or your own domain (option 2). It's separate from the recipient *context*, which always personalizes the content regardless of whose brand styles the page.
 
 ### Step 2: Octave Context Gathering
 
 Based on the target, angle, and CTA, use Octave MCP tools to build deep personalization context. **Always tell the user what you're researching and why.**
 
-**Call as many tools as needed.** The more you know about the account, the more personalized the microsite. A great microsite layers company enrichment + Motion ICP cell narrative + proof points + competitive intel into a narrative that feels hand-crafted. Don't stop at one tool when four would give you a stronger page.
+**Call as many tools as needed.** The more you know about the account, the more personalized the microsite. A great microsite layers company enrichment + Motion ICP cell narrative + proof points + competitive intel into a narrative that feels hand-crafted.
 
-**List vs Search — when to use which:**
-
-| Tool | Purpose | Use when... |
-|------|---------|-------------|
-| `list_all_entities({ entityType })` | Fetch all entities of a type (minimal fields) | You want a quick inventory — "show me all our proof points" |
-| `list_entities({ entityType })` | Fetch entities with full data (paginated) | You need the actual content — "get full proof point details" |
-| `get_entity({ oId })` | Deep dive on one specific entity | You found something relevant and need the complete picture |
-| `search_knowledge_base({ query })` | Semantic search across library + resources | You have a concept or question — "how do we help healthcare?" |
-| `list_resources()` / `search_resources({ query })` | Uploaded docs, URLs, Google Drive files | You need reference material, uploaded assets, or source docs |
-
----
-
-See [octave-tool-reference.md](references/octave-tool-reference.md) for the full tool reference tables (always-run, person-specific, social proof, competitive, trigger-based, and additional context).
-
----
+For list-vs-search guidance and the common tool tables, see [../shared/octave-research-toolkit.md](../shared/octave-research-toolkit.md). For the microsite-specific tool tables (always-run, person-specific, social proof, competitive, trigger-based, and additional context), see [tool-reference.md](references/tool-reference.md).
 
 **Output of this step:** Present a content outline to the user for approval:
 
@@ -147,25 +125,16 @@ See [microsite-outline-template.md](references/microsite-outline-template.md) fo
 
 ### Step 3: Style & Brand
 
-Two layers of brand apply to microsites:
-1. **Your brand** (the sender's brand) — logo, colors, fonts. This is what the microsite is styled with.
-2. **Their context** (the recipient's company) — the personalization that shows you researched them. This appears as content, not styling.
+Two layers apply to every microsite, and they are independent:
 
-**If user chose brand extraction in Step 1:**
+1. **Styling brand** — whose visual identity the page wears. **Default: the recipient's brand** (per the On-brand styling section above); the sender's brand is the fallback when the user prefers it.
+2. **Recipient context** — the personalization that shows you researched them. This appears as *content* ("Built for [Company]", their pains, their industry proof) no matter whose brand styles the page.
 
-Use the same tiered brand extraction approach as the deck skill (see `/octave:deck` Step 3 for full detail):
-
-1. **Tier 1: `get_external_brand_assets`** (first-party, fast) — one call returns brand colors, logo variants, and backdrop images. Sanity-check the result: a strip of varied logos is usually a "trusted by" **customer wall**, not the brand's own logo, and `brandName` can grab a customer — prefer the favicon/nav wordmark and verify against the domain.
-2. **Tier 2: `scrape_website`** (`{ format: "html", includeScreenshot: true }`) — pull the homepage **and one representative page**; read fonts + CSS custom properties from the html, and the **component/layout vocabulary** (button shapes, card radii, spacing, gradients, section patterns) from the screenshot. Microsites especially benefit — the goal is to *look like the sender's site*, not just borrow its colors.
-3. **Tier 3: browser-use** (fallback) — open the site, screenshot, extract computed styles via JS eval.
-4. **Tier 4: WebFetch** (fallback) — parse homepage HTML/CSS for CSS custom properties, font-family, logo URLs, meta theme-color.
-5. **Tier 5: Manual** — ask user for hex colors, font names, and logo files directly.
-
-Confirm the brand config with the user before proceeding.
+**If brand extraction is needed (no cached kit):** follow the tiered flow in [../shared/brand-kit-usage.md](../shared/brand-kit-usage.md) — Tier 1 `get_external_brand_assets` (colors + logo, with the customer-logo sanity check), Tier 2 `scrape_website` with `includeScreenshot` (homepage + one representative page; microsites especially benefit — the goal is to *look like the brand's site*, not just borrow its colors), then browser-use / WebFetch / manual fallbacks. Confirm the brand config with the user before proceeding.
 
 **If user chose a style preset:**
 
-Reference the deck skill's [style-presets.md](../deck/references/style-presets.md). Use the same CSS variable system. Recommended defaults for microsites:
+Use the shared preset system in [../shared/style-presets.md](../shared/style-presets.md). Recommended defaults for microsites:
 
 | Angle | Recommended Preset |
 |-------|--------------------|
@@ -193,7 +162,7 @@ Every microsite gets its own folder under `.octave-microsites/`:
 
 Example: `/octave:microsite acme.com` produces `.octave-microsites/acme-2026-02-11/acme-microsite.html`
 
-The entire `.octave-microsites/` directory is in `.gitignore` — nothing here gets committed.
+Make sure `.octave-microsites/` is ignored by your project's `.gitignore` (an `.octave-*/` pattern covers all Octave output dirs) so generated microsites don't get committed.
 
 #### Page Sections by Angle
 
@@ -328,67 +297,16 @@ Want me to:
 
 ## MCP Tools Used
 
-### Research & Enrichment
-- `enrich_company` - Full company intelligence profile
-- `enrich_person` - Full person intelligence report
-- `find_person` - Find contacts at a company by title/role
-- `qualify_company` - ICP fit scoring for a company
-- `qualify_person` - ICP fit scoring for a person
-
-### Library -- Fetching Entities
-- `list_all_entities` - Quick scan of all entities of a type (minimal fields, no pagination)
-- `list_entities` - Fetch entities with full data and pagination (proof points, references, etc.)
-- `get_entity` - Deep dive on one specific entity
-
-### Motions
-- `list_motions` - Motions for the offering
-- `list_motion_playbooks` - Default + Custom Motion Playbooks under a Motion
-- `get_motion_playbook` - Full Motion Playbook details
-- `list_motion_icps` - Persona × segment matrix for a Motion
-- `find_motion_icp` - Full per-cell narrative + Learning Loop learnings
-
-### Library -- Searching
-- `search_knowledge_base` - Semantic search across library entities and resources
-- `list_resources` - Browse uploaded docs, URLs, and Google Drive files
-- `search_resources` - Semantic search across uploaded resources
-
-### Intelligence & Signals
-- `list_findings` - Recent conversation findings and insights
-- `list_events` - Deal events (won, lost, created, etc.)
-- `get_event_detail` - Full details for a specific event
-
-### Content Generation
-- `generate_call_prep` - Synthesized prep brief for accounts
-- `generate_content` - Generate positioning or messaging content
+Common research, library, signals, and generation tools: see [../shared/octave-research-toolkit.md](../shared/octave-research-toolkit.md). Microsite-specific additions:
 
 ### Brand & Style
+- `get_external_brand_assets` / `get_external_brand_logo` / `scrape_website` — Brand extraction (Tiers 1-2)
 - `list_all_entities` (entityType: "brand_voice") - Available brand voices in workspace
 - `list_writing_styles` - Available writing styles in workspace
 
 ## Error Handling
 
-**Octave Connection Failed:**
-> Could not connect to your Octave workspace.
->
-> The microsite builder can still work without Octave — you provide the content manually, and I'll handle structure, style, and HTML generation. The result won't have Octave-powered personalization, but it will still look great.
->
-> To reconnect: check your MCP configuration or run `/octave:workspace status`
-
-**Company Not Found:**
-> I couldn't find detailed intelligence for [target].
->
-> Options:
-> 1. Proceed with general positioning from your library — I'll use your best-fit Motion ICP cell
-> 2. Try a different domain or email
-> 3. Provide company details manually (industry, size, challenges) and I'll personalize from that
-
-**No Relevant Proof Points:**
-> I couldn't find proof points in [their industry / of their size].
->
-> Options:
-> 1. Use your strongest proof points from adjacent industries
-> 2. Use general metrics without company-specific quotes
-> 3. Skip the proof section and lead with a stronger solution narrative
+Standard responses (connection failed, company not found, no matching Motion ICP cell, no proof points): see [../shared/octave-research-toolkit.md](../shared/octave-research-toolkit.md) → Standard error handling. Microsite-specific:
 
 **No Competitor Data (for Competitive Angle):**
 > I don't have data on the competitor they likely use.
@@ -398,15 +316,10 @@ Want me to:
 > 2. Use general competitive positioning without naming the competitor
 > 3. Provide competitor details manually and I'll build the narrative
 
-**No Matching Motion ICP Cell:**
-> No Motion ICP cell matches this audience profile directly.
->
-> I'll use your general positioning. After the microsite is built, consider layering a Custom Motion Playbook (Thematic / Milestone / Account / Competitive) on the relevant Motion for this angle: `/octave:library create motion-playbook`
-
 **Browser-Use Unavailable (Brand Extraction):**
 > Browser automation isn't available for brand extraction.
 >
-> Falling back to web fetch. If that doesn't capture your brand accurately, you can provide colors and fonts manually.
+> Falling back to web fetch. If that doesn't capture the brand accurately, you can provide colors and fonts manually.
 
 ## Related Skills
 

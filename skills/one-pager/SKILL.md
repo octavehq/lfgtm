@@ -1,6 +1,7 @@
 ---
 name: one-pager
 description: Personalized one-pager / leave-behind generator rendered as self-contained HTML. Use when user says "one-pager for [company]", "leave-behind", "follow-up doc", "demo summary", or asks for a concise customer-facing document.
+argument-hint: "<company-or-email> [--for <occasion>] [--style <preset>] [--skip-review]"
 ---
 
 # /octave:one-pager - Personalized One-Pager Builder
@@ -9,30 +10,18 @@ Generate personalized, self-contained HTML one-pager documents (leave-behinds) p
 
 One-pagers are single scrollable pages designed to be sent after a demo, meeting, or call. They summarize why your product is a fit for this specific account. Think of it as the document you email or print, not present.
 
-## On-brand styling — use a brand kit if one exists
+## On-brand styling
 
-This one-pager is **customer-facing** (a leave-behind for the recipient), so **offer the recipient's (the target company's) brand** for a personalized, "built for you" feel; the sender's (your own) brand is the alternative. "The company" below = whichever they pick (default to offering the recipient's). Then:
-
-1. Resolve the company to a `<slug>` and check for a cached brand kit at `~/.octave/brands/<slug>/manifest.json`.
-2. **If a kit exists →** offer it: *"I found a saved brand kit for <Company> — want this one-pager rendered in their brand?"* If yes, style the output with the kit instead of a generic preset:
-   - inline the kit's `tokens.css` (`:root` + the embedded `@font-face`) **and** `get-brand-components/assets/kit_base.css` into the output `<style>`;
-   - follow `brand-kit.md` → **Signature moves**, and reuse the kit's real **logo**, `images/`, and `icons.json`;
-   - for doc-shaped output you can compose directly with `get-brand-components/scripts/render_kit.py` (hero / split / logos / pricing / cta / footer blocks).
-3. **If no kit exists →** offer to build one first: *"No brand kit for <Company> yet — want me to capture it (~1 min) so this is on-brand?"* → run `/octave:get-brand-components <domain>`, then proceed.
-4. **If the user declines →** generate with the default style/preset.
-
-> The brand kit is the strongest styling signal — when one is available, prefer it over generic `--style` presets. See the `get-brand-components` skill for the kit format, token contract, and renderer.
+A one-pager is **customer-facing** (a leave-behind for the recipient), so **offer the recipient's (the target company's) brand** for a personalized, "built for you" feel; the sender's brand is the alternative. Follow the kit lookup, defaults, and extraction tiers in [../shared/brand-kit-usage.md](../shared/brand-kit-usage.md).
 
 ## Review pass (runs by default)
 
-After generating, **run the review pass by default** — don't wait to be asked. In interactive mode, tell the user at intake that you'll review before finishing (recommended) and that they can opt out with `--skip-review` or "skip review". Follow [`get-brand-components/references/asset-review.md`](../get-brand-components/references/asset-review.md): the always-on **preflight** (em dashes, broken images/logos, link `target`, themed scrollbars, leaked internals) plus the **visual pass** (render/screenshot, inspect the pixels across the dimensions — groundedness/verification matters most — report a short located scorecard, fix, re-verify). The visual pass defaults off only in a `--research fast` run; the preflight always runs.
-
-When generating, follow the output rules in [`get-brand-components/references/presentation-principles.md`](../get-brand-components/references/presentation-principles.md) — the generation-time companion to the review pass (label every value, no tool names in the output, confirmed vs hypothesized, lean and deal-specific).
+Run the default review pass after generating — the always-on preflight plus the visual render-and-inspect pass, per [../shared/review-pass.md](../shared/review-pass.md). Opt out with `--skip-review`. When generating, follow the output rules in [../shared/presentation-principles.md](../shared/presentation-principles.md).
 
 ## Usage
 
 ```
-/octave:one-pager <target> [--for <occasion>] [--style <preset>]
+/octave:one-pager <target> [--for <occasion>] [--style <preset>] [--skip-review]
 ```
 
 ## Examples
@@ -107,11 +96,9 @@ Your choice:
 
 Based on target, occasion, and tone, use Octave MCP tools to build rich context for the one-pager. **Always tell the user what you're researching and why.**
 
-**Call as many tools as needed to build a complete picture.** The best one-pagers come from layering multiple sources -- company enrichment + Motion ICP cell narrative + proof points + conversation intel all combine to create a document that feels genuinely personalized. Don't stop at one tool when three would give you a stronger narrative.
+**Call as many tools as needed to build a complete picture.** The best one-pagers come from layering multiple sources -- company enrichment + Motion ICP cell narrative + proof points + conversation intel all combine to create a document that feels genuinely personalized. Not every tool applies to every one-pager; pick the combination that gives you the richest context for the occasion and target.
 
-That said, not every tool applies to every one-pager. Use your judgment about which are relevant to *this specific* situation. The tables below show what's available -- pick the combination that gives you the richest context for the occasion and target.
-
-See [tool-reference.md](references/tool-reference.md) for list-vs-search guidance, follow-up grounding tools, and the tool reference tables for account-specific and segment-level one-pagers.
+For list-vs-search guidance, follow-up grounding, and the common tool tables, see [../shared/octave-research-toolkit.md](../shared/octave-research-toolkit.md). For the account-specific and segment-level tool tables, see [tool-reference.md](references/tool-reference.md).
 
 **Output of this step:** Present a content outline to the user for approval. See [outline-template.md](references/outline-template.md) for the outline template.
 
@@ -119,7 +106,7 @@ See [tool-reference.md](references/tool-reference.md) for list-vs-search guidanc
 
 ### Step 3: Style Selection
 
-One-pagers use the same 12 style presets and brand extraction system as the deck skill. See [style-presets.md](../deck/references/style-presets.md) for full CSS variable definitions.
+One-pagers use the same 12 style presets and brand extraction system as the other document skills. See [../shared/style-presets.md](../shared/style-presets.md) for full CSS variable definitions.
 
 Ask the user:
 
@@ -134,9 +121,9 @@ How would you like to style the one-pager?
 Your choice:
 ```
 
-**Option 1: Preset Picker** -- Show the same preset table from the deck skill (see `/octave:deck` Step 4, Option 2).
+**Option 1: Preset Picker** -- Show the 12-preset menu from [../shared/style-presets.md](../shared/style-presets.md).
 
-**Option 2: Brand Extraction** -- Follow the same brand discovery flow from the deck skill (see `/octave:deck` Step 3): Tier 1 `get_external_brand_assets` (colors + logo, with a customer-logo sanity check), Tier 2 `scrape_website` with `includeScreenshot` for fonts + components, then browser-use / WebFetch / manual fallbacks. Confirm brand config with user before proceeding.
+**Option 2: Brand Extraction** -- Follow the tiered brand extraction flow in [../shared/brand-kit-usage.md](../shared/brand-kit-usage.md): Tier 1 `get_external_brand_assets` (colors + logo, with a customer-logo sanity check), Tier 2 `scrape_website` with `includeScreenshot` for fonts + components, then browser-use / WebFetch / manual fallbacks. Confirm brand config with user before proceeding.
 
 **Option 3: Auto-Pick** -- Map occasion + tone to recommended presets:
 
@@ -171,7 +158,7 @@ Every one-pager gets its own folder under `.octave-one-pagers/`:
 
 Example: `/octave:one-pager acme.com` produces `.octave-one-pagers/acme-one-pager-2026-02-11/acme-one-pager.html`
 
-The entire `.octave-one-pagers/` directory is in `.gitignore` -- nothing here gets committed.
+Make sure `.octave-one-pagers/` is ignored by your project's `.gitignore` (an `.octave-*/` pattern covers all Octave output dirs) so generated one-pagers don't get committed.
 
 #### HTML Architecture
 
@@ -179,7 +166,7 @@ See [html-architecture.md](references/html-architecture.md) for the HTML/CSS sca
 
 #### Document Sections
 
-See [document-sections.md](references/document-sections.md) for per-section HTML templates (Header, The Challenge, Our Approach, Key Differentiators, Proof Points, Next Steps).
+See [one-pager-sections.md](references/one-pager-sections.md) for per-section HTML templates (Header, The Challenge, Our Approach, Key Differentiators, Proof Points, Next Steps).
 
 #### Content Density Rules
 
@@ -236,78 +223,16 @@ Want me to:
 
 ## MCP Tools Used
 
-### Research & Enrichment
-- `enrich_company` - Full company intelligence profile
-- `enrich_person` - Full person intelligence report
-- `find_person` - Find contacts at a company by title/role
-- `qualify_company` - ICP fit scoring for a company
-- `qualify_person` - ICP fit scoring for a person
-- `find_company` - Find companies matching criteria
-
-### Library -- Fetching Entities
-- `list_all_entities` - Quick scan of all entities of a type (minimal fields, no pagination)
-- `list_entities` - Fetch entities with full data and pagination (proof points, references, personas, etc.)
-- `get_entity` - Deep dive on one specific entity
-
-### Motions
-- `list_motions` - Motions for the offering
-- `list_motion_playbooks` - Default + Custom Motion Playbooks under a Motion
-- `get_motion_playbook` - Full Motion Playbook details
-- `list_motion_icps` - Persona × segment matrix for a Motion
-- `find_motion_icp` - Full per-cell narrative + Learning Loop learnings
-
-### Library -- Searching
-- `search_knowledge_base` - Semantic search across library entities and resources
-- `list_resources` - Browse uploaded docs, URLs, and Google Drive files
-- `search_resources` - Semantic search across uploaded resources
-
-### Intelligence & Signals
-- `list_findings` - Recent conversation findings and insights
-- `list_events` - Deal events (won, lost, created, etc.)
-- `get_event_detail` - Full details for a specific event
-
-### Content Generation
-- `generate_call_prep` - Synthesized prep brief for accounts
-- `generate_content` - Generate positioning or messaging content
+Common research, library, signals, and generation tools: see [../shared/octave-research-toolkit.md](../shared/octave-research-toolkit.md). One-pager-specific additions:
 
 ### Brand & Style
+- `get_external_brand_assets` / `get_external_brand_logo` / `scrape_website` — Brand extraction (Tiers 1-2)
 - `list_all_entities` (entityType: "brand_voice") - Available brand voices in workspace
 - `list_writing_styles` - Available writing styles in workspace
 
 ## Error Handling
 
-**Octave Connection Failed:**
-> Could not connect to your Octave workspace.
->
-> The one-pager builder can still work without Octave -- you'll provide the content manually, and I'll handle structure, style, and HTML generation.
->
-> To reconnect: check your MCP configuration or run `/octave:workspace status`
-
-**Company/Person Not Found:**
-> I couldn't find detailed intelligence for [target].
->
-> Options:
-> 1. Proceed with what we have -- I'll use general positioning from your library
-> 2. Try a different domain or email
-> 3. Provide the content manually and I'll build the one-pager
-
-**No Matching Motion ICP Cell:**
-> No Motion ICP cell matches this audience profile directly.
->
-> I'll use your general positioning. After the one-pager is built, consider layering a Custom Motion Playbook (Thematic / Milestone / Account / Competitive) on the relevant Motion for this angle: `/octave:library create motion-playbook`
-
-**No Proof Points Available:**
-> No proof points found matching this account's industry or segment.
->
-> Options:
-> 1. Proceed without the proof points section
-> 2. Use general proof points from your library
-> 3. Provide customer results manually and I'll format them
-
-**No Findings for Follow-Up:**
-> No conversation findings found for [target] in the recent period.
->
-> This means I'll build the one-pager from enrichment data and library content rather than grounding it in specific past conversations. You can provide meeting notes or context manually if you have them.
+Standard responses (connection failed, company/person not found, no matching Motion ICP cell, no proof points, no findings): see [../shared/octave-research-toolkit.md](../shared/octave-research-toolkit.md) → Standard error handling.
 
 ## Related Skills
 

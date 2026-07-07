@@ -1,6 +1,7 @@
 ---
 name: deck
 description: Octave-powered presentation builder that researches, structures, and generates self-contained HTML slide decks. Use when user says "build a deck", "create a presentation", "pitch deck", "QBR slides", "sales deck", or asks for slides on any topic.
+argument-hint: "[topic or file] [--for <purpose>] [--audience <target>] [--style <preset>] [--skip-review]"
 ---
 
 # /octave:deck - Octave-Powered Deck Builder
@@ -9,30 +10,18 @@ Build compelling, self-contained HTML presentations powered by your Octave GTM k
 
 > HTML presentation engine inspired by [frontend-slides](https://github.com/zarazhangrui/frontend-slides) by Zara Zhang (MIT license). Decks render on a **fixed 1920×1080 stage scaled to the viewport** (see [references/viewport-base.css](references/viewport-base.css)).
 
-## On-brand styling — use a brand kit if one exists
+## On-brand styling
 
-This deck is **customer-facing**, so whose brand it wears is a real choice — **offer the recipient's (the target company's) brand** for a personalized, made-for-you feel; the sender's (your own) brand is the standard alternative. "The company" below = whichever they pick (default to offering the recipient's). Then:
-
-1. Resolve the company to a `<slug>` and check for a cached brand kit at `~/.octave/brands/<slug>/manifest.json`.
-2. **If a kit exists →** offer it: *"I found a saved brand kit for <Company> — want this deck rendered in their brand?"* If yes, style the output with the kit instead of a generic preset:
-   - inline the kit's `tokens.css` (`:root` + the embedded `@font-face`) **and** `get-brand-components/assets/kit_base.css` into the output `<style>`;
-   - follow `brand-kit.md` → **Signature moves**, and reuse the kit's real **logo**, `images/`, and `icons.json`;
-   - for doc-shaped output you can compose directly with `get-brand-components/scripts/render_kit.py` (hero / split / logos / pricing / cta / footer blocks).
-3. **If no kit exists →** offer to build one first: *"No brand kit for <Company> yet — want me to capture it (~1 min) so this is on-brand?"* → run `/octave:get-brand-components <domain>`, then proceed.
-4. **If the user declines →** generate with the default style/preset.
-
-> The brand kit is the strongest styling signal — when one is available, prefer it over generic `--style` presets. See the `get-brand-components` skill for the kit format, token contract, and renderer.
+A deck is **customer-facing**, so whose brand it wears is a real choice — **offer the recipient's (the target company's) brand** for a personalized, made-for-you feel; the sender's brand is the standard alternative. Follow the kit lookup, defaults, and extraction tiers in [../shared/brand-kit-usage.md](../shared/brand-kit-usage.md).
 
 ## Review pass (runs by default)
 
-After generating, **run the review pass by default** — don't wait to be asked. In interactive mode, tell the user at intake that you'll review before finishing (recommended) and that they can opt out with `--skip-review` or "skip review". Follow [`get-brand-components/references/asset-review.md`](../get-brand-components/references/asset-review.md): the always-on **preflight** (em dashes, broken images/logos, link `target`, themed scrollbars, leaked internals) plus the **visual pass** (render/screenshot, inspect the pixels across the dimensions — groundedness/verification matters most — report a short located scorecard, fix, re-verify). The visual pass defaults off only in a `--research fast` run; the preflight always runs.
-
-When generating, follow the output rules in [`get-brand-components/references/presentation-principles.md`](../get-brand-components/references/presentation-principles.md) — the generation-time companion to the review pass (label every value, no tool names in the output, confirmed vs hypothesized, lean and deal-specific).
+Run the default review pass after generating — the always-on preflight plus the visual render-and-inspect pass, per [../shared/review-pass.md](../shared/review-pass.md). Opt out with `--skip-review`. When generating, follow the output rules in [../shared/presentation-principles.md](../shared/presentation-principles.md).
 
 ## Usage
 
 ```
-/octave:deck [topic or file] [--for <purpose>] [--audience <target>] [--style <preset>]
+/octave:deck [topic or file] [--for <purpose>] [--audience <target>] [--style <preset>] [--skip-review]
 ```
 
 ## Examples
@@ -53,123 +42,11 @@ When the user runs `/octave:deck`:
 
 ### Step 1: Understand the Purpose & Goal
 
-If not provided via flags, ask the user interactively using AskUserQuestion:
+Establish five things before researching — **purpose** (customer pitch / QBR / internal strategy / keynote / launch / competitive / enablement), **goal** (the outcome the deck should drive), **audience** (company, person, role, or general group), **content readiness** (from scratch, notes, pasted content, or a PPTX file), and **length + density** (slide count and speaker-led vs reading-first).
 
-**Purpose — "What kind of deck is this?"**
+Anything not provided via flags or the prompt, ask interactively using the question menus and per-purpose defaults in [references/intake.md](references/intake.md). If a `.pptx` file is provided, jump to the [PPTX Conversion Path](#pptx-conversion-path) before continuing.
 
-```
-What kind of deck are you building?
-
-1. Customer pitch / pre-demo deck
-2. Customer QBR / business review
-3. Internal strategy / planning
-4. Conference talk / keynote
-5. Product launch / GTM plan
-6. Competitive battlecard presentation
-7. Sales enablement / training
-8. Something else (describe it)
-
-Your choice:
-```
-
-**Goal — "What's the outcome you want?"**
-
-```
-What outcome should this deck drive?
-
-1. Close a deal / advance an opportunity
-2. Educate / enable a team
-3. Get executive buy-in
-4. Win a competitive deal
-5. Launch a product or campaign
-6. Other (describe it)
-
-Your choice:
-```
-
-**Audience — "Who is this for?"**
-
-```
-Who's the audience?
-
-Provide any of the following:
-• Company name or domain (e.g., acme.com)
-• Person name or email (e.g., jane@acme.com)
-• Role/title description (e.g., "VP Sales at mid-market SaaS")
-• General audience (e.g., "internal sales team", "board of directors")
-
-Target:
-```
-
-**Content readiness — "How much do you have already?"**
-
-```
-How much content do you have?
-
-1. I have content ready — I'll paste or describe it
-2. I have rough notes — I'll share, you help me structure
-3. Help me figure it out — Octave drives the content strategy
-4. I have a PPTX file — convert and enhance it
-
-Your choice:
-```
-
-If a `.pptx` file is provided, jump to the [PPTX Conversion Path](#pptx-conversion-path) before continuing.
-
-**Length — "How long should this be?"**
-
-If the user provided existing content (PPTX, notes, or pasted content), offer to keep, shorten, or expand:
-
-```
-Your source has ~[N] slides worth of content. What length do you want?
-
-1. Keep similar — stay around [N] slides
-2. Shorter — condense to the essentials
-3. Longer — expand with more detail and data
-4. Custom — I have a specific slide count in mind
-
-Your choice:
-```
-
-If starting from scratch, ask based on purpose:
-
-```
-How long should this deck be?
-
-1. Short (5-8 slides) — punchy, high-impact, perfect for pitches and exec summaries
-2. Medium (10-15 slides) — standard for most presentations
-3. Long (18-25 slides) — detailed deep-dives, enablement, or QBRs
-4. Custom — I have a specific slide count in mind
-
-Your choice:
-```
-
-| Purpose | Recommended Default |
-|---------|-------------------|
-| Customer pitch / pre-demo | Short (5-8) |
-| Customer QBR / review | Long (18-25) |
-| Internal strategy | Medium (10-15) |
-| Conference keynote | Medium (10-15) |
-| Product launch / GTM | Long (18-25) |
-| Competitive battlecard | Short (5-8) |
-| Sales enablement | Long (18-25) |
-
-Use the recommended default as the pre-selected option. If the user picks "Custom," ask for a target slide count.
-
-**Density — "How should each slide read?"**
-
-```
-How dense should each slide be?
-
-1. Speaker-led (low density) — big ideas, generous space, 1-3 bullets max,
-   more slides. Best for live pitches, keynotes, exec rooms.
-2. Reading-first (high density) — self-contained, structured grids,
-   4-8 bullets or 4-6 cards, tighter spacing. Best for QBRs, async/leave-behind decks.
-
-Your choice:
-```
-
-Default by purpose: pitches/keynotes/competitive → **speaker-led**; QBRs/enablement/launch/strategy → **reading-first**. Carry this choice through Step 5: it drives the content density limits per slide type (split into more slides rather than shrink text or overflow). Either way, no scrolling and no cramped text — the fixed stage scales the whole slide, it does not add room.
+Carry the **density** choice through Step 5: it drives the content limits per slide type (split into more slides rather than shrink text or overflow).
 
 ### Step 2: Octave-Powered Context Gathering
 
@@ -177,120 +54,10 @@ Based on purpose, goal, and audience, use Octave MCP tools to build rich context
 
 **Call as many tools as needed to build a complete picture.** The best decks come from layering multiple sources — company enrichment + Motion ICP narrative + proof points + conversation intel all combine to create slides grounded in real data. Don't stop at one tool when three would give you a stronger narrative.
 
-That said, not every tool applies to every deck. Use your judgment about which are relevant to *this specific* situation. The tables below show what's available — pick the combination that gives you the richest context for the deck type and audience.
+That said, not every tool applies to every deck. Use your judgment about which are relevant to *this specific* situation, and pick the combination that gives you the richest context for the deck type and audience:
 
-**List vs Search — when to use which:**
-
-| Tool | Purpose | Use when... |
-|------|---------|-------------|
-| `list_all_entities({ entityType })` | Fetch all entities of a type (minimal fields) | You want a quick inventory — "show me all our personas" |
-| `list_entities({ entityType })` | Fetch entities with full data (paginated) | You need the actual content — "get full proof point details" |
-| `get_entity({ oId })` | Deep dive on one specific entity | You found something relevant and need the complete picture |
-| `search_knowledge_base({ query })` | Semantic search across library + resources | You have a concept or question — "how do we compete in healthcare?" |
-| `list_resources()` / `search_resources({ query })` | Uploaded docs, URLs, Google Drive files | You need reference material, uploaded assets, or source docs |
-
-**Rule of thumb:** Use `list_*` when you know *what type* of thing you want. Use `search_*` when you know *what topic* you're looking for.
-
-**Follow-up decks — ground them in what actually happened:**
-
-If this deck follows a previous interaction with the account (QBR, follow-up after a demo, deal review, renewal pitch), pull findings and events to anchor the narrative in real data rather than generic positioning:
-
-- `list_findings({ query: "<company or contact>", startDate: "<relevant period>" })` — surfaces what was actually said in calls: objections raised, features requested, pain points confirmed, competitor mentions
-- `list_events({ filters: { accounts: ["<account_oId>"] } })` — deal stage changes, meetings held, emails sent — shows the journey so far
-- `get_event_detail({ eventOId })` — deep dive on specific events (e.g., the discovery call, the demo) to pull exact context
-
-This turns a generic "here's our product" deck into "here's what we heard from you, and here's how we're addressing it" — much more compelling for the audience.
-
----
-
-#### For Customer-Facing Decks (pitch, demo, QBR)
-
-Start with company and person enrichment, then pull positioning context as needed:
-
-| What you need | Tool | When to use |
-|---------------|------|-------------|
-| Company profile | `enrich_company({ companyDomain })` | Almost always — gives industry, size, tech stack, signals |
-| Key contacts | `find_person({ searchMode: "people", companyDomain, fuzzyTitles })` | When audience includes unknown stakeholders |
-| Person deep-dive | `enrich_person({ person: { email, firstName, lastName, companyDomain } })` | When a specific person is the target audience |
-| ICP fit scoring | `qualify_company({ companyDomain })` | When you need to frame "why us" for this account |
-| All Motions | `list_motions()` | Quick scan of Motions to find the right one for this account |
-| Motion Playbooks | `list_motion_playbooks({ motionOId })` | Default + Custom Motion Playbooks for the selected Motion |
-| Motion Playbook details | `get_motion_playbook({ motionPlaybookOId })` | Full Motion Playbook narrative content |
-| Motion ICP cells | `list_motion_icps({ motionOId })` | Persona × segment cells under a Motion |
-| Motion ICP narrative | `find_motion_icp({ motionIcpOId, includeLearnings: true })` | Cell-level Target ICP / Strategic narrative / Pains / Benefits / Methodology / References + Learning Loop learnings |
-| All proof points | `list_entities({ entityType: "proof_point" })` | Fetch actual proof points with full data — metrics, quotes, logos |
-| All references | `list_entities({ entityType: "reference" })` | Fetch customer references with full details |
-| Find proof points by topic | `search_knowledge_base({ query: "<industry> results", entityTypes: ["proof_point", "reference"] })` | When you need proof points *about* a specific topic or industry |
-| Competitive context | `search_knowledge_base({ query: "<signals>", entityTypes: ["competitor"] })` | When competitor is mentioned or likely in the deal |
-| Uploaded resources | `search_resources({ query: "<topic>" })` | When the workspace has uploaded docs, one-pagers, or assets relevant to the deck |
-| Recent intel | `list_findings({ query: "<company>", startDate: "<90 days ago>" })` | When you want conversation-based insights |
-| Synthesized prep | `generate_call_prep({ companyDomain })` | When you want a single comprehensive brief to work from |
-
----
-
-#### For Internal Decks (strategy, planning, launch)
-
-Pull from the library to ground the deck in your actual GTM data:
-
-| What you need | Tool | When to use |
-|---------------|------|-------------|
-| Personas | `list_all_entities({ entityType: "persona" })` | Quick scan of all personas |
-| Persona details | `list_entities({ entityType: "persona" })` | Full persona data — pain points, priorities, messaging |
-| Segments | `list_all_entities({ entityType: "segment" })` | Quick scan of market segments |
-| Competitors | `list_all_entities({ entityType: "competitor" })` | Quick scan of competitive landscape |
-| Products | `list_all_entities({ entityType: "product" })` | Quick scan of product capabilities |
-| Use cases | `list_all_entities({ entityType: "use_case" })` | When deck covers how customers use the product |
-| Entity details | `get_entity({ oId })` | Deep dive on any specific entity found above |
-| Positioning by topic | `search_knowledge_base({ query: "<topic>", entityTypes: ["product"] })` | When you have a concept and need relevant positioning |
-| Motions | `list_motions()` | Available Motions to ground the deck in |
-| Motion Playbooks | `list_motion_playbooks({ motionOId })` and `get_motion_playbook({ motionPlaybookOId })` | Default + Custom Motion Playbook narrative content |
-| Motion ICP narratives | `list_motion_icps({ motionOId })` then `find_motion_icp({ motionIcpOId })` | Persona × segment narrative grounded in the library |
-| Proof points | `list_entities({ entityType: "proof_point" })` | Fetch all proof points with full data for credibility slides |
-| References | `list_entities({ entityType: "reference" })` | Fetch customer references for social proof slides |
-| Uploaded docs | `search_resources({ query: "<topic>" })` | Find uploaded strategy docs, market research, or assets |
-| Market signals | `list_findings({ query: "<topic>", startDate: "<90 days ago>" })` | Recent conversation-based trends |
-| Deal outcomes | `list_events({ startDate: "<90 days ago>", filters: { eventTypes: ["DEAL_WON", "DEAL_LOST"] } })` | Pipeline, revenue, or win/loss data |
-
----
-
-#### For Competitive Decks (battlecard presentations)
-
-Focus on the specific competitor(s) and evidence from real deals:
-
-| What you need | Tool | When to use |
-|---------------|------|-------------|
-| All competitors | `list_all_entities({ entityType: "competitor" })` | Quick scan of all competitors |
-| Competitor full data | `list_entities({ entityType: "competitor" })` | Full competitor profiles — strengths, weaknesses, positioning |
-| Competitor deep dive | `get_entity({ oId })` | Everything about one specific competitor |
-| Competitive positioning | `search_knowledge_base({ query: "<competitor> differentiation", entityTypes: ["competitor"] })` | When you have a concept — "how do we beat them on security?" |
-| Our products | `list_entities({ entityType: "product" })` | Full product data for side-by-side comparison slides |
-| Proof points (competitive wins) | `list_entities({ entityType: "proof_point" })` | Fetch all proof points — filter for competitive wins |
-| Win/loss data | `list_events({ filters: { eventTypes: ["DEAL_WON", "DEAL_LOST"], competitors: ["<oId>"] } })` | Real deal outcomes against this competitor |
-| Conversation evidence | `list_findings({ query: "<competitor>", eventFilters: { competitors: ["<oId>"] } })` | Real objections and mentions from calls |
-| Custom Motion Playbooks (COMPETITIVE) | `list_motions()` then `list_motion_playbooks({ motionOId })` filtered by `narrativeType === "COMPETITIVE"` | Competitive narrative layered onto each Motion |
-| Motion Playbook details | `get_motion_playbook({ motionPlaybookOId })` | Full competitive narrative content |
-| Competitive resources | `search_resources({ query: "<competitor>" })` | Uploaded battlecards, analyst reports, or competitive docs |
-
----
-
-#### For Enablement Decks (training, sales kickoff)
-
-Mix Motion ICP narrative content with real deal examples:
-
-| What you need | Tool | When to use |
-|---------------|------|-------------|
-| All Motions | `list_motions()` | Scan available Motions to decide which to teach |
-| Motion Playbooks | `list_motion_playbooks({ motionOId })` and `get_motion_playbook({ motionPlaybookOId })` | Default + Custom Motion Playbook content for training slides |
-| Motion ICP narratives | `list_motion_icps({ motionOId })` then `find_motion_icp({ motionIcpOId, includeLearnings: true })` | Cell-level narratives + Learning Loop learnings for training slides |
-| Personas | `list_entities({ entityType: "persona" })` | Full persona data for "know your buyer" slides |
-| Competitors | `list_entities({ entityType: "competitor" })` | Full competitor data for competitive handling slides |
-| All proof points | `list_entities({ entityType: "proof_point" })` | Fetch proof points with full data for example slides |
-| Proof points by topic | `search_knowledge_base({ query: "results metrics", entityTypes: ["proof_point", "reference"] })` | When you need proof points *about* specific outcomes |
-| Recent wins | `list_events({ filters: { eventTypes: ["DEAL_WON"] } })` | Success stories to use as examples |
-| Win details | `get_event_detail({ eventOId })` | Deep dive on a notable win for a case study slide |
-| Training resources | `search_resources({ query: "<topic>" })` | Uploaded enablement docs, Motion Playbook reference PDFs, or training assets |
-
----
+- **List-vs-search guidance, follow-up grounding (findings/events), and the common tool tables:** [../shared/octave-research-toolkit.md](../shared/octave-research-toolkit.md). If this deck follows a previous interaction (QBR, post-demo follow-up, renewal), use the follow-up-grounding tools there to anchor the narrative in what was actually said.
+- **Per-deck-type tool tables** (customer-facing, internal, competitive, enablement): [references/tool-reference.md](references/tool-reference.md).
 
 **Output of this step:** Present a structured content brief to the user:
 
@@ -367,86 +134,11 @@ Whose brand should this deck reflect — and how should we style it?
 3. I'll provide brand assets directly (colors, fonts, logo)
 4. No brand — pick from style presets
 5. Use Octave brand styling
-
-Your choice:
 ```
 
-> **Whose brand decides which website you fetch.** This is the key fork: for option 1 run the extraction against *your own* domain; for option 2 run it against the *audience's/recipient's* domain. Everything below targets that chosen domain.
+> **Whose brand decides which website you fetch.** For option 1 run the extraction against *your own* domain; for option 2 run it against the *audience's/recipient's* domain.
 
-If user wants brand extraction, work down these tiers — start at Tier 1 and only fall through when a tier is unavailable. Tiers 1–2 are the fast, high-quality path; combine both when you can (colors+logo from Tier 1, fonts+components from Tier 2).
-
-**Tier 1: Octave brand-assets tool (first-party, fast — try first)**
-```
-get_external_brand_assets({ url: "https://<domain>" })
-  → colors (primary / secondary / accent), logo variants, backdrop images, brand name
-get_external_brand_logo({ domain: "<domain>" })   # if you only need the single best logo
-```
-This is one call for the visual identity and the right default. **Sanity-check the result — the scraper reads the DOM and can misattribute a homepage logo wall:**
-- If `brandName` doesn't match the target company, ignore it (it likely grabbed a customer name).
-- A strip of many logos with varied aspect ratios is usually a **"trusted by" customer wall**, not the brand's own logo — don't use those as the deck logo. Prefer the `favicon` / `apple-touch-icon` entries or the nav wordmark.
-- The `colors` are usually reliable; still confirm with the user.
-
-**Tier 2: `scrape_website` — components & typography (the "looks like their site" leap)**
-```
-scrape_website({ url: "https://<domain>",        format: "html", includeScreenshot: true })
-scrape_website({ url: "https://<representative-page>", format: "html", includeScreenshot: true })
-```
-Pull the homepage **and one representative page** (case study, blog post, pricing, or product page). Then:
-- **From the screenshot(s):** read the component vocabulary the DOM hides — button shapes, card styles, corner radii, spacing rhythm, type scale, section patterns, use of gradients/imagery. Emulate this *component and layout system*, not just the colors.
-- **From the html:** extract exact fonts (`font-family`, Google Fonts `<link>`s / `@font-face`), CSS custom properties (`--brand-*`, `--color-*`), and the real copy tone.
-
-> If `scrape_website` isn't available in this workspace yet, skip to Tier 3.
-
-**Tier 3: browser-use (fallback if `scrape_website` unavailable)**
-```
-1. browser-use open <website-url>
-2. browser-use screenshot brand-capture.png
-3. browser-use eval "(() => {
-     const body = getComputedStyle(document.body);
-     return {
-       bgColor: body.backgroundColor, textColor: body.color, fontFamily: body.fontFamily,
-       links: getComputedStyle(document.querySelector('a') || document.body).color,
-       headings: getComputedStyle(document.querySelector('h1,h2,h3') || document.body).fontFamily,
-       logos: [...document.querySelectorAll('header img, img[src*=logo], svg[class*=logo]')].map(e => e.src || 'inline-svg').slice(0, 3)
-     };
-   })()"
-4. browser-use extract "List the primary brand colors (hex), fonts, and logo URLs visible on this page"
-```
-
-**Tier 4: WebFetch (fallback if browser-use unavailable)**
-```
-1. WebFetch the homepage URL
-2. Parse HTML/CSS for CSS custom properties (--brand-*, --color-*), font-family on body/h1-h3,
-   logo URLs from <img>/<svg>/og:image, and meta theme-color
-```
-
-**Tier 5: Manual (if nothing automated works)**
-```
-I couldn't automatically extract your brand. You can:
-1. Share your brand guidelines (PDF or link)
-2. Provide hex colors: primary, secondary, background, text
-3. Name your fonts (heading + body)   4. Share logo files
-```
-
-**Always confirm the brand config with the user before proceeding:**
-
-```
-BRAND CONFIG EXTRACTED
-======================
-
-Colors:
-  Primary:    #XXXXXX ██   Secondary: #XXXXXX ██   Accent: #XXXXXX ██
-  Background: #XXXXXX ██   Text:      #XXXXXX ██
-
-Fonts:    Headings: [Font name]    Body: [Font name]
-
-Logo:     [URL or file path]   (verified as the brand's own, not a customer logo)
-
-Components observed (from screenshots, if Tier 2 ran):
-  • [e.g. pill buttons, 12px card radius, generous section spacing, gradient accents]
-
-Does this look right? (y/n/adjust)
-```
+Check for a cached brand kit first, and if extraction is needed work down the tiers (Octave brand-assets tool → `scrape_website` → browser-use → WebFetch → manual), then confirm the extracted brand config with the user — all per [../shared/brand-kit-usage.md](../shared/brand-kit-usage.md).
 
 ### Step 4: Style Selection
 
@@ -462,8 +154,6 @@ How would you like to choose your style?
 
 Your choice:
 ```
-
----
 
 #### Option 1: Mood-Based Previews
 
@@ -481,7 +171,7 @@ Your mood:
 
 Generate **3 single-slide HTML preview files** — show, don't tell. Each is a real, animated **title slide using the user's actual first-slide content** (title, subtitle, date, author, logo if available). Never render "Option A", "preview", a preset/template name, or any file path *on the slide itself*. Save to `.octave-decks/slide-previews/` as `style-a.html`, `style-b.html`, `style-c.html`, built on the **fixed 1920×1080 stage** (paste `viewport-base.css`).
 
-**Preview mix:** generate previews from the mood-matched presets in [references/style-presets.md](references/style-presets.md), optionally swapping one for a custom wildcard:
+**Preview mix:** generate previews from the mood-matched presets in [../shared/style-presets.md](../shared/style-presets.md), optionally swapping one for a custom wildcard:
 
 | Mood | Preview presets |
 |------|----------------|
@@ -494,60 +184,13 @@ For more range, make one of the three a **custom wildcard** — a self-generated
 
 Open all previews in the browser for the user to compare, then ask which they prefer (or which elements to mix).
 
----
-
 #### Option 2: Preset Picker
 
-Show the preset table:
-
-```
-STYLE PRESETS
-=============
-
-DARK THEMES
-  1. midnight-pro      — Dark navy, white text, blue accents. Executive feel.
-  2. executive-dark    — Charcoal + gold. Premium boardroom aesthetic.
-  3. octave-brand      — Octave purple on dark navy. Product-aligned.
-  4. electric-studio   — Pure black + electric blue. Tech-forward.
-  5. neon-pulse        — Dark + neon green/cyan. Developer/hacker energy.
-  6. dark-botanical    — Dark + warm gold/rose. Elegant and premium.
-
-LIGHT THEMES
-  7. swiss-modern      — White + red accent. Bauhaus minimal.
-  8. soft-light        — Warm white + sage green. Calm and approachable.
-  9. paper-minimal     — Off-white + black type. Editorial simplicity.
-
-VIBRANT THEMES
-  10. solar-flare      — Deep orange gradients. Bold and energetic.
-  11. aurora-gradient   — Purple-to-teal gradients. Visionary and modern.
-  12. monochrome-bold  — High-contrast B&W. Statement typography.
-
-Your choice (number or name):
-```
-
-Full CSS variable definitions for each preset are in [references/style-presets.md](references/style-presets.md).
-
----
+Show the 12-preset menu (6 dark, 3 light, 3 vibrant) with one-line descriptions. Full CSS variable definitions for each preset are in [../shared/style-presets.md](../shared/style-presets.md).
 
 #### Option 3: Brand-Generated Style
 
-Auto-generate CSS variables from the brand config extracted in Step 3:
-
-```
-- --bg: [brand background or dark variant]
-- --bg-elevated: [slightly lighter than bg]
-- --bg-card: [semi-transparent card bg]
-- --text-primary: [brand text color]
-- --text-secondary: [muted variant]
-- --brand-primary: [primary brand color]
-- --brand-500: [lighter accent]
-- --font-display: [brand heading font]
-- --font-body: [brand body font]
-```
-
-Show the generated style to the user for confirmation.
-
----
+Auto-generate CSS variables from the brand config extracted in Step 3 (see [../shared/brand-kit-usage.md](../shared/brand-kit-usage.md) → "Applying an extracted brand"). Show the generated style to the user for confirmation.
 
 #### Option 4: Auto-Pick
 
@@ -586,7 +229,7 @@ Every deck gets its own folder under `.octave-decks/`:
 
 Example: `/octave:deck "pitch for Acme Corp"` → `.octave-decks/acme-corp-pitch-2026-02-07/acme-corp-pitch.html`
 
-The entire `.octave-decks/` directory is in `.gitignore` — nothing here gets committed.
+Make sure `.octave-decks/` is ignored by your project's `.gitignore` (an `.octave-*/` pattern covers all Octave output dirs) so generated decks don't get committed.
 
 #### HTML Architecture
 
@@ -601,7 +244,7 @@ Every slide is a fixed 1920×1080 canvas; the controller scales the whole stage.
 
 1. **Size in px against the 1920×1080 canvas.** A title is ~96–120px, body ~24–32px, slide padding ~80×140px. Translate any `clamp()`/`vw` from a preset or custom design into fixed px.
 2. **`overflow: hidden` on every `.slide`** (from viewport-base.css) — anything that doesn't fit is clipped, so it must fit by design.
-3. **Content density limits per slide type** (tighten for *speaker-led*, allow the upper bound for *reading-first* — see Step 1 density choice):
+3. **Content density limits per slide type** (tighten for *speaker-led*, allow the upper bound for *reading-first* — see the Step 1 density choice):
 
 | Slide Type | Max Content |
 |-----------|------------|
@@ -662,7 +305,7 @@ Whether using a preset or a custom wildcard, the output should look intentional,
 - **Layout:** vary slide types; avoid cookie-cutter "title + 3 bullets" on every slide.
 - **Context:** the design should fit the occasion and audience (a board deck and a hackathon demo should not look alike).
 
-**Copy is held to the same bar as visuals.** Every word a viewer reads (headline, body, caption, pill, metric label) must pass the slop standard in [`get-brand-components/references/asset-review.md`](../get-brand-components/references/asset-review.md) → WRITE_LIKE_A_HUMAN. Two rules break most decks, so treat them as hard rules, not preferences, and fix them in the review pass rather than excusing them as "headline style":
+**Copy is held to the same bar as visuals.** Every word a viewer reads (headline, body, caption, pill, metric label) must pass the slop standard in [../shared/asset-review.md](../shared/asset-review.md) → WRITE_LIKE_A_HUMAN. Two rules break most decks, so treat them as hard rules, not preferences, and fix them in the review pass rather than excusing them as "headline style":
 
 1. **No em dashes in deck copy, headlines included.** Both `&mdash;` and the literal `—`. Use a comma, colon, period, or two sentences. Hyphenated compounds (`go-to-market`) and arrows (`6mo → 3wk`) are fine.
 2. **At most one negative-contrast construction in the whole deck.** "It's not X, it's Y", "this isn't about X, it's Y", "The X wasn't the hard part. The Y was." Keep the single strongest one (usually the title hook); state every other point positively.
@@ -728,7 +371,7 @@ Consult [references/export-guide.md](references/export-guide.md) for detailed in
 - **Live URL** — `bash "${CLAUDE_PLUGIN_ROOT:-.}"/scripts/deploy.sh <deck-folder>/` deploys to Vercel and returns a public link that works on any device.
 - **LinkedIn Carousel, PPTX, Google Slides, Gamma, Markdown** — as documented in the export guide.
 
-> `export-pdf.sh` and `deploy.sh` are generic — the same commands work for any HTML output from the other Octave skills (one-pager, proposal, microsite, brief, win-loss-report).
+> `export-pdf.sh` and `deploy.sh` are generic — the same commands work for any HTML output from the other Octave skills (one-pager, proposal, microsite, brief, wins-losses reports).
 
 ---
 
@@ -738,47 +381,21 @@ When a `.pptx` file is provided:
 
 ### Extract Content
 
-```python
-# Install if needed: pip install python-pptx Pillow
-from pptx import Presentation
-from pptx.util import Inches, Pt
-import json, os
+Use the bundled extractor (requires `pip install python-pptx`):
 
-prs = Presentation("input.pptx")
-slides = []
-deck_dir = ".octave-decks/<deck-name>-<date>"
-os.makedirs(f"{deck_dir}/assets", exist_ok=True)
-
-for i, slide in enumerate(prs.slides):
-    slide_data = {"index": i, "shapes": []}
-    for shape in slide.shapes:
-        if shape.has_text_frame:
-            slide_data["shapes"].append({
-                "type": "text",
-                "text": shape.text_frame.text,
-                "paragraphs": [
-                    {"text": p.text, "level": p.level}
-                    for p in shape.text_frame.paragraphs
-                ]
-            })
-        elif shape.shape_type == 13:  # Picture
-            img = shape.image
-            ext = img.content_type.split("/")[-1]
-            fname = f"{deck_dir}/assets/slide{i}_img{len(slide_data['shapes'])}.{ext}"
-            with open(fname, "wb") as f:
-                f.write(img.blob)
-            slide_data["shapes"].append({"type": "image", "path": fname})
-    slides.append(slide_data)
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT:-.}"/scripts/extract-pptx.py <input.pptx> .octave-decks/<deck-name>-<date>
 ```
+
+It emits a JSON structure of every slide (title, text paragraphs with levels, speaker notes) and saves embedded images to `assets/` inside the output directory.
 
 ### Conversion Flow
 
-1. Extract text and images from PPTX using python-pptx
-2. Save images to the `assets/` subdirectory inside the deck folder (`.octave-decks/<deck-name>-<date>/assets/`)
-3. Show extracted content structure to the user for review
-4. **Still run Step 1** (purpose/goal) — the content comes from the PPTX but context matters
-5. **Still offer Step 3** (brand) — the original PPTX style is lost in conversion
-6. Proceed to Steps 4-6 as normal, using extracted content instead of Octave-generated content
+1. Extract text and images from the PPTX with the script above
+2. Show the extracted content structure to the user for review
+3. **Still run Step 1** (purpose/goal) — the content comes from the PPTX but context matters
+4. **Still offer Step 3** (brand) — the original PPTX style is lost in conversion
+5. Proceed to Steps 4-6 as normal, using extracted content instead of Octave-generated content
 
 > **Note:** Images from the PPTX are saved as separate files referenced by the HTML. The output is still a single HTML file, but images are external assets. Mention this to the user.
 
@@ -786,67 +403,18 @@ for i, slide in enumerate(prs.slides):
 
 ## MCP Tools Used
 
-### Research & Enrichment
-- `enrich_company` - Full company intelligence profile
-- `enrich_person` - Full person intelligence report
-- `find_person` - Find contacts at a company by title/role
-- `qualify_company` - ICP fit scoring for a company
-- `qualify_person` - ICP fit scoring for a person
-- `find_company` - Find companies matching criteria
-
-### Library — Fetching Entities
-- `list_all_entities` - Quick scan of all entities of a type (minimal fields, no pagination)
-- `list_entities` - Fetch entities with full data and pagination (proof points, references, personas, etc.)
-- `get_entity` - Deep dive on one specific entity
-- `list_motions` - List Motions in the workspace
-- `list_motion_playbooks` - List Motion Playbooks under a Motion (Default + Custom)
-- `get_motion_playbook` - Full details for a Motion Playbook
-- `list_motion_icps` - List Motion ICP cells (persona × segment) for a Motion
-- `find_motion_icp` - Motion ICP narrative + Learning Loop learnings
-
-### Library — Searching
-- `search_knowledge_base` - Semantic search across library entities and resources
-- `list_resources` - Browse uploaded docs, URLs, and Google Drive files
-- `search_resources` - Semantic search across uploaded resources
-
-### Intelligence & Signals
-- `list_findings` - Recent conversation findings and insights
-- `list_events` - Deal events (won, lost, created, etc.)
-- `get_event_detail` - Full details for a specific event
-
-### Content Generation
-- `generate_call_prep` - Synthesized prep brief for accounts
-- `generate_content` - Generate positioning or messaging content
-- `generate_email` - Generate email content (for follow-up slides)
+Common research, library, signals, and generation tools: see [../shared/octave-research-toolkit.md](../shared/octave-research-toolkit.md). Deck-specific additions:
 
 ### Brand & Style
-- `get_external_brand_assets` - Scrape a URL for brand colors, logo variants, backdrop images, brand name (Tier 1 brand extraction)
-- `get_external_brand_logo` - Single best logo URL for a domain
-- `scrape_website` - Fetch a page as markdown/html with an optional screenshot (`{ format, includeScreenshot }`) — used to read components/typography for brand emulation (Tier 2)
-- `list_all_entities` (entityType: "brand_voice") - Available brand voices in workspace
-- `list_writing_styles` - Available writing styles in workspace
+- `get_external_brand_assets` — Scrape a URL for brand colors, logo variants, backdrop images, brand name (Tier 1 brand extraction)
+- `get_external_brand_logo` — Single best logo URL for a domain
+- `scrape_website` — Fetch a page as markdown/html with an optional screenshot (`{ format, includeScreenshot }`) — used to read components/typography for brand emulation (Tier 2)
+- `list_all_entities` (entityType: "brand_voice") — Available brand voices in workspace
+- `list_writing_styles` — Available writing styles in workspace
 
 ## Error Handling
 
-**Octave Connection Failed:**
-> Could not connect to your Octave workspace.
->
-> The deck builder can still work without Octave — you'll provide the content manually, and I'll handle structure, style, and HTML generation.
->
-> To reconnect: check your MCP configuration or run `/octave:workspace status`
-
-**Company/Person Not Found:**
-> I couldn't find detailed intelligence for [target].
->
-> Options:
-> 1. Proceed with what we have — I'll use general positioning from your library
-> 2. Try a different domain or email
-> 3. Provide the content manually and I'll build the deck
-
-**No Matching Motion ICP:**
-> No Motion ICP cell matches this audience profile directly.
->
-> I'll use your general positioning. After the deck is built, consider adding the missing persona × segment cell to a Motion (or creating a new Motion).
+Standard responses (connection failed, company/person not found, no matching Motion ICP cell): see [../shared/octave-research-toolkit.md](../shared/octave-research-toolkit.md) → Standard error handling. Deck-specific:
 
 **PPTX Extraction Failed:**
 > Could not parse the PPTX file.

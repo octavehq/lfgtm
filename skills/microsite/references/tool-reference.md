@@ -9,8 +9,8 @@ Start with enrichment and qualification — this drives the personalization that
 | Company profile | `enrich_company({ companyDomain })` | Always — industry, size, tech stack, signals power the entire page |
 | ICP fit scoring | `qualify_company({ companyDomain })` | Always — matched segment determines which Motion ICP cell to pull |
 | Motions for offering | `list_motions()` | Always — find the Motion(s) covering this offering / motion type |
-| Persona × segment matrix | `list_motion_icps({ motionOId })` | Always — pick the Motion ICP cell that matches their persona × segment |
-| Motion ICP cell narrative | `find_motion_icp({ motionIcpOId, includeLearnings: true })` | After identifying the cell — drives the solution section (Strategic narrative, Benefits and impacts, Pains and consequences) |
+| Motion ICP cell narrative | `find_motion_icp({ personaOId, segmentOId, includeLearnings: true })` | Always — once qualification names the matched persona × segment, fetch the cell directly. If multiple cells come back (several playbooks cover the slot), prefer the one on the DEFAULT-narrative playbook unless the chosen angle matches a specialized one |
+| Persona × segment matrix | `list_motion_icps({ motionOId })` | Only when browsing — the matrix can run to hundreds of paginated cells, so don't scan it to find one cell; use the filtered `find_motion_icp` call above instead |
 | Custom Motion Playbooks | `list_motion_playbooks({ motionOId })` + `get_motion_playbook` | Pull any Thematic / Milestone / Account / Competitive angles layered on the Motion |
 | Brand voice | `list_all_entities(entityType: "brand_voice")` | Always — consistent tone across the microsite |
 
@@ -62,7 +62,7 @@ When the angle is tied to a recent event or news:
 | What you need | Tool | When to use |
 |---------------|------|-------------|
 | Recent intel | `list_findings({ query: "<company>", startDate: "<90 days ago>" })` | Conversation-based insights and signals |
-| Events | `list_events({ filters: { accounts: ["<account_oId>"] } })` | Deal events, meetings, interactions |
+| Events | `list_events({ filters: { companyDomains: ["<domain>"] } })` | Deal events, meetings, interactions |
 | Event details | `get_event_detail({ eventOId })` | Deep dive on a specific trigger event |
 
 ---

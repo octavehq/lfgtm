@@ -54,7 +54,7 @@ This is critical for proposals. Buyers share these documents internally — soci
 | What you need | Tool | When to use |
 |---------------|------|-------------|
 | Recent findings | `list_findings({ query: "<company>", startDate: "<relevant period>" })` | What was said in calls — objections, priorities, feature requests |
-| Deal events | `list_events({ filters: { accounts: ["<account_oId>"] } })` | Timeline of the relationship |
+| Deal events | `list_events({ filters: { companyDomains: ["<domain>"] } })` | Timeline of the relationship |
 | Event details | `get_event_detail({ eventOId })` | Deep dive on a specific call or meeting |
 | Synthesized prep | `generate_call_prep({ companyDomain })` | Comprehensive brief to work from |
 

@@ -1,6 +1,6 @@
 # HTML Architecture
 
-The proposal uses the same CSS variable system as `/octave:deck` (see [style-presets.md](../../deck/references/style-presets.md)) but with a document layout instead of slides.
+The proposal uses the shared CSS variable / preset system (see [../../shared/style-presets.md](../../shared/style-presets.md)) and builds on the shared document scaffold ([../../shared/doc-scaffold.md](../../shared/doc-scaffold.md)) — with a labeled sticky TOC sidebar instead of nav dots, and print styles as a first-class concern.
 
 **Core structure:**
 

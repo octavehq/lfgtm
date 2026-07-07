@@ -8,7 +8,7 @@ Generation-time rules for any skill that produces a customer-facing or seller-fa
 No orphan values. "$500,000" is meaningless; "Deal value: $500,000" is information. Every number, date, name, or metric is accompanied by a label that says what it is.
 
 ### 2. No internal tool terminology in the output
-No function names (`enrich_company`, `ask_graph`), version numbers (`v2`), stream identifiers (`Stream B`), or tool inventories ("Sources: Octave enrichment, qualification engine"). The reader doesn't care what built it. The output reads as if a human analyst wrote it.
+No function names (`enrich_company`, `list_events`), version numbers (`v2`), stream identifiers (`Stream B`), or tool inventories ("Sources: Octave enrichment, qualification engine"). The reader doesn't care what built it. The output reads as if a human analyst wrote it.
 
 ### 3. No repeating data across sections
 One canonical location per data point. If deal stats live in a labeled snapshot, don't also dump them in a subtitle or in prose. When a later section needs data that lives elsewhere, point to it — don't restate it.
