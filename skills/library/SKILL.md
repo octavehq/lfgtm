@@ -1,6 +1,7 @@
 ---
 name: library
-description: Browse, search, create, and update Octave library entities (personas, products, segments, competitors, proof points, references) and Motions / Motion Playbooks / Motion ICP cells. Use when user says "show my personas", "list products", "create a competitor", "update this segment", "search the library", "list motions", "show the motion ICP for [persona]", or references any entity type by name.
+description: Browse, search, create, and update Octave library entities (personas, products, segments, competitors, proof points, references, objections, alternatives, buying triggers) and Motions / Motion Playbooks / Motion ICP cells. Use when user says "show my personas", "list products", "create a competitor", "update this segment", "search the library", "list motions", "show the motion ICP for [persona]", or references any entity type by name.
+argument-hint: "[list|search|show|create|update|history] [<type>|<oId>|\"<query>\"]"
 ---
 
 # /octave:library - Library Management
@@ -23,39 +24,15 @@ Or natural language like:
 - "Create a new persona for CTOs"
 - "Update the enterprise segment"
 
+## Entity Types and oId Prefixes
+
+The canonical entity taxonomy — every entity type, its `entityType` value, and its oId prefix — lives in [entity-model.md](../shared/entity-model.md). Read it to map user language ("proof points", "buying triggers", `mp_xyz789`) to the right type and tool. Highlights:
+
+- **Library entities:** personas (`pe_`), products/services (`px_`), segments (`sg_`), use cases (`uu_`), competitors (`cp_`), alternatives, buying triggers, objections (`oj_`), proof points (`pp_`), references (`re_`), brand voices (`bv_`), writing styles (`ws_`)
+- **Motion era:** Motions (`mo_`), Motion Playbooks (`mp_`), Motion ICP cells (`mi_`)
+- **Legacy (deprecated, still readable):** standalone playbooks (`pb_`), value props (`hy_`)
+
 ## Instructions
-
-**Entity Type Mapping:**
-
-```yaml
-# Library entities
-personas:        { prefix: pe_ }
-products:        { prefix: px_ }
-services:        { prefix: px_ }  # Services share the product prefix
-segments:        { prefix: sg_ }
-use-cases:       { prefix: uu_ }
-competitors:     { prefix: cp_ }
-proof-points:    { prefix: pp_ }
-references:      { prefix: re_ }
-brand-voices:    { prefix: bv_ }
-writing-styles:  { prefix: ws_ }
-
-# Motions and Motion Playbooks (Motion era)
-motions:         { prefix: mo_ }   # Motion
-motion-playbooks:{ prefix: mp_ }   # Motion Playbook (Default + Custom)
-motion-icps:     { prefix: mi_ }   # Motion ICP cells (persona × segment narratives)
-
-# Other common oId prefixes
-agents:          { prefix: ca_ }   # ContentAgent - all agent types
-workspaces:      { prefix: wa_ }   # Workspace
-organizations:   { prefix: og_ }   # Organization
-
-# Legacy (deprecated, still readable for back-compat)
-# Note: `playbooks` is the legacy standalone Playbook entity type.
-# Motions / Motion Playbooks / Motion ICPs (above) are the modern primitives — prefer them for any new work.
-playbooks:       { prefix: pb_ }
-value-props:     { prefix: hy_ }
-```
 
 ### Subcommand: list
 
@@ -76,21 +53,6 @@ List entities of a specific type.
 - For Motion Playbooks under a Motion: use `list_motion_playbooks({ motionOId })` — returns the Default Motion Playbook plus any Custom Motion Playbooks
 - For Motion ICP cells (the persona × segment matrix) under a Motion: use `list_motion_icps({ motionOId })`
 
-**Entity Types:**
-- `personas` / `persona`
-- `products` / `product`
-- `segments` / `segment`
-- `use-cases` / `use_case`
-- `competitors` / `competitor`
-- `proof-points` / `proof_point`
-- `references` / `reference`
-- `services` / `service`
-- `brand-voices` / `brand-voice`
-- `writing-styles` / `writing-style`
-- `motions` (Motion-era top-level container)
-- `motion-playbooks` (Default + Custom playbooks under a Motion)
-- `motion-icps` (persona × segment narrative cells under a Motion)
-
 **Output Format:**
 ```
 Personas (5 total)
@@ -103,10 +65,6 @@ Personas (5 total)
 2. VP of Engineering
    oId: pe_def456
    Updated: 2026-01-20
-
-3. Director of Platform
-   oId: pe_ghi789
-   Updated: 2026-01-22
 
 ...
 
@@ -122,11 +80,6 @@ Motions (3 total)
    oId: mo_abc123
    ICP cells: 6 (3 personas × 2 segments)
    Motion Playbooks: 1 Default + 2 Custom
-
-2. PLG Activation — Self-Serve
-   oId: mo_def456
-   ICP cells: 4
-   Motion Playbooks: 1 Default
 
 ...
 
@@ -184,39 +137,10 @@ Display full details for an entity.
 - For a Motion Playbook (Default or Custom): use `get_motion_playbook`
 - For a Motion ICP cell (persona × segment narrative): use `find_motion_icp` (pass `includeLearnings: true` to include Learning Loop learnings)
 
-**Output Format:**
+Present the entity with its key sections (description, pain points, objectives, responsibilities for a persona; the seven narrative sections for a Motion ICP cell), created/updated dates, and a closing pointer:
+
 ```
-Persona: CTO - Enterprise Tech
-==============================
-oId: pe_abc123
-Created: 2026-01-10
-Updated: 2026-01-15
-Status: Active
-
-## Description
-Senior technology executive responsible for technical strategy
-and engineering organization at enterprise companies...
-
-## Pain Points
-- Managing technical debt while delivering new features
-- Balancing innovation with operational stability
-- Attracting and retaining top engineering talent
-- Security and compliance requirements
-
-## Key Objectives
-- Modernize technology stack
-- Improve developer productivity
-- Reduce operational costs
-- Accelerate time to market
-
-## Primary Responsibilities
-- Technical strategy and roadmap
-- Engineering team leadership
-- Vendor and technology selection
-- Budget management
-
----
-Use /octave:library update pe_abc123 to modify this persona.
+Use /octave:library update <oId> to modify this entity.
 ```
 
 ### Subcommand: create
@@ -229,122 +153,9 @@ Create a new library entity.
 /octave:library create motion-playbook "Q1 Outbound — Cost Pressure" --motion mo_abc123 --narrative-type THEMATIC --sources "https://..."
 ```
 
-**Note on Motions vs Motion Playbooks:**
-
-A **Motion** is the top-level container for a go-to-market motion (e.g., "Enterprise Outbound — Platform"). Creating a Motion is done in the Motion builder UI — it automatically generates a **Default Motion Playbook** covering the persona × segment matrix as Motion ICP cells. Once a Motion exists, this skill can layer **Custom Motion Playbooks** on top for specific angles (Thematic, Milestone, Account, Competitive).
-
-**Interactive Flow for Custom Motion Playbooks:**
-
-Custom Motion Playbooks always sit under an existing Motion and have a narrative type.
-
-1. **List available Motions:**
-   ```
-   list_motions()
-   ```
-
-2. **Ask user to select a Motion:**
-   ```
-   Which Motion is this Custom Motion Playbook layered on?
-
-   1. Enterprise Outbound — Platform (mo_abc123)
-   2. PLG Activation — Self-Serve (mo_def456)
-   3. Renewal & Expansion — Tier 1 (mo_ghi789)
-
-   Your choice:
-   ```
-
-3. **Ask for the narrative type:**
-   ```
-   What narrative type fits this Motion Playbook?
-
-   1. THEMATIC — built around a theme, trend, or shared pain (e.g., "Q1 Cost Pressure")
-   2. MILESTONE — built around an event or trigger (e.g., "Post-Funding Outreach")
-   3. ACCOUNT — built around a specific named account or tight account list
-   4. COMPETITIVE — built around displacing a specific competitor
-
-   Your choice:
-   ```
-
-4. **Gather Motion Playbook details:**
-   ```
-   Creating Custom Motion Playbook: "Q1 Outbound — Cost Pressure"
-   Under Motion: [Selected Motion]
-   Narrative type: THEMATIC
-
-   Please provide details to generate this Motion Playbook:
-
-   1. What's the angle (theme / milestone / account / competitor)?
-   2. Which personas / segments from the Motion ICP matrix does this lean into?
-   3. Any supporting context, proof, or competitive framing?
-   4. Any source materials? (URLs or text to inform generation)
-   ```
-
-5. **Call `create_motion_playbook`:**
-   ```
-   create_motion_playbook({
-     motionOId: "mo_abc123",
-     narrativeType: "THEMATIC",
-     name: "Q1 Outbound — Cost Pressure",
-     instructions: "<detailed instructions from user input>",
-     keyContext: "<any additional context>",
-     sources: [{ type: "url", content: "https://..." }]
-   })
-   ```
-
-6. **Report success:**
-   ```
-   Created Custom Motion Playbook: Q1 Outbound — Cost Pressure
-   oId: mp_new123
-   Under Motion: Enterprise Outbound — Platform (mo_abc123)
-   Narrative type: THEMATIC
-
-   The Motion Playbook has been generated and saved.
-   Use /octave:library show mp_new123 to view the full details.
-   ```
-
-**Interactive Flow for Other Entities:**
-
-1. **Gather basic info:**
-   ```
-   Creating new persona: "VP of Product"
-
-   Please provide details to generate this persona:
-
-   1. What industry or company type? (e.g., B2B SaaS, Enterprise Tech)
-   2. What are their main responsibilities?
-   3. Any specific pain points or priorities to focus on?
-   4. Any source materials? (URLs or text to inform generation)
-   ```
-
-2. **Confirm and create:**
-   ```
-   I'll create a VP of Product persona with:
-   - Focus: B2B SaaS companies
-   - Key responsibilities: Product strategy, roadmap, GTM alignment
-   - Pain points: Prioritization, cross-functional alignment, metrics
-
-   Proceed? (yes/no)
-   ```
-
-3. **Call `create_entity`:**
-   ```
-   create_entity({
-     entityType: "persona",
-     name: "VP of Product",
-     instructions: "<detailed instructions from user input>",
-     keyContext: "<any additional context>",
-     sources: [{ type: "url", content: "https://..." }]
-   })
-   ```
-
-4. **Report success:**
-   ```
-   Created persona: VP of Product
-   oId: pe_new123
-
-   The persona has been generated and saved to your library.
-   Use /octave:library show pe_new123 to view the full details.
-   ```
+Follow the interactive flows in [create-update-flows.md](references/create-update-flows.md):
+- **Custom Motion Playbooks** — select the parent Motion, pick a narrative type (`THEMATIC` / `MILESTONE` / `ACCOUNT` / `COMPETITIVE`), gather the angle and sources, then call `create_motion_playbook`. (Motions themselves are created in the Motion builder UI — creating one auto-generates the Default Motion Playbook.)
+- **Other entities** — gather generation inputs, confirm, then call `create_entity`.
 
 ### Subcommand: update
 
@@ -356,136 +167,13 @@ Update an existing entity.
 /octave:library update pe_abc123 --instructions "Add focus on AI/ML adoption"
 ```
 
-**Interactive Flow:**
+Follow the interactive flow in [create-update-flows.md](references/create-update-flows.md): fetch the current entity, show its key sections, gather the requested changes in natural language, confirm, then apply:
+- oIds starting with `mp_` → `update_motion_playbook` (edits narrative sections inside the playbook's Motion ICP cells)
+- all other library entities → `update_entity`
 
-1. **Fetch current entity:**
-   ```
-   Fetching: CTO - Enterprise Tech (pe_abc123)
-   ```
+### Motion / Motion Playbook / Motion ICP Handling
 
-2. **Show current state and ask for changes:**
-   ```
-   Current Persona: CTO - Enterprise Tech
-
-   Key sections:
-   - Pain Points: [list current]
-   - Objectives: [list current]
-   - Responsibilities: [list current]
-
-   What would you like to update?
-   (Describe the changes in natural language)
-   ```
-
-3. **Confirm changes:**
-   ```
-   I'll update the CTO persona with:
-   - Add AI/ML adoption as a key objective
-   - Include "evaluating AI tools" in responsibilities
-   - Add "AI readiness" to pain points
-
-   Proceed? (yes/no)
-   ```
-
-4. **Apply the update:**
-
-   **For Motion Playbooks** (oId starts with `mp_`), use `update_motion_playbook`:
-   ```
-   update_motion_playbook({
-     motionPlaybookOId: "mp_xyz789",
-     instructions: "Sharpen the Strategic narrative for the [persona] × [segment] cell to address security concerns...",
-     keyContext: "<any additional context>"
-   })
-   ```
-
-   `update_motion_playbook` edits the narrative sections (Target ICP overview, Operating landscape, Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References) inside the Motion Playbook's Motion ICP cells.
-
-   **For other library entities**, use `update_entity`:
-   ```
-   update_entity({
-     entityType: "persona",
-     oId: "pe_abc123",
-     instructions: "Add AI/ML adoption as a key objective...",
-     keyContext: "<any additional context>"
-   })
-   ```
-
-5. **Report success:**
-   ```
-   Updated persona: CTO - Enterprise Tech
-
-   Changes applied:
-   - Added AI/ML adoption objective
-   - Updated responsibilities
-   - Added AI readiness pain point
-
-   Use /octave:library show pe_abc123 to see the updated version.
-   ```
-
-### Motion / Motion Playbook / Motion ICP Updates (Special Handling)
-
-The Motion era replaces the standalone playbook model. A Motion is the top-level container; under it live one or more Motion Playbooks (a Default Motion Playbook is auto-generated covering the persona × segment matrix, plus any Custom Motion Playbooks). Each Motion Playbook is composed of **Motion ICP cells** — one narrative per persona × segment intersection.
-
-**Structure:**
-- **Motion** — top-level container, tied to an offering (product/service) and a motion type (Outbound, PLG, Renewal, etc.)
-- **Motion Playbook** — Default (auto-generated) or Custom (THEMATIC / MILESTONE / ACCOUNT / COMPETITIVE)
-- **Motion ICP cell** — per persona × segment narrative inside a Motion Playbook: Target ICP overview, Operating landscape, Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References
-
-**Decision Logic:**
-
-| User Request | Tools to Use |
-|--------------|--------------|
-| "Show me all Motions" | `list_motions` |
-| "List the playbooks under the Enterprise Outbound motion" | `list_motion_playbooks({ motionOId })` |
-| "Show me the full Default Motion Playbook for that Motion" | `get_motion_playbook` |
-| "What's in the CTO × Mid-Market cell?" | `find_motion_icp({ motionIcpOId, includeLearnings: true })` |
-| "Sharpen the Strategic narrative for the CFO × Enterprise cell" | `update_motion_playbook` |
-| "Add a Custom Motion Playbook for displacing [competitor]" | `create_motion_playbook` with `narrativeType: "COMPETITIVE"` |
-| "Rework the whole Default Motion Playbook" | `update_motion_playbook` on the Default Motion Playbook |
-
-**Reading flow:**
-
-1. `list_motions()` — find the relevant Motion for the offering / motion type
-2. `list_motion_playbooks({ motionOId })` — see Default + any Custom playbooks under it
-3. `list_motion_icps({ motionOId })` — see the persona × segment matrix
-4. `find_motion_icp({ motionIcpOId, includeLearnings: true })` — full narrative for a cell, plus Learning Loop learnings
-
-**Editing flow:**
-
-Narrative edits (Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, etc.) are all done through `update_motion_playbook`. The tool re-generates affected narrative sections based on your instructions.
-
-```
-update_motion_playbook({
-  motionPlaybookOId: "mp_xyz789",
-  instructions: "Sharpen Strategic narrative and Benefits and impacts for the CFO × Enterprise cell. Emphasize cost-savings framing over efficiency framing. Keep Pains and consequences unchanged.",
-  keyContext: "<any supporting context>"
-})
-```
-
-**Example — Reframing a cell's value narrative:**
-```
-User: "Make the CFO cell focus more on cost savings"
-
-1. Find the Motion: list_motions()
-2. List the Motion's playbooks: list_motion_playbooks({ motionOId: "mo_abc123" })
-3. Confirm the cell exists: list_motion_icps({ motionOId: "mo_abc123" })  # check for CFO × <segment> cells
-4. Update: update_motion_playbook({
-     motionPlaybookOId: "mp_xyz789",
-     instructions: "Reframe the CFO × Enterprise cell's Strategic narrative and Benefits and impacts to lead with cost savings rather than efficiency. Leave other cells unchanged."
-   })
-```
-
-**Example — Adding a Custom Motion Playbook for a new angle:**
-```
-User: "Add a competitive displacement Motion Playbook for [Competitor] under our Enterprise Outbound motion"
-
-1. Confirm the Motion: list_motions()
-2. Create: create_motion_playbook({
-     motionOId: "mo_abc123",
-     narrativeType: "COMPETITIVE",
-     name: "Displace [Competitor] — Enterprise",
-     instructions: "Generate a competitive displacement Motion Playbook targeting current [Competitor] customers. Cells should focus on switching pain, ROI of migration, and proof from prior displacements."
-   })
-```
+The Motion-era model — structure, decision logic, reading flow, editing flow, and worked examples — is documented in [motion-model.md](references/motion-model.md). Read it whenever a request touches Motions, Motion Playbooks, or Motion ICP cells.
 
 ### Subcommand: history
 
@@ -564,7 +252,7 @@ The legacy `get_playbook`, `list_value_props`, `create_playbook`, `update_playbo
 **Invalid Entity Type:**
 > Unknown entity type "[input]".
 >
-> Valid library types: personas, products, segments, use-cases, competitors, proof-points, references, services, brand-voices, writing-styles
+> Valid library types: personas, products, segments, use-cases, competitors, alternatives, buying-triggers, objections, proof-points, references, services, brand-voices, writing-styles
 > Valid Motion-era types: motions, motion-playbooks, motion-icps
 >
 > Check spelling and try again.

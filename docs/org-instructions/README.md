@@ -10,8 +10,8 @@ Claude org preferences cap at **3,000 characters**.
 
 | Version | Size | Use when |
 |---|---|---|
-| **[short.md](./short.md)** | ~1,700 chars | You want headroom to layer workspace-specific rules (custom ICPs, named playbooks, vertical terms) on top. Covers core routing and the most common Octave intents. |
-| **[long.md](./long.md)** | ~2,950 chars | Your team also has HubSpot, Salesforce, Gong, Granola, Fathom, or Clay connected. Adds explicit rules that demote raw-data tools to fallbacks, plus routing for LFGTM plugin skills and specialized agents. |
+| **[short.md](./short.md)** | ~1,800 chars | You want headroom to layer workspace-specific rules (custom ICPs, named Motions, vertical terms) on top. Covers core routing and the most common Octave intents. |
+| **[long.md](./long.md)** | ~2,900 chars | Your team also has HubSpot, Salesforce, Gong, Granola, Fathom, or Clay connected. Adds explicit rules that demote raw-data tools to fallbacks, plus routing for LFGTM plugin skills and specialized agents. |
 
 Click into either file, view **Raw** on GitHub, copy the full contents, and paste into Claude org preferences.
 
@@ -28,7 +28,7 @@ Individual Pro users who aren't in a Teams/Enterprise workspace can paste the sa
 
 Before saving, consider adding workspace-specific rules. A few useful patterns:
 
-- **Named playbooks.** If your team has a standard playbook (e.g., "4-Step Cold Outbound Sequence"), reference it by name so Claude knows to look for it: *"When asked to run a cold outbound sequence, use the '4-Step Cold Outbound Sequence' playbook."*
+- **Named Motions and playbooks.** If your team has a standard Motion or playbook (e.g., "4-Step Cold Outbound Sequence"), reference it by name so Claude knows to look for it: *"When asked to run a cold outbound sequence, use the '4-Step Cold Outbound Sequence' playbook."*
 - **ICP-specific framing.** *"We sell to mid-market B2B SaaS companies with 50–500 employees. Ignore fit signals outside this range."*
 - **Vertical terminology.** If your industry uses specific terms (e.g., "ACV," "GRR," "PLG motion"), define them once so Claude uses them correctly.
 - **Custom MCP tool names.** If you renamed your Octave connection (e.g., `octave-acme` vs. `octave-myWorkspace`), no change needed — tool names are server-scoped, not connection-scoped.

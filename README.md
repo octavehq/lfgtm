@@ -11,7 +11,7 @@ Octave is a GTM intelligence platform that helps sales and marketing teams centr
 ### Prerequisites
 
 - Claude Code CLI installed ([install guide](https://docs.anthropic.com/en/docs/claude-code))
-- Active Claude API key configured
+- Claude Code authenticated — a Claude subscription (Pro/Max/Team) or an Anthropic API key both work
 - An Octave workspace account
 
 ### Install via Marketplace (Recommended)
@@ -54,6 +54,8 @@ claude mcp add octave-acme --transport http https://mcp.octavehq.com/mcp?ctx=<co
 
 You can use any name that starts with `octave-` (e.g. `octave-acme`). Skills detect the Octave MCP server from your available tools.
 
+> **Keep the `ctx` value private.** It is a workspace-scoped credential — treat it like an API key and never commit it to a repository or paste it into shared documents.
+
 ### 2. Start Using Octave Skills
 ```
 /octave:workspace         # Check connection status
@@ -86,8 +88,9 @@ See [**docs/org-instructions/**](docs/org-instructions/) for short and long reco
 | `/octave:messaging` | Build messaging frameworks, positioning statements, and matrices |
 | `/octave:campaign` | Plan and generate multi-channel campaign content |
 | `/octave:launch` | Product and feature launch planning with full content kit |
-| `/octave:battlecard` | Competitive intelligence — battlecards, displacement, trap questions |
-| `/octave:ads` | Build platform-ready ad campaigns with audience targeting, creative variants, and negative keywords. Resonance loop pulls performance from MCP, BigQuery Data Transfer, direct API, or manual paste — and writes falsifiable prediction cards that get scored against future data, accumulating a verifiable track record over time. |
+| `/octave:battlecard` | Competitive intelligence — battlecards, displacement, trap questions. Add `--format doc` for an interactive HTML battlecard document |
+| `/octave:ads` | Build platform-ready ad campaigns with audience targeting, creative variants, and negative keywords |
+| `/octave:ads-resonance` | Analyze ad performance (MCP, BigQuery Data Transfer, direct API, or manual paste), score falsifiable prediction cards against real data, and feed learnings back into the library |
 
 ### Research & Prospecting Skills
 
@@ -114,7 +117,7 @@ See [**docs/org-instructions/**](docs/org-instructions/) for short and long reco
 |-------|-------------|
 | `/octave:insights` | Surface findings, trends, and patterns from calls and emails |
 | `/octave:signals` | Morning intelligence briefing — deals, patterns, and signals demanding attention |
-| `/octave:wins-losses` | Analyze won/lost deals for patterns and learnings |
+| `/octave:wins-losses` | Analyze won/lost deals for patterns and learnings. Add `--format report` for a visual HTML report with charts |
 | `/octave:icp-refine` | Refine ICP definitions using deal outcome analysis |
 | `/octave:explore-agents` | Browse and run your saved Octave agents |
 | `/octave:qual-doctor` | Diagnose and tune qualification agents — test against known-fit prospects, analyze per-question scoring patterns, and recommend specific changes to questions, weights, and entity descriptions. Handles both score-only and routing+scoring tuning modes. |
@@ -130,9 +133,9 @@ See [**docs/org-instructions/**](docs/org-instructions/) for short and long reco
 | `/octave:brief` | Internal account dossier and call prep HTML document |
 | `/octave:proposal` | Formal business case and proposal as customer-facing HTML |
 | `/octave:microsite` | Personalized ABM microsite / landing page as HTML |
-| `/octave:battlecard-doc` | Visual competitive battlecard as interactive HTML |
 | `/octave:positioning` | Complete visual Messaging & Positioning system (8 frameworks) as HTML |
-| `/octave:win-loss-report` | Visual win/loss analysis report with CSS-based charts |
+
+Visual battlecards and win/loss reports are document formats of their parent skills: `/octave:battlecard … --format doc` and `/octave:wins-losses --format report`.
 
 ### Ideation & Content Skills
 
@@ -238,6 +241,7 @@ Competitive intelligence hub:
 
 ```
 /octave:battlecard battlecard --competitor "Acme"
+/octave:battlecard battlecard --competitor "Acme" --format doc   # Interactive HTML document
 /octave:battlecard displacement --competitor "Acme"
 /octave:battlecard traps --competitor "Acme"
 /octave:battlecard landscape
@@ -400,6 +404,7 @@ Analyze deal outcomes to improve win rates:
 /octave:wins-losses
 /octave:wins-losses --status lost
 /octave:wins-losses --competitor "Salesforce"
+/octave:wins-losses --format report   # Visual HTML report with charts
 ```
 
 ### /octave:explore-agents
@@ -450,13 +455,23 @@ Build platform-ready ad campaign plans grounded in your library intelligence:
 - Landing page recommendations from your resources
 - Export as CSV for Google Ads, Meta, or LinkedIn bulk upload
 - Visual campaign deck as self-contained HTML
-- Resonance loop: feed performance data back to update library, Motion ICP narratives, and sales language
 
 ```
 /octave:ads                                              # Interactive — full campaign builder
 /octave:ads "compliance automation for VP Engineering"   # Campaign with angle
 /octave:ads "competitive displacement vs Acme"           # Competitive campaign
 /octave:ads "Q1 product launch"                          # Launch campaign
+```
+
+### /octave:ads-resonance
+Analyze ad performance and feed learnings back into your GTM library:
+- Pulls performance data from an ads MCP server, BigQuery Data Transfer, direct API, or manual paste — auto-detected in that order
+- Confidence-tiered findings that scale with spend, from smoke-test mode to full resonance analysis
+- Falsifiable prediction cards scored on every run, accumulating a calibration track record over time
+- Library update recommendations and a sales intelligence brief — applied only with your approval
+
+```
+/octave:ads-resonance         # Auto-detects the best available data source
 ```
 
 ### /octave:deal-coach
@@ -547,7 +562,10 @@ The plugin uses the single Octave MCP server you configure (e.g. `octave-acme`).
 - `list_all_entities` - Quick list with basic fields
 - `list_entities` - Detailed list with pagination
 - `get_entity` - Full entity details
+- `list_revisions` - List version history for library entities
+- `get_revision` - Get a specific historical revision of an entity
 - `search_knowledge_base` - Semantic search
+- `ask_octave` - Natural-language questions over the typed knowledge graph (entities, events, findings, opportunities)
 
 ### Library Write
 - `create_entity` - Create new entity (AI-generated) - excludes legacy playbooks
@@ -590,6 +608,9 @@ Still available for workspaces operating on legacy standalone playbooks, but Mot
 - `find_similar_people` / `find_similar_companies` - Lookalike search
 - `enrich_person` / `enrich_company` - Detailed intelligence
 - `qualify_person` / `qualify_company` - ICP scoring
+- `resolve_profile_from_email` / `resolve_email_from_profile` - Resolve a profile from an email (and vice versa)
+- `scrape_website` - Scrape and extract structured content from a URL
+- `deep_web_research` - Multi-source web research on a person, company, or topic
 
 ### Content Generation
 - `generate_email` - Generate email sequences
@@ -601,10 +622,30 @@ Still available for workspaces operating on legacy standalone playbooks, but Mot
 - `list_findings` - Aggregate extracted insights
 - `get_event_detail` - Get detailed event info with transcript/content
 
+### GTM Reports
+Narrative GTM analyses (GTM Explorer / Beats).
+- `list_gtm_reports` - List available GTM Explorer report groups
+- `get_latest_gtm_report` - Get the most recent report (digest across configs in a group)
+- `get_report_run` - Get the full content of a specific report run (title, summary, sections)
+
+### Suggestions
+Proposed library changes (add / edit / merge) from conversation findings, queued for human review.
+- `list_suggestions` - List entity suggestions (defaults to pending, last 14 days)
+- `get_suggestion` - Preview a suggestion in full (proposed entity + current-vs-after diff)
+- `accept_suggestion` / `reject_suggestion` - Apply or dismiss a pending suggestion
+- `create_suggestion` - Queue a new pending suggestion (does NOT apply directly)
+- `update_suggestion` - Revise a pending suggestion via natural-language instructions
+
+### Workspace Company
+The workspace's own company profile (singleton).
+- `get_workspace_company` - Get the workspace company (null if not yet bootstrapped)
+- `update_workspace_company` - Update workspace company fields (description, positioning, etc.)
+
 ### CRM
 - `find_crm_records` - Search for CRM records (accounts, contacts, leads, opportunities)
 - `find_crm_activities` - Fetch activities (notes, tasks, calls, emails) for a CRM record
 - `generate_crm_context` - Generate synthesized CRM context summary for a person or company
+- `get_crm_entity_schema` - Introspect valid fields/properties on a CRM entity (discover field names before requesting them)
 
 ### Pipeline Analytics
 - `list_pipeline_overview` - Deals grouped by stage with counts, total value, and per-deal detail
@@ -644,60 +685,67 @@ Still available for workspaces operating on legacy standalone playbooks, but Mot
 ```
 .
 ├── .claude/
-│   └── settings.json            # Plugin settings (MCP permissions)
+│   └── settings.json            # Project settings
 ├── .claude-plugin/
 │   ├── plugin.json              # Plugin metadata
 │   └── marketplace.json         # Marketplace configuration
+├── .github/
+│   └── workflows/
+│       └── sync-downstream.yml  # Builds and mirrors the Codex and Cursor plugin repos
 ├── agents/
 │   ├── asset-manager.md         # Hosted asset publishing/sharing agent
 │   ├── octave-assistant.md      # General GTM assistant agent
-│   ├── pmm-strategist.md       # Product marketing strategist agent
-│   ├── sdr-coach.md            # SDR coaching agent
-│   └── revenue-strategist.md   # Revenue strategy advisor agent
-├── skills/                      # Skill definitions
-│   ├── SKILL-GUIDE.md          # Best practices for writing skills
-│   ├── abm/SKILL.md            # Account-based planning
-│   ├── ads/SKILL.md            # Ad campaign builder
-│   │   └── references/         # HTML deck template, Google Ads CSV format
-│   ├── analyzer/SKILL.md       # Conversation analysis
-│   ├── asset-manager/SKILL.md  # Publish & manage hosted assets
-│   │   └── scripts/            # curl wrappers for the assets service (upload/update/download)
-│   ├── audit/SKILL.md          # Library health check
-│   ├── battlecard/SKILL.md     # Competitive intelligence (text)
-│   ├── battlecard-doc/SKILL.md # Competitive battlecard (HTML)
-│   ├── brainstorm/SKILL.md     # GTM ideation
-│   ├── brief/SKILL.md          # Account dossier (HTML)
-│   ├── campaign/SKILL.md       # Multi-channel campaigns
-│   ├── deal-coach/SKILL.md    # Deal coaching (Resonate/Elevate/Compel)
-│   │   └── references/         # Frameworks, agents, templates
-│   ├── deck/SKILL.md           # Presentation builder (HTML)
-│   │   └── references/         # Slide templates, export guide
-│   ├── enablement/SKILL.md     # Sales enablement materials
-│   ├── explore-agents/SKILL.md # Agent management
-│   ├── generate/SKILL.md       # Quick content generation
-│   ├── icp-refine/SKILL.md     # ICP refinement
-│   ├── insights/SKILL.md       # Field intelligence
-│   ├── launch/SKILL.md         # Launch planning
-│   ├── library/SKILL.md        # Library CRUD
-│   ├── meeting-prep/SKILL.md   # Meeting battle plan (HTML)
-│   ├── messaging/SKILL.md      # Messaging frameworks
-│   ├── microsite/SKILL.md      # ABM microsite (HTML)
-│   ├── one-pager/SKILL.md      # One-pager / leave-behind (HTML)
-│   ├── pipeline/SKILL.md       # Deal coaching
-│   ├── pmm/SKILL.md            # Product marketing content
-│   ├── positioning/SKILL.md    # Positioning system (HTML)
-│   │   └── references/         # Section templates, layouts
-│   ├── proposal/SKILL.md       # Business case / proposal (HTML)
-│   ├── prospector/SKILL.md     # Prospect discovery
-│   ├── repurpose/SKILL.md      # Content repurposing
-│   ├── research/SKILL.md       # Research & prep
-│   ├── signals/SKILL.md        # Morning intelligence briefing
-│   ├── train/SKILL.md          # Sales training & role-play
-│   ├── win-loss-report/SKILL.md # Win/loss report (HTML)
-│   ├── wins-losses/SKILL.md    # Deal outcome analysis
-│   ├── workflow/SKILL.md       # Workflow engine
-│   └── workspace/SKILL.md      # Connection status
-├── workflows/                   # Workflow templates
+│   ├── pmm-strategist.md        # Product marketing strategist agent
+│   ├── sdr-coach.md             # SDR coaching agent
+│   └── revenue-strategist.md    # Revenue strategy advisor agent
+├── docs/
+│   └── org-instructions/        # Recommended Claude org preferences for Octave-first routing
+├── scripts/
+│   ├── build-codex.sh           # Generate the Codex plugin artifact
+│   ├── build-cursor.sh          # Generate the Cursor plugin artifact
+│   ├── deploy.sh                # Deploy a generated deck or page to Vercel
+│   ├── export-pdf.sh            # Export an HTML presentation to PDF
+│   └── extract-pptx.py          # Extract content from .pptx for /octave:deck
+├── skills/                      # Skill definitions (each: SKILL.md + optional references/)
+│   ├── shared/                  # Cross-skill references (entity model, presentation principles, style presets, …) — not a skill
+│   ├── abm/                     # Account-based planning
+│   ├── ads/                     # Ad campaign builder
+│   ├── ads-resonance/           # Ad performance resonance loop + prediction cards
+│   ├── analyzer/                # Conversation analysis
+│   ├── asset-manager/           # Publish & manage hosted assets (bundled upload/download scripts)
+│   ├── audit/                   # Library health check
+│   ├── battlecard/              # Competitive intelligence (--format doc for HTML)
+│   ├── brainstorm/              # GTM ideation
+│   ├── brief/                   # Account dossier (HTML)
+│   ├── campaign/                # Multi-channel campaigns
+│   ├── deal-coach/              # Deal coaching (Resonate/Elevate/Compel)
+│   ├── deck/                    # Presentation builder (HTML)
+│   ├── enablement/              # Sales enablement materials
+│   ├── explore-agents/          # Agent management
+│   ├── generate/                # Quick content generation
+│   ├── get-brand-components/    # Brand kit capture for on-brand documents
+│   ├── icp-refine/              # ICP refinement
+│   ├── insights/                # Field intelligence
+│   ├── launch/                  # Launch planning
+│   ├── library/                 # Library CRUD
+│   ├── meeting-prep/            # Meeting battle plan (HTML)
+│   ├── messaging/               # Messaging frameworks
+│   ├── microsite/               # ABM microsite (HTML)
+│   ├── one-pager/               # One-pager / leave-behind (HTML)
+│   ├── pipeline/                # Deal coaching
+│   ├── pmm/                     # Product marketing content
+│   ├── positioning/             # Positioning system (HTML)
+│   ├── proposal/                # Business case / proposal (HTML)
+│   ├── prospector/              # Prospect discovery
+│   ├── qual-doctor/             # Qualification agent tuning
+│   ├── repurpose/               # Content repurposing
+│   ├── research/                # Research & prep
+│   ├── signals/                 # Morning intelligence briefing
+│   ├── train/                   # Sales training & role-play
+│   ├── wins-losses/             # Deal outcome analysis (--format report for HTML)
+│   ├── workflow/                # Workflow engine
+│   └── workspace/               # Connection status
+├── workflows/                   # Workflow templates (run via /octave:workflow)
 │   ├── account-based-research.workflow.md
 │   ├── competitive-deal-prep.workflow.md
 │   ├── competitive-response.workflow.md

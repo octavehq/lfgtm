@@ -55,10 +55,18 @@ jq '{
 }' "$SRC_ROOT/.claude-plugin/marketplace.json" \
   > "$OUT/.agents/plugins/marketplace.json"
 
-# 3. skills/: copy and optionally rename + rewrite inline refs
+# 3. skills/: copy and optionally rename + rewrite the frontmatter name.
+#    Dirs without a SKILL.md (e.g. skills/shared/, the cross-skill reference
+#    dir) are copied unrenamed so relative ../shared/ links keep resolving.
 echo "→ skills/ (prefix='$NAMESPACE_PREFIX')"
 for dir in "$SRC_ROOT"/skills/*/; do
   src_name="$(basename "$dir")"
+
+  if [[ ! -f "$dir/SKILL.md" ]]; then
+    cp -R "$dir" "$OUT/skills/$src_name"
+    continue
+  fi
+
   dst_name="${NAMESPACE_PREFIX}${src_name}"
   cp -R "$dir" "$OUT/skills/$dst_name"
 
@@ -74,10 +82,6 @@ for dir in "$SRC_ROOT"/skills/*/; do
       { print }
     ' "$skill_md" > "$skill_md.tmp" && mv "$skill_md.tmp" "$skill_md"
   fi
-
-  # Rewrite inline references: /octave:foo → /octave-foo
-  sed -i.bak 's#/octave:\([a-z][a-z0-9-]*\)#/octave-\1#g' "$skill_md"
-  rm -f "$skill_md.bak"
 done
 
 # 4. workflows/: plain markdown, safe to copy as-is
@@ -101,7 +105,18 @@ case "$CONVERT_AGENTS" in
     ;;
 esac
 
-# 6. README: Codex-specific install instructions
+# 6. Rewrite inline skill references in every shipped markdown file
+#    (SKILL.md, references/, shared/, workflows/, converted agents):
+#    /octave:foo → /octave-foo
+if [[ -n "$NAMESPACE_PREFIX" ]]; then
+  echo "→ rewriting /octave: refs in shipped markdown"
+  find "$OUT" -name '*.md' -print0 | while IFS= read -r -d '' md; do
+    sed -i.bak 's#/octave:\([a-z][a-z0-9-]*\)#/octave-\1#g' "$md"
+    rm -f "$md.bak"
+  done
+fi
+
+# 7. README: Codex-specific install instructions
 cat > "$OUT/README.md" <<EOF
 # Octave Codex Plugin
 
@@ -111,10 +126,13 @@ GTM knowledge base integration for OpenAI Codex CLI.
 
 ## Install
 
+Install the skills from this repository using your Codex CLI version's skills/plugin mechanism, for example:
+
 \`\`\`bash
 codex plugin marketplace add https://github.com/octavehq/lfgtm-codex
-npx codex-marketplace add  octavehq/lfgtm-codex --plugin
 \`\`\`
+
+If your Codex version does not support plugin marketplaces, clone this repository and copy the \`skills/\` directories into your Codex skills location (see \`codex --help\` or the Codex documentation for the path your version uses).
 
 ## Configure your Octave MCP server
 

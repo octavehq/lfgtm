@@ -63,7 +63,7 @@ SECTIONS TO INCLUDE
 
 Octave Sources Used:
 - Company profile: [Company] — [key insights]
-- Playbook: [Playbook name] — [messaging angle]
+- Motion Playbook: [Motion Playbook name] — [messaging angle]
 - Proof points: [N] references pulled
 - Competitive intel: [If applicable]
 - Findings: [N] recent signals

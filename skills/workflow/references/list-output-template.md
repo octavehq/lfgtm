@@ -1,49 +1,47 @@
 # List Output Template
 
+Build the list dynamically: read every `.workflow.md` file in the plugin's `workflows/` directory (TEMPLATES) and in `~/.octave/workflows/` (MY WORKFLOWS), parse each file's front matter, and render one entry per workflow. Never hardcode the inventory — new template files should appear automatically.
+
 ```
 AVAILABLE WORKFLOWS
 ===================
 
-TEMPLATES (4)
+TEMPLATES (N)
 -------------
 
-1. Full Outbound Pipeline
-   Company research → qualify → find contacts → qualify → email outreach
-   Inputs: company_domain (required), persona, num_contacts
-   Run: /octave:workflow run "Full Outbound Pipeline" --company <domain>
+1. [Workflow Name]
+   [One-line description from front matter]
+   Inputs: [input names, marking required ones]
+   Run: /octave:workflow run "[Workflow Name]" [--flags for required inputs]
 
-2. Account-Based Research
-   Deep research dossier on a target account with contact mapping
-   Inputs: company_domain (required), num_contacts
-   Run: /octave:workflow run "Account-Based Research" --company <domain>
+2. [Workflow Name]
+   ...
 
-3. Competitive Deal Prep
-   Research + competitive positioning + tailored displacement outreach
-   Inputs: company_domain (required), contact_email (required), competitor_name (required)
-   Run: /octave:workflow run "Competitive Deal Prep" --company <domain> --contact <email> --competitor <name>
-
-4. Persona-Targeted Outreach
-   Find people matching a persona across companies and generate outreach
-   Inputs: persona_name (required), industry, min_company_size
-   Run: /octave:workflow run "Persona-Targeted Outreach" --persona "CTO"
+[One entry per .workflow.md file found in the plugin's workflows/ directory]
 
 ---
 
-MY WORKFLOWS (2)
+MY WORKFLOWS (N)
 -----------------
 
-1. Security Team Outreach
-   Find and reach security decision-makers at target companies
-   Inputs: company_domain (required), num_contacts
-   Run: /octave:workflow run "Security Team Outreach" --company <domain>
+1. [Workflow Name]
+   [One-line description from front matter]
+   Inputs: [input names, marking required ones]
+   Run: /octave:workflow run "[Workflow Name]" [--flags for required inputs]
 
-2. Partner Channel Mapping
-   Research potential partners and their GTM teams
-   Inputs: company_domain (required)
-   Run: /octave:workflow run "Partner Channel Mapping" --company <domain>
+[One entry per .workflow.md file found in ~/.octave/workflows/]
 
 ---
 
 Use /octave:workflow show <name> for details.
 Use /octave:workflow create to build a new workflow.
+```
+
+Example entry, fully rendered:
+
+```
+1. Full Outbound Pipeline
+   Research, qualify, and generate personalized outreach for a target company
+   Inputs: company_domain (required), persona, motion, num_contacts
+   Run: /octave:workflow run "Full Outbound Pipeline" --company <domain>
 ```

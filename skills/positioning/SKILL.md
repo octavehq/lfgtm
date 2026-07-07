@@ -1,6 +1,7 @@
 ---
 name: positioning
 description: Generate a complete Messaging & Positioning system as a stunning visual HTML document — message framework, positioning anchors, strategy table, persona-based messaging, awareness funnel, use case canvases, lifecycle mapping, and homepage messaging. Use when user says "positioning system", "positioning exercise", "message framework", "positioning anchors", "positioning document", "visual messaging framework", or asks for a comprehensive positioning deliverable.
+argument-hint: "[section] [--product <name>] [--style <preset>] [--skip-review]"
 ---
 
 # /octave:positioning - Visual Messaging & Positioning System
@@ -14,30 +15,18 @@ Unlike `/octave:messaging` which outputs text-based frameworks, this skill rende
 - vs `/octave:deck` — deck is a presentation for an audience; positioning is a reference document
 - vs `/octave:brief` — brief is account-specific; positioning is about YOUR product/company
 
-## On-brand styling — use a brand kit if one exists
+## On-brand styling — internal doc, so default to YOUR brand
 
-Before generating, decide whose brand this positioning doc should match (usually the **target company**; sometimes your own company). Then:
-
-1. Resolve the company to a `<slug>` and check for a cached brand kit at `~/.octave/brands/<slug>/manifest.json`.
-2. **If a kit exists →** offer it: *"I found a saved brand kit for <Company> — want this positioning doc rendered in their brand?"* If yes, style the output with the kit instead of a generic preset:
-   - inline the kit's `tokens.css` (`:root` + the embedded `@font-face`) **and** `get-brand-components/assets/kit_base.css` into the output `<style>`;
-   - follow `brand-kit.md` → **Signature moves**, and reuse the kit's real **logo**, `images/`, and `icons.json`;
-   - for doc-shaped output you can compose directly with `get-brand-components/scripts/render_kit.py` (hero / split / logos / pricing / cta / footer blocks).
-3. **If no kit exists →** offer to build one first: *"No brand kit for <Company> yet — want me to capture it (~1 min) so this is on-brand?"* → run `/octave:get-brand-components <domain>`, then proceed.
-4. **If the user declines →** generate with the default style/preset.
-
-> The brand kit is the strongest styling signal — when one is available, prefer it over generic `--style` presets. See the `get-brand-components` skill for the kit format, token contract, and renderer.
+A positioning system is about **your own product and company**, so it should wear the **sender's own brand** (your workspace's company) — don't ask whose brand. Resolve the sender with `get_workspace_company` and follow the kit lookup and defaults in [../shared/brand-kit-usage.md](../shared/brand-kit-usage.md). Respect an explicit `--style` or brand override.
 
 ## Review pass (runs by default)
 
-After generating, **run the review pass by default** — don't wait to be asked. In interactive mode, tell the user at intake that you'll review before finishing (recommended) and that they can opt out with `--skip-review` or "skip review". Follow [`get-brand-components/references/asset-review.md`](../get-brand-components/references/asset-review.md): the always-on **preflight** (em dashes, broken images/logos, link `target`, themed scrollbars, leaked internals) plus the **visual pass** (render/screenshot, inspect the pixels across the dimensions — groundedness/verification matters most — report a short located scorecard, fix, re-verify). The visual pass defaults off only in a `--research fast` run; the preflight always runs.
-
-When generating, follow the output rules in [`get-brand-components/references/presentation-principles.md`](../get-brand-components/references/presentation-principles.md) — the generation-time companion to the review pass (label every value, no tool names in the output, confirmed vs hypothesized, lean and deal-specific).
+Run the default review pass after generating — the always-on preflight plus the visual render-and-inspect pass, per [../shared/review-pass.md](../shared/review-pass.md). Opt out with `--skip-review`. When generating, follow the output rules in [../shared/presentation-principles.md](../shared/presentation-principles.md).
 
 ## Usage
 
 ```
-/octave:positioning [section] [--product <name>] [--style <preset>]
+/octave:positioning [section] [--product <name>] [--style <preset>] [--skip-review]
 ```
 
 ## Modes
@@ -110,17 +99,7 @@ Gather all library intelligence in a single pass. **Tell the user what you're re
 
 **Call as many tools as needed to build a complete picture.** The best positioning systems come from layering multiple sources — product details + persona definitions + Motion ICP cell narratives + competitive context + proof points + conversation evidence all combine to create frameworks grounded in real data.
 
-**List vs Search — when to use which:**
-
-| Tool | Purpose | Use when... |
-|------|---------|-------------|
-| `list_all_entities({ entityType })` | Fetch all entities of a type (minimal fields) | You want a quick inventory — "show me all personas" |
-| `list_entities({ entityType })` | Fetch entities with full data (paginated) | You need the actual content — "get full persona details" |
-| `get_entity({ oId })` | Deep dive on one specific entity | You found something relevant and need the complete picture |
-| `search_knowledge_base({ query })` | Semantic search across library + resources | You have a concept — "how do we position for enterprise?" |
-| `list_resources()` / `search_resources({ query })` | Uploaded docs, URLs, Google Drive files | You need reference material or source docs |
-
-**Rule of thumb:** Use `list_*` when you know *what type* of thing you want. Use `search_*` when you know *what topic* you're looking for.
+For list-vs-search guidance and the common tool tables, see [../shared/octave-research-toolkit.md](../shared/octave-research-toolkit.md).
 
 ---
 
@@ -223,7 +202,7 @@ Does this look right? I can:
 
 ### Step 3: Style Selection
 
-The positioning system uses the same CSS variable / style preset system as `/octave:deck`. Full preset definitions are in the deck skill's [style-presets.md](../deck/references/style-presets.md).
+The positioning system uses the same CSS variable / style preset system as the other document skills. Full preset definitions are in [../shared/style-presets.md](../shared/style-presets.md).
 
 Positioning documents default to strategic, executive-friendly presets. If `--style` was not provided, ask:
 
@@ -251,7 +230,7 @@ OTHER
 Your choice (number or name, or press Enter for midnight-pro):
 ```
 
-If the user selects "Use my brand," follow the brand discovery flow from the deck skill (website extraction via browser-use or WebFetch, manual fallback). If they select "Match an existing doc," ask for the file path and extract its CSS variables.
+If the user selects "Use my brand," follow the brand extraction tiers in [../shared/brand-kit-usage.md](../shared/brand-kit-usage.md). If they select "Match an existing doc," ask for the file path and extract its CSS variables.
 
 ### Step 4: Generate HTML
 
@@ -269,7 +248,7 @@ Example: `/octave:positioning --product "Octave"` produces `.octave-positioning/
 
 For single sections: `.octave-positioning/octave-message-framework-2026-02-24/message-framework.html`
 
-The `.octave-positioning/` directory should be in `.gitignore`.
+Make sure `.octave-positioning/` is ignored by your project's `.gitignore` (an `.octave-*/` pattern covers all Octave output dirs) so generated documents don't get committed.
 
 #### HTML Architecture
 
@@ -279,7 +258,7 @@ The full HTML structure, section templates, and CSS component patterns are defin
 - [section-templates.md](references/section-templates.md) — HTML templates for all 8 section types
 - [section-layouts.md](references/section-layouts.md) — Section-specific CSS patterns (grids, funnels, timelines, canvases)
 
-See [html-scaffold.md](references/html-scaffold.md) for the full HTML + CSS scaffold of the positioning system document, including persona color system, highlight classes, and key differences from other doc skills.
+Build on the shared scaffold in [../shared/doc-scaffold.md](../shared/doc-scaffold.md); positioning-specific components (persona color system, highlight classes, wide grids, section numbering) are in [html-scaffold.md](references/html-scaffold.md).
 
 #### Content Population
 
@@ -377,28 +356,11 @@ update_motion_playbook({
 
 ## MCP Tools Used
 
-### Library — Fetching Entities
-- `list_all_entities` — Quick scan of all entities of a type (products, personas, segments, use cases, competitors)
-- `list_entities` — Fetch entities with full data and pagination (personas, proof points, references, use cases)
-- `get_entity` — Deep dive on one specific entity (product, competitor)
+Common research, library, signals, and generation tools: see [../shared/octave-research-toolkit.md](../shared/octave-research-toolkit.md). Positioning-specific additions:
 
-### Motions
-- `list_motions` — Motions for the offering
-- `list_motion_playbooks` — Default + Custom Motion Playbooks under a Motion
-- `get_motion_playbook` — Full Motion Playbook details
-- `list_motion_icps` — Persona × segment matrix
-- `find_motion_icp` — Per-cell narrative + Learning Loop learnings
-
-### Library — Searching
-- `search_knowledge_base` — Semantic search across library entities and resources (competitive positioning, differentiation)
-- `search_resources` — Search uploaded docs and reference material
-
-### Intelligence & Signals
-- `list_findings` — Conversation findings: what resonates (positive) and what falls flat (negative)
+- `list_findings` with sentiment filters — What resonates (positive) and what falls flat (negative) in real conversations
 - `list_all_entities` (entityType: "brand_voice") — Brand voice for homepage messaging tone
-
-### Content Generation
-- `generate_content` — Synthesize library data into framework structures
+- `get_workspace_company` — Resolve the sender's own company for brand styling
 
 ### Library Updates (Post-Generation)
 - `update_entity` — Save positioning statements back to product entity

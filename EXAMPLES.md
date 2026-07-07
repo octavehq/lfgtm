@@ -14,11 +14,16 @@ Real-world examples of how to use the Octave Claude Code plugin for common GTM w
 | Plan a multi-channel campaign | `/octave:campaign "Q1 pipeline push"` |
 | Build a Google Search ad campaign | `/octave:ads "compliance automation for VPs of Engineering"` |
 | Competitive displacement ads | `/octave:ads "displacement campaign vs Acme"` |
+| Analyze ad performance (resonance loop) | `/octave:ads-resonance` |
 | Build a messaging framework | `/octave:messaging framework` |
 | Full positioning exercise (visual HTML) | `/octave:positioning` |
 | Just the message framework | `/octave:positioning message-framework` |
 | Homepage messaging template | `/octave:positioning homepage` |
 | Create a competitive battlecard | `/octave:battlecard battlecard --competitor "Acme"` |
+| Visual battlecard document | `/octave:battlecard battlecard --competitor "Acme" --format doc` |
+| Prep a meeting battle plan | `/octave:meeting-prep "discovery call with Acme tomorrow"` |
+| Build a slide deck | `/octave:deck "pitch for Acme Corp"` |
+| Capture a brand kit | `/octave:get-brand-components acme.com` |
 | Plan an account approach | `/octave:abm acme.com` |
 | Coach on a stalled deal | `/octave:pipeline stalled acme.com` |
 | Deal coaching role play | `/octave:deal-coach acme.com --mode roleplay` |
@@ -27,7 +32,10 @@ Real-world examples of how to use the Octave Claude Code plugin for common GTM w
 | Plan a product launch | `/octave:launch "New AI feature"` |
 | Refine your ICP | `/octave:icp-refine --period 90` |
 | See what objections are trending | `/octave:insights --type objections` |
+| Morning intelligence briefing | `/octave:signals` |
+| Practice with role-play or quizzes | `/octave:train roleplay --persona "CTO"` |
 | Understand why you're losing deals | `/octave:wins-losses --status lost` |
+| Visual win/loss report | `/octave:wins-losses --format report` |
 | Run a saved agent | `/octave:explore-agents run "Enterprise Outreach" --to john@acme.com` |
 | Tune a qualification agent | `/octave:qual-doctor` |
 | Run a multi-step workflow | `/octave:workflow run "Full Outbound Pipeline" --company acme.com` |
@@ -264,14 +272,11 @@ After generating, you can:
 
 ### Resonance Loop — Learn from Performance
 
-After your campaign has been running, feed performance data back to improve your entire GTM:
+After your campaign has been running, feed performance data back to improve your entire GTM with the companion skill:
 
 ```
 # Trigger the resonance loop (auto-detects available data source)
-/octave:ads loop
-
-# Or provide data manually
-/octave:ads resonance-loop
+/octave:ads-resonance
 ```
 
 **Performance data sources** (auto-detected in priority order):
@@ -280,7 +285,7 @@ After your campaign has been running, feed performance data back to improve your
 3. **Direct API** — curl/Python against the Google Ads API if you have credentials but no MCP
 4. **Manual** — paste a CSV, screenshot, or verbal summary
 
-See `skills/ads/references/performance-data-sources.md` for setup steps, smoke tests, and troubleshooting.
+See `skills/ads-resonance/references/performance-data-sources.md` for setup steps, smoke tests, and troubleshooting.
 
 The resonance loop:
 - Maps winning variants back to their source cards to identify what resonated and why
@@ -347,7 +352,7 @@ A typical scorecard on a small-spend account looks like this:
 | P-004 | exposure-projection | Director Compliance ad group reaches 30 clicks in 7 days | ⏳ PENDING | Window not fully complete |
 ```
 
-The CONFIRMED prediction is the most interesting one: it's a *structural* claim about the auction (one ad group is structurally cheaper than another), and it confirms via a brand new ad group that didn't exist when the prediction was written. That's strong evidence the loop is detecting auction-structure properties, not just measuring noise in specific units. Read `skills/ads/references/prediction-cards.md` for the full schema, prediction types, and empirical lessons.
+The CONFIRMED prediction is the most interesting one: it's a *structural* claim about the auction (one ad group is structurally cheaper than another), and it confirms via a brand new ad group that didn't exist when the prediction was written. That's strong evidence the loop is detecting auction-structure properties, not just measuring noise in specific units. Read `skills/ads-resonance/references/prediction-cards.md` for the full schema, prediction types, and empirical lessons.
 
 **The loop will NEVER make a prediction it can't validate.** Predictions are SQL queries that return booleans, with explicit volume gates. If the volume gate fails, the prediction is `INCONCLUSIVE` (with a `_FAVORABLE` / `_UNFAVORABLE` suffix tracking whether the directional signal at least pointed the right way). After 10+ resolved predictions, the loop self-tunes: it stops generating prediction types that consistently fail and promotes the confidence of types that consistently land.
 
@@ -365,12 +370,12 @@ Prediction cards make the loop *worth* running regularly, because each run adds 
 
 **Setup is conversational.** From any Claude Code Desktop session, just describe what you want:
 
-> set up a scheduled task that runs `/octave:ads resonance` every Monday at 9am
+> set up a scheduled task that runs `/octave:ads-resonance` every Monday at 9am
 
 Or use the Schedule sidebar in the Desktop app (Schedule → New task → New local task) and fill in:
 - **Name**: `resonance-loop`
 - **Description**: `Weekly Google Ads resonance loop with prediction calibration`
-- **Prompt**: `/octave:ads resonance`
+- **Prompt**: `/octave:ads-resonance`
 - **Frequency**: Weekly, Monday, 9:00 AM (or whatever cadence matches your spend tier)
 
 The first time the task runs, you'll get permission prompts for the tools it needs (Bash, Read, Write, etc.). Click "always allow" for each so future runs auto-approve. You can also click **Run now** on the task to test the whole flow before waiting for the first scheduled fire.
@@ -380,7 +385,7 @@ The first time the task runs, you'll get permission prompts for the tools it nee
 - **`/loop`** (session-scoped, in the CLI): runs locally and has full file access, but only fires while the Claude Code session is open. Useful for short-lived polling within a working session, not for a weekly cadence.
 - **Cloud scheduled tasks** (the `/schedule` skill that creates remote triggers): runs in Anthropic's cloud, **not** on your machine. Cannot access `~/.octave/predictions/<MCC>.json` and cannot run `bq query` against local credentials. Don't use for this loop until prediction storage moves to a shared remote location.
 
-**Or just run it manually.** If you'd rather not set up a scheduled task, just invoke `/octave:ads resonance` from local Claude Code on your chosen cadence. A calendar reminder enforces the cadence. The loop reads the prediction file, evaluates pending cards, generates new ones, and writes back — same behavior either way.
+**Or just run it manually.** If you'd rather not set up a scheduled task, just invoke `/octave:ads-resonance` from local Claude Code on your chosen cadence. A calendar reminder enforces the cadence. The loop reads the prediction file, evaluates pending cards, generates new ones, and writes back — same behavior either way.
 
 ---
 
@@ -470,6 +475,9 @@ The output is a single scrollable HTML document with sticky navigation, collapsi
 ```
 # Full battlecard
 /octave:battlecard battlecard --competitor "Acme"
+
+# Interactive HTML battlecard document (expandable sections, color-coded comparisons)
+/octave:battlecard battlecard --competitor "Acme" --format doc
 
 # Displacement campaign
 /octave:battlecard displacement --competitor "Acme"
@@ -631,6 +639,19 @@ The deal-coach skill uses the **Resonate → Elevate → Compel** methodology:
 - **Compel** — Drive action: business case, Why Now, champion enablement
 
 Each output mode (role play, microsite, deck, quiz) is scored against Buyer Mindset, Value Propositions, and Talking Points for the active stage.
+
+### Practice Selling
+
+For general skills practice outside a specific deal, use the training skill:
+
+```
+/octave:train                                   # Interactive — pick a mode
+/octave:train roleplay --persona "CTO"          # Role-play a discovery call
+/octave:train quiz --topic objections           # Quiz on objection handling
+/octave:train quiz --competitor "Acme"          # Competitive knowledge check
+```
+
+Role-plays simulate a buyer grounded in your persona and Motion ICP data; quizzes test your knowledge of the library itself.
 
 ---
 
@@ -981,6 +1002,15 @@ Then paste your email thread. Returns:
 /octave:insights --persona "CTO"
 ```
 
+### Morning Intelligence Briefing
+
+```
+# What needs attention right now — deals, patterns, signals
+/octave:signals
+```
+
+Flips intelligence from pull-based to push-based: surfaces the deals, patterns, and signals demanding attention since you last checked, so the data tells you what to work on.
+
 ### Win/Loss Analysis
 
 ```
@@ -995,7 +1025,79 @@ Then paste your email thread. Returns:
 
 # Deep dive on specific deal
 /octave:wins-losses --company acme.com
+
+# Visual HTML report with CSS-based charts
+/octave:wins-losses --format report
 ```
+
+---
+
+## Document Builders
+
+Every document builder produces a self-contained HTML file you can open, share, or export to PDF (`scripts/export-pdf.sh`) and deploy to a live URL (`scripts/deploy.sh`).
+
+### Capture a Brand Kit
+
+```
+# Capture fonts, colors, logo, and components from a company's website
+/octave:get-brand-components acme.com
+```
+
+Builds a reusable component kit from the target's live site. Once captured, the other document builders detect the kit and render on-brand automatically — decks, one-pagers, and microsites that look like they came from the target company's own design team.
+
+### Meeting Battle Plan
+
+```
+# Strategic prep for a specific upcoming meeting
+/octave:meeting-prep "discovery call with Acme's VP Eng tomorrow"
+```
+
+Verified stakeholders, why-this-company intel, why-us for each persona at the table, likely objections and competitors, and talking-point beats — coached prep, not a script.
+
+### Slide Decks
+
+```
+/octave:deck "pitch for Acme Corp"                  # Customer pitch
+/octave:deck "Q1 QBR for enterprise segment"        # QBR with real data
+/octave:deck ~/Downloads/existing-deck.pptx         # Convert PPTX to HTML
+/octave:deck "demo day pitch" --style octave-brand  # Specific style preset
+```
+
+### One-Pager / Leave-Behind
+
+```
+# Personalized leave-behind after a demo or discovery call
+/octave:one-pager acme.com
+```
+
+Concise, customer-facing summary grounded in the account's matched Motion ICP — pains, value, proof, next step.
+
+### Internal Account Brief
+
+```
+# Account dossier for internal prep — scannable reference page
+/octave:brief acme.com
+```
+
+Internal-facing counterpart to the one-pager: company intel, stakeholder map, conversation history, and open questions.
+
+### Proposal / Business Case
+
+```
+# Customer-facing business case with ROI framing
+/octave:proposal acme.com
+```
+
+Formal closing document: problem framing, proposed solution, ROI model, implementation plan, and references.
+
+### ABM Microsite
+
+```
+# Personalized landing page for a target account
+/octave:microsite acme.com
+```
+
+A single-page microsite speaking directly to the account's pains and priorities — pairs well with `/octave:get-brand-components` for an on-brand experience.
 
 ---
 
@@ -1029,6 +1131,9 @@ Multi-step workflows chain research, qualification, and generation into reusable
 
 # Quarterly GTM review
 /octave:workflow run "Quarterly GTM Review" --period 90
+
+# Full positioning exercise (library audit → 8-framework document → save back)
+/octave:workflow run "Positioning Exercise" --product "Platform"
 
 # Content sprint around a theme
 /octave:workflow run "Content Sprint" --theme "AI-powered analytics" --persona "CTO"

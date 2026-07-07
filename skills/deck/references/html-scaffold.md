@@ -20,7 +20,7 @@ The full contents of [`viewport-base.css`](viewport-base.css) are **mandatory** 
   <style>
     /* === CSS Variables (from chosen preset) === */
     :root {
-      ...                              /* colors/fonts/radius from style-presets.md */
+      ...                              /* colors/fonts/radius from ../../shared/style-presets.md */
       --stage-bg: #000;                /* letterbox color behind the stage */
       --slide-bg: var(--bg);           /* slide canvas background */
     }
@@ -150,4 +150,4 @@ The full contents of [`viewport-base.css`](viewport-base.css) are **mandatory** 
 | Mobile | Stage letterboxes/pillarboxes; content never reflows or cramps |
 | Reduced motion | `prefers-reduced-motion` block in viewport-base.css neutralizes animations |
 
-This only applies to **decks** (slides). The document-style skills (one-pager, proposal, brief, microsite, win-loss-report, etc.) remain scrolling pages and keep their `clamp()`/reflow model — they share the *color/font* presets, not this stage model.
+This only applies to **decks** (slides). The document-style skills (one-pager, proposal, brief, microsite, wins-losses reports, etc.) remain scrolling pages and keep their `clamp()`/reflow model — they share the *color/font* presets, not this stage model.

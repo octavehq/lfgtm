@@ -1,6 +1,7 @@
 ---
 name: research
-description: Context-aware research and prep for calls, meetings, demos, outreach, and deal reviews. Use when user says "research [company]", "prep for my call", "who is [person]", "meeting prep", "demo prep", or asks to research a company or person. Do NOT use for bulk prospecting — use /octave:prospector instead.
+description: Context-aware research on companies and people, with occasion-specific prep angles for discovery, demos, and outreach. Use when user says "research [company]", "who is [person]", "look into this prospect", "demo prep", or asks for background on a company or person. Do NOT use for bulk prospecting — use /octave:prospector. Do NOT use for a full meeting battle plan — use /octave:meeting-prep; for an HTML account dossier — use /octave:brief.
+argument-hint: "<email|domain|name> [--for discovery|demo|follow-up|outreach]"
 ---
 
 # /octave:research - Context-Aware Research & Prep
@@ -33,7 +34,7 @@ Research prospects and prepare for calls, meetings, demos, outreach, and deal re
 | `outreach` | Hooks, angles, personalization points, CTAs |
 | `general` | Comprehensive research (default) |
 
-> **Deal coaching?** Use `/octave:pipeline` for deal-level strategy, stalled deals, multi-threading, and competitive deal coaching.
+> **Working a live deal?** Use `/octave:pipeline` for deal-level strategy — stalled deals, multi-threading, and competitive situations. **Prepping a specific upcoming meeting?** Use `/octave:meeting-prep` for a full battle plan, or `/octave:brief` for an HTML account dossier.
 
 ## Instructions
 
@@ -61,7 +62,8 @@ What are you preparing for?
 4. Outreach - Cold/warm outreach, getting a response
 5. General research - Just want to know more
 
-TIP: For deal coaching and pipeline review, use /octave:pipeline
+TIP: For deal-level strategy on a live deal, use /octave:pipeline
+TIP: For a full battle plan for a specific meeting, use /octave:meeting-prep
 
 Your choice:
 ```
@@ -171,9 +173,6 @@ What would you like to do next?
 - `qualify_company` - ICP scoring for company
 - `find_person` - Find contacts at company
 
-### Content Generation
-- `generate_call_prep` - Generate full call prep materials
-
 ### Library Context
 - `list_motions` - List Motions in the workspace
 - `list_motion_icps` - List Motion ICP cells under a Motion
@@ -210,10 +209,12 @@ What would you like to do next?
 
 ## Related Skills
 
+- `/octave:meeting-prep` - Full strategic battle plan for a specific upcoming meeting
+- `/octave:brief` - HTML account dossier / internal reference document
 - `/octave:generate` - Generate outreach content
 - `/octave:pmm` - Create account-specific collateral
 - `/octave:prospector` - Find more prospects like this one
 - `/octave:analyzer` - Analyze past interactions with this account
-- `/octave:pipeline` - Deal-level coaching (stalled deals, multi-threading, competitive)
+- `/octave:pipeline` - Deal-level strategy (stalled deals, multi-threading, competitive)
 - `/octave:abm` - Full account-based planning with stakeholder mapping
 - `/octave:battlecard` - Competitive intelligence for deals

@@ -41,6 +41,7 @@ __pycache__/
 
 # Octave plugin local config
 .claude/config/
+.claude/settings.local.json
 PLAN.MD
 
 # Generated asset output dirs (deck, brief, meeting-prep, microsite, one-pager, proposal, battlecard, …)

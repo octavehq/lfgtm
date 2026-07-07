@@ -1,6 +1,7 @@
 ---
 name: messaging
-description: Build messaging frameworks, positioning statements, messaging matrices, elevator pitches, and narrative arcs from your library. Use when user says "messaging framework", "positioning statement", "elevator pitch", "messaging matrix", "narrative arc", or asks to align or structure messaging.
+description: Build messaging frameworks, positioning statements, messaging matrices, elevator pitches, and narrative arcs from your library. Use when user says "messaging framework", "positioning statement", "elevator pitch", "messaging matrix", "narrative arc", or asks to align or structure messaging. Do NOT use for the comprehensive visual HTML positioning system — use /octave:positioning instead.
+argument-hint: "[matrix|framework|positioning|elevator|narrative|value-props] [--product <name>] [--persona <name>] [--competitor <name>]"
 ---
 
 # /octave:messaging - Messaging Framework Builder

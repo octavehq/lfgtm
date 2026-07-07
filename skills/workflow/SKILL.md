@@ -1,11 +1,14 @@
 ---
 name: workflow
 description: Define, run, and manage multi-step GTM workflows with human-in-the-loop execution. Use when user says "run a workflow", "show workflows", "create a workflow", "automate this process", or references workflow-based tasks.
+argument-hint: "[list|show|run|create] [\"<workflow name>\"] [--auto] [--company <domain>]"
 ---
 
 # /octave:workflow - GTM Workflow Engine
 
 Define, run, and manage multi-step GTM workflows. Chain research, qualification, generation, and agent tools into reusable recipes. Ship with built-in templates or create your own.
+
+**Why a custom `.workflow.md` format instead of slash commands?** Portability. This plugin runs across Claude Code, OpenAI Codex, and Cursor — the workflow files are plain markdown recipes that any of those clients can read and execute, and user-created workflows live in `~/.octave/workflows/` where every client can find them. Client-specific command formats would tie the recipes to one harness.
 
 ## Usage
 
@@ -133,10 +136,8 @@ If not found:
 Workflow "XYZ" not found.
 
 Available workflows:
-- Full Outbound Pipeline
-- Account-Based Research
-- Competitive Deal Prep
-- Persona-Targeted Outreach
+[Read the plugin's workflows/ directory and ~/.octave/workflows/
+and list every workflow name found]
 
 Use /octave:workflow list to see all workflows.
 ```
@@ -244,7 +245,7 @@ Subject: How TechCorp cut deployment time by 60%
 Personalization used:
 - Company: Acme Corp (450 employees, Series C)
 - Matched persona: CTO - Enterprise Tech
-- Playbook: Enterprise DevOps Sale
+- Motion ICP: Enterprise Outbound — CTO × Scaling SaaS
 
 ---
 
@@ -275,115 +276,7 @@ Would you like to:
 
 **Step 5: Deliver Results**
 
-When the user selects "Deliver to your tools", follow this MCP-first approach:
-
-**Phase 1: Detect likely destination from workflow output**
-
-Map the workflow output type to a recommended destination:
-- Email sequences → Email sequencer (Outreach, Apollo, Salesloft, Instantly)
-- Account research / call prep → CRM (Salesforce, HubSpot, Pipedrive)
-- Content / collateral → Documents (Google Docs, Notion, Confluence)
-- Presentations → Slides (Gamma, Google Slides, PowerPoint)
-- Reports / data → File export (CSV, markdown, HTML)
-
-**Phase 2: Check for MCP connectors**
-
-```
-# Check what MCP servers the user has connected
-ListMcpResourcesTool()
-
-# Look for tool-specific MCP servers:
-# - Google Drive MCP → can write docs directly
-# - Salesforce/HubSpot MCP → can create CRM records
-# - Slack MCP → can post to channels
-# - Notion MCP → can create pages
-# - Any other connected MCP server
-```
-
-**Phase 3: Branch based on what's available**
-
-**If matching MCP server found:**
-```
-I can push these results directly to [Tool] via your connected MCP server.
-
-Detected: [MCP Server Name] connected
-Destination: [specific location — e.g., Drive folder, CRM object, Slack channel]
-
-Ready to push? (yes / choose a different destination)
-```
-
-Use the MCP server's tools to write/push the output directly.
-
-**If no matching MCP server found, ask for destination:**
-```
-Where should these results go?
-
-OUTREACH & SEQUENCERS
-1. Outreach / Apollo / Salesloft / Instantly
-
-CRM
-2. Salesforce / HubSpot / Pipedrive
-
-DOCUMENTS
-3. Google Docs / Notion / Confluence
-
-PRESENTATIONS
-4. Gamma / Google Slides / PowerPoint
-
-COMMUNICATION
-5. Slack / Email
-
-MARKETING AUTOMATION
-6. Marketo / Pardot / Mailchimp
-
-FILE EXPORT
-7. Local file (markdown, HTML, CSV, plain text)
-
-8. Keep in conversation (already displayed)
-
-Your choice (or name your tool):
-```
-
-After the user picks a destination, check for MCP:
-```
-Do you have an MCP server for [Tool] connected?
-
-If yes → Connect it and I'll push directly.
-If no → I'll format the output for easy import.
-```
-
-**Phase 4: Format for import (when no MCP connector)**
-
-Recommend the best format based on destination, then generate:
-
-| Destination | Recommended Format | Why |
-|---|---|---|
-| Outreach / Apollo / Salesloft / Instantly | CSV (Step, Subject, Body, Wait Days) | Direct sequence import |
-| Salesforce / HubSpot / Pipedrive | Structured text (Account Summary, Stakeholders, Next Steps) | Paste into notes/activity fields |
-| Google Docs | Clean markdown with headers | Import or paste preserves structure |
-| Notion | Markdown with toggles/callouts | Native Notion markdown support |
-| Confluence | Markdown or HTML | Paste into Confluence editor |
-| Gamma | Numbered slide outline (Title + bullets per slide) | Paste into Gamma "Generate" |
-| Google Slides / PowerPoint | Slide outline with speaker notes | Copy into slide builder |
-| Slack | Formatted message blocks | Post as Slack message |
-| Email (direct) | HTML email or plain text | Send or paste into email client |
-| Marketo / Pardot | HTML email templates | Import as email template |
-| Mailchimp | HTML email with merge tags | Import as campaign |
-| Local file | User choice: `.md`, `.html`, `.csv`, `.txt` | Write to `./octave-output/<workflow>-<date>.<ext>` |
-
-Present as:
-```
-For [Tool], I recommend: [Format]
-[Brief reason why this format works best]
-
-Other options:
-- [Alternative format 1]
-- [Alternative format 2]
-
-Which format? (or press Enter for recommended):
-```
-
-Write the formatted output using Claude's Write tool (for files) or display inline (for paste targets).
+When the user selects "Deliver to your tools", follow the MCP-first delivery approach in [delivery-guide.md](references/delivery-guide.md): detect the likely destination from the output type, check for connected MCP servers that can receive it directly, and fall back to import-friendly formats (CSV, markdown, slide outlines, HTML) when no connector exists.
 
 ---
 
@@ -394,7 +287,9 @@ When executing steps, resolve `{{variable}}` references from the context map:
 - `{{company_profile}}` → full result from the step that saved as `company_profile`
 - `{{company_profile.name}}` → specific field from a saved result
 - `{{contacts[0]}}` → first item from an array result
-- `{{persona_titles}}` → derived from persona lookup (Claude resolves intelligently)
+- `{{selected_contact}}` → a decision step's `save_as` result (the user's choice)
+- `{{current_date}}`, `{{90_days_ago}}`, `{{period_start}}` → derived date variables (see the format reference)
+- `{{persona_titles}}` → derived from persona lookup (Claude resolves intelligently; the step description should say how)
 
 Claude should resolve these references naturally from context. The `{{}}` syntax is a guide, not a rigid template engine — Claude understands what data to pass between steps.
 
@@ -536,10 +431,7 @@ This skill dynamically invokes MCP tools based on workflow step definitions. Any
 > Workflow "XYZ" not found.
 >
 > Available workflows:
-> - Full Outbound Pipeline
-> - Account-Based Research
-> - Competitive Deal Prep
-> - Persona-Targeted Outreach
+> [Read the plugin's workflows/ directory and ~/.octave/workflows/ and list every workflow name found]
 >
 > Use /octave:workflow list to see all workflows.
 
