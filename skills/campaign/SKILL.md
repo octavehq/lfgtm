@@ -1,6 +1,7 @@
 ---
 name: campaign
-description: Plan and generate multi-channel campaign content including email sequences, LinkedIn, ads, social, blog, and landing pages. Use when user says "create a campaign", "campaign for launch", "multi-channel outreach", "demand gen", or asks for coordinated content across channels. Do NOT use for single emails or messages — use /octave:generate instead.
+description: Plan and generate multi-channel campaign content including email sequences, LinkedIn, ads, social, blog, and landing pages. Use when user says "create a campaign", "multi-channel outreach", "demand gen", or asks for coordinated content across channels. Do NOT use for single emails or messages — use /octave:generate instead. Do NOT use for product/feature launch kits — use /octave:launch instead.
+argument-hint: "[topic] [--channels email,linkedin,ads,social,blog,landing-page] [--persona <name>] [--motion <name>]"
 ---
 
 # /octave:campaign - Campaign Architect
@@ -29,7 +30,7 @@ Plan and generate integrated campaign content across channels — emails, Linked
 |---------|-----------------|
 | `email` | Multi-step email sequence (default: 4 emails) |
 | `linkedin` | Connection request + follow-up messages + post drafts |
-| `ads` | 2-3 ad copy variants (headline, body, CTA) |
+| `ads` | 2-3 ad copy variants (headline, body, CTA). For platform-ready ad sets with targeting, negative keywords, and bulk-upload export, use /octave:ads |
 | `social` | 3-5 social posts (LinkedIn, Twitter/X) |
 | `blog` | Full blog post outline with key sections |
 | `landing-page` | Landing page copy (hero, benefits, CTA, proof points) |
@@ -48,7 +49,7 @@ If no topic provided, ask:
 What's the campaign about?
 
 GROWTH
-1. New product/feature launch
+1. New product/feature launch → use /octave:launch for the launch plan and content kit itself; pick this only for a post-launch campaign push
 2. Pipeline acceleration (drive meetings)
 3. Customer expansion / upsell
 4. Event promotion (webinar, conference)
@@ -269,11 +270,7 @@ What would you like to do?
 
 ## Generation Mode Note
 
-This skill uses Octave's `generate_content` and `generate_email` tools by default. Two alternatives:
-- **Saved agents**: Check for matching agents with `list_agents` when relevant. See `/octave:explore-agents`.
-- **Claude-direct**: Skip `generate_*` calls, gather Octave context, Claude writes directly. Offer when user wants more control.
-
-For the full interactive mode selector, use `/octave:generate`.
+See [generation-modes.md](../shared/generation-modes.md) for the default generation mode and the saved-agent / Claude-direct alternatives.
 
 ## MCP Tools Used
 
@@ -315,6 +312,8 @@ For the full interactive mode selector, use `/octave:generate`.
 
 - `/octave:brainstorm campaigns` - Ideate campaign concepts before building
 - `/octave:generate` - Quick one-off content generation
+- `/octave:ads` - Platform-ready ad campaigns (ad sets, targeting, negative keywords, export)
+- `/octave:launch` - Launch planning and full launch content kit
 - `/octave:pmm` - Deep-dive collateral (case studies, one-pagers)
 - `/octave:repurpose` - Adapt campaign content for new audiences
 - `/octave:messaging` - Build messaging framework before campaign

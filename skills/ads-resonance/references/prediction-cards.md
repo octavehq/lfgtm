@@ -12,7 +12,7 @@ Three things every other AI tool fails to do:
 
 1. **Calibration over time.** After 10+ predictions you can compute hit rates per prediction type and learn what to trust. After 100, you have the only AI tool in GTM with a verifiable track record of its own predictions in your account.
 2. **Forced honesty about thin data.** The loop can't claim "this variant won" from 1 conversion if it's also predicting that the conversion data is too thin to validate within 7 days. Pre-committing to specific falsifiability conditions before the data arrives is what scientists do; it's what marketing tools never do.
-3. **A reason to re-run the loop.** Predictions have evaluation dates. When a date arrives, you (or a scheduled job — see "Scheduling" below) re-run the loop to see if the predictions held. Loop becomes a habit instead of an event.
+3. **A reason to re-run the loop.** Predictions have evaluation dates. When a date arrives, you (or a scheduled job — see "Cadence and scheduling" below) re-run the loop to see if the predictions held. Loop becomes a habit instead of an event.
 
 ---
 
@@ -156,7 +156,7 @@ The loop's calibration log (the `lessons` array under `calibration` in the JSON 
 
 `~/.octave/predictions/<MCC_ID>.json`
 
-One file per Google Ads MCC. The file is plain JSON, no database required. The directory is gitignored in the lfgtm repo as a defense-in-depth measure even though it lives in `$HOME`.
+One file per Google Ads MCC. The file is plain JSON, no database required. It lives under `$HOME/.octave/`, outside any repo, and is user-owned.
 
 ### File lifecycle
 
@@ -206,15 +206,16 @@ After 5+ resolved predictions, the loop maintains aggregate stats:
 
 ### Self-tuning over time
 
-After 10+ resolved predictions of a given type, the loop can adjust its default behavior:
+The loop adjusts its default behavior based on its own track record. Don't eyeball the hit rate — apply these exact rules, in order. "Resolved" means CONFIRMED + REFUTED + INCONCLUSIVE_FAVORABLE + INCONCLUSIVE_UNFAVORABLE combined; hit rate is CONFIRMED / resolved.
 
-- **Hit rate > 80%**: Promote default confidence for that type from MEDIUM to HIGH. Surface as "high-trust finding type."
-- **Hit rate < 50%**: Demote default confidence to LOW. Surface findings of that type with caveats.
-- **Always inconclusive**: Stop generating that type entirely until the evaluation conditions can be relaxed.
-- **Many INCONCLUSIVE_FAVORABLE**: Volume gate is too strict for this type. Suggest loosening.
-- **Many INCONCLUSIVE_UNFAVORABLE**: Volume gate is fine, but the prediction generation is wrong about direction. Investigate why.
+1. **Fewer than 10 resolved cards for a type**: use its default confidence and do not adjust. Small N is not a basis for tuning.
+2. **10+ resolved and hit rate ≥ 80%**: promote the type's default confidence by one tier (LOW → MEDIUM → HIGH). Surface findings of this type as "high-trust" in the resonance map.
+3. **10+ resolved and hit rate ≤ 30%**: demote the type's default confidence by one tier and add a caveat to all findings of this type.
+4. **10+ resolved and hit rate is 0%**: stop generating that type entirely on this run. Note in the calibration `lessons` that the type has been retired.
+5. **INCONCLUSIVE_FAVORABLE outnumbers INCONCLUSIVE_UNFAVORABLE by 3:1 or more across 10+ inconclusive cards of the same type**: the volume gate is too strict for that type. Note this in `lessons` and consider relaxing the gate (with user confirmation) on the next run. Conversely, many INCONCLUSIVE_UNFAVORABLE means the volume gate is fine but the prediction generation is wrong about direction — investigate why.
+6. **10+ resolved with hit rate between 30% and 80%**: no adjustment — the type is calibrated reasonably.
 
-These adjustments happen automatically — the loop reads its own track record and tunes accordingly. This is what calibration over time looks like in practice.
+These rules are deterministic so two future sessions reading the same calibration block will make the same tuning decisions. Always note in the loop output what tuning was applied (e.g., "cpc-efficiency-gap promoted from MEDIUM to HIGH based on 12/14 hit rate"). This is what calibration over time looks like in practice.
 
 ---
 
@@ -247,39 +248,18 @@ Prediction cards make the loop *worth* running regularly, because each run adds 
 | $500–$2,000/day | Twice weekly (Monday + Thursday) | Enough volume to see ad-level changes mid-week. |
 | > $2,000/day | Daily | Conversion data accumulates fast enough that daily checks are useful. |
 
-### Recommended: Claude Code Desktop scheduled tasks
+### How to schedule the loop
 
-Claude Code Desktop has a built-in scheduled tasks feature that runs locally on the user's machine on whatever cadence the user picks. Local scheduled tasks have everything the resonance loop needs:
+**Recommended: a locally scheduled run on the user's machine** (e.g., Claude Code's scheduled tasks feature, or any local scheduler that can invoke `/octave:ads-resonance`). A local run has the two things the loop needs that a cloud-hosted schedule does not:
 
-- **Full access to `~/.octave/predictions/<MCC_ID>.json`** for reading and writing prediction cards
-- **Local Google Cloud credentials**, so the task can run `bq query` against the user's BigQuery dataset directly
-- **Persistent across restarts** of the Desktop app
-- **Configurable per-task permissions**, so the user can grant `Bash` / `Read` / `Write` / `Edit` once and future runs auto-approve
-- **Conversational setup**: in any Desktop session, the user can describe what they want — "set up a weekly task that runs `/octave:ads resonance` every Monday at 9am" — and Desktop creates the task via the `CronCreate` tool
-- **Or use the Schedule sidebar UI**: Schedule → New task → New local task → fill in the form
+1. **Local file access** to read and write `~/.octave/predictions/<MCC_ID>.json` — without it, calibration tracking cannot work.
+2. **Local Google Cloud credentials**, so the run can execute `bq query` against the user's BigQuery dataset directly — a cloud-hosted run would need credentials baked into the prompt (insecure) or a hosted BigQuery connector.
 
-The Desktop app needs to be open and the user's computer needs to be awake for tasks to fire. Desktop has a "Keep computer awake" setting under Desktop app → General that prevents idle sleep. If the computer was asleep when a task was due, Desktop runs exactly one catch-up after wake.
-
-**This is the recommended automation path for the resonance loop.** The setup is one conversational sentence and the task runs unattended on the user's chosen cadence.
-
-### Alternative: `/loop` (session-scoped only)
-
-`/loop` is a bundled CLI skill that schedules a recurring prompt within the current Claude Code session. It runs locally with full file access, but tasks are session-scoped — they die when the session exits. Useful for short-lived polling ("check the build every 5 minutes") within an open working session, but not appropriate for a weekly cadence that needs to survive restarts.
-
-### Not recommended: cloud scheduled tasks (`/schedule`)
-
-Claude Code's `/schedule` skill creates **remote** triggers that run in Anthropic's cloud, not on the user's machine. They have several constraints that make them a poor fit for the resonance loop:
-
-1. **No local file access.** Cannot read or write `~/.octave/predictions/<MCC_ID>.json`. Calibration tracking would not work.
-2. **No local Google Cloud credentials.** Would need a BigQuery MCP connector or direct REST calls with credentials baked into the prompt (insecure).
-3. **Minimum interval is 1 hour** (sub-hourly schedules are rejected).
-4. **Cron expressions are in UTC**, not local time.
-
-When prediction storage moves from local filesystem to a shared remote location (e.g., a BigQuery auxiliary table) AND a BigQuery MCP connector becomes available, cloud scheduled tasks become viable. Until then, use Desktop scheduled tasks (the local kind).
+Session-scoped recurring prompts (ones that die when the working session exits) are fine for short-lived polling but not for a weekly cadence that needs to survive restarts. If prediction storage ever moves from the local filesystem to a shared remote location (e.g., a BigQuery auxiliary table), cloud-hosted schedules become viable.
 
 ### What to do when a prediction's evaluation date arrives mid-week
 
-If you don't want to wait for your usual scheduled run, just invoke the loop manually: `/octave:ads resonance`. It will read the JSON file, find any PENDING cards whose evaluation date has passed, run the evaluation queries against current BigQuery data, and update the file.
+If you don't want to wait for your usual scheduled run, just invoke the loop manually: `/octave:ads-resonance`. It will read the JSON file, find any PENDING cards whose evaluation date has passed, run the evaluation queries against current BigQuery data, and update the file.
 
 Predictions also have a soft "courtesy notification" mechanism: after generating new cards, the loop output should mention upcoming evaluation dates so you know when to expect the next meaningful resolution.
 

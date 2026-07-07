@@ -1,6 +1,7 @@
 ---
 name: enablement
 description: Generate sales enablement materials — cheat sheets, objection guides, discovery question banks, competitive sheets, and onboarding kits from your library. Use when user says "cheat sheet", "objection guide", "discovery questions", "onboarding kit", "enablement materials", or asks for quick-reference sales tools.
+argument-hint: "[quick-ref|objections|discovery|competitive-sheet|onboarding|persona-guide|motion-summary] [--persona <name>] [--competitor <name>] [--product <name>]"
 ---
 
 # /octave:enablement - Sales Enablement Studio
@@ -173,11 +174,7 @@ What would you like to do next?
 
 ## Generation Mode Note
 
-This skill uses Octave's `generate_content` and `generate_email` tools by default. Two alternatives:
-- **Saved agents**: Check for matching agents with `list_agents` when relevant. See `/octave:explore-agents`.
-- **Claude-direct**: Skip `generate_*` calls, gather Octave context, Claude writes directly. Offer when user wants more control.
-
-For the full interactive mode selector, use `/octave:generate`.
+See [generation-modes.md](../shared/generation-modes.md) for the default generation mode and the saved-agent / Claude-direct alternatives.
 
 ## MCP Tools Used
 

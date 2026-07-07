@@ -1,6 +1,7 @@
 ---
 name: pmm
 description: Product marketing content generator for case studies, blog posts, datasheets, and FAQs. Use when user says "case study", "blog post", "datasheet", "FAQ", or asks for marketing collateral. For visual document output, prefer /octave:deck, /octave:one-pager, /octave:brief, /octave:proposal, or /octave:microsite.
+argument-hint: "[one-pager|case-study|landing-page|deck|blog|datasheet|faq]"
 ---
 
 # /octave:pmm - Product Marketing Assistant
@@ -53,6 +54,9 @@ OTHER
 
 TIP: For competitive battlecards, use /octave:battlecard
 TIP: For objection handling guides, use /octave:enablement objections
+TIP: For a designed HTML one-pager or leave-behind, use /octave:one-pager
+TIP: For full slide decks, use /octave:deck
+TIP: For a personalized HTML landing page, use /octave:microsite
 
 Your choice:
 ```
@@ -273,11 +277,7 @@ Apply selected voice guidelines to all generated content.
 
 ## Generation Mode Note
 
-This skill uses Octave's `generate_content` and `generate_email` tools by default. Two alternatives:
-- **Saved agents**: Check for matching agents with `list_agents` when relevant. See `/octave:explore-agents`.
-- **Claude-direct**: Skip `generate_*` calls, gather Octave context, Claude writes directly. Offer when user wants more control.
-
-For the full interactive mode selector, use `/octave:generate`.
+See [generation-modes.md](../shared/generation-modes.md) for the default generation mode and the saved-agent / Claude-direct alternatives.
 
 ## MCP Tools Used
 
