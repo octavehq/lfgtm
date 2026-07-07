@@ -1,0 +1,150 @@
+#!/usr/bin/env bash
+# Zip a site folder and upload it as a new artifact in a single zip part.
+# Falls back through zip -> PowerShell -> Python so it works on macOS, Linux,
+# and Windows (Git Bash) without extra tooling.
+#
+# Usage:
+#   ARTIFACTS_ACCESS_TOKEN=<token> ./zip-and-upload-artifact.sh --src /path/to/artifact
+#   ARTIFACTS_ACCESS_TOKEN=<token> ./zip-and-upload-artifact.sh --src ./site \
+#     --type storage --visibility public --identifier docs
+#
+# Flags:
+#   --src <folder>        (required) site folder to zip and upload
+#   --type <t>            website | storage        (default: website)
+#   --visibility <v>      public | private         (default: private)
+#   --status <s>          draft | published | archived  (default: published)
+#   --identifier <id>     artifact identifier      (default: --src basename)
+#   --description <d>     description              (default: "Uploaded via curl-templates")
+#   --entry-point <path>  entry point (website only; sent only when set)
+#   -h, --help            show this help
+#
+# Auth / environment (the access token is env-only):
+#   ARTIFACTS_ACCESS_TOKEN  (required) per-user access token — mint one via
+#                           POST /api/v1/user/access-token
+#   ARTIFACTS_URL           base URL of the server (default: http://localhost:3015)
+set -euo pipefail
+
+BASE_URL="${ARTIFACTS_URL:-http://localhost:3015}"
+TOKEN="${ARTIFACTS_ACCESS_TOKEN:-}"
+
+usage() {
+  # Reuse the header comment block above as the single source of help text.
+  awk 'NR==1 { next } /^#/ { sub(/^# ?/, ""); print; next } { exit }' "$0" >&2
+}
+
+# Defaults (all overridable by flags).
+SRC=""
+TYPE="website"
+VISIBILITY="private"
+STATUS="published"
+IDENTIFIER=""
+DESCRIPTION="Uploaded via curl-templates"
+ENTRY_POINT=""
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --src)         SRC="${2:?--src requires a value}"; shift 2 ;;
+    --type)        TYPE="${2:?--type requires a value}"; shift 2 ;;
+    --visibility)  VISIBILITY="${2:?--visibility requires a value}"; shift 2 ;;
+    --status)      STATUS="${2:?--status requires a value}"; shift 2 ;;
+    --identifier)  IDENTIFIER="${2:?--identifier requires a value}"; shift 2 ;;
+    --description) DESCRIPTION="${2:?--description requires a value}"; shift 2 ;;
+    --entry-point) ENTRY_POINT="${2:?--entry-point requires a value}"; shift 2 ;;
+    -h|--help)     usage; exit 0 ;;
+    *) echo "error: unexpected argument: $1" >&2; usage; exit 1 ;;
+  esac
+done
+
+if [ -z "$SRC" ]; then
+  echo "error: --src is required (a folder to zip)" >&2
+  usage
+  exit 1
+fi
+SRC="${SRC%/}"
+if [ ! -d "$SRC" ]; then
+  echo "error: --src $SRC is not a directory" >&2
+  exit 1
+fi
+
+if [ -z "$TOKEN" ]; then
+  echo "error: no access token — set ARTIFACTS_ACCESS_TOKEN" >&2
+  echo "mint one: curl -X POST $BASE_URL/api/v1/user/access-token \\" >&2
+  echo '  -H "Authorization: Bearer <service-key>" -H "Content-Type: application/json" \' >&2
+  echo '  -d '"'"'{"userOId":"...","workspaceOId":"..."}'"'" >&2
+  exit 1
+fi
+
+# Fail fast on typo'd enums (the server validates too, but this saves a round-trip).
+case "$TYPE" in website | storage) ;; *) echo "error: --type must be website|storage" >&2; exit 1 ;; esac
+case "$VISIBILITY" in public | private) ;; *) echo "error: --visibility must be public|private" >&2; exit 1 ;; esac
+case "$STATUS" in draft | published | archived) ;; *) echo "error: --status must be draft|published|archived" >&2; exit 1 ;; esac
+
+NAME=$(basename "$SRC")
+IDENTIFIER="${IDENTIFIER:-$NAME}"
+METADATA=$(printf '{"identifier":"%s","description":"%s","type":"%s","visibility":"%s","status":"%s"' \
+  "$IDENTIFIER" "$DESCRIPTION" "$TYPE" "$VISIBILITY" "$STATUS")
+# entryPoint is website-only; storage artifacts ignore it.
+if [ "$TYPE" = "website" ] && [ -n "$ENTRY_POINT" ]; then
+  METADATA="$METADATA,\"entryPoint\":\"$ENTRY_POINT\""
+fi
+METADATA="$METADATA}"
+
+TMP_ZIP="${TMPDIR:-/tmp}/artifact-$NAME-$$.zip"
+RESP_FILE="$(mktemp)"
+trap 'rm -f "$TMP_ZIP" "$RESP_FILE"' EXIT
+
+# Zip the folder contents (paths relative to the folder root, dotfiles
+# excluded — the server rejects dotfile segments anyway).
+if command -v zip >/dev/null 2>&1; then
+  (cd "$SRC" && zip -r -q "$TMP_ZIP" . -x '.*' -x '*/.*')
+elif command -v powershell.exe >/dev/null 2>&1; then
+  # Windows Git Bash: cygpath converts POSIX paths for PowerShell.
+  WIN_SRC=$(cygpath -w "$SRC")
+  WIN_ZIP=$(cygpath -w "$TMP_ZIP")
+  powershell.exe -NoProfile -Command \
+    "Compress-Archive -Path '$WIN_SRC\\*' -DestinationPath '$WIN_ZIP' -Force"
+elif command -v python3 >/dev/null 2>&1 || command -v python >/dev/null 2>&1; then
+  PY=$(command -v python3 || command -v python)
+  (cd "$SRC" && "$PY" -m zipfile -c "$TMP_ZIP" ./*)
+else
+  echo "error: need one of: zip, powershell.exe, python3/python to create a zip" >&2
+  exit 1
+fi
+
+SIZE=$(wc -c <"$TMP_ZIP" | tr -d ' ')
+echo "zipped $SRC/ -> $SIZE bytes, uploading as \"$IDENTIFIER\""
+
+HTTP_CODE=$(curl -sS -o "$RESP_FILE" -w "%{http_code}" \
+  -X POST "$BASE_URL/api/v1/artifacts" \
+  -H "Authorization: Bearer $TOKEN" \
+  -F "metadata=$METADATA" \
+  -F "site=@$TMP_ZIP;type=application/zip")
+
+if [ "$HTTP_CODE" != "201" ]; then
+  echo "error: POST /api/v1/artifacts -> $HTTP_CODE" >&2
+  cat "$RESP_FILE" >&2
+  echo >&2
+  exit 1
+fi
+
+if command -v jq >/dev/null 2>&1; then
+  jq . "$RESP_FILE"
+  UUID=$(jq -r '.uuid' "$RESP_FILE")
+else
+  cat "$RESP_FILE"
+  echo
+  UUID=$(grep -o '"uuid":"[^"]*"' "$RESP_FILE" | head -1 | sed -e 's/^"uuid":"//' -e 's/"$//')
+fi
+
+echo
+echo "created: $UUID"
+if [ "$VISIBILITY" != "public" ] || [ "$STATUS" != "published" ]; then
+  echo "publish:  curl -X POST $BASE_URL/api/v1/artifacts/$UUID/publish -H \"Authorization: Bearer \$ARTIFACTS_ACCESS_TOKEN\""
+fi
+if [ "$TYPE" = "storage" ]; then
+  echo "download: $BASE_URL/download/$UUID"
+else
+  echo "serve:    $BASE_URL/sites/$IDENTIFIER-$UUID/"
+fi
+# Owner download (any status/visibility), names the folder after the identifier.
+echo "fetch:    ./download-artifact.sh --uuid $UUID"

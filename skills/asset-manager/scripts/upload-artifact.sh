@@ -1,0 +1,152 @@
+#!/usr/bin/env bash
+# Upload a site folder (or a ready-made .zip) as a new artifact. Nested
+# directory structure is preserved via the multipart filename.
+#
+# Usage:
+#   ARTIFACTS_ACCESS_TOKEN=<token> ./upload-artifact.sh --src /path/to/artifact
+#   ARTIFACTS_ACCESS_TOKEN=<token> ./upload-artifact.sh --src /path/to/site.zip \
+#     --type storage --visibility public --identifier docs
+#
+# Flags:
+#   --src <path>          (required) site folder or ready-made .zip to upload
+#   --type <t>            website | storage        (default: website)
+#                         storage artifacts are downloaded via /download (not
+#                         served) and have no entry point.
+#   --visibility <v>      public | private         (default: private)
+#   --status <s>          draft | published | archived  (default: published)
+#   --identifier <id>     artifact identifier      (default: --src basename)
+#   --description <d>     description              (default: "Uploaded via curl-templates")
+#   --entry-point <path>  entry point (website only; sent only when set)
+#   -h, --help            show this help
+#
+# Auth / environment (the access token is env-only):
+#   ARTIFACTS_ACCESS_TOKEN  (required) per-user access token — mint one via
+#                           POST /api/v1/user/access-token
+#   ARTIFACTS_URL           base URL of the server (default: http://localhost:3015)
+#
+# New artifacts are private by default and 404 until published:
+#   curl -X POST $ARTIFACTS_URL/api/v1/artifacts/<uuid>/publish \
+#     -H "Authorization: Bearer $ARTIFACTS_ACCESS_TOKEN"
+set -euo pipefail
+
+BASE_URL="${ARTIFACTS_URL:-http://localhost:3015}"
+TOKEN="${ARTIFACTS_ACCESS_TOKEN:-}"
+
+usage() {
+  # Reuse the header comment block above as the single source of help text.
+  awk 'NR==1 { next } /^#/ { sub(/^# ?/, ""); print; next } { exit }' "$0" >&2
+}
+
+# Defaults (all overridable by flags).
+SRC=""
+TYPE="website"
+VISIBILITY="private"
+STATUS="published"
+IDENTIFIER=""
+DESCRIPTION="Uploaded via curl-templates"
+ENTRY_POINT=""
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --src)         SRC="${2:?--src requires a value}"; shift 2 ;;
+    --type)        TYPE="${2:?--type requires a value}"; shift 2 ;;
+    --visibility)  VISIBILITY="${2:?--visibility requires a value}"; shift 2 ;;
+    --status)      STATUS="${2:?--status requires a value}"; shift 2 ;;
+    --identifier)  IDENTIFIER="${2:?--identifier requires a value}"; shift 2 ;;
+    --description) DESCRIPTION="${2:?--description requires a value}"; shift 2 ;;
+    --entry-point) ENTRY_POINT="${2:?--entry-point requires a value}"; shift 2 ;;
+    -h|--help)     usage; exit 0 ;;
+    *) echo "error: unexpected argument: $1" >&2; usage; exit 1 ;;
+  esac
+done
+
+if [ -z "$SRC" ]; then
+  echo "error: --src is required (a folder or a .zip)" >&2
+  usage
+  exit 1
+fi
+SRC="${SRC%/}"
+
+if [ -z "$TOKEN" ]; then
+  echo "error: no access token — set ARTIFACTS_ACCESS_TOKEN" >&2
+  echo "mint one: curl -X POST $BASE_URL/api/v1/user/access-token \\" >&2
+  echo '  -H "Authorization: Bearer <service-key>" -H "Content-Type: application/json" \' >&2
+  echo '  -d '"'"'{"userOId":"...","workspaceOId":"..."}'"'" >&2
+  exit 1
+fi
+
+# Fail fast on typo'd enums (the server validates too, but this saves a round-trip).
+case "$TYPE" in website | storage) ;; *) echo "error: --type must be website|storage" >&2; exit 1 ;; esac
+case "$VISIBILITY" in public | private) ;; *) echo "error: --visibility must be public|private" >&2; exit 1 ;; esac
+case "$STATUS" in draft | published | archived) ;; *) echo "error: --status must be draft|published|archived" >&2; exit 1 ;; esac
+
+NAME=$(basename "$SRC")
+NAME="${NAME%.zip}"
+IDENTIFIER="${IDENTIFIER:-$NAME}"
+METADATA=$(printf '{"identifier":"%s","description":"%s","type":"%s","visibility":"%s","status":"%s"' \
+  "$IDENTIFIER" "$DESCRIPTION" "$TYPE" "$VISIBILITY" "$STATUS")
+# entryPoint is website-only; storage artifacts ignore it.
+if [ "$TYPE" = "website" ] && [ -n "$ENTRY_POINT" ]; then
+  METADATA="$METADATA,\"entryPoint\":\"$ENTRY_POINT\""
+fi
+METADATA="$METADATA}"
+
+# Build the file parts: one -F per file with the relative path as filename
+# (busboy preservePath keeps the nested structure), or a single zip part.
+FORM_ARGS=("-F" "metadata=$METADATA")
+if [ -d "$SRC" ]; then
+  FILE_COUNT=0
+  while IFS= read -r FILE; do
+    REL="${FILE#"$SRC"/}"
+    FORM_ARGS+=("-F" "files=@$FILE;filename=$REL")
+    FILE_COUNT=$((FILE_COUNT + 1))
+  done < <(find "$SRC" -type f ! -path '*/.*' ! -name '.*' | sort)
+  if [ "$FILE_COUNT" -eq 0 ]; then
+    echo "error: no files found under $SRC (dotfiles are skipped)" >&2
+    exit 1
+  fi
+  echo "uploading $FILE_COUNT file(s) from $SRC/ as \"$IDENTIFIER\""
+elif [ -f "$SRC" ] && [[ "$SRC" == *.zip ]]; then
+  FORM_ARGS+=("-F" "site=@$SRC;type=application/zip")
+  echo "uploading zip $SRC as \"$IDENTIFIER\""
+else
+  echo "error: $SRC is neither a directory nor a .zip file" >&2
+  exit 1
+fi
+
+RESP_FILE="$(mktemp)"
+trap 'rm -f "$RESP_FILE"' EXIT
+
+HTTP_CODE=$(curl -sS -o "$RESP_FILE" -w "%{http_code}" \
+  -X POST "$BASE_URL/api/v1/artifacts" \
+  -H "Authorization: Bearer $TOKEN" \
+  "${FORM_ARGS[@]}")
+
+if [ "$HTTP_CODE" != "201" ]; then
+  echo "error: POST /api/v1/artifacts -> $HTTP_CODE" >&2
+  cat "$RESP_FILE" >&2
+  echo >&2
+  exit 1
+fi
+
+if command -v jq >/dev/null 2>&1; then
+  jq . "$RESP_FILE"
+  UUID=$(jq -r '.uuid' "$RESP_FILE")
+else
+  cat "$RESP_FILE"
+  echo
+  UUID=$(grep -o '"uuid":"[^"]*"' "$RESP_FILE" | head -1 | sed -e 's/^"uuid":"//' -e 's/"$//')
+fi
+
+echo
+echo "created: $UUID"
+if [ "$VISIBILITY" != "public" ] || [ "$STATUS" != "published" ]; then
+  echo "publish:  curl -X POST $BASE_URL/api/v1/artifacts/$UUID/publish -H \"Authorization: Bearer \$ARTIFACTS_ACCESS_TOKEN\""
+fi
+if [ "$TYPE" = "storage" ]; then
+  echo "download: $BASE_URL/download/$UUID"
+else
+  echo "serve:    $BASE_URL/sites/$IDENTIFIER-$UUID/"
+fi
+# Owner download (any status/visibility), names the folder after the identifier.
+echo "fetch:    ./download-artifact.sh --uuid $UUID"

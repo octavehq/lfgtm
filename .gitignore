@@ -50,3 +50,6 @@ PLAN.MD
 # Resonance loop prediction cards (canonical location is $HOME/.octave/predictions/, but defense in depth)
 .octave/
 predictions/
+
+# agent memory
+.claude/agent-memory/
