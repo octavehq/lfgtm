@@ -1,6 +1,7 @@
 ---
 name: train
-description: Practice selling with role-play simulations, knowledge quizzes, and guided learning on your GTM library. Use when user says "role-play a call", "quiz me", "practice objections", "sales training", "test my knowledge", or asks for interactive learning.
+description: Practice selling with role-play simulations, knowledge quizzes, and guided learning on your GTM library. Use when user says "role-play a call", "quiz me", "practice objections", "sales training", "test my knowledge", or asks for interactive learning. For Resonate/Elevate/Compel methodology practice, use /octave:deal-coach instead.
+argument-hint: "[roleplay|quiz] [--persona <name>] [--competitor <name>] [--scenario <type>] [--topic <topic>]"
 ---
 
 # /octave:train - Sales Training Ground
@@ -145,27 +146,14 @@ Present the scenario context, then begin:
 
 See [roleplay-scene-template.md](references/roleplay-scene-template.md) for the role-play scene template.
 
-**How to play the buyer:**
-
-Use the loaded persona data to respond realistically:
+**Run the conversation with the shared role-play engine** — [roleplay-mechanics.md](../shared/roleplay-mechanics.md) defines how to play the buyer at each difficulty tier, session length (8-12 exchanges), and natural endings. Train-specific grounding:
 - Reference real pain points from the persona entity
-- Raise real objections from conversation findings data
-- React based on difficulty level:
-  - **Friendly**: Engaged, asks questions, shares information willingly
-  - **Skeptical**: Needs proof, challenges claims, asks "why should I care?"
-  - **Hostile**: Short answers, pushes on price, questions ROI, brings up competitors
-- Respond naturally to what the user says — don't just cycle through objections
-- If the user makes a strong point, acknowledge it (even skeptical buyers respond to good selling)
-- If the user fumbles, the buyer gets more distant/disengaged
-
-**End the conversation after 8-12 exchanges** with a natural conclusion:
-- Friendly: "This sounds interesting, let's set up a follow-up"
-- Skeptical: "I need to think about it" or "Send me some materials"
-- Hostile: "I don't think this is for us" (unless the user sold well)
+- Raise real objections from conversation findings data (`list_findings`)
+- In competitive scenarios, use the competitor entity's strengths as the buyer's talking points
 
 #### Step RP-4: Scorecard
 
-After the role-play ends, provide detailed feedback:
+After the role-play ends, provide detailed feedback following the scorecard mechanics in [roleplay-mechanics.md](../shared/roleplay-mechanics.md):
 
 See [roleplay-scorecard-template.md](references/roleplay-scorecard-template.md) for the role-play scorecard template.
 
@@ -240,6 +228,8 @@ list_all_entities({ entityType: "use_case" })
 
 #### Step Q-3: Run the Quiz
 
+Run questions with the shared quiz engine — [roleplay-mechanics.md](../shared/roleplay-mechanics.md) defines question pacing, per-answer grading, and running-score display.
+
 See [quiz-formats.md](references/quiz-formats.md) for the rapid fire, scenario-based, and deep dive quiz format templates with question types per topic.
 
 #### Step Q-4: Quiz Results
@@ -283,6 +273,10 @@ list_motions()
 list_motion_icps({ motionOId: "<motion_oId>" })
 find_motion_icp({ motionIcpOId: "<motion_icp_oId>", includeLearnings: true })
 
+# For the "A Motion" topic, also walk the Motion's playbooks
+list_motion_playbooks({ motionOId: "<motion_oId>" })
+get_motion_playbook({ motionPlaybookOId: "<mp_oId>" })  // Default + any Custom playbooks
+
 # Load real conversation examples
 list_findings({
   query: "<topic>",
@@ -309,8 +303,6 @@ See [guided-learning-template.md](references/guided-learning-template.md) for th
 
 ### Conversation Evidence
 - `list_findings` - Real objections, pain points, and signals from calls/emails
-- `list_events` - Deal outcomes (win/loss evidence for coaching)
-- `get_event_detail` - Specific interaction details for training examples
 
 ### Content Generation
 - `generate_content` - Generate scenario descriptions, coaching feedback
@@ -352,6 +344,7 @@ See [guided-learning-template.md](references/guided-learning-template.md) for th
 
 ## Related Skills
 
+- `/octave:deal-coach` - Methodology-specific practice (Resonate → Elevate → Compel) with coaching microsites, decks, and quizzes
 - `/octave:enablement` - Generate training materials (cheat sheets, objection guides, discovery banks)
 - `/octave:battlecard` - Deep competitive intelligence for competitive training
 - `/octave:insights` - Surface real field intelligence to inform training

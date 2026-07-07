@@ -1,6 +1,7 @@
 ---
 name: signals
-description: Morning intelligence briefing that surfaces the deals, patterns, and signals demanding attention right now. Use when user says "what should I focus on", "morning briefing", "what happened", "signals", "what needs attention", "daily update", or asks what changed since they last checked. Flips from pull-based to push-based — the data tells you what to work on.
+description: Morning intelligence briefing that surfaces the deals and signals demanding attention right now. Use when user says "what should I focus on", "morning briefing", "what happened", "signals", "what needs attention", "daily update", or asks what changed since they last checked. Flips from pull-based to push-based — the data tells you what to work on.
+argument-hint: "[--period today|3d|week|2w] [--focus deals|patterns|pipeline|content] [--segment <name>] [--motion <name>]"
 ---
 
 # /octave:signals - Morning Intelligence Briefing
@@ -36,35 +37,26 @@ When the user runs `/octave:signals`:
 
 ### Step 1: Gather All Signal Data
 
-Run these queries **in parallel** to gather the full picture. Use the period option to set date ranges (default: last 7 days).
+Run these queries **in parallel** to gather the full picture. Use the period option to set date ranges (default: last 7 days). Note the call shapes: `list_events` takes event types inside `filters`; `list_findings` requires a natural-language `query` with any filters inside `eventFilters`.
 
 **A. Recent Events (activity stream)**
 ```
 list_events({
-  eventTypes: ["CALL_TRANSCRIPT", "EMAIL_SENT", "EMAIL_REPLY_RECEIVED", "DEAL_WON", "DEAL_LOST", "DEAL_STAGE_CHANGE"],
-  dateRange: { start: "<period start>", end: "<today>" },
-  limit: 100
+  startDate: "<period start>",
+  endDate: "<today>",
+  limit: 100,
+  filters: {
+    eventTypes: ["CALL_TRANSCRIPT", "EMAIL_SENT", "EMAIL_REPLY_RECEIVED", "DEAL_WON", "DEAL_LOST", "OPPORTUNITY_CREATED", "MEETING_BOOKED"]
+  }
 })
 ```
 
-**B. All Finding Types (signal extraction)**
+**B. Current Period Findings (signal extraction)**
 ```
 list_findings({
-  extractionTypes: [
-    "CALL_EXTERNAL_OBJECTIONS",
-    "CALL_EXTERNAL_BUSINESS_PROBLEMS",
-    "CALL_EXTERNAL_QUESTIONS_OR_CONFUSION_ABOUT_OFFERING",
-    "CALL_EXTERNAL_COMPETITORS_TO_OUR_OFFERING",
-    "CALL_INTERNAL_VALUE_PROP_PRESENTATIONS",
-    "CALL_INTERNAL_PROOF_POINTS",
-    "CALL_INTERNAL_USE_CASES_BROUGHT_UP",
-    "EMAIL_OBJECTION",
-    "EMAIL_COMPETITOR_MENTION",
-    "EMAIL_VALUE_PROP",
-    "EMAIL_PAIN_POINT"
-  ],
-  dateRange: { start: "<period start>", end: "<today>" },
-  groupBy: "extractionType",
+  query: "objections, pain points, questions or confusion about the offering, competitor mentions, value props presented, proof points cited, use cases discussed",
+  startDate: "<period start>",
+  endDate: "<today>",
   limit: 200
 })
 ```
@@ -72,17 +64,14 @@ list_findings({
 **C. Previous Period Findings (for trend comparison)**
 ```
 list_findings({
-  extractionTypes: [
-    "CALL_EXTERNAL_OBJECTIONS",
-    "CALL_EXTERNAL_COMPETITORS_TO_OUR_OFFERING",
-    "CALL_INTERNAL_VALUE_PROP_PRESENTATIONS",
-    "CALL_INTERNAL_PROOF_POINTS"
-  ],
-  dateRange: { start: "<two periods ago>", end: "<period start>" },
-  groupBy: "extractionType",
+  query: "objections, competitor mentions, value props presented, proof points cited",
+  startDate: "<two periods ago>",
+  endDate: "<period start>",
   limit: 200
 })
 ```
+
+Bucket the returned findings by type yourself (objections, competitors, value props, proof points, and so on), then diff the current-period buckets against the previous-period buckets to detect trends.
 
 **D. Library Context (for gap detection)**
 ```
@@ -169,7 +158,7 @@ Suggest the appropriate follow-up skill based on signal type:
 | Signal | Detection | Priority |
 |--------|-----------|----------|
 | Champion silent | No reply from primary contact in >2x their avg response time | CRITICAL |
-| New competitor | Competitor extraction type appears for a deal where it wasn't before | CRITICAL |
+| New competitor | Competitor-mention finding appears for a deal where it wasn't before | CRITICAL |
 | Deal moved backward | Deal stage change event where new stage is earlier than previous | CRITICAL |
 | Deal advanced | Deal stage change event moving forward | HIGH |
 | Stalled deal | Active deal with no events in 14+ days | HIGH |
@@ -180,7 +169,7 @@ Suggest the appropriate follow-up skill based on signal type:
 ### Pattern Signals
 | Signal | Detection | Priority |
 |--------|-----------|----------|
-| Objection spike | >2x increase in extraction count vs previous period | HIGH |
+| Objection spike | >2x increase in objection findings vs previous period | HIGH |
 | New objection | Objection theme appears that wasn't in previous period | HIGH |
 | Competitor trending | Competitor mentions increased >50% vs previous period | HIGH |
 | Hot proof point | Proof point cited in >3 conversations this period | MEDIUM |

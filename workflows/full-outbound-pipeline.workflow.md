@@ -89,7 +89,7 @@ params:
 save_as: contacts
 description: Find people at the company matching the target persona titles and seniority level.
 
-If a persona was specified (or auto-detected from library), use its common job titles for the search. Otherwise, search for senior decision-makers.
+Resolve {{persona_titles}} first: if a persona was specified (or auto-detected from the library), fetch its common job titles via `list_all_entities({ entityType: "persona" })` + `get_entity` and use those. Otherwise, search for senior decision-maker titles.
 
 Present the contact list with names, titles, and LinkedIn profiles.
 
@@ -105,8 +105,7 @@ prompt: |
 
   Which contact(s) should I target?
   (Enter a number, multiple numbers separated by commas, or "all")
-
-Save the selected contact(s) for subsequent steps.
+save_as: selected_contact
 
 ### Step 6: Qualify Top Contact
 tool: qualify_person

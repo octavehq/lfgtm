@@ -1,6 +1,7 @@
 ---
 name: launch
 description: Product and feature launch planning with full content kit generation across channels and audiences. Use when user says "launch plan", "product launch", "feature announcement", "GTM plan for launch", "launch content kit", or mentions launching something new.
+argument-hint: "[description] [--type product|feature|update|partnership|expansion] [--persona <name>]"
 ---
 
 # /octave:launch - Launch Command Center
@@ -154,6 +155,8 @@ generate_content({
 })
 ```
 
+For the extended enablement package (objection guides, discovery question banks, cheat sheets), use /octave:enablement.
+
 **Customer FAQ:**
 ```
 generate_content({
@@ -244,11 +247,7 @@ create_motion_playbook({
 
 ## Generation Mode Note
 
-This skill uses Octave's `generate_content` and `generate_email` tools by default. Two alternatives:
-- **Saved agents**: Check for matching agents with `list_agents` when relevant. See `/octave:explore-agents`.
-- **Claude-direct**: Skip `generate_*` calls, gather Octave context, Claude writes directly. Offer when user wants more control.
-
-For the full interactive mode selector, use `/octave:generate`.
+See [generation-modes.md](../shared/generation-modes.md) for the default generation mode and the saved-agent / Claude-direct alternatives.
 
 ## MCP Tools Used
 

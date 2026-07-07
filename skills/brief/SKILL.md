@@ -1,9 +1,10 @@
 ---
 name: brief
-description: Account dossier and call prep document rendered as a scannable HTML reference page for internal use. Use when user says "brief me on [company]", "account dossier", "call prep doc", "background on [person]", or asks for an internal reference document. Do NOT use for customer-facing documents — use /octave:one-pager or /octave:proposal instead.
+description: Account dossier rendered as a scannable HTML reference page for internal use. Use when user says "brief me on [company]", "account dossier", "background on [person]", or asks for an internal reference document. Do NOT use for customer-facing documents — use /octave:one-pager or /octave:proposal instead — and for prep tuned to a specific upcoming meeting, use /octave:meeting-prep.
+argument-hint: "<company-or-email> [--for <occasion>] [--style <preset>] [--research <deep|standard|fast>] [--skip-review]"
 ---
 
-# /octave:brief - Account Dossier & Call Prep Builder
+# /octave:brief - Account Dossier Builder
 
 Build beautiful, self-contained HTML account briefs powered by your Octave GTM intelligence. Designed to sit on your second monitor during a call or to review before a meeting. Unlike plain-text research, briefs render as scannable, styled reference documents with sticky navigation, collapsible sections, and print-friendly layout — grounded in real enrichment data, Motion ICP narrative, proof points, and conversation intel.
 
@@ -11,30 +12,22 @@ This is an **internal** document for the sales team, not customer-facing collate
 
 **Key differentiators:**
 - vs `/octave:research` — research outputs plain text; brief renders it as a styled, scannable HTML document
-- vs `/octave:one-pager` — one-pager is customer-facing; brief is internal prep
+- vs `/octave:one-pager` — one-pager is customer-facing; brief is internal
+- vs `/octave:meeting-prep` — meeting-prep is coached prep for one specific conversation; brief is a static account reference
 - vs `/octave:deck` — deck is a slide presentation; brief is a scrollable reference document
 
 ## On-brand styling — internal doc, so default to YOUR brand
 
-A brief is an **internal reference doc**, so it should look like the **sender's own brand** (your workspace's company), not the target account's — the prospect's brand is for *customer-facing* assets. Don't ask whose brand; default to your own.
-
-1. Resolve the **sender** (`get_workspace_company`) to a `<slug>` and check for a cached kit at `~/.octave/brands/<sender-slug>/manifest.json`.
-2. **If the sender's kit exists → use it by default** (no need to ask): inline its `tokens.css` (`:root` + `@font-face`) **and** `get-brand-components/assets/kit_base.css`, follow `brand-kit.md` → **Signature moves**, and reuse the real **logo**.
-3. **If no sender kit is cached →** offer to capture it once (`/octave:get-brand-components <your-domain>`), or fall back to a readable `--style` preset.
-4. Respect an explicit `--style` or brand override (a target-company kit only if the user asks for it).
-
-> The brand kit is the strongest styling signal — when one is available, prefer it over generic `--style` presets. See the `get-brand-components` skill for the kit format, token contract, and renderer.
+A brief is an **internal reference doc**, so it should look like the **sender's own brand** (your workspace's company), not the target account's — don't ask whose brand. Resolve the sender with `get_workspace_company` and follow the kit lookup and defaults in [../shared/brand-kit-usage.md](../shared/brand-kit-usage.md). Respect an explicit `--style` or brand override.
 
 ## Review pass (runs by default)
 
-After generating, **run the review pass by default** — don't wait to be asked. In interactive mode, tell the user at intake that you'll review before finishing (recommended) and that they can opt out with `--skip-review` or "skip review". Follow [`get-brand-components/references/asset-review.md`](../get-brand-components/references/asset-review.md): the always-on **preflight** (em dashes, broken images/logos, link `target`, themed scrollbars, leaked internals) plus the **visual pass** (render/screenshot, inspect the pixels across the dimensions — groundedness/verification matters most — report a short located scorecard, fix, re-verify). The visual pass defaults off only in a `--research fast` run; the preflight always runs.
-
-When generating, follow the output rules in [`get-brand-components/references/presentation-principles.md`](../get-brand-components/references/presentation-principles.md) — the generation-time companion to the review pass (label every value, no tool names in the output, confirmed vs hypothesized, lean and deal-specific).
+Run the default review pass after generating — the always-on preflight plus the visual render-and-inspect pass, per [../shared/review-pass.md](../shared/review-pass.md). Opt out with `--skip-review`; the visual pass defaults off in a `--research fast` run. When generating, follow the output rules in [../shared/presentation-principles.md](../shared/presentation-principles.md).
 
 ## Usage
 
 ```
-/octave:brief <target> [--for <occasion>] [--style <preset>] [--research <deep|standard|fast>]
+/octave:brief <target> [--for <occasion>] [--style <preset>] [--research <deep|standard|fast>] [--skip-review]
 ```
 
 ## Examples
@@ -105,82 +98,10 @@ The research layers **live external web** (`deep_web_research`, `scrape_website`
 
 Based on the target and occasion, use Octave MCP tools to build a complete intelligence picture. **Tell the user what you're researching and why.**
 
-**Call as many tools as needed to build a thorough brief.** The best briefs layer multiple sources — company enrichment + person enrichment + Motion ICP narrative + proof points + conversation intel all combine to create a document grounded in real data. Don't stop at one tool when several would give you a stronger brief.
+**Call as many tools as needed to build a thorough brief.** The best briefs layer multiple sources — company enrichment + person enrichment + Motion ICP narrative + proof points + conversation intel all combine to create a document grounded in real data. Not every tool applies to every brief; pick the combination that gives you the richest context for the occasion and target:
 
-Not every tool applies to every brief. Use your judgment about which are relevant to *this specific* situation. The tables below show what's available — pick the combination that gives you the richest context for the occasion and target.
-
-**List vs Search — when to use which:**
-
-| Tool | Purpose | Use when... |
-|------|---------|-------------|
-| `list_all_entities({ entityType })` | Fetch all entities of a type (minimal fields) | You want a quick inventory — "show me all our competitors" |
-| `list_entities({ entityType })` | Fetch entities with full data (paginated) | You need the actual content — "get full proof point details" |
-| `get_entity({ oId })` | Deep dive on one specific entity | You found something relevant and need the complete picture |
-| `search_knowledge_base({ query })` | Semantic search across library + resources | You have a concept or question — "how do we position for healthcare?" |
-| `list_resources()` / `search_resources({ query })` | Uploaded docs, URLs, Google Drive files | You need reference material, uploaded assets, or source docs |
-
-**Rule of thumb:** Use `list_*` when you know *what type* of thing you want. Use `search_*` when you know *what topic* you're looking for.
-
-**Follow-up briefs — ground them in what actually happened:**
-
-If this brief follows a previous interaction with the account (follow-up, QBR, deal review), pull findings and events to anchor the brief in real data rather than generic positioning:
-
-- `list_findings({ query: "<company or contact>", startDate: "<relevant period>" })` — surfaces what was actually said in calls: objections raised, features requested, pain points confirmed, competitor mentions
-- `list_events({ filters: { accounts: ["<account_oId>"] } })` — deal stage changes, meetings held, emails sent — shows the journey so far
-- `get_event_detail({ eventOId })` — deep dive on specific events (e.g., the discovery call, the demo) to pull exact context
-
-This turns a generic "here's what we know" brief into "here's what happened and what to do about it" — much more useful walking into the next conversation.
-
----
-
-#### For Person-Targeted Briefs
-
-Start with person and company enrichment, then pull positioning context:
-
-| What you need | Tool | When to use |
-|---------------|------|-------------|
-| Person deep-dive | `enrich_person({ person: { email, firstName, lastName, companyDomain } })` | Always for person-targeted briefs — gives background, role, priorities |
-| Company profile | `enrich_company({ companyDomain })` | Always — gives industry, size, tech stack, signals |
-| ICP fit (person) | `qualify_person({ person: { ... } })` | When you need persona match and fit assessment |
-| ICP fit (company) | `qualify_company({ companyDomain })` | When you need segment match and ICP scoring |
-| Additional contacts | `find_person({ searchMode: "people", companyDomain, fuzzyTitles })` | When you want to map the broader buying committee |
-| Find Motion | `list_motions()` | List all Motions to find the relevant offering + motion type |
-| Persona × segment matrix | `list_motion_icps({ motionOId })` | See the persona × segment cells available under a Motion |
-| Motion ICP narrative | `find_motion_icp({ motionIcpOId, includeLearnings: true })` | Pull the full Target ICP overview, Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References, and Learning Loop learnings for the target persona × segment |
-| Proof points | `list_entities({ entityType: "proof_point" })` | Fetch all proof points with full data — metrics, quotes, logos |
-| References | `list_entities({ entityType: "reference" })` | Customer references with full details |
-| Competitive context | `search_knowledge_base({ query: "<signals>", entityTypes: ["competitor"] })` | When competitor is mentioned or likely in the deal |
-| Recent intel | `list_findings({ query: "<company or person>", startDate: "<90 days ago>" })` | Conversation-based insights from past interactions |
-| Deal history | `list_events({ filters: { accounts: ["<account_oId>"] } })` | Timeline of deal events |
-| Synthesized prep | `generate_call_prep({ companyDomain })` | Quick comprehensive brief to use as a starting point |
-
----
-
-#### For Company-Targeted Briefs
-
-Start with company enrichment and contact discovery:
-
-| What you need | Tool | When to use |
-|---------------|------|-------------|
-| Company profile | `enrich_company({ companyDomain })` | Always — gives industry, size, tech stack, funding, signals |
-| ICP fit scoring | `qualify_company({ companyDomain })` | Always — segment match, fit score, fit reasons |
-| Key contacts | `find_person({ searchMode: "people", companyDomain, fuzzyTitles })` | Find stakeholders to populate the Stakeholders section |
-| Enrich contacts | `enrich_person({ person: { ... } })` | Deep dive on each key contact found |
-| All Motions | `list_motions()` | Quick scan to find the right Motion (offering + motion type) |
-| Motion ICP matrix | `list_motion_icps({ motionOId })` | See the persona × segment matrix under a Motion |
-| Motion ICP narrative | `find_motion_icp({ motionIcpOId, includeLearnings: true })` | Full Target ICP overview, Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References, plus Learning Loop learnings for the target cell |
-| Custom Motion Playbook details | `get_motion_playbook({ motionPlaybookOId })` | When a Custom Motion Playbook (Thematic / Milestone / Account / Competitive) layers on the relevant Motion |
-| All competitors | `list_all_entities({ entityType: "competitor" })` | Quick scan of competitive landscape |
-| Competitor details | `get_entity({ oId })` | Deep dive on a specific relevant competitor |
-| Proof points | `list_entities({ entityType: "proof_point" })` | Full proof points for the evidence section |
-| References | `list_entities({ entityType: "reference" })` | Customer references for social proof |
-| Topic search | `search_knowledge_base({ query: "<industry> <use case>", entityTypes: ["proof_point", "reference"] })` | Find proof points relevant to their specific situation |
-| Recent intel | `list_findings({ query: "<company>", startDate: "<90 days ago>" })` | Conversation signals from calls and meetings |
-| Deal events | `list_events({ filters: { accounts: ["<account_oId>"] } })` | Full deal history and timeline |
-| Event details | `get_event_detail({ eventOId })` | Deep dive on specific past interactions |
-| Uploaded resources | `search_resources({ query: "<company or industry>" })` | Relevant uploaded docs and assets |
-
----
+- **List-vs-search guidance, follow-up grounding (findings/events), and the common tool tables:** [../shared/octave-research-toolkit.md](../shared/octave-research-toolkit.md). If this brief follows a previous interaction (follow-up, QBR, deal review), use the follow-up-grounding tools there.
+- **Person-targeted and company-targeted tool tables:** [references/tool-reference.md](references/tool-reference.md).
 
 **Output of this step:** Present a content outline to the user for approval before generating:
 
@@ -231,7 +152,7 @@ Does this look good? I can:
 
 ### Step 3: Style Selection
 
-The brief uses the same CSS variable / style preset system as `/octave:deck`. Full preset definitions are in the deck skill's [style-presets.md](../deck/references/style-presets.md).
+The brief uses the same CSS variable / style preset system as the other document skills. Full preset definitions are in [../shared/style-presets.md](../shared/style-presets.md).
 
 Briefs default to readability-optimized presets. If `--style` was not provided, ask:
 
@@ -259,7 +180,7 @@ Your choice (or press Enter for midnight-pro):
 | Deal review | `paper-minimal` |
 | General | `midnight-pro` |
 
-If the user selects "Use my brand," follow the brand discovery flow from the deck skill (website extraction via browser-use or WebFetch, manual fallback). If they select "Match my deck," ask for the deck file path and extract its CSS variables.
+If the user selects "Use my brand," follow the brand extraction tiers in [../shared/brand-kit-usage.md](../shared/brand-kit-usage.md). If they select "Match my deck," ask for the deck file path and extract its CSS variables.
 
 ### Step 4: Generate HTML
 
@@ -275,7 +196,7 @@ Build a single self-contained HTML file. The brief is a scrollable reference doc
 
 Example: `/octave:brief acme.com --for discovery` -> `.octave-briefs/acme-discovery-2026-02-11/acme-discovery.html`
 
-The `.octave-briefs/` directory should be in `.gitignore`.
+Make sure `.octave-briefs/` is ignored by your project's `.gitignore` (an `.octave-*/` pattern covers all Octave output dirs) so generated briefs don't get committed.
 
 #### Document Sections (Full Dossier)
 
@@ -295,7 +216,7 @@ Not all sections appear in every brief. The occasion determines emphasis:
 
 1. **Header** — "Account Brief: [Company]" + generation date + occasion badge (pill label like "Discovery Prep" or "QBR Brief")
 2. **Company Snapshot** — Company name, logo (if available), industry, employee count, HQ location, funding stage, tech stack highlights, recent news/signals. Card-based layout.
-3. **ICP Fit** — Fit score with a visual progress bar, matched segment name, 3-5 key fit reasons as checkmarks, any red flags as warnings. **Show the composite score *and* the breakdown.** `qualify_company` returns sub-scores (product fit vs segment fit), and the composite can mislead: an account can be a strong *product* fit yet score low because it's **out of the segment definition by size or model** (too large, or B2C). Say which — "out-of-segment-by-size, strong product fit" reads very differently from "bad fit." Don't bury a strong product-fit signal under a low composite; if the account is out-of-segment but strategically worth pursuing, frame the wedge rather than just flashing a red number.
+3. **ICP Fit** — Fit score with a visual progress bar, matched segment name, 3-5 key fit reasons as checkmarks, any red flags as warnings. **Show the composite score *and* the breakdown** — see the `qualify_company` note in [../shared/octave-research-toolkit.md](../shared/octave-research-toolkit.md): an account can be a strong *product* fit yet score low because it's out of the segment definition by size or model; say which, and frame the wedge rather than just flashing a red number.
 4. **Key Stakeholders** — Cards for each person: name, title, LinkedIn URL, matched persona, inferred priorities, communication style notes. Highlight the primary contact.
 5. **Recommended Motion & angle** — the matching Motion / Motion ICP cell (plus any Custom Motion Playbook that layers on it), the strategic angle, and key themes to drive. Brief summary of the recommended approach.
 6. **Talking Points** — Occasion-specific content:
@@ -313,7 +234,7 @@ Not all sections appear in every brief. The occasion determines emphasis:
 
 #### HTML Architecture
 
-See [html-architecture.md](references/html-architecture.md) for the full HTML scaffold, inline CSS, and key differences from deck HTML.
+Build on the shared scaffold in [../shared/doc-scaffold.md](../shared/doc-scaffold.md); brief-specific components (occasion badge, stakeholder cards, fit bar, timeline, quick-reference sidebar) are in [html-architecture.md](references/html-architecture.md).
 
 #### Content Density Guidelines
 
@@ -371,39 +292,15 @@ Want me to:
 
 ## MCP Tools Used
 
-### Research & Enrichment
-- `enrich_company` — Full company intelligence profile
-- `enrich_person` — Full person intelligence report
-- `find_person` — Find contacts at a company by title/role
-- `find_company` — Find companies matching criteria
-- `qualify_company` — ICP fit scoring for a company
-- `qualify_person` — ICP fit scoring for a person
+Common research, library, signals, and generation tools: see [../shared/octave-research-toolkit.md](../shared/octave-research-toolkit.md). Brief-specific additions:
 
-### Library — Fetching Entities
-- `list_all_entities` — Quick scan of all entities of a type (minimal fields, no pagination)
-- `list_entities` — Fetch entities with full data and pagination (proof points, references, etc.)
-- `get_entity` — Deep dive on one specific entity
-- `list_motions` — List all Motions in the workspace
-- `list_motion_playbooks` — List Motion Playbooks (Default + Custom) under a Motion
-- `get_motion_playbook` — Full details for a Motion Playbook
-- `list_motion_icps` — List Motion ICP cells (persona × segment intersections) for a Motion
-- `find_motion_icp` — Full Motion ICP cell narrative (Target ICP overview, Operating landscape, Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References) plus Learning Loop learnings
-
-### Library — Searching
-- `search_knowledge_base` — Semantic search across library entities and resources
-- `list_resources` — Browse uploaded docs, URLs, and Google Drive files
-- `search_resources` — Semantic search across uploaded resources
-
-### Intelligence & Signals
-- `list_findings` — Recent conversation findings and insights
-- `list_events` — Deal events (stage changes, meetings, outcomes)
-- `get_event_detail` — Full details for a specific event
-
-### Content Generation
-- `generate_call_prep` — Synthesized prep brief (useful as a starting point)
-- `generate_content` — Generate positioning or messaging content
+- `get_workspace_company` — Resolve the sender's own company for brand styling
+- `deep_web_research` — Live web research for news and segment/market intel (deep/standard modes)
+- `scrape_website` — Verified, linkable facts from the company's own site
 
 ## Error Handling
+
+Standard responses (company/person not found, no matching Motion ICP cell, no findings, no proof points): see [../shared/octave-research-toolkit.md](../shared/octave-research-toolkit.md) → Standard error handling. Brief-specific:
 
 **Octave Connection Failed:**
 > Could not connect to your Octave workspace.
@@ -411,14 +308,6 @@ Want me to:
 > The brief builder needs Octave data to generate useful content. Without it, most sections would be empty.
 >
 > To reconnect: check your MCP configuration or run `/octave:workspace status`
-
-**Company Not Found:**
-> I couldn't find detailed intelligence for [domain].
->
-> Options:
-> 1. Check the domain spelling and try again
-> 2. Try a different domain or company name
-> 3. Provide company details manually and I'll structure the brief
 
 **Person Not Found:**
 > I couldn't find detailed information for [email/name].
@@ -428,27 +317,13 @@ Want me to:
 > 2. Search for them on LinkedIn (provide URL)
 > 3. Create a brief based on their title and company alone
 
-**No Matching Motion ICP:**
-> No Motion ICP cell matches this audience profile directly.
->
-> I'll use general positioning from the knowledge base. Consider creating a Motion for this offering, or layering a Custom Motion Playbook (Thematic / Milestone / Account / Competitive) onto an existing Motion to cover this segment.
-
-**No Findings Data:**
-> No conversation signals found for [company/person].
->
-> This may be a new prospect with no prior interactions. I'll skip the Recent Signals and Deal Timeline sections and focus on enrichment data, Motion ICP narrative, and proof points instead.
-
-**No Proof Points:**
-> No proof points found in your library.
->
-> The Proof Points section will be omitted. To strengthen future briefs, add case studies and customer references to your Octave library.
-
 ## Related Skills
 
 - `/octave:research` — Text-based research and prep (brief is the visual, rendered version)
+- `/octave:meeting-prep` — Coached prep for a specific upcoming meeting
 - `/octave:one-pager` — Customer-facing leave-behind document (brief is internal)
 - `/octave:deck` — Full slide presentation (brief is a reference document)
-- `/octave:battlecard-doc` — Competitive reference document (brief includes competitive context but is broader)
+- `/octave:battlecard --format doc` — Competitive reference document (brief includes competitive context but is broader)
 - `/octave:pipeline` — Deal-level coaching and pipeline strategy
 - `/octave:generate` — Generate outreach content with brand voice control
 - `/octave:insights` — Conversation intelligence deep dives

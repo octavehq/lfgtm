@@ -1,6 +1,7 @@
 ---
 name: explore-agents
 description: Browse, understand, and run your saved Octave agents. Use when user says "show my agents", "list agents", "run an agent", "which agents do I have", or asks about saved agent configurations.
+argument-hint: "[list|show|run|suggest] [\"<agent name>\"] [--to <email>] [--company <domain>]"
 ---
 
 # /octave:explore-agents - Agent Manager
@@ -71,7 +72,13 @@ list_agents({
 
 ### Subcommand: show <name>
 
-Show detailed information about an agent:
+Resolve the agent by name (via `list_agents` if needed), then fetch full details:
+
+```
+get_agent({ oId: "<agent_oId>" })
+```
+
+Present the configuration:
 
 ```
 Agent: Enterprise Cold Outreach
@@ -298,6 +305,7 @@ Your choice:
 
 ### Agent Management
 - `list_agents` - List all agents with optional type filter
+- `get_agent` - Full configuration details for one agent (used by `show`)
 
 ### Agent Execution
 - `run_email_agent` - Run email sequence agent
@@ -332,12 +340,11 @@ Your choice:
 **No Agents Configured:**
 > You don't have any agents configured yet.
 >
-> Agents are created in the Octave web app:
-> 1. Go to Agents in Octave
-> 2. Create a new agent
-> 3. Configure its settings
+> You can create one:
+> 1. In the Octave web app (Agents section), or
+> 2. Right here — I can call `create_agent` to set one up (and `update_agent` / `delete_agent` to manage it later)
 >
-> Once created, you can run them from here.
+> Once created, you can run agents from this skill.
 >
 > In the meantime, use /octave:generate for one-off content generation.
 

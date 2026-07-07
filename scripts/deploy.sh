@@ -50,10 +50,17 @@ if [[ -f "$INPUT" && "$INPUT" == *.html ]]; then
     cp "$INPUT" "$DEPLOY_DIR/index.html"
     PARENT_DIR=$(dirname "$INPUT")
 
-    # Parse the HTML for local file references (src="...", url('...'), href="...")
-    # and copy any referenced local files into the deploy directory
-    grep -oE '(src|href|url\()["'"'"']?[^"'"'"'>)]+' "$INPUT" 2>/dev/null | \
-        sed "s/^src=//; s/^href=//; s/^url(//; s/[\"']//g" | \
+    # Parse the HTML for local file references (src="...", srcset="...",
+    # url('...'), href="...") and copy any referenced local files into the
+    # deploy directory
+    {
+        grep -oE '(src|href|url\()["'"'"']?[^"'"'"'>)]+' "$INPUT" 2>/dev/null | \
+            sed "s/^src=//; s/^href=//; s/^url(//; s/[\"']//g"
+        # srcset lists multiple candidates ("img.png 1x, img@2x.png 2x") —
+        # split on commas and keep the URL of each candidate
+        grep -oE 'srcset=["'"'"'][^"'"'"']*' "$INPUT" 2>/dev/null | \
+            sed "s/^srcset=[\"']//" | tr ',' '\n' | awk 'NF {print $1}'
+    } | \
         grep -v '^http' | grep -v '^data:' | grep -v '^#' | grep -v '^/' | \
         sort -u | while read -r ref; do
             # Resolve the reference relative to the HTML file's directory
@@ -115,9 +122,21 @@ elif npx --yes vercel --version &>/dev/null 2>&1; then
     ok "Vercel CLI available via npx"
 else
     info "Installing Vercel CLI..."
-    npm install -g vercel
-    VERCEL_CMD="vercel"
-    ok "Vercel CLI installed"
+    if npm install -g vercel; then
+        VERCEL_CMD="vercel"
+        ok "Vercel CLI installed"
+    else
+        err "Could not install the Vercel CLI (npm install -g vercel failed)."
+        err "This usually means npm's global prefix needs elevated permissions."
+        err ""
+        err "Fix options:"
+        err "  1. Install with elevated permissions:  sudo npm install -g vercel"
+        err "  2. Use a user-level npm prefix:        npm config set prefix ~/.npm-global"
+        err "     (add ~/.npm-global/bin to PATH, then re-run this script)"
+        err "  3. Skip installation and use npx:      npx vercel login"
+        [[ "$CLEANUP_TEMP" == "true" ]] && rm -rf "$DEPLOY_DIR"
+        exit 1
+    fi
 fi
 
 # ─── Step 2: Check login status ───────────────────────────

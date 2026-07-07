@@ -4,19 +4,19 @@ description: Diagnose and tune qualification agents by testing against known-fit
 argument-hint: "[no args — the skill is fully interactive and walks through agent selection, section picking, test case collection, and diagnosis]"
 ---
 
-# /qual-doctor - Qualification Agent Tuner
+# /octave:qual-doctor - Qualification Agent Tuner
 
 Diagnose why your qualification agent scores prospects the way it does, then tune it with targeted changes to questions, weights, entity descriptions, and rationales. Think of it as a doctor's visit for your qualification setup: examine, diagnose, prescribe, verify.
 
 ## Instructions
 
-When the user runs `/qual-doctor`:
+When the user runs `/octave:qual-doctor`:
 
 ### Phase 1: Setup
 
 #### 1a: Resolve MCP Server
 
-The Octave MCP server provides tools like `verify_connection`, `get_entity`, `qualify_person`, `qualify_company`, `run_qualify_person_agent`, `run_qualify_company_agent`. From your tool list, identify the active Octave MCP server name (e.g. `octave-acme`, `octave-octave-clean`).
+The Octave MCP server provides tools like `verify_connection`, `get_entity`, `qualify_person`, `qualify_company`, `run_qualify_person_agent`, `run_qualify_company_agent`. From your tool list, identify the active Octave MCP server name (the name varies per install, e.g. `octave` or `octave-<workspace>`).
 
 #### 1b: Determine Execution Mode
 
@@ -231,20 +231,7 @@ A confirmed test set of 3-15 cases with expected score bands. Minimum: 1 GOOD + 
 
 **Calculate cost and confirm before execution.**
 
-Calculate credits per run from the agent config (or raw tool defaults):
-
-| Component | Credits | How to check |
-|-----------|---------|-------------|
-| Base (includes product/offering) | 1 | Always included |
-| + Segment section | +1 | `entities.segment.strategy === "BEST_MATCH"` |
-| + Persona section | +1 | `entities.persona.strategy === "BEST_MATCH"` |
-| + Motion section | +1 | `entities.motion.strategy === "BEST_MATCH"` |
-| + High effort mode | +4 | `tools.highEffortMode.enabled === true` |
-| + Deep research | +8 | `tools.parallelWebSearch.enabled === true` |
-| + CRM activity | +10 | `tools.crmActivity.enabled === true` |
-| + Custom task | +5 | `tools.customTask.enabled === true` |
-
-For raw tools (no saved agent), skip the cost estimate entirely — just confirm the test case count and proceed.
+Calculate credits per run from the agent config using the component table in [cost-reference.md](references/cost-reference.md). For raw tools (no saved agent), skip the cost estimate entirely — just confirm the test case count and proceed.
 
 **For saved agents**, show the calculated cost:
 ```
@@ -296,29 +283,7 @@ Running qualification...
 
 #### Present Results Grid
 
-Always label the score column with the section name to make clear this is a sub-score.
-
-**Score-only mode** (single entity):
-```
-RESULTS (Product Fit Sub-Score)
-===============================
-#   Company              Score   Expected   Verdict
-1   Snowflake              9     8-10       OK
-2   Acme Corp              8     4-6        TOO HIGH ←
-3   Mom's Pizza            2     1-3        OK
-4   DataDog                7     8-10       LOW ←
-```
-
-**Routing + Scoring mode** (multi-entity):
-```
-RESULTS (Persona Fit — Routing + Score)
-========================================
-#   Person              Matched Persona    Score   Expected Match      Exp. Score   Verdict
-1   Jane Doe            VP of Sales          9     VP of Sales         8-10         OK
-2   Bob Smith           VP of Sales          7     RevOps Leader       8-10         WRONG MATCH ←
-3   Lisa Chen           SDR Manager          3     SDR Manager         4-6          LOW ←
-4   Mark Lee            VP of Sales          2     None / bad fit      1-3          OK (low score = correct)
-```
+Always label the score column with the section name to make clear this is a sub-score. Show a results grid per mode — see [per-mismatch-deep-dive-templates.md](references/per-mismatch-deep-dive-templates.md) for the score-only and routing+scoring grid templates.
 
 In Routing + Scoring mode, mismatches fall into three categories:
 - **WRONG MATCH** — agent selected the wrong entity (routing problem)
@@ -382,31 +347,7 @@ Compare user annotations against the entity description:
 
 #### 4d: Ranked Recommendations Summary
 
-Consolidate all recommendations into a ranked list:
-
-```
-RECOMMENDATIONS (ranked by expected impact)
-============================================
-
-1. [HIGH IMPACT] Add question: competitive tool usage
-   Type: New BAD fit question, weight HIGH
-   Fixes: Acme Corp (#2), SimilarCo (#5)
-   Expected effect: Drops competitor-users by 1-2 points
-
-2. [MEDIUM IMPACT] Update entity description: add competitive landscape
-   Type: Entity description change
-   Fixes: Supports recommendation #1, improves edge case interpretation
-   Expected effect: Better context for all competitive questions
-
-3. [MEDIUM IMPACT] Archive Q7: "50+ employees"
-   Type: Remove non-differentiating question
-   Fixes: Reduces noise across all cases
-   Expected effect: Slightly lowers scores for very large companies
-
-4. [LOW IMPACT] Reweight Q4: "Uses no-code automation tools" → MEDIUM
-   Type: Weight change
-   Fixes: Reduces score volatility from low-confidence answers
-```
+Consolidate all recommendations into a single list ranked by expected impact. Each entry carries: impact level (HIGH/MEDIUM/LOW), change type (new question, description change, archive, reweight), which test cases it fixes, and the expected effect on scores. See [per-mismatch-deep-dive-templates.md](references/per-mismatch-deep-dive-templates.md) for the ranked recommendations template.
 
 #### 4e: Apply Changes
 
@@ -458,29 +399,7 @@ Applied change 3 of 3: Archived Q7 "50+ employees"
 
 ### Phase 5: Verify
 
-Re-run ALL test cases with updated questions. Again, show the **sub-score** for the section being tuned.
-
-**Score-only mode:**
-```
-BEFORE / AFTER (Product Fit Sub-Score)
-======================================
-#   Company         Before   After   Expected    Change
-1   Snowflake         9       9      8-10        — stable
-2   Acme Corp         8       5      4-6         ↓3 FIXED
-3   Mom's Pizza       2       1      1-3         — stable
-4   DataDog           7       9      8-10        ↑2 FIXED
-```
-
-**Routing + Scoring mode:**
-```
-BEFORE / AFTER (Persona Fit — Routing + Score)
-===============================================
-#   Person          Before Match → After Match    Before → After   Expected              Verdict
-1   Jane Doe        VP Sales → VP Sales             9 → 9          VP Sales, 8-10        stable
-2   Bob Smith       VP Sales → RevOps Leader         7 → 8          RevOps Leader, 8-10   ROUTING FIXED
-3   Lisa Chen       SDR Mgr → SDR Mgr                3 → 5          SDR Mgr, 4-6          SCORE FIXED
-4   Mark Lee        VP Sales → VP Sales               2 → 2          bad fit, 1-3          stable
-```
+Re-run ALL test cases with updated questions. Again, show the **sub-score** for the section being tuned, in a before/after grid per mode — see [wrap-up-summary-templates.md](references/wrap-up-summary-templates.md) for the score-only and routing+scoring before/after grid templates.
 
 If still mismatches:
 ```
@@ -507,24 +426,7 @@ See [wrap-up-summary-templates.md](references/wrap-up-summary-templates.md) for 
 
 ## Cost Reference
 
-Credits per qualification run = sum of active components:
-
-| Component | Credits |
-|-----------|---------|
-| Base (includes product/offering) | 1 |
-| + Segment section | +1 |
-| + Persona section | +1 |
-| + Motion section | +1 |
-| + High effort mode | +4 |
-| + Deep research | +8 |
-| + CRM activity | +10 |
-| + Custom task | +5 |
-
-`update_entity` is free (no credit cost).
-
-**Example**: Agent with product + segment active, no tools = 2 credits/run. 7 cases × 2 rounds = 28 credits.
-
-Always calculate and show exact cost before executing test runs.
+See [cost-reference.md](references/cost-reference.md) for the credits-per-run component table and a worked example. Always calculate and show exact cost before executing test runs; `update_entity` is free.
 
 ## MCP Tools Used
 
@@ -544,36 +446,9 @@ Always calculate and show exact cost before executing test runs.
 ### Write
 - `update_entity` — modify qualifying questions, weights, entity descriptions
 
-## Entity qualifyingQuestions Structure
+## Data Structures
 
-Each entity's `qualifyingQuestions[]` array contains objects with:
-- `question` (string) - The question text
-- `weight` (string) - "HIGH" | "MEDIUM" | "LOW" | "INSTANT_DISQUALIFIER"
-- `fitType` (string) - "GOOD" (should answer Yes for good fits) | "BAD" (should answer Yes for bad fits)
-- `rationale` (string) - Guides the agent's interpretation of the question
-- `archivedAt` (string|null) - null = active, timestamp = archived (used as negative example)
-
-## Qualification Response Structure
-
-Each qualification response includes per-section results. Each section contains:
-- `oId`, `name`, `description` - The selected entity
-- `qualification.score` (number 1-10) - Section score
-- `qualification.rationale` (string) - Section-level explanation
-- `qualification.answers[]` - Per-question breakdown:
-  - `question` (string) - Question text
-  - `answer` (string) - "Yes" or "No"
-  - `rationale` (string) - Why the agent answered this way
-  - `confidence` (string) - "HIGH" | "MEDIUM" | "LOW"
-  - `weight` (string) - "HIGH" | "MEDIUM" | "LOW" | "INSTANT_DISQUALIFIER"
-
-## Agent Configuration Reference
-
-Saved qualification agents have these tuning-relevant settings:
-- `data.commonContext.entities.{type}.strategy` - "BEST_MATCH" (active) or "NONE" (disabled)
-- `data.scoringContext.{section}.skipContributingToOverallScore` - Exclude from overall score
-- `data.tools.parallelWebSearch.enabled` - Deep research (checks news, articles, job postings)
-- `data.tools.highEffortMode.enabled` - More compute for matching/scoring
-- `data.model` - NOTE/PULSE/ECHO/HARMONY/CHORUS/SYMPHONY
+See [data-structures.md](references/data-structures.md) for the entity `qualifyingQuestions[]` structure, the qualification response structure (per-section scores and per-question `answers[]`), and the agent configuration fields relevant to tuning.
 
 ## Error Handling
 
@@ -593,7 +468,7 @@ Show available agents and ask user to pick.
 ## Examples
 
 ```
-/qual-doctor
+/octave:qual-doctor
 ```
 
 The skill is fully interactive — it walks you through agent selection, section picking, test case collection, and diagnosis.

@@ -1,6 +1,7 @@
 ---
 name: generate
 description: Generate GTM content (emails, LinkedIn messages, call prep) using saved agents, Octave AI, or Claude direct — your choice. Use when user says "generate an email", "write a LinkedIn message", "prep for a call", "create outreach", or asks for single-asset content generation with mode selection.
+argument-hint: "[email|linkedin|call-prep|content] [--to <person>] [--about <topic>] [--mode agent|octave|claude]"
 ---
 
 # /octave:generate - GTM Content Generator
@@ -65,17 +66,7 @@ Three ways to generate content, each with different trade-offs:
 | Octave Default | Balanced quality + library grounding | `generate_email` / `generate_content` / `generate_call_prep` |
 | Claude Direct | Maximum control, rapid iteration, custom formats | Fetch Octave context, Claude generates directly |
 
-### Smart Inference Rules
-
-Skip the mode question when intent is obvious:
-
-- **"Run my cold outreach agent"** / **"use the enterprise agent"** → Saved Agent
-- **"Generate an email for..."** / **"create a sequence"** → Octave Default
-- **"Write me an email using our Motion narrative"** / **"draft this yourself"** / **"I want more control"** → Claude Direct
-
-### When Ambiguous, Ask (via AskUserQuestion tool)
-
-When the mode is not obvious from the request, **always use the `AskUserQuestion` tool** to present the three options as a UI selector. Never silently default to one mode — let the user choose.
+Mode selection rules (inference + when to ask) are in Step 2 below.
 
 ## Instructions
 
@@ -92,9 +83,10 @@ Identify:
 
 ### Step 2: Determine Generation Mode
 
-Apply smart inference rules from the request wording:
+Apply smart inference rules from the request wording — skip the mode question when intent is obvious:
 - **"Run my cold outreach agent"** / **"use the enterprise agent"** → Saved Agent (skip the question)
-- **"Draft this yourself"** / **"I want more control"** / **"write it yourself"** → Claude Direct (skip the question)
+- **"Generate an email for..."** / **"create a sequence"** → Octave Default (skip the question)
+- **"Write me an email using our Motion narrative"** / **"draft this yourself"** / **"I want more control"** / **"write it yourself"** → Claude Direct (skip the question)
 
 **If mode is not obvious from the request, use the `AskUserQuestion` tool** to ask — do NOT default silently:
 

@@ -55,10 +55,11 @@ The Play                         — NOT collapsible. Full-width gradient footer
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>[Deal Name] — Deal Coaching: [Stage Name]</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=[Font Query]" rel="stylesheet">
   <style>
+    /* Self-contained: no external font requests. Use a brand kit's embedded
+       @font-face (inlined data URIs) when available, otherwise system stacks:
+       --font-display / --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif
+       --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace */
     :root {
       /* Populated from style preset or brand extraction */
     }
@@ -1126,10 +1127,11 @@ NOT a collapsible section. Full-width gradient footer with two parts: strategic 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>[Company] — Deal Coaching [Stage Name]</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=[Font Query]" rel="stylesheet">
   <style>
+    /* Self-contained: no external font requests. Use a brand kit's embedded
+       @font-face (inlined data URIs) when available, otherwise system stacks:
+       --font-display / --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif
+       --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace */
     :root {
       /* Populated from style preset */
     }

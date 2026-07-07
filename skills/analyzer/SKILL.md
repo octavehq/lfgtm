@@ -1,6 +1,7 @@
 ---
 name: analyzer
-description: Analyze email threads, call transcripts, and conversations for resonance, adherence to messaging, and competitive differentiation. Use when user says "analyze this call", "how did the email land", "score this thread", "conversation analysis", or pastes conversation content to evaluate.
+description: Analyze a single email thread, call transcript, or conversation for resonance, adherence to messaging, and competitive differentiation. Use when user says "analyze this call", "how did the email land", "score this thread", "conversation analysis", or pastes conversation content to evaluate. Do NOT use for aggregate trends across many conversations — use /octave:insights instead.
+argument-hint: "[--type email|call|chat]"
 ---
 
 # /octave:analyzer - Conversation Analysis
@@ -294,7 +295,7 @@ Me: Did you have a chance to review the proposal?
 >
 > I'll analyze against general best practices, but for better insights:
 > - Tell me which Motion (offering + motion type) this falls under
-> - Or create a Motion for this offering if one don't exist yet
+> - Or create a Motion for this offering if one doesn't exist yet
 
 ## Related Skills
 

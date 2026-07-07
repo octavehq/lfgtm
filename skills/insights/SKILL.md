@@ -1,6 +1,7 @@
 ---
 name: insights
-description: Surface findings, trends, and patterns from calls, emails, and deals. Use when user says "what are prospects saying", "common objections", "conversation trends", "field intelligence", "what patterns", or asks about aggregate conversation insights. Do NOT use for deal-level win/loss analysis — use /octave:wins-losses instead.
+description: Surface findings, trends, and conversation patterns from calls, emails, and deals. Use when user says "what are prospects saying", "common objections", "conversation trends", "conversation patterns", "field intelligence", or asks about aggregate conversation insights. Do NOT use for a single pasted conversation (use /octave:analyzer) or deal-level win/loss analysis (use /octave:wins-losses).
+argument-hint: "[--type <finding-type>] [--period <range>] [--segment <name>] [--persona <name>] [--company <domain>]"
 ---
 
 # /octave:insights - Field Intelligence
@@ -55,37 +56,35 @@ Your choice (or just ask a question):
 
 ### Step 2: Query Events and Findings
 
-Use the MCP tools to gather data:
+Use the MCP tools to gather data. `list_events` takes event types inside `filters`; `list_findings` requires a natural-language `query` describing the kind of findings you want, with entity and outcome filters inside `eventFilters`.
 
 **For Overview:**
 ```
 # Get recent events
 list_events({
-  eventTypes: ["CALL_TRANSCRIPT", "EMAIL_SENT", "EMAIL_REPLY_RECEIVED"],
-  dateRange: { start: "<30 days ago>", end: "<today>" },
-  limit: 50
+  startDate: "<30 days ago>",
+  endDate: "<today>",
+  limit: 50,
+  filters: { eventTypes: ["CALL_TRANSCRIPT", "EMAIL_SENT", "EMAIL_REPLY_RECEIVED"] }
 })
 
-# Get finding aggregates
+# Get findings across the main types
 list_findings({
-  extractionTypes: [
-    "CALL_EXTERNAL_OBJECTIONS",
-    "CALL_EXTERNAL_BUSINESS_PROBLEMS",
-    "CALL_EXTERNAL_QUESTIONS_OR_CONFUSION_ABOUT_OFFERING",
-    "CALL_EXTERNAL_COMPETITORS_TO_OUR_OFFERING",
-    "CALL_INTERNAL_VALUE_PROP_PRESENTATIONS"
-  ],
-  dateRange: { start: "<30 days ago>", end: "<today>" },
-  groupBy: "extractionType",
+  query: "objections, pain points, questions about the offering, competitor mentions, value props presented",
+  startDate: "<30 days ago>",
+  endDate: "<today>",
   limit: 100
 })
 ```
 
+Group the returned findings by type yourself (objections, pain points, questions, competitors, value props) before presenting the overview.
+
 **For Specific Type (e.g., Objections):**
 ```
 list_findings({
-  extractionTypes: ["CALL_EXTERNAL_OBJECTIONS", "EMAIL_OBJECTION"],
-  dateRange: { start: "<period start>", end: "<period end>" },
+  query: "objections and pushback raised by prospects in calls and emails",
+  startDate: "<period start>",
+  endDate: "<period end>",
   limit: 50
 })
 ```
@@ -93,9 +92,9 @@ list_findings({
 **With Persona/Segment Filter:**
 ```
 list_findings({
-  extractionTypes: ["<types>"],
-  entityMatches: {
-    personaOIds: ["<persona_oId>"]
+  query: "<finding type description>",
+  eventFilters: {
+    personas: ["<persona_oId>"]
   },
   limit: 50
 })
@@ -198,15 +197,17 @@ If yes, use `update_entity` to apply.
 
 ## Finding Types Reference
 
-| Type | Description | Extraction Types |
-|------|-------------|------------------|
-| objections | Pushback and concerns raised | `CALL_EXTERNAL_OBJECTIONS`, `EMAIL_OBJECTION` |
-| pain-points | Problems prospects mention | `CALL_EXTERNAL_BUSINESS_PROBLEMS`, `EMAIL_PAIN_POINT` |
-| questions | Questions asked about offering | `CALL_EXTERNAL_QUESTIONS_OR_CONFUSION_ABOUT_OFFERING`, `EMAIL_QUESTION` |
-| competitors | Competitor mentions | `CALL_EXTERNAL_COMPETITORS_TO_OUR_OFFERING`, `EMAIL_COMPETITOR_MENTION` |
-| value-props | Value props that resonated | `CALL_INTERNAL_VALUE_PROP_PRESENTATIONS`, `EMAIL_VALUE_PROP` |
-| use-cases | Use cases discussed | `CALL_INTERNAL_USE_CASES_BROUGHT_UP`, `EMAIL_USE_CASE` |
-| proof-points | Proof points referenced | `CALL_INTERNAL_PROOF_POINTS`, `EMAIL_PROOF_POINT` |
+Express the finding type in the `list_findings` query text:
+
+| Type | Description | Example query |
+|------|-------------|---------------|
+| objections | Pushback and concerns raised | "objections and pushback raised by prospects" |
+| pain-points | Problems prospects mention | "business problems and pain points prospects described" |
+| questions | Questions asked about offering | "questions or confusion about our offering" |
+| competitors | Competitor mentions | "competitors mentioned or compared against our offering" |
+| value-props | Value props that resonated | "value props presented and how prospects responded" |
+| use-cases | Use cases discussed | "use cases brought up in conversations" |
+| proof-points | Proof points referenced | "proof points and customer stories cited" |
 
 ## MCP Tools Used
 

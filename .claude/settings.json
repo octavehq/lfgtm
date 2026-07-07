@@ -1,7 +1,5 @@
 {
   "permissions": {
-    "allow": [
-      "mcp__octave-*__*"
-    ]
+    "allow": []
   }
 }

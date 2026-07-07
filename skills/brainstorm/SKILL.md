@@ -1,6 +1,7 @@
 ---
 name: brainstorm
 description: Brainstorm campaigns, Custom Motion Playbook angles, lead magnets, CTAs, and growth experiments using your GTM library. Use when user says "brainstorm ideas", "campaign ideas", "growth experiments", "what content should we create", or asks for creative ideation.
+argument-hint: "[topic — e.g., 'campaigns for enterprise', 'lead magnets', 'motion playbook pack', 'CTAs for CFOs']"
 ---
 
 # /octave:brainstorm - GTM Ideation Engine
