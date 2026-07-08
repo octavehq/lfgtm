@@ -31,6 +31,15 @@ Every operation routes through exactly one of two backends. Never mix them up:
 - **Never** use `update-artifact.sh` for metadata-only changes — that is `asset_update`'s job.
 - **Never** try to upload files via MCP — no such tool exists (intentionally).
 
+## MCP Tools Are Tool Calls (never bash)
+
+`assets_list`, `asset_generate_access_token`, `asset_update`, and every other `asset_*` tool are **tool calls**. You cannot reach them through bash or python.
+
+- **Never** write a script that echoes, simulates, curls, or "assumes" the result of an MCP tool. A check whose tool result is not in your transcript **did not happen**.
+- **Never** print "assuming no duplicates found" or "ready to proceed once token is available" — each of those is the signal that the next action is the missing tool call itself, right now.
+- The script headers mention `POST /api/v1/user/access-token` — that endpoint is for service operators with a service key. **You cannot call it.** Your ONLY token source is the `asset_generate_access_token` / `asset_refresh_access_token` tool calls.
+- **No helper scripts.** The 4 bundled scripts are the only shell this skill needs; the single permitted extra shell is the one-line staging `cp`/`rm` documented where it's used. Do not write wrappers, staging helpers, or scripts that print status instead of performing an action.
+
 ## Check Before Create (Cache Rule)
 
 The asset store doubles as a cache: the asset the user wants may already exist (created in another project, another session — or, as scoping widens, by a teammate). **Never create a new asset without checking first.**
@@ -63,6 +72,7 @@ Therefore:
 1. Mint the token via `asset_generate_access_token` **immediately before** each batch of bash script calls — after all MCP calls for this step are done.
 2. If any asset MCP call happens mid-flow, re-mint before the next script call.
 3. If a script returns 401: call `asset_refresh_access_token`, retry the script once.
+4. **STOP precondition:** before running ANY script you must hold an `accessToken` value returned by a tool call **in this conversation**. If you don't have one, the next action is the `asset_generate_access_token` tool call — not a script, not a question to the user.
 
 Script invocation form (inline env only — never `export` into the profile, never echo the token, never write it to any file):
 
@@ -121,6 +131,20 @@ Script gotcha: metadata values are interpolated into JSON **without escaping** �
    - Private → explain the URL will 404 for others until they get a share link, and **offer to create one now** (see Shares workflow)
    - Storage → the `/download/<uuid>` link (public) or share-link note (private)
 
+**The Exact Publish Sequence** — the ENTIRE publish is these five actions and nothing else:
+
+```
+1. assets_list                    ← MCP tool call (Cache Rule)
+2. AskUserQuestion                ← identifier, then visibility
+3. asset_generate_access_token    ← MCP tool call; capture accessToken from the result
+4. ONE bash command               ← ARTIFACTS_ACCESS_TOKEN='<accessToken>' ARTIFACTS_URL='<base>' \
+                                      bash "${CLAUDE_PLUGIN_ROOT:-.}"/skills/asset-manager/scripts/zip-and-upload-artifact.sh \
+                                      --src … --identifier … --description … --visibility … --status published [--entry-point …]
+5. Update the registry, report the link
+```
+
+A publish that runs more than one upload command, or any script outside the bundled four, is off the rails — stop and restart from this sequence.
+
 ## Workflow: Update an Asset's Files
 
 1. Resolve the asset (registry first; `asset_get_by_id` / `assets_list` if unsure).
@@ -175,10 +199,10 @@ Update the registry after every share mutation.
 Persistent registry shared with the `asset-manager` agent, at:
 
 ```
-.claude/agent-memory/asset-manager/MEMORY.md
+<project root>/.claude/agent-memory/asset-manager/MEMORY.md
 ```
 
-Create it (and parent directories) on first use. Format:
+This is the `.claude` directory of the **current project** (where you are working) — **NEVER `~/.claude/...` in the home directory**. Before creating a registry anywhere, READ the project path first: if it exists, use it — it may already hold published assets and the token prefix. Never maintain two registries. Create it (and parent directories) only when the project path genuinely has none. Format:
 
 ```markdown
 # Asset Registry

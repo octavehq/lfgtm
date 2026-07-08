@@ -82,7 +82,7 @@ The whole value of this skill is that output looks like it came **off the page**
 2. Derive the `<slug>` from the registrable domain.
 3. **Cache check (do this first).** If a kit already exists at `~/.octave/brands/<slug>/` (has `manifest.json`), **reuse it by default**: print a one-line summary from `manifest.json`, `open` the gallery, and **stop — do not re-walk or spend scrape credits.** Only proceed to Step 2 when the user passed `refresh` (or explicitly asked to rebuild/re-scrape), or the kit is missing/partial/stale. Mention they can pass `refresh` to rebuild.
 4. **Asset-store fallback (on local miss only).** No local kit? Before spending scrape credits, check whether this kit was already published as a hosted asset. If the Octave MCP asset tools aren't available, skip this silently and continue to Step 2.
-   - Run `assets_list` and look for identifier `<slug>-brand-kit` — exact first, then fuzzy (identifier or description containing the slug/company name plus "brand").
+   - Run the `assets_list` MCP tool — an **actual tool call**, never a bash/python simulation, and never "assume" its result. If the `assets_list` result is not in your transcript, this check did not happen and you may not proceed to Step 2. Look for identifier `<slug>-brand-kit` — exact first, then fuzzy (identifier or description containing the slug/company name plus "brand").
    - **Match found** → tell the user: *"A brand kit for <domain> is already published: <link>"* and ask (AskUserQuestion): **Use it (Recommended)** — download it as the local cache — or **Rebuild fresh** — walk the site anyway.
      - *Use it*: follow the asset-manager download workflow in [`../asset-manager/SKILL.md`](../asset-manager/SKILL.md) (mint the token, then `download-artifact.sh --uuid <uuid> --out ~/.octave/brands/<slug>`), verify `manifest.json` landed, then treat it exactly like a local cache hit: summarize, open the gallery, **stop** — no scrape credits spent. Update the asset-manager registry per its rules.
      - *Rebuild fresh*: continue to Step 2, but remember the asset's uuid — Step 8.5 will offer to **update** the hosted kit rather than create a duplicate.
@@ -341,6 +341,7 @@ The kit is built and reviewed — offer to publish it so it's reachable by link 
      ```
      then upload the staged folder with `zip-and-upload-artifact.sh`.
 3. If Step 1.4 found this kit already hosted (or the upload returns 409): offer to **update the existing hosted kit** instead — `update-artifact.sh --uuid <uuid> --src "$STAGE"` (full replace) — never create a duplicate.
+   The entire hosting step is **2 MCP tool calls + the one-line staging + one upload command** (see the asset-manager skill's "Exact Publish Sequence"). More shell than that means you're doing it wrong.
 4. Private choice → asset-manager's share flow (emails and/or allowed domains; the one-time share URL goes into its registry).
 5. Report the final link: the live site URL (public) or the share URL (private).
 
