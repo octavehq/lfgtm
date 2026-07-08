@@ -126,7 +126,7 @@ See [**docs/org-instructions/**](docs/org-instructions/) for short and long reco
 
 | Skill | Description |
 |-------|-------------|
-| `/octave:get-brand-components` | Capture a company's brand (fonts, colors, logo, real imagery, components) from its website into a reusable kit — every Document Builder below can render **on-brand** with it |
+| `/octave:get-brand-components` | Capture a company's brand (fonts, colors, logo, real imagery, components) from its website into a reusable kit — every Document Builder below can render **on-brand** with it; kits can be reused from and hosted to the asset store (asset-manager) |
 | `/octave:meeting-prep` | Strategic meeting battle plan with coaching frameworks and talk tracks as HTML |
 | `/octave:deck` | Build Octave-powered HTML slide decks with brand styling and export |
 | `/octave:one-pager` | Personalized one-pager / leave-behind as self-contained HTML |
