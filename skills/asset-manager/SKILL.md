@@ -77,21 +77,23 @@ Therefore:
 Script invocation form (inline env only — never `export` into the profile, never echo the token, never write it to any file):
 
 ```bash
-ARTIFACTS_ACCESS_TOKEN='<token>' ARTIFACTS_URL='<base_url>' \
+ARTIFACTS_ACCESS_TOKEN='<token>' \
   bash "${CLAUDE_PLUGIN_ROOT:-.}"/skills/asset-manager/scripts/<script>.sh <flags>
 ```
+
+(The scripts resolve the base URL themselves — see Base URL Resolution. Prefix `ARTIFACTS_URL='<url>'` only when the user explicitly targets a different environment.)
 
 In the registry, record only the token `prefix` and `expiresAt` — **never the plaintext token**.
 
 ## Base URL Resolution
 
-Resolve `<base_url>` in this order:
+**The scripts resolve the base URL themselves** — do not compute or pass it unless the user explicitly targets a different environment. Resolution order (built into every script):
 
-1. `$ARTIFACTS_URL` already set in the environment → use it.
-2. `base_url` recorded in the registry (see Memory Registry below).
-3. Default: `http://localhost:3015` (current dev setup; when the service moves to production, update `base_url` in the registry — nothing else changes).
+1. `ARTIFACTS_URL` environment variable (explicit override — set it only when the user asks for a specific environment)
+2. `.env` at the plugin root (development clones only — never present in marketplace installs)
+3. Production default: `https://link.octavehq.com`
 
-Always pass `ARTIFACTS_URL` explicitly to scripts.
+Record the base URL the API reports back (e.g. from `siteUrl`) as `base_url` in the registry — it's a record of where the assets live, not an input.
 
 ## The Bundled Scripts
 
@@ -137,7 +139,7 @@ Script gotcha: metadata values are interpolated into JSON **without escaping** �
 1. assets_list                    ← MCP tool call (Cache Rule)
 2. AskUserQuestion                ← identifier, then visibility
 3. asset_generate_access_token    ← MCP tool call; capture accessToken from the result
-4. ONE bash command               ← ARTIFACTS_ACCESS_TOKEN='<accessToken>' ARTIFACTS_URL='<base>' \
+4. ONE bash command               ← ARTIFACTS_ACCESS_TOKEN='<accessToken>' \
                                       bash "${CLAUDE_PLUGIN_ROOT:-.}"/skills/asset-manager/scripts/zip-and-upload-artifact.sh \
                                       --src … --identifier … --description … --visibility … --status published [--entry-point …]
 5. Update the registry, report the link
@@ -206,7 +208,7 @@ This is the `.claude` directory of the **current project** (where you are workin
 
 ```markdown
 # Asset Registry
-base_url: http://localhost:3015
+base_url: https://link.octavehq.com
 token: prefix=atk_7f3c expires=2026-08-06
 last_reconciled: 2026-07-07
 

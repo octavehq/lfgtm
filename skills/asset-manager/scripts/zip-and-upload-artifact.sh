@@ -21,10 +21,19 @@
 # Auth / environment (the access token is env-only):
 #   ARTIFACTS_ACCESS_TOKEN  (required) per-user access token — mint one via
 #                           POST /api/v1/user/access-token
-#   ARTIFACTS_URL           base URL of the server (default: http://localhost:3015)
+#   ARTIFACTS_URL           base URL of the server (default: https://link.octavehq.com;
+#                           dev override via plugin-root .env — see .env.example)
 set -euo pipefail
 
-BASE_URL="${ARTIFACTS_URL:-http://localhost:3015}"
+# Base URL: ARTIFACTS_URL env > plugin-root .env (development) > production default.
+# Marketplace installs never ship a .env (gitignored), so they always use production.
+if [[ -z "${ARTIFACTS_URL:-}" ]]; then
+  ENV_FILE="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)/.env"
+  if [[ -f "$ENV_FILE" ]]; then
+    ARTIFACTS_URL="$(grep -E '^ARTIFACTS_URL=' "$ENV_FILE" | tail -1 | cut -d= -f2- | tr -d "\"' \r" || true)"
+  fi
+fi
+BASE_URL="${ARTIFACTS_URL:-https://link.octavehq.com}"
 TOKEN="${ARTIFACTS_ACCESS_TOKEN:-}"
 
 usage() {
