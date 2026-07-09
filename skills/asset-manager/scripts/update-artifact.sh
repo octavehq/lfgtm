@@ -31,7 +31,7 @@
 #   ARTIFACTS_ACCESS_TOKEN  (required) per-user access token — mint one via
 #                           POST /api/v1/user/access-token
 #   ARTIFACTS_URL           base URL of the server (default: https://link.octavehq.com;
-#                           dev override via plugin-root .env — see .env.example)
+#                           dev override: ARTIFACTS_URL=... in a plugin-root .env)
 set -euo pipefail
 
 # Base URL: ARTIFACTS_URL env > plugin-root .env (development) > production default.

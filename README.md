@@ -551,22 +551,6 @@ Pre-built workflow templates for common multi-step GTM processes:
 
 Authentication is handled via OAuth at the MCP server level. No API keys are stored in the plugin configuration.
 
-### Developing against a local assets service
-
-The asset-manager upload/download scripts (`skills/asset-manager/scripts/`) talk to the Octave assets service. They resolve the base URL in this order:
-
-1. `ARTIFACTS_URL` environment variable (explicit override)
-2. `.env` at the repo root (development only)
-3. Production default: `https://link.octavehq.com`
-
-To develop against a local [octave-artifacts](https://github.com/octavehq/octave-artifacts) instance, create a `.env` in your clone of this repo:
-
-```bash
-cp .env.example .env   # sets ARTIFACTS_URL=http://localhost:3015
-```
-
-`.env` is gitignored and therefore never ships with the plugin — **marketplace installs always use the production URL** unless the user deliberately exports `ARTIFACTS_URL`.
-
 ## MCP Tools
 
 The plugin uses the single Octave MCP server you configure (e.g. `octave-acme`). Call tools by name (e.g. `verify_connection()`, `get_entity(...)`, `list_all_entities(...)`).

@@ -23,7 +23,7 @@
 #   ARTIFACTS_ACCESS_TOKEN  (required) per-user access token — mint one via
 #                           POST /api/v1/user/access-token
 #   ARTIFACTS_URL           base URL of the server (default: https://link.octavehq.com;
-#                           dev override via plugin-root .env — see .env.example)
+#                           dev override: ARTIFACTS_URL=... in a plugin-root .env)
 #
 # New artifacts are private by default and 404 until published:
 #   curl -X POST $ARTIFACTS_URL/api/v1/artifacts/<uuid>/publish \
