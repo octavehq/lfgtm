@@ -1,0 +1,9 @@
+{
+  "name": "octave-mcp",
+  "version": "1.0.0",
+  "description": "Declares the Octave MCP server (https://mcp.octavehq.com/mcp) without embedding credentials — for environments that inject auth externally, such as Claude Tag access bundles where an admin attaches an Octave API-key credential and this plugin tells Claude the server exists. Claude Code users should instead run `claude mcp add` with their workspace URL (see the lfgtm README).",
+  "author": {
+    "name": "Octave",
+    "url": "https://octavehq.com"
+  }
+}
