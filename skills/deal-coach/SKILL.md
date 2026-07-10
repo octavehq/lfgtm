@@ -168,9 +168,9 @@ list_findings({
 list_events({
   filters: { companyDomains: ["<domain>"] }
 })
-list_all_entities({ entityType: "persona" })
-list_all_entities({ entityType: "competitor" })
-list_all_entities({ entityType: "proofPoint" })
+list_entities({ entityType: "persona" })
+list_entities({ entityType: "competitor" })
+list_entities({ entityType: "proofPoint" })
 ```
 
 **Motion ICP (after enrichment / persona / segment inference):**
@@ -193,9 +193,9 @@ If any tool call fails, note the gap and continue. Coach with available data and
 For generic mode, gather library-level data only:
 
 ```
-list_all_entities({ entityType: "persona" })
-list_all_entities({ entityType: "competitor" })
-list_all_entities({ entityType: "proofPoint" })
+list_entities({ entityType: "persona" })
+list_entities({ entityType: "competitor" })
+list_entities({ entityType: "proofPoint" })
 ```
 
 Then load the Default Motion Playbook narrative for the most relevant Motion:
@@ -406,7 +406,7 @@ This directory should be in `.gitignore`.
 |------|---------|
 | `search_knowledge_base` | Find matching guides and research |
 | `search_resources` | Find relevant resources (docs, presentations) |
-| `list_all_entities` | List personas, competitors, proof points, references |
+| `list_entities` | List personas, competitors, proof points, references |
 | `list_findings` | Objections, pain points, competitor mentions from conversations |
 | `list_events` | Deal history, stage changes, activity timeline |
 

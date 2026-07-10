@@ -89,7 +89,7 @@ params:
 save_as: contacts
 description: Find people at the company matching the target persona titles and seniority level.
 
-Resolve {{persona_titles}} first: if a persona was specified (or auto-detected from the library), fetch its common job titles via `list_all_entities({ entityType: "persona" })` + `get_entity` and use those. Otherwise, search for senior decision-maker titles.
+Resolve {{persona_titles}} first: if a persona was specified (or auto-detected from the library), fetch its common job titles via `list_entities({ entityType: "persona" })` + `get_entity` and use those. Otherwise, search for senior decision-maker titles.
 
 Present the contact list with names, titles, and LinkedIn profiles.
 

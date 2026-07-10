@@ -59,42 +59,42 @@ Use MCP tools based on brainstorm type:
 
 **For Campaigns:**
 ```
-- list_all_entities({ entityType: "segment" })
-- list_all_entities({ entityType: "persona" })
+- list_entities({ entityType: "segment" })
+- list_entities({ entityType: "persona" })
 - list_motions()
-- list_all_entities({ entityType: "use_case" })
+- list_entities({ entityType: "use_case" })
 ```
 
 **For Motion Playbook Concepts:**
 ```
-- list_all_entities({ entityType: "segment" })
-- list_all_entities({ entityType: "persona" })
-- list_all_entities({ entityType: "product" })
-- list_all_entities({ entityType: "use_case" })
+- list_entities({ entityType: "segment" })
+- list_entities({ entityType: "persona" })
+- list_entities({ entityType: "product" })
+- list_entities({ entityType: "use_case" })
 - list_motions()                                  # See existing Motions
 - list_motion_playbooks({ motionOId: "<motion_oId>" })  # See existing Default + Custom Motion Playbooks
 ```
 
 **For Lead Magnets:**
 ```
-- list_all_entities({ entityType: "persona" })
-- list_all_entities({ entityType: "use_case" })
-- list_all_entities({ entityType: "proof_point" })
+- list_entities({ entityType: "persona" })
+- list_entities({ entityType: "use_case" })
+- list_entities({ entityType: "proof_point" })
 - search_knowledge_base({ query: "pain points challenges problems" })
 ```
 
 **For CTAs & Offers:**
 ```
-- list_all_entities({ entityType: "persona" })
-- list_all_entities({ entityType: "product" })
-- list_all_entities({ entityType: "proof_point" })
+- list_entities({ entityType: "persona" })
+- list_entities({ entityType: "product" })
+- list_entities({ entityType: "proof_point" })
 ```
 
 **For Growth Experiments:**
 ```
 - list_motions()
-- list_all_entities({ entityType: "segment" })
-- list_all_entities({ entityType: "persona" })
+- list_entities({ entityType: "segment" })
+- list_entities({ entityType: "persona" })
 ```
 
 ### Step 3: Ask Scoping Questions (Optional)
@@ -203,7 +203,7 @@ Your choice:
 ## MCP Tools Used
 
 ### Read Operations
-- `list_all_entities` - Get entities for context
+- `list_entities` - Get entities for context
 - `get_entity` - Deep dive on specific entities
 - `list_motions` - See existing Motions
 - `list_motion_playbooks` - Understand existing Motion Playbook coverage (Default + Custom) on a Motion

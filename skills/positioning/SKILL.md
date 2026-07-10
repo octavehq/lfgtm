@@ -109,12 +109,12 @@ Every section needs data from the library. Gather it all up front:
 
 | What you need | Tool | Sections that use it |
 |---------------|------|---------------------|
-| All products | `list_all_entities({ entityType: "product" })` | All 8 |
+| All products | `list_entities({ entityType: "product" })` | All 8 |
 | Product deep dive | `get_entity({ oId: "<product_oId>" })` | All 8 |
 | All personas | `list_entities({ entityType: "persona" })` | 1, 3, 4, 5, 7, 8 |
 | All segments | `list_entities({ entityType: "segment" })` | 1, 3 |
 | All use cases | `list_entities({ entityType: "use_case" })` | 1, 3, 6, 7 |
-| All competitors | `list_all_entities({ entityType: "competitor" })` | 2, 3, 6 |
+| All competitors | `list_entities({ entityType: "competitor" })` | 2, 3, 6 |
 | Competitor details | `get_entity({ oId })` | 3, 6 |
 | All Motions | `list_motions()` | 1, 2, 4, 5, 8 |
 | Motion Playbooks under a Motion | `list_motion_playbooks({ motionOId })` | 1, 2, 4, 5, 8 |
@@ -123,7 +123,7 @@ Every section needs data from the library. Gather it all up front:
 | Motion ICP cell narrative | `find_motion_icp({ motionIcpOId, includeLearnings: true })` | 1, 2, 4, 5, 8 |
 | Proof points | `list_entities({ entityType: "proof_point" })` | 2, 3, 5 |
 | References | `list_entities({ entityType: "reference" })` | 2, 3 |
-| Brand voice | `list_all_entities(entityType: "brand_voice")` | 8 (homepage tone) |
+| Brand voice | `list_entities(entityType: "brand_voice")` | 8 (homepage tone) |
 | Competitive positioning | `search_knowledge_base({ query: "<product> differentiation competitive advantage", entityTypes: ["competitor"] })` | 2, 3, 6 |
 | What resonates | `list_findings({ query: "value propositions positive reactions resonated", startDate: "<90 days ago>", eventFilters: { sentiments: ["POSITIVE"] } })` | 2, 5 |
 | What falls flat | `list_findings({ query: "objections pushback concerns", startDate: "<90 days ago>", eventFilters: { sentiments: ["NEGATIVE"] } })` | 3, 5 |
@@ -359,7 +359,7 @@ update_motion_playbook({
 Common research, library, signals, and generation tools: see [../shared/octave-research-toolkit.md](../shared/octave-research-toolkit.md). Positioning-specific additions:
 
 - `list_findings` with sentiment filters — What resonates (positive) and what falls flat (negative) in real conversations
-- `list_all_entities` (entityType: "brand_voice") — Brand voice for homepage messaging tone
+- `list_entities` (entityType: "brand_voice") — Brand voice for homepage messaging tone
 - `get_workspace_company` — Resolve the sender's own company for brand styling
 
 ### Library Updates (Post-Generation)

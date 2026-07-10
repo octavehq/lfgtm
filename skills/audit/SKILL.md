@@ -35,22 +35,22 @@ When the user runs `/octave:audit`:
 
 ### Step 1: Gather Library State
 
-**Resolve Octave MCP server first:** The Octave MCP server provides tools like `verify_connection`, `get_entity`, `list_all_entities`. From your tool list, get the server name.
+**Resolve Octave MCP server first:** The Octave MCP server provides tools like `verify_connection`, `get_entity`, `list_entities`. From your tool list, get the server name.
 
 **Fetch entities using MCP tools:**
 
 ```
-1. list_all_entities({ entityType: "persona" })
-2. list_all_entities({ entityType: "product" })
-3. list_all_entities({ entityType: "segment" })
-4. list_all_entities({ entityType: "use_case" })
-5. list_all_entities({ entityType: "competitor" })
-6. list_all_entities({ entityType: "alternative" })
-7. list_all_entities({ entityType: "buying_trigger" })
-8. list_all_entities({ entityType: "objection" })
-9. list_all_entities({ entityType: "proof_point" })
-10. list_all_entities({ entityType: "reference" })
-11. list_all_entities({ entityType: "playbook" }) — legacy standalone playbooks, if any remain
+1. list_entities({ entityType: "persona" })
+2. list_entities({ entityType: "product" })
+3. list_entities({ entityType: "segment" })
+4. list_entities({ entityType: "use_case" })
+5. list_entities({ entityType: "competitor" })
+6. list_entities({ entityType: "alternative" })
+7. list_entities({ entityType: "buying_trigger" })
+8. list_entities({ entityType: "objection" })
+9. list_entities({ entityType: "proof_point" })
+10. list_entities({ entityType: "reference" })
+11. list_entities({ entityType: "playbook" }) — legacy standalone playbooks, if any remain
 12. list_motions() — all Motions in workspace
 13. For each Motion: list_motion_icps({ motionOId }) — Motion ICP cell state
 ```
@@ -110,7 +110,7 @@ For cleanup mode, render the report with [cleanup-report-template.md](references
 ## MCP Tools Used
 
 ### Read Operations
-- `list_all_entities` - Get all entities of each type (quick scan)
+- `list_entities` - Get all entities of each type (quick scan)
 - `get_entity` - Get full details for specific entities (qualifying questions, field data, links)
 - `get_playbook` - Get a legacy standalone playbook with its linked personas, segments, and value props (migration mode only)
 - `list_value_props` - Read value props on a legacy playbook (migration mode only)

@@ -90,7 +90,7 @@ AskUserQuestion({
 If no persona specified, present available personas:
 ```
 # Get personas from library
-list_all_entities({ entityType: "persona" })
+list_entities({ entityType: "persona" })
 ```
 
 Ask:
@@ -130,7 +130,7 @@ list_findings({
 })
 
 # Get product details
-list_all_entities({ entityType: "product" })
+list_entities({ entityType: "product" })
 get_entity({ oId: "<product_oId>" })
 
 # Get competitor details (for competitive scenarios)
@@ -202,7 +202,7 @@ AskUserQuestion({
 ```
 # Load based on topic
 # For Personas:
-list_all_entities({ entityType: "persona" })
+list_entities({ entityType: "persona" })
 get_entity({ oId: "<persona_oId>" })  // for each persona
 
 # For Objections:
@@ -215,15 +215,15 @@ list_motion_icps({ motionOId: "<motion_oId>" })
 find_motion_icp({ motionIcpOId: "<motion_icp_oId>", includeLearnings: true })
 
 # For Competitive:
-list_all_entities({ entityType: "competitor" })
+list_entities({ entityType: "competitor" })
 get_entity({ oId: "<competitor_oId>" })  // for each competitor
 
 # For Full GTM:
-list_all_entities({ entityType: "persona" })
-list_all_entities({ entityType: "product" })
-list_all_entities({ entityType: "competitor" })
+list_entities({ entityType: "persona" })
+list_entities({ entityType: "product" })
+list_entities({ entityType: "competitor" })
 search_knowledge_base({ query: "value propositions proof points" })
-list_all_entities({ entityType: "use_case" })
+list_entities({ entityType: "use_case" })
 ```
 
 #### Step Q-3: Run the Quiz
@@ -292,7 +292,7 @@ See [guided-learning-template.md](references/guided-learning-template.md) for th
 ## MCP Tools Used
 
 ### Library Context
-- `list_all_entities` - List personas, products, competitors, use cases
+- `list_entities` - List personas, products, competitors, use cases
 - `get_entity` - Full entity details (persona pain points, competitor weaknesses, etc.)
 - `list_motions` - List Motions in the workspace
 - `list_motion_playbooks` - List Motion Playbooks under a Motion (Default + Custom)

@@ -28,7 +28,7 @@ For the full entity taxonomy — entity types, oId prefixes, field-by-field stru
 You have access to the full Octave MCP server. Tools grouped by capability (see the plugin README for the per-tool reference):
 
 - **Connection** — `verify_connection`
-- **Library read** — `list_all_entities`, `list_entities`, `get_entity`, `search_knowledge_base`, `ask_octave` (natural-language questions over the typed knowledge graph), revision history via `list_revisions` / `get_revision`, `list_writing_styles`. There is no `list_brand_voices` tool — use `list_all_entities({ entityType: "brand_voice" })`.
+- **Library read** — `list_entities`, `get_entity`, `search_knowledge_base`, `ask_octave` (natural-language questions over the typed knowledge graph), revision history via `list_revisions` / `get_revision`, `list_writing_styles`. There is no `list_brand_voices` tool — use `list_entities({ entityType: "brand_voice" })`.
 - **Library write** — `create_entity` / `update_entity` / `delete_entity`, and `link_entities_to_offering` (drives which entities appear in a Motion's matrix)
 - **Motions** — `list_motions` / `get_motion` plus create/update/delete, `list_motion_playbooks` / `get_motion_playbook` plus create/update/delete, `list_motion_icps`, and `find_motion_icp` (full persona × segment narrative plus Learning Loop learnings)
 - **Research** — `find_person` / `find_company`, `find_similar_people` / `find_similar_companies`, `enrich_person` / `enrich_company`, `qualify_person` / `qualify_company`, `resolve_profile_from_email` / `resolve_email_from_profile`, `scrape_website`, `deep_web_research`, `get_external_brand_assets` / `get_external_brand_logo`

@@ -71,7 +71,7 @@ Tell me about the launch:
 get_entity({ oId: "<product_oId>" })
 
 # Get all personas (to prioritize which audiences to target)
-list_all_entities({ entityType: "persona" })
+list_entities({ entityType: "persona" })
 get_entity({ oId: "<primary_persona_oId>" })
 
 # Get the relevant Motion(s) and Motion ICP cells for this offering
@@ -98,7 +98,7 @@ search_knowledge_base({
 })
 
 # Get brand voice
-list_all_entities(entityType: "brand_voice")
+list_entities(entityType: "brand_voice")
 ```
 
 ### Step 3: Generate Launch Plan
@@ -252,10 +252,10 @@ See [generation-modes.md](../shared/generation-modes.md) for the default generat
 ## MCP Tools Used
 
 ### Library Context
-- `list_all_entities` - List products, personas, use cases
+- `list_entities` - List products, personas, use cases
 - `get_entity` - Full entity details
 - `search_knowledge_base` - Proof points, references, competitive intel
-- `list_all_entities` (entityType: "brand_voice") - Brand voice consistency
+- `list_entities` (entityType: "brand_voice") - Brand voice consistency
 
 ### Motions
 - `list_motions` - Motions for the offering

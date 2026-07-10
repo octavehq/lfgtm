@@ -36,9 +36,9 @@ When the target is a segment description rather than a specific company:
 | Motion ICP cells for segment | `list_motion_icps({ motionOId })` | Identify cells where this segment is the segment side of the persona × segment intersection |
 | Motion ICP cell narrative | `find_motion_icp({ motionIcpOId, includeLearnings: true })` | Full per-cell narrative for the segment-specific buyer |
 | Personas | `list_entities({ entityType: "persona" })` | Understand who the typical buyer is in this segment |
-| Segments | `list_all_entities({ entityType: "segment" })` | Quick scan to match the description to a defined segment |
+| Segments | `list_entities({ entityType: "segment" })` | Quick scan to match the description to a defined segment |
 | Proof points | `list_entities({ entityType: "proof_point" })` | Fetch proof points relevant to this segment |
 | References | `list_entities({ entityType: "reference" })` | Customer references in this segment |
 | Products | `list_entities({ entityType: "product" })` | Product capabilities relevant to segment needs |
-| Use cases | `list_all_entities({ entityType: "use_case" })` | Use cases that resonate with this segment |
+| Use cases | `list_entities({ entityType: "use_case" })` | Use cases that resonate with this segment |
 | Uploaded resources | `search_resources({ query: "<segment topic>" })` | Relevant uploaded collateral |

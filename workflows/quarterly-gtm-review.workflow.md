@@ -83,7 +83,7 @@ description: Identify messaging and value props that are landing well.
 
 Pull current library definitions for comparison.
 
-tool: list_all_entities
+tool: list_entities
 params:
   entityType: "segment"
 save_as: current_segments
@@ -93,7 +93,7 @@ description: Get current ICP segment definitions to compare against deal data.
 
 Pull persona definitions.
 
-tool: list_all_entities
+tool: list_entities
 params:
   entityType: "persona"
 save_as: current_personas
@@ -103,7 +103,7 @@ description: Get current persona definitions for effectiveness analysis.
 
 Check competitive activity.
 
-tool: list_all_entities
+tool: list_entities
 params:
   entityType: "competitor"
 save_as: competitors

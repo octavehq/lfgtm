@@ -48,7 +48,7 @@ List entities of a specific type.
 ```
 
 **Actions:**
-- For library entities: use `list_all_entities` for quick overview (default), or `list_entities` with pagination for detailed view (--detailed flag)
+- For library entities: use `list_entities` for a quick slim overview (default), or `list_entities` with `includeDetails: true` for the detailed view (--detailed flag)
 - For Motions: use `list_motions`
 - For Motion Playbooks under a Motion: use `list_motion_playbooks({ motionOId })` — returns the Default Motion Playbook plus any Custom Motion Playbooks
 - For Motion ICP cells (the persona × segment matrix) under a Motion: use `list_motion_icps({ motionOId })`
@@ -203,11 +203,10 @@ The legacy `get_playbook`, `list_value_props`, `create_playbook`, `update_playbo
 
 ## MCP Tools Used
 
-**Important:** Call MCP tools by name (e.g. `get_entity`, `update_entity`, `list_all_entities`).
+**Important:** Call MCP tools by name (e.g. `get_entity`, `update_entity`, `list_entities`).
 
 ### Read Operations
-- `list_all_entities` - Quick list with basic fields (default for list)
-- `list_entities` - Detailed list with pagination (for --detailed flag)
+- `list_entities` - List entities by type; slim rows by default, `includeDetails: true` for full data (--detailed flag), plus `search`, `all`, and pagination
 - `get_entity` - Full entity details
 - `search_knowledge_base` - Semantic search
 

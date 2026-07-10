@@ -48,8 +48,8 @@ Map the seller's Octave library data to Resonate coaching outputs:
 | Output Field | Octave Source | How to Map |
 |-------------|---------------|------------|
 | Buyer Mindset | `enrich_company` → company profile, industry; `find_crm_records` → deal stage; `list_findings` → pain points | Synthesize buyer's likely awareness level, trigger, and constraints from available data |
-| Value Propositions | `find_motion_icp` → Pains and consequences, Strategic narrative; `list_all_entities` → proof points (benchmarks) | Select props that validate pain without prescribing; use benchmarks to show you understand the problem |
-| Talking Points | `find_motion_icp` → Methodology (discovery questions); `list_findings` → pain points; `list_all_entities` → personas | Generate discovery questions that go wide, deep, and high; tailor to the persona's language and level |
+| Value Propositions | `find_motion_icp` → Pains and consequences, Strategic narrative; `list_entities` → proof points (benchmarks) | Select props that validate pain without prescribing; use benchmarks to show you understand the problem |
+| Talking Points | `find_motion_icp` → Methodology (discovery questions); `list_findings` → pain points; `list_entities` → personas | Generate discovery questions that go wide, deep, and high; tailor to the persona's language and level |
 
 ### Example Coaching Interaction
 
@@ -92,8 +92,8 @@ You are equal parts provocative strategist and positioning expert. You understan
 | Output Field | Octave Source | How to Map |
 |-------------|---------------|------------|
 | Buyer Mindset | `list_findings` → status quo signals, competitor mentions; `find_crm_records` → stage; `find_crm_activities` → engagement pattern | Assess: is the buyer still defending status quo, or actively evaluating? |
-| Value Propositions | `find_motion_icp` → Strategic narrative, Benefits and impacts; `list_all_entities` → competitors (for differentiated value assessment) | Cross-reference: what's unique in the Motion ICP narrative AND missing from competitor capabilities AND important to this buyer? |
-| Talking Points | `enrich_company` → industry trends (The Shift); `list_findings` → pain points (Status Quo Gaps); `list_all_entities` → proof points; `find_motion_icp` → Strategic narrative + Benefits and impacts (Value Framing + The Reframe) | Build the 3-beat Case for Change from deal data; generate Value Framing translations from the Motion ICP narrative |
+| Value Propositions | `find_motion_icp` → Strategic narrative, Benefits and impacts; `list_entities` → competitors (for differentiated value assessment) | Cross-reference: what's unique in the Motion ICP narrative AND missing from competitor capabilities AND important to this buyer? |
+| Talking Points | `enrich_company` → industry trends (The Shift); `list_findings` → pain points (Status Quo Gaps); `list_entities` → proof points; `find_motion_icp` → Strategic narrative + Benefits and impacts (Value Framing + The Reframe) | Build the 3-beat Case for Change from deal data; generate Value Framing translations from the Motion ICP narrative |
 
 ### Example Coaching Interaction
 
@@ -140,8 +140,8 @@ You are part business case architect and part executive communication coach. You
 | Output Field | Octave Source | How to Map |
 |-------------|---------------|------------|
 | Buyer Mindset | `find_crm_records` → deal stage, amount, close date; `find_crm_activities` → exec engagement; `generate_crm_context` → deal narrative | Map decision process, budget status, champion engagement level, and timeline pressure |
-| Value Propositions | `list_all_entities` → proof points (quantified); `find_motion_icp` → Benefits and impacts (ROI data, outcomes); `enrich_company` → strategic initiatives | Select props with specific metrics; align to company's stated priorities |
-| Talking Points | `find_crm_records` → deal amount + timeline (for cost of delay); `list_all_entities` → personas (for stakeholder mapping); `find_motion_icp` → Strategic narrative + Benefits and impacts (executive messaging); `list_all_entities` → proof points (for benchmarks) | Build Value Discovery questions, Value Proof models, Why Now Case (both dimensions), and champion talk track |
+| Value Propositions | `list_entities` → proof points (quantified); `find_motion_icp` → Benefits and impacts (ROI data, outcomes); `enrich_company` → strategic initiatives | Select props with specific metrics; align to company's stated priorities |
+| Talking Points | `find_crm_records` → deal amount + timeline (for cost of delay); `list_entities` → personas (for stakeholder mapping); `find_motion_icp` → Strategic narrative + Benefits and impacts (executive messaging); `list_entities` → proof points (for benchmarks) | Build Value Discovery questions, Value Proof models, Why Now Case (both dimensions), and champion talk track |
 
 ### Example Coaching Interaction
 
@@ -189,7 +189,7 @@ You are a negotiation coach who has advised on deals from $50K to $50M. You beli
 | Output Field | Octave Source | How to Map |
 |-------------|---------------|------------|
 | Value Anchor | Prior Compel business case + `find_crm_records` → deal amount | Reference the quantified value already established |
-| Competitive Alternatives | `list_all_entities` → competitors | Know the buyer's BATNA |
+| Competitive Alternatives | `list_entities` → competitors | Know the buyer's BATNA |
 | Concession Inventory | `find_motion_icp` → Methodology / pricing notes; library `product` / pricing entities | Know what can be traded and its cost |
 | Relationship Context | `find_crm_activities` + `list_findings` → sentiment | Gauge relationship strength and leverage |
 
@@ -222,7 +222,7 @@ You see every objection as a diagnostic signal. You never "handle" objections in
 |-------------|---------------|------------|
 | Objection Context | `list_findings` → objections | Match finding objections to stage gaps |
 | Resolution Framework | `frameworks.md` → relevant stage | Pull Talking Points for the identified gap stage |
-| Supporting Evidence | `list_all_entities` → proof points | Counter objections with quantified data |
+| Supporting Evidence | `list_entities` → proof points | Counter objections with quantified data |
 | Motion ICP Response | `find_motion_icp` → Pains and consequences, Methodology (objection handling); `get_motion_playbook` → Custom Motion Playbook objection content | Combine stage coaching with offering-specific responses |
 
 ### Example Coaching Interaction
