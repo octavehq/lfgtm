@@ -19,6 +19,17 @@
         "url": "https://octavehq.com"
       },
       "homepage": "https://octavehq.com"
+    },
+    {
+      "name": "octave-mcp",
+      "source": "./plugins/octave-mcp",
+      "description": "Credential-less declaration of the Octave MCP server — pair with an externally managed credential (e.g. a Claude Tag access bundle's Bearer API key)",
+      "version": "1.0.0",
+      "author": {
+        "name": "Octave",
+        "url": "https://octavehq.com"
+      },
+      "homepage": "https://octavehq.com"
     }
   ]
 }

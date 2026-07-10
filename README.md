@@ -42,6 +42,21 @@ This repo is the source of truth. On every push to `main`, the same skills are a
 
 Install from the matching repo (see its README). Don't edit those repos directly — they're generated and overwritten. File issues and PRs here.
 
+### Claude Tag (Claude in Slack)
+
+[Claude Tag](https://claude.com/product/tag) lets a whole Slack workspace @-mention Claude in channels. It connects to Octave through an admin-provisioned **access bundle** rather than per-user OAuth, so setup differs from Claude Code:
+
+1. **Create an Octave API key** in Octave under **Settings → API Keys**. Claude Tag credentials are shared by everyone in the bundle's scope, so we recommend a **read-only** key (create one directly, or use the row menu → "Make read-only") unless you want channel members writing to your Library.
+2. **Add the credential**: in [claude.ai admin settings](https://claude.ai/admin-settings/claude-tag), open your access bundle → **Credentials → Connect another tool**. Choose credential type **Bearer**, name it "Octave MCP", set **Allowed websites** to `mcp.octavehq.com`, and paste the API key as the token. (The Octave MCP server accepts API keys via `Authorization: Bearer` or an `x-api-key` header.)
+3. **Attach the plugins**: in the bundle's **Plugins** tab, add this marketplace (`https://github.com/octavehq/lfgtm`) and enable both plugins:
+   - **`octave`** — the skills and agents in this repo
+   - **`octave-mcp`** — a credential-less `.mcp.json` that tells Claude the Octave MCP server exists at `https://mcp.octavehq.com/mcp`. No `ctx` parameter is needed: the API key identifies your workspace, and the bundle's credential is injected at the network layer.
+4. **Verify**: attach the bundle to a channel and send `@Claude verify your Octave connection`.
+
+The in-app guide (Octave → Settings → API Keys → Connect MCP → **Claude Tag**) walks through the same steps with copy buttons.
+
+> **Note:** `octave-mcp` is for externally injected credentials (Claude Tag). In Claude Code, keep using `claude mcp add` with your workspace URL as described below — the bare server declaration in `octave-mcp` has no credential and no workspace context on its own.
+
 ## Quick Start
 
 ### 1. Configure MCP Server
