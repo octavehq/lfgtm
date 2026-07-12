@@ -40,8 +40,8 @@ jq '{
   > "$OUT/.codex-plugin/plugin.json"
 
 # 2. marketplace.json: Codex schema is different from Claude's — rebuild from scratch.
-#    Only the octave plugin is mirrored: octave-mcp is a Claude-Tag-only
-#    server declaration (plugins/octave-mcp/), and mapping every marketplace
+#    Only the octave plugin is mirrored: octave-claude-tag is a Claude-Tag-only
+#    server declaration (plugins/octave-claude-tag/), and mapping every marketplace
 #    entry to path "./" would advertise it as a phantom copy of this repo.
 echo "→ .agents/plugins/marketplace.json"
 jq '{

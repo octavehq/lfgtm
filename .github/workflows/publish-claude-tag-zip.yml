@@ -33,5 +33,5 @@ jobs:
           else
             gh release create claude-tag-plugin /tmp/octave-plugin.zip \
               --title "Claude Tag plugin bundle" \
-              --notes "Rolling build of the Octave plugins (octave + octave-mcp) as an upload-ready zip for Claude Tag access bundles. Updated on every push to main. See the README's Claude Tag section for setup."
+              --notes "Rolling build of the Octave plugins (octave + octave-claude-tag) as an upload-ready zip for Claude Tag access bundles. Updated on every push to main. See the README's Claude Tag section for setup."
           fi

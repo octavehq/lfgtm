@@ -51,8 +51,8 @@ jq '{
 
 # 2. .cursor-plugin/marketplace.json — Cursor schema differs from Claude's
 #    (owner{name,email?}, plugins[].source is a string path).
-#    Only the octave plugin is mirrored: octave-mcp is a Claude-Tag-only
-#    server declaration (plugins/octave-mcp/), and mapping every marketplace
+#    Only the octave plugin is mirrored: octave-claude-tag is a Claude-Tag-only
+#    server declaration (plugins/octave-claude-tag/), and mapping every marketplace
 #    entry to source "./" would advertise it as a phantom copy of this repo.
 echo "→ .cursor-plugin/marketplace.json"
 jq '{
