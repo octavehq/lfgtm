@@ -1,0 +1,37 @@
+name: Publish Claude Tag plugin zip
+
+# Claude Tag access bundles install plugins from a private repository or an
+# uploaded zip. This publishes a ready-to-upload bundle (repo contents with
+# .claude-plugin/ at the archive root) to a rolling release, so admins can
+# download one file instead of cloning and re-zipping:
+#   https://github.com/octavehq/lfgtm/releases/download/claude-tag-plugin/octave-plugin.zip
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out lfgtm
+        uses: actions/checkout@v4
+
+      - name: Build octave-plugin.zip (.claude-plugin/ at archive root)
+        run: zip -qr /tmp/octave-plugin.zip . -x ".git/*" ".github/*" ".claude/*" "build/*"
+
+      - name: Publish to the rolling claude-tag-plugin release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view claude-tag-plugin >/dev/null 2>&1; then
+            gh release upload claude-tag-plugin /tmp/octave-plugin.zip --clobber
+          else
+            gh release create claude-tag-plugin /tmp/octave-plugin.zip \
+              --title "Claude Tag plugin bundle" \
+              --notes "Rolling build of the Octave plugins (octave + octave-mcp) as an upload-ready zip for Claude Tag access bundles. Updated on every push to main. See the README's Claude Tag section for setup."
+          fi

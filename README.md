@@ -52,23 +52,22 @@ Install from the matching repo (see its README). Don't edit those repos directly
    - **`octave-mcp`** — a credential-less `.mcp.json` that registers the Octave MCP server (`https://mcp.octavehq.com/mcp`) natively, so the tool list and schemas are loaded up front instead of Claude re-discovering the API every thread — faster, cheaper, and consistent across users. No `ctx` parameter is needed: the API key identifies your workspace, and the bundle's credential is injected at the network layer.
    - **`octave`** — the skills and agents in this repo, which teach Claude *when* and *how* to use those tools well.
 
-   Claude Tag currently only accepts **private repositories** as plugin sources, so you can't point it at this public repo directly. Two ways in:
+   Claude Tag currently only accepts **private repositories** as plugin sources, so you can't point it at this public repo directly. Three ways in, easiest first:
 
-   **Option A — private mirror (recommended; stays updatable):**
+   **Option A — download the ready-made zip (no terminal, no GitHub account):**
+   Download [`octave-plugin.zip`](https://github.com/octavehq/lfgtm/releases/download/claude-tag-plugin/octave-plugin.zip) — an upload-ready bundle rebuilt automatically on every change to this repo — and upload it in the bundle's **Plugins** tab. To get updates later, re-download and re-upload the same file.
+
+   **Option B — private mirror in the browser (no terminal):**
+   Open GitHub's [repository import](https://github.com/new/import), paste `https://github.com/octavehq/lfgtm.git` as the source, choose your organization as the owner, set visibility to **Private**, and import. Then connect `YOUR_ORG/lfgtm` in the bundle's **Plugins** tab and enable both plugins. (Imports don't auto-sync — to update later, use the CLI sync in Option C, or just switch to the zip flow.)
+
+   **Option C — private mirror via CLI (updatable):**
    ```bash
    gh repo create YOUR_ORG/lfgtm --private
    git clone https://github.com/octavehq/lfgtm.git && cd lfgtm
    git remote add mirror https://github.com/YOUR_ORG/lfgtm.git
    git push mirror main
    ```
-   Connect `YOUR_ORG/lfgtm` in the bundle's **Plugins** tab and enable both plugins. To pull future updates: `git pull origin main && git push mirror main`. (GitHub's [repository import](https://github.com/new/import) works too if you prefer the UI.)
-
-   **Option B — zip upload (one-off, no repo needed):**
-   ```bash
-   curl -L https://github.com/octavehq/lfgtm/archive/refs/heads/main.zip -o lfgtm.zip
-   unzip -q lfgtm.zip && (cd lfgtm-main && zip -qr ../octave-plugin.zip .)
-   ```
-   Upload `octave-plugin.zip` in the bundle's **Plugins** tab (the re-zip puts `.claude-plugin/` at the archive root, where the console expects it). Zip uploads don't receive updates — re-download when this repo changes.
+   Connect `YOUR_ORG/lfgtm` in the bundle's **Plugins** tab and enable both plugins. To pull future updates: `git pull origin main && git push mirror main`.
 4. **Verify**: attach the bundle to a channel and send `@Claude verify your Octave connection`.
 
 The in-app guide (Octave → Settings → API Keys → Connect MCP → **Claude Tag**) walks through the same steps with copy buttons.
