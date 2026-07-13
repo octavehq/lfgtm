@@ -48,14 +48,14 @@ Install from the matching repo (see its README). Don't edit those repos directly
 
 1. **Create an Octave API key** in Octave under **Settings → API Keys**. Claude Tag credentials are shared by everyone in the bundle's scope, so we recommend a **read-only** key (create one directly, or use the row menu → "Make read-only") unless you want channel members writing to your Library.
 2. **Add the credential**: in [claude.ai admin settings](https://claude.ai/admin-settings/claude-tag), open your access bundle → **Credentials → Connect another tool**. Choose credential type **Bearer**, name it "Octave MCP", set **Allowed websites** to `mcp.octavehq.com`, and paste the API key as the token. (The Octave MCP server accepts API keys via `Authorization: Bearer` or an `x-api-key` header.)
-3. **Attach the plugin (recommended)**: the credential alone is enough for Claude to reach Octave — it can discover and drive the MCP server ad hoc from a channel. Attaching the `octave` plugin upgrades that to a first-class integration and is what we recommend for real rollouts. The plugin bundles two things:
-   - a credential-less `.mcp.json` that registers the Octave MCP server (`https://mcp.octavehq.com/mcp`) natively, so the tool list and schemas are loaded up front instead of Claude re-discovering the API every thread — faster, cheaper, and consistent across users. No `ctx` parameter is needed: the API key identifies your workspace, and the bundle's credential is injected at the network layer.
+3. **Attach the plugin (recommended)**: the credential alone is enough for Claude to reach Octave — it can discover and drive the MCP server ad hoc from a channel. Attaching the `octave` plugin upgrades that to a first-class integration and is what we recommend for real rollouts. The **Claude Tag build of the plugin** carries two things:
+   - a credential-less `.mcp.json` that registers the Octave MCP server (`https://mcp.octavehq.com/mcp`) natively, so the tool list and schemas are loaded up front instead of Claude re-discovering the API every thread — faster, cheaper, and consistent across users. No `ctx` parameter is needed: the API key identifies your workspace, and the bundle's credential is injected at the network layer. (This declaration is injected only into the Claude Tag zip — it's deliberately excluded from Claude Code installs, where a credential-less server would just fail. See the note at the end of this section.)
    - the **skills and agents** in this repo, which teach Claude *when* and *how* to use those tools well.
 
    Claude Tag currently only accepts **private repositories** as plugin sources, so you can't point it at this public repo directly. Three ways in, easiest first:
 
-   **Option A — download the ready-made zip (no terminal, no GitHub account):**
-   Download [`octave-plugin.zip`](https://github.com/octavehq/lfgtm/releases/download/claude-tag-plugin/octave-plugin.zip) — an upload-ready bundle rebuilt automatically on every change to this repo — and upload it in the bundle's **Plugins** tab. To get updates later, re-download and re-upload the same file. (Don't use GitHub's native "Download ZIP" — it wraps everything in an `lfgtm-main/` folder, so `.claude-plugin/` isn't at the archive root where the console looks for it.)
+   **Option A — download the ready-made zip (recommended; no terminal, no GitHub account):**
+   Download [`octave-plugin.zip`](https://github.com/octavehq/lfgtm/releases/download/claude-tag-plugin/octave-plugin.zip) — an upload-ready bundle rebuilt automatically on every change to this repo, **with the MCP declaration already injected** — and upload it in the bundle's **Plugins** tab. To get updates later, re-download and re-upload the same file. (Don't use GitHub's native "Download ZIP" — it wraps everything in an `lfgtm-main/` folder, so `.claude-plugin/` isn't at the archive root where the console looks for it.)
 
    **Option B — private mirror in the browser (no terminal):**
    Open GitHub's [repository import](https://github.com/new/import), paste `https://github.com/octavehq/lfgtm.git` as the source, choose your organization as the owner, set visibility to **Private**, and import. Then connect `YOUR_ORG/lfgtm` in the bundle's **Plugins** tab and enable the `octave` plugin. (Imports don't auto-sync — to update later, use the CLI sync in Option C, or just switch to the zip flow.)
@@ -68,11 +68,13 @@ Install from the matching repo (see its README). Don't edit those repos directly
    git push mirror main
    ```
    Connect `YOUR_ORG/lfgtm` in the bundle's **Plugins** tab and enable the `octave` plugin. To pull future updates: `git pull origin main && git push mirror main`.
+
+   > Options B and C mirror the **raw repo**, where the MCP declaration is not part of the plugin (it lives in `claude-tag/` and is injected only into the Option A zip). So a mirror install gives you the skills and agents, and Claude reaches Octave through the bundle **credential** (discovered ad hoc) rather than a preloaded server. For the native, tools-loaded-up-front experience, use **Option A**.
 4. **Verify**: attach the bundle to a channel and send `@Claude verify your Octave connection`.
 
 The in-app guide (Octave → Settings → API Keys → Connect MCP → **Claude Tag**) walks through the same steps with copy buttons.
 
-> **Note:** the `octave` plugin bundles a credential-less `.mcp.json` that only works where a credential is injected externally (Claude Tag). In **Claude Code / Desktop** that server declaration has no credential and no workspace context on its own, so it resolves to a failing `octave` server — ignore it and add your workspace with `claude mcp add` (see below) instead.
+> **Note:** the credential-less `.mcp.json` (`claude-tag/octave.mcp.json`) is injected into the plugin **only** for the Claude Tag zip, where the bundle supplies the credential at the network layer. It is intentionally kept out of the plugin that **Claude Code / Desktop** installs, because a credential-less, workspace-less server there would just fail. In Claude Code, install the plugin for its skills and agents and add your workspace separately with `claude mcp add` (see below).
 
 ## Quick Start
 
@@ -689,11 +691,13 @@ The workspace's own company profile (singleton).
 ├── scripts/                     # Repo CI tooling (not shipped inside the plugin)
 │   ├── build-codex.sh           # Generate the Codex plugin artifact
 │   └── build-cursor.sh          # Generate the Cursor plugin artifact
+├── claude-tag/                  # Claude Tag overlay — injected into the zip build, not the plugin
+│   ├── octave.mcp.json          # Octave MCP declaration (credential-less; injected only into the Claude Tag zip)
+│   └── README.md
 ├── plugins/
-│   └── octave/                  # The plugin — skills, workflows, agents, runtime scripts, MCP
+│   └── octave/                  # The plugin — skills, workflows, agents, runtime scripts
 │       ├── .claude-plugin/
 │       │   └── plugin.json      # Plugin metadata
-│       ├── .mcp.json            # Registers the Octave MCP server (credential-less; for Claude Tag)
 │       ├── agents/
 │       │   ├── octave-assistant.md      # General GTM assistant agent
 │       │   ├── pmm-strategist.md        # Product marketing strategist agent

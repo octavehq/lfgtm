@@ -21,8 +21,14 @@ jobs:
       - name: Check out lfgtm
         uses: actions/checkout@v4
 
+      # The credential-less .mcp.json is kept OUT of the installable plugin (so Claude Code
+      # installs don't get a workspace-less, failing octave server) and injected only here,
+      # into the Claude Tag zip, where an access bundle injects the credential at the network layer.
+      - name: Inject the Claude Tag MCP declaration into the octave plugin
+        run: cp claude-tag/octave.mcp.json plugins/octave/.mcp.json
+
       - name: Build octave-plugin.zip (.claude-plugin/ at archive root)
-        run: zip -qr /tmp/octave-plugin.zip . -x ".git/*" ".github/*" ".claude/*" "build/*"
+        run: zip -qr /tmp/octave-plugin.zip . -x ".git/*" ".github/*" ".claude/*" "build/*" "claude-tag/*"
 
       - name: Publish to the rolling claude-tag-plugin release
         env:
