@@ -48,14 +48,31 @@ Install from the matching repo (see its README). Don't edit those repos directly
 
 1. **Create an Octave API key** in Octave under **Settings → API Keys**. Claude Tag credentials are shared by everyone in the bundle's scope, so we recommend a **read-only** key (create one directly, or use the row menu → "Make read-only") unless you want channel members writing to your Library.
 2. **Add the credential**: in [claude.ai admin settings](https://claude.ai/admin-settings/claude-tag), open your access bundle → **Credentials → Connect another tool**. Choose credential type **Bearer**, name it "Octave MCP", set **Allowed websites** to `mcp.octavehq.com`, and paste the API key as the token. (The Octave MCP server accepts API keys via `Authorization: Bearer` or an `x-api-key` header.)
-3. **Attach the plugins**: in the bundle's **Plugins** tab, add this marketplace (`https://github.com/octavehq/lfgtm`) and enable both plugins:
-   - **`octave`** — the skills and agents in this repo
-   - **`octave-mcp`** — a credential-less `.mcp.json` that tells Claude the Octave MCP server exists at `https://mcp.octavehq.com/mcp`. No `ctx` parameter is needed: the API key identifies your workspace, and the bundle's credential is injected at the network layer.
+3. **Attach the plugins (recommended)**: the credential alone is enough for Claude to reach Octave — it can discover and drive the MCP server ad hoc from a channel. Attaching the plugins upgrades that to a first-class integration and is what we recommend for real rollouts:
+   - **`octave-claude-tag`** — a credential-less `.mcp.json` that registers the Octave MCP server (`https://mcp.octavehq.com/mcp`) natively, so the tool list and schemas are loaded up front instead of Claude re-discovering the API every thread — faster, cheaper, and consistent across users. No `ctx` parameter is needed: the API key identifies your workspace, and the bundle's credential is injected at the network layer.
+   - **`octave`** — the skills and agents in this repo, which teach Claude *when* and *how* to use those tools well.
+
+   Claude Tag currently only accepts **private repositories** as plugin sources, so you can't point it at this public repo directly. Three ways in, easiest first:
+
+   **Option A — download the ready-made zip (no terminal, no GitHub account):**
+   Download [`octave-plugin.zip`](https://github.com/octavehq/lfgtm/releases/download/claude-tag-plugin/octave-plugin.zip) — an upload-ready bundle rebuilt automatically on every change to this repo — and upload it in the bundle's **Plugins** tab. To get updates later, re-download and re-upload the same file. (Don't use GitHub's native "Download ZIP" — it wraps everything in an `lfgtm-main/` folder, so `.claude-plugin/` isn't at the archive root where the console looks for it.)
+
+   **Option B — private mirror in the browser (no terminal):**
+   Open GitHub's [repository import](https://github.com/new/import), paste `https://github.com/octavehq/lfgtm.git` as the source, choose your organization as the owner, set visibility to **Private**, and import. Then connect `YOUR_ORG/lfgtm` in the bundle's **Plugins** tab and enable both plugins. (Imports don't auto-sync — to update later, use the CLI sync in Option C, or just switch to the zip flow.)
+
+   **Option C — private mirror via CLI (updatable):**
+   ```bash
+   gh repo create YOUR_ORG/lfgtm --private
+   git clone https://github.com/octavehq/lfgtm.git && cd lfgtm
+   git remote add mirror https://github.com/YOUR_ORG/lfgtm.git
+   git push mirror main
+   ```
+   Connect `YOUR_ORG/lfgtm` in the bundle's **Plugins** tab and enable both plugins. To pull future updates: `git pull origin main && git push mirror main`.
 4. **Verify**: attach the bundle to a channel and send `@Claude verify your Octave connection`.
 
 The in-app guide (Octave → Settings → API Keys → Connect MCP → **Claude Tag**) walks through the same steps with copy buttons.
 
-> **Note:** `octave-mcp` is for externally injected credentials (Claude Tag). In Claude Code, keep using `claude mcp add` with your workspace URL as described below — the bare server declaration in `octave-mcp` has no credential and no workspace context on its own.
+> **Note:** `octave-claude-tag` is for externally injected credentials (Claude Tag), which is why it isn't part of the Claude Code install steps above. In Claude Code, keep using `claude mcp add` with your workspace URL as described below — the bare server declaration in `octave-claude-tag` has no credential and no workspace context on its own, so installing it there just produces a failing server.
 
 ## Quick Start
 
