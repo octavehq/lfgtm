@@ -28,9 +28,11 @@ rm -rf "$OUT"
 mkdir -p "$OUT/.cursor-plugin" "$OUT/skills" "$OUT/agents" "$OUT/commands" "$OUT/workflows"
 
 # ----- NOTE on MCP config -----
-# Cursor reads mcp.json at the plugin root, but — matching the Claude/Codex
-# plugins — we ship none. Each user adds their own workspace-specific Octave
-# MCP server. Skills detect the Octave server from the available tools.
+# Cursor reads mcp.json at the plugin root. The octave plugin's .mcp.json is a
+# credential-less declaration meant for Claude Tag (credential injected at the
+# network layer); in Cursor it would resolve to a workspace-less server, so we
+# don't copy it. Each Cursor user adds their own workspace-specific Octave MCP
+# server. Skills detect the Octave server from the available tools.
 
 # 1. .cursor-plugin/plugin.json — preserve name/version/description/author,
 #    add Cursor component pointers. (Folder discovery would find these anyway,
@@ -51,9 +53,7 @@ jq '{
 
 # 2. .cursor-plugin/marketplace.json — Cursor schema differs from Claude's
 #    (owner{name,email?}, plugins[].source is a string path).
-#    Only the octave plugin is mirrored: octave-claude-tag is a Claude-Tag-only
-#    server declaration (plugins/octave-claude-tag/), and mapping every marketplace
-#    entry to source "./" would advertise it as a phantom copy of this repo.
+#    The marketplace lists a single plugin (octave); we mirror it to source "./".
 echo "→ .cursor-plugin/marketplace.json"
 jq '{
   name: .name,

@@ -22,9 +22,9 @@ rm -rf "$OUT"
 mkdir -p "$OUT/.codex-plugin" "$OUT/skills" "$OUT/workflows" "$OUT/.agents/plugins"
 
 # ----- NOTE on MCP config -----
-# Codex's MCP config is TOML (~/.codex/config.toml with [mcp_servers.<name>] tables).
-# Users add their own workspace-specific Octave server via `codex mcp add`. The plugin
-# itself ships no MCP file — matching the Claude plugin's pattern.
+# Codex's MCP config is TOML (~/.codex/config.toml with [mcp_servers.<name>] tables),
+# so the octave plugin's .mcp.json is not portable here and is intentionally not copied.
+# Codex users add their own workspace-specific Octave server via `codex mcp add`.
 
 # 1. plugin.json: preserve name/version/description/author, add Codex pointers
 echo "→ .codex-plugin/plugin.json"
@@ -40,9 +40,7 @@ jq '{
   > "$OUT/.codex-plugin/plugin.json"
 
 # 2. marketplace.json: Codex schema is different from Claude's — rebuild from scratch.
-#    Only the octave plugin is mirrored: octave-claude-tag is a Claude-Tag-only
-#    server declaration (plugins/octave-claude-tag/), and mapping every marketplace
-#    entry to path "./" would advertise it as a phantom copy of this repo.
+#    The marketplace lists a single plugin (octave); we mirror it to path "./".
 echo "→ .agents/plugins/marketplace.json"
 jq '{
   name: .name,
