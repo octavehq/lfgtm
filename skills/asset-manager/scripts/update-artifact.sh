@@ -21,6 +21,7 @@
 #                         must already exist in the artifact, or the site 404s.
 #   --visibility <v>      public | private
 #   --status <s>          draft | published | archived
+#   --share-workspace <b> true | false — share/unshare with the workspace
 #   -h, --help            show this help
 #
 # With --src the upload and any metadata flags are sent together as one atomic
@@ -58,6 +59,7 @@ DESCRIPTION=""
 ENTRY_POINT=""
 VISIBILITY=""
 STATUS=""
+SHARE_WORKSPACE=""
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -68,6 +70,7 @@ while [ $# -gt 0 ]; do
     --entry-point) ENTRY_POINT="${2:?--entry-point requires a value}"; shift 2 ;;
     --visibility)  VISIBILITY="${2:?--visibility requires a value}"; shift 2 ;;
     --status)      STATUS="${2:?--status requires a value}"; shift 2 ;;
+    --share-workspace) SHARE_WORKSPACE="${2:?--share-workspace requires a value}"; shift 2 ;;
     -h|--help)     usage; exit 0 ;;
     *) echo "error: unexpected argument: $1" >&2; usage; exit 1 ;;
   esac
@@ -84,7 +87,7 @@ if [ -z "$TOKEN" ]; then
   echo "error: no access token — set ARTIFACTS_ACCESS_TOKEN" >&2
   echo "mint one: curl -X POST $BASE_URL/api/v1/user/access-token \\" >&2
   echo '  -H "Authorization: Bearer <service-key>" -H "Content-Type: application/json" \' >&2
-  echo '  -d '"'"'{"userOId":"...","workspaceOId":"..."}'"'" >&2
+  echo '  -d '"'"'{"userOId":"...","workspaceOId":"...","firstName":"...","lastName":"...","email":"..."}'"'" >&2
   exit 1
 fi
 
@@ -94,6 +97,9 @@ if [ -n "$VISIBILITY" ]; then
 fi
 if [ -n "$STATUS" ]; then
   case "$STATUS" in draft | published | archived) ;; *) echo "error: --status must be draft|published|archived" >&2; exit 1 ;; esac
+fi
+if [ -n "$SHARE_WORKSPACE" ]; then
+  case "$SHARE_WORKSPACE" in true | false) ;; *) echo "error: --share-workspace must be true|false" >&2; exit 1 ;; esac
 fi
 
 # Assemble a metadata patch from only the flags that were passed. Values are
@@ -105,6 +111,8 @@ if [ -n "$DESCRIPTION" ]; then META_PARTS+=("\"description\":\"$DESCRIPTION\"");
 if [ -n "$ENTRY_POINT" ]; then META_PARTS+=("\"entryPoint\":\"$ENTRY_POINT\""); fi
 if [ -n "$VISIBILITY" ];  then META_PARTS+=("\"visibility\":\"$VISIBILITY\""); fi
 if [ -n "$STATUS" ];      then META_PARTS+=("\"status\":\"$STATUS\""); fi
+# shareWithWorkspace is a boolean -> no surrounding quotes.
+if [ -n "$SHARE_WORKSPACE" ]; then META_PARTS+=("\"shareWithWorkspace\":$SHARE_WORKSPACE"); fi
 
 METADATA=""
 if [ "${#META_PARTS[@]}" -gt 0 ]; then
@@ -191,6 +199,8 @@ IDENT=$(json_field identifier)
 TYPE=$(json_field type)
 STATUS_OUT=$(json_field status)
 VIS_OUT=$(json_field visibility)
+# previewUrl is present only for private artifacts (json_field yields "" for null).
+PREVIEW_URL=$(json_field previewUrl)
 
 echo
 echo "updated: $UUID"
@@ -201,4 +211,9 @@ if [ "$TYPE" = "storage" ]; then
   echo "download: $BASE_URL/download/$UUID"
 else
   echo "serve:    $BASE_URL/sites/$IDENT-$UUID/"
+fi
+# Private artifacts return a tokenized preview link (owner + same workspace)
+# that renders the site/download without making it public.
+if [ -n "${PREVIEW_URL:-}" ]; then
+  echo "preview:  $PREVIEW_URL"
 fi

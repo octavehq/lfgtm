@@ -7,7 +7,10 @@
 #
 # Flags:
 #   --uuid <uuid>   (required) the artifact to download
-#   --out <dir>     where to write the files (default: ./<artifact-identifier>)
+#   --out <dir>     parent directory to download into. The files are always
+#                   placed inside a folder named after the artifact identifier,
+#                   i.e. <dir>/<identifier>/...  (default: the current
+#                   directory, so ./<identifier>/...)
 #   -h, --help      show this help
 #
 # Auth / environment (the access token is env-only):
@@ -17,9 +20,9 @@
 #                           dev override: ARTIFACTS_URL=... in a plugin-root .env)
 #
 # How it works: both the file list and the file bodies come from the
-# authenticated, owner-scoped artifacts API (guarded by the per-user access
-# token), so this works for any artifact you own regardless of status or
-# visibility — no publish required:
+# authenticated artifacts API (guarded by the per-user access token). It works
+# for any artifact you own — or one a teammate shared with your workspace —
+# regardless of status or visibility, no publish required:
 #   GET /api/v1/artifacts/:uuid              -> identifier + metadata.filesMap
 #   GET /api/v1/artifacts/:uuid/download/... -> each file's bytes
 #
@@ -44,7 +47,8 @@ usage() {
 }
 
 UUID=""
-OUT_DIR=""
+# --out is the PARENT dir; the <identifier>/ folder is always created inside it.
+OUT_DIR="."
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -65,7 +69,7 @@ if [ -z "$TOKEN" ]; then
   echo "error: no access token — set ARTIFACTS_ACCESS_TOKEN" >&2
   echo "mint one: curl -X POST $BASE_URL/api/v1/user/access-token \\" >&2
   echo '  -H "Authorization: Bearer <service-key>" -H "Content-Type: application/json" \' >&2
-  echo '  -d '"'"'{"userOId":"...","workspaceOId":"..."}'"'" >&2
+  echo '  -d '"'"'{"userOId":"...","workspaceOId":"...","firstName":"...","lastName":"...","email":"..."}'"'" >&2
   exit 1
 fi
 
@@ -101,30 +105,30 @@ if [ -z "$PATHS" ]; then
   exit 1
 fi
 
-# Default output dir = the identifier as a filesystem-safe folder name (no
-# slashes/control chars/leading dots); fall back to the uuid.
-if [ -z "$OUT_DIR" ]; then
-  SAFE_ID=$(printf '%s' "$IDENTIFIER" | tr '/\\' '--' | tr -d '[:cntrl:]' |
-    sed -e 's/^[[:space:].]*//' -e 's/[[:space:]]*$//')
-  OUT_DIR="./${SAFE_ID:-$UUID}"
-fi
+# Always nest the files under a single top-level folder named after the
+# artifact identifier (filesystem-safe: no slashes/control chars/leading dots;
+# uuid fallback). --out is the PARENT directory that folder is created in, so
+# the parent folder of every downloaded file is the identifier.
+SAFE_ID=$(printf '%s' "$IDENTIFIER" | tr '/\\' '--' | tr -d '[:cntrl:]' |
+  sed -e 's/^[[:space:].]*//' -e 's/[[:space:]]*$//')
+DEST="${OUT_DIR%/}/${SAFE_ID:-$UUID}"
 
 # 3. Download each file from the owner-scoped download endpoint (token auth,
 #    preserves paths). Works for any status/visibility of an artifact you own.
-echo "downloading into $OUT_DIR/"
+echo "downloading into $DEST/"
 COUNT=0
 while IFS= read -r FILE_PATH; do
   [ -n "$FILE_PATH" ] || continue
   ENCODED=$(printf '%s' "$FILE_PATH" | sed 's/ /%20/g')
-  mkdir -p "$OUT_DIR/$(dirname "$FILE_PATH")"
-  HTTP_CODE=$(curl -sS -o "$OUT_DIR/$FILE_PATH" -w "%{http_code}" \
+  mkdir -p "$DEST/$(dirname "$FILE_PATH")"
+  HTTP_CODE=$(curl -sS -o "$DEST/$FILE_PATH" -w "%{http_code}" \
     -H "Authorization: Bearer $TOKEN" \
     "$BASE_URL/api/v1/artifacts/$UUID/download/$ENCODED")
   if [ "$HTTP_CODE" != "200" ]; then
-    rm -f "$OUT_DIR/$FILE_PATH"
+    rm -f "$DEST/$FILE_PATH"
     echo "error: GET /api/v1/artifacts/$UUID/download/$FILE_PATH -> $HTTP_CODE" >&2
-    echo "hint: 401 -> bad/expired access token; 404 -> wrong uuid, not your" >&2
-    echo "      artifact, or that path isn't in this artifact." >&2
+    echo "hint: 401 -> bad/expired access token; 404 -> wrong uuid, not yours" >&2
+    echo "      (nor workspace-shared), or that path isn't in this artifact." >&2
     exit 1
   fi
   echo "  $FILE_PATH"
@@ -133,4 +137,4 @@ done <<EOF
 $PATHS
 EOF
 
-echo "done: $COUNT file(s) -> $OUT_DIR/"
+echo "done: $COUNT file(s) -> $DEST/"

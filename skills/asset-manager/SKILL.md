@@ -1,6 +1,6 @@
 ---
 name: asset-manager
-description: Publish and manage hosted assets (HTML sites, docs, file bundles) on the Octave assets service - upload, visibility, private share links, and a persistent registry of everything published. Acts as a cache - always checks the asset store for an existing match before creating anything new, so the same work is never done twice. Use when the user says "publish this", "host this html", "share this with the team / with an email", "make it public/private", "who has access to", "update the published site", "list my published assets", "what assets are available", "is there already a ... published", "do we have a ...", or wants a shareable URL for something they built locally. Do NOT use for Vercel deploys of microsites (that is /octave:microsite's own deploy step) or for generating the content itself (use the Document Builder skills).
+description: Publish and manage hosted assets (HTML sites, docs, file bundles) on the Octave assets service - upload, visibility, private share links, and a persistent registry of everything published. Acts as a cache - always checks the asset store for an existing match before creating anything new, so the same work is never done twice. Use when the user says "publish this", "host this html", "store these files" (storage type), "share this with the team / workspace / with an email", "make it public/private", "who has access to", "update the published site", "list my published assets", "what assets are available", "is there already a ... published", "do we have a ...", or wants a shareable URL for something they built locally. Do NOT use for Vercel deploys of microsites (that is /octave:microsite's own deploy step) or for generating the content itself (use the Document Builder skills).
 ---
 
 # /octave:asset-manager - Publish & Manage Hosted Assets
@@ -42,18 +42,26 @@ Every operation routes through exactly one of two backends. Never mix them up:
 
 ## Check Before Create (Cache Rule)
 
-The asset store doubles as a cache: the asset the user wants may already exist (created in another project, another session — or, as scoping widens, by a teammate). **Never create a new asset without checking first.**
+The asset store doubles as a cache: the asset the user wants may already exist — created by you in another project or session, **or by a workspace teammate** (workspace-shared assets appear in `assets_list` with their `owner`). **Never create a new asset without checking first.**
 
 Before ANY new upload:
 
 1. Run a **fresh `assets_list`**. Never trust the local registry alone for this — it is per-project and lags behind assets created elsewhere.
 2. Match the intended asset against existing ones: normalize identifiers (kebab-case → words) and compare against the intended name/topic keywords; scan descriptions; weigh `type` (website vs storage).
-3. **Plausible matches found** → AskUserQuestion with up to 3 candidates. Each option shows the identifier, and its description says what it is plus the link (siteUrl, download URL, or "private — share required"). Always include a final option: `No — this is new, create it`.
+3. **Plausible matches found** → AskUserQuestion with up to 3 candidates. Each option shows the identifier, and its description says what it is, **who owns it** (`owner`: "me" or a teammate's name), plus the link (siteUrl, previewUrl for non-public, or download URL). Always include a final option: `No — this is new, create it`. A teammate-owned match can be reused and downloaded, but never modified — to change one, create the user's own copy.
    - User picks a match → show its link, then ask what next: nothing / update its files / change metadata / manage shares.
    - User says it's new → proceed to publish, choosing an identifier distinct from the matches (avoids a 409).
 4. **No match** → proceed directly, mentioning that nothing similar was found.
 
 Ordering constraint: `assets_list` is an MCP asset call and **rotates the access token** — always do this check BEFORE minting the upload token.
+
+## Workspace Sharing & Preview Links
+
+Assets are **shared with the workspace by default** (`shareWithWorkspace`, default `true` at create): teammates can READ them through the API (list/get/download) — even private or draft ones. All mutations and share management stay owner-only.
+
+- Every asset response carries `owner`: `"me"` for your own, otherwise the teammate's `"First Last <email>"`. **Teammate-owned assets are read-only** — never call `asset_update`, `asset_delete`, or any share tool on them; if the user wants changes, create their own copy.
+- Non-public assets (private, draft, or archived) carry a **`previewUrl`**: a tokenized link that renders the site/download for the owner and workspace members without making it public. It is `null` once the asset is published + public (use `siteUrl` then). It is **short-lived and minted per read — NEVER store it in the registry**; fetch a fresh one with `asset_get_by_id` when someone needs it.
+- Link reporting rule: published + public → `siteUrl`. Anything else → `previewUrl` (for the user and workspace members) plus a share link for people outside the workspace.
 
 ## MCP Server Detection
 
@@ -101,10 +109,10 @@ All in `${CLAUDE_PLUGIN_ROOT:-.}/skills/asset-manager/scripts/` (bash + curl; jq
 
 | Script | Purpose | Key flags |
 |--------|---------|-----------|
-| `zip-and-upload-artifact.sh` | Zip a folder locally, upload as one request (default for folders; zip fallback chain: zip → powershell → python) | `--src <folder> --identifier --description --type --visibility --status --entry-point` |
+| `zip-and-upload-artifact.sh` | Zip a folder locally, upload as one request (default for folders; zip fallback chain: zip → powershell → python) | `--src <folder> --identifier --description --type --visibility --status --share-workspace --entry-point` |
 | `upload-artifact.sh` | Upload a ready `.zip`, or a folder as per-file multipart (fallback if zipping fails; skips dotfiles) | same as above, `--src` accepts folder or `.zip` |
 | `update-artifact.sh` | Replace an asset's files (FULL REPLACE) | `--uuid <u> --src <path>` |
-| `download-artifact.sh` | Download all files of an owned asset | `--uuid <u> --out <dir>` |
+| `download-artifact.sh` | Download all files of an owned or workspace-shared asset | `--uuid <u> --out <parent-dir>` — files always land in `<parent-dir>/<identifier>/` |
 
 Script gotcha: metadata values are interpolated into JSON **without escaping** — `--identifier` and `--description` values must contain no double quotes or backslashes. If the description needs them, upload with a plain placeholder and set the real text afterward via `asset_update` (which is JSON-safe).
 
@@ -112,36 +120,39 @@ Script gotcha: metadata values are interpolated into JSON **without escaping** �
 
 1. **Identify the source.** Confirm the path exists. Classify:
    - Contains HTML → `--type website`. Determine the entry point (default `index.html`; if the main file has another name, pass `--entry-point <file>`).
-   - Loose files / binaries / docs meant for download, not viewing → `--type storage` (no entry point; delivered via `/download/<uuid>`, never served as a site).
+   - Files for storage/distribution rather than viewing (docs, zips, datasets, binaries) → `--type storage`: no entry point, never served as a site; delivered via `<base>/download/<uuid>` when public, or via previewUrl/share link when private.
 2. **Check for existing work — apply the Cache Rule** (see above). If the user confirms an existing asset is what they meant, switch to that asset (show link, then update/share/etc.) instead of publishing. Only continue here once it's confirmed new.
 3. **Suggest an identifier.** The identifier is user-facing — it appears in the public URL `<base_url>/sites/<identifier>-<uuid>/`. Heuristics:
    - kebab-case, lowercase, ≤50 chars, no quotes/backslashes
    - Prefer the HTML `<title>` or H1 if meaningful; else the source folder basename
    - Strip dates, `tmp`/`final`/`v2` noise suffixes
    - Must not collide with existing identifiers — reuse the `assets_list` result from step 2 (no second call); identifiers are unique per user
-4. **Ask the user** (AskUserQuestion, one question at a time):
-   - Identifier: offer your suggestion first (`<suggestion> (Recommended)`), 1-2 sensible alternates; the user can always type their own via Other.
-   - Visibility: `Public` ("Anyone with the URL can view") vs `Private` ("Only people you share a link with").
+4. **Ask the user** (two AskUserQuestion calls):
+   - First — identifier: offer your suggestion first (`<suggestion> (Recommended)`), 1-2 sensible alternates; the user can always type their own via Other.
+   - Second — one call with three questions:
+     - Visibility: `Public` ("Anyone with the URL can view") vs `Private` ("Only via share links; workspace members via preview").
+     - Workspace sharing: `Share with workspace (Recommended)` ("Teammates can find and reuse it — this is what makes the asset cache work") vs `Owner-only`.
+     - Status: `published (Recommended)` vs `draft` ("Uploaded but not served yet"). `archived` also exists — set later via `asset_update`.
 5. **Draft the description.** 1-2 sentences saying what the asset is and who it's for (e.g. "Interactive use-case explorer for Acme's platform, built for the Q3 ABM campaign"). Sanitize for the script (no `"` or `\`).
 6. **Mint the token** (`asset_generate_access_token`) and resolve the base URL. Do this AFTER steps 1-5 — the step-2 `assets_list` already rotated any earlier token, and no MCP asset calls may follow the mint before the upload runs.
 7. **Upload.**
    - Source is already a `.zip` → `upload-artifact.sh --src <file>.zip ...`
    - Source is a folder → `zip-and-upload-artifact.sh --src <folder> ...` (fall back to `upload-artifact.sh` per-file multipart only if zipping fails)
-   - Always pass explicitly: `--identifier`, `--description`, `--visibility`, `--status published`, and `--entry-point` for websites. Never rely on script defaults.
-8. **Record and report.** Update the registry (uuid, identifier, description, type, visibility, status, url). Then report:
-   - Public website → the live `siteUrl`
-   - Private → explain the URL will 404 for others until they get a share link, and **offer to create one now** (see Shares workflow)
-   - Storage → the `/download/<uuid>` link (public) or share-link note (private)
+   - Always pass explicitly: `--identifier`, `--description`, `--visibility`, `--status`, `--share-workspace`, and `--entry-point` for websites. Never rely on script defaults.
+8. **Record and report.** Update the registry (uuid, identifier, description, type, visibility, status, workspace sharing, url). Then report:
+   - Published + public website → the live `siteUrl`
+   - Private or draft → the `preview:` link from the upload output (works for the user and workspace members), and **offer a share link now** for people outside the workspace (see Shares workflow)
+   - Storage → the `/download/<uuid>` link (public) or the preview/share-link note (private)
 
 **The Exact Publish Sequence** — the ENTIRE publish is these five actions and nothing else:
 
 ```
 1. assets_list                    ← MCP tool call (Cache Rule)
-2. AskUserQuestion                ← identifier, then visibility
+2. AskUserQuestion                ← identifier, then visibility + workspace sharing + status
 3. asset_generate_access_token    ← MCP tool call; capture accessToken from the result
 4. ONE bash command               ← ARTIFACTS_ACCESS_TOKEN='<accessToken>' \
                                       bash "${CLAUDE_PLUGIN_ROOT:-.}"/skills/asset-manager/scripts/zip-and-upload-artifact.sh \
-                                      --src … --identifier … --description … --visibility … --status published [--entry-point …]
+                                      --src … --identifier … --description … --visibility … --status … --share-workspace … [--entry-point …]
 5. Update the registry, report the link
 ```
 
@@ -160,8 +171,13 @@ For identifier, description, entry point, visibility, or status changes use `ass
 
 - Changing the identifier changes the public URL — tell the user the old link breaks.
 - Status: `draft` and `archived` are never served; `published` is the live state.
-- **When flipping visibility to `private`**, proactively ask: "The public URL will stop working for others. Want to create a share link so specific people keep access?" If yes → Shares workflow.
+- **When flipping visibility to `private`**, explain what private means, then ask who keeps access:
+  1. The public URL stops working for everyone — a private asset is never globally reachable, even with the link.
+  2. People **outside the workspace** need a share link and get access after validating their email.
+  3. **Workspace members** keep access without a share link via the asset's `previewUrl` (as long as it stays workspace-shared).
+  Then ask WHO to share with (emails and/or allowed domains) and HOW LONG (`expiresInDays`, or never) → Shares workflow. Report the fresh `previewUrl` for teammates alongside the share link.
 - **When flipping to `public`**, mention existing share links keep working but are no longer needed.
+- **Workspace sharing** (`shareWithWorkspace` on `asset_update`): toggles whether teammates can read the asset at all; turning it off also kills their preview access.
 
 ## Workflow: Shares (private assets)
 
@@ -182,8 +198,8 @@ Update the registry after every share mutation.
 
 ## Workflow: Download / List / Delete
 
-- **Download**: mint token, then `download-artifact.sh --uuid <uuid> --out <dir>` (works for any owned asset regardless of status/visibility).
-- **List**: "what assets are available / do we have X?" → run a fresh `assets_list`, show the results with links, and reconcile the registry while you're at it. The registry alone is only enough for quick recall of what was published from this project.
+- **Download**: mint token, then `download-artifact.sh --uuid <uuid> --out <parent-dir>` — files always land in `<parent-dir>/<identifier>/`. Works for any asset the user owns or a teammate workspace-shared, regardless of status/visibility.
+- **List**: "what assets are available / do we have X?" → run a fresh `assets_list`, show identifier, owner ("me" vs teammate), and link for each, and reconcile the registry while you're at it. The registry alone is only enough for quick recall of what was published from this project.
 - **Delete**: `asset_delete` — irreversible, deletes the files too. Always confirm with the user first. Then remove the entry from the registry.
 
 ## Error Handling
@@ -215,7 +231,8 @@ last_reconciled: 2026-07-07
 ## Assets
 ### <identifier> (<uuid>)
 - type: website — status/visibility: published/private
-- url: <siteUrl | <base>/download/<uuid> | (private — share required)>
+- workspace: shared — owner: me
+- url: <siteUrl | <base>/download/<uuid> | (non-public — fetch a fresh previewUrl via asset_get_by_id)>
 - description: <one line>
 - updated: <YYYY-MM-DD>
 - shares:
@@ -227,6 +244,7 @@ last_reconciled: 2026-07-07
 - After EVERY successful mutation (upload, file update, metadata change, share create/add/remove/revoke, delete, token mint) update the registry in the same turn, before the user-facing report.
 - Store only the token `prefix` + `expiresAt` — never the plaintext token.
 - The share `url` exists nowhere else after creation — losing it means revoking and re-creating the share.
+- Never store `previewUrl` — it is short-lived and minted per read; fetch a fresh one with `asset_get_by_id` when needed.
 - The registry is a **local, per-project cache** — assets created from other projects or sessions won't be in it. It is never sufficient for the Cache Rule's dedup check; that always uses a fresh `assets_list`.
 
 **Reconciliation:**

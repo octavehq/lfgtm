@@ -670,9 +670,9 @@ The workspace's own company profile (singleton).
 ### Assets
 - `asset_generate_access_token` - Mint the per-user access token used by the upload/download scripts (rotates the previous one)
 - `asset_refresh_access_token` - Rotate the access token (e.g. after a 401)
-- `assets_list` - List published assets with status/visibility filters
+- `assets_list` - List your assets and workspace-shared teammates' assets, with status/visibility filters
 - `asset_get_by_id` - Get one asset by uuid
-- `asset_update` - Update metadata: identifier, description, entry point, visibility, status
+- `asset_update` - Update metadata: identifier, description, entry point, visibility, status, workspace sharing
 - `asset_delete` - Permanently delete an asset and its files
 - `asset_share_create` - Create a private share link (emails and/or domains; the returned URL is shown only once)
 - `asset_shares_list` - List an asset's share links

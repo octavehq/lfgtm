@@ -14,6 +14,9 @@
 #                         served) and have no entry point.
 #   --visibility <v>      public | private         (default: private)
 #   --status <s>          draft | published | archived  (default: published)
+#   --share-workspace <b> true | false             (default: true) — let
+#                         same-workspace teammates read this artifact via the
+#                         API; pass false to keep it owner-only
 #   --identifier <id>     artifact identifier      (default: --src basename)
 #   --description <d>     description              (default: "Uploaded via curl-templates")
 #   --entry-point <path>  entry point (website only; sent only when set)
@@ -51,6 +54,7 @@ SRC=""
 TYPE="website"
 VISIBILITY="private"
 STATUS="published"
+SHARE_WORKSPACE="true"
 IDENTIFIER=""
 DESCRIPTION="Uploaded via curl-templates"
 ENTRY_POINT=""
@@ -61,6 +65,7 @@ while [ $# -gt 0 ]; do
     --type)        TYPE="${2:?--type requires a value}"; shift 2 ;;
     --visibility)  VISIBILITY="${2:?--visibility requires a value}"; shift 2 ;;
     --status)      STATUS="${2:?--status requires a value}"; shift 2 ;;
+    --share-workspace) SHARE_WORKSPACE="${2:?--share-workspace requires a value}"; shift 2 ;;
     --identifier)  IDENTIFIER="${2:?--identifier requires a value}"; shift 2 ;;
     --description) DESCRIPTION="${2:?--description requires a value}"; shift 2 ;;
     --entry-point) ENTRY_POINT="${2:?--entry-point requires a value}"; shift 2 ;;
@@ -80,7 +85,7 @@ if [ -z "$TOKEN" ]; then
   echo "error: no access token — set ARTIFACTS_ACCESS_TOKEN" >&2
   echo "mint one: curl -X POST $BASE_URL/api/v1/user/access-token \\" >&2
   echo '  -H "Authorization: Bearer <service-key>" -H "Content-Type: application/json" \' >&2
-  echo '  -d '"'"'{"userOId":"...","workspaceOId":"..."}'"'" >&2
+  echo '  -d '"'"'{"userOId":"...","workspaceOId":"...","firstName":"...","lastName":"...","email":"..."}'"'" >&2
   exit 1
 fi
 
@@ -88,12 +93,13 @@ fi
 case "$TYPE" in website | storage) ;; *) echo "error: --type must be website|storage" >&2; exit 1 ;; esac
 case "$VISIBILITY" in public | private) ;; *) echo "error: --visibility must be public|private" >&2; exit 1 ;; esac
 case "$STATUS" in draft | published | archived) ;; *) echo "error: --status must be draft|published|archived" >&2; exit 1 ;; esac
+case "$SHARE_WORKSPACE" in true | false) ;; *) echo "error: --share-workspace must be true|false" >&2; exit 1 ;; esac
 
 NAME=$(basename "$SRC")
 NAME="${NAME%.zip}"
 IDENTIFIER="${IDENTIFIER:-$NAME}"
-METADATA=$(printf '{"identifier":"%s","description":"%s","type":"%s","visibility":"%s","status":"%s"' \
-  "$IDENTIFIER" "$DESCRIPTION" "$TYPE" "$VISIBILITY" "$STATUS")
+METADATA=$(printf '{"identifier":"%s","description":"%s","type":"%s","visibility":"%s","status":"%s","shareWithWorkspace":%s' \
+  "$IDENTIFIER" "$DESCRIPTION" "$TYPE" "$VISIBILITY" "$STATUS" "$SHARE_WORKSPACE")
 # entryPoint is website-only; storage artifacts ignore it.
 if [ "$TYPE" = "website" ] && [ -n "$ENTRY_POINT" ]; then
   METADATA="$METADATA,\"entryPoint\":\"$ENTRY_POINT\""
@@ -141,10 +147,13 @@ fi
 if command -v jq >/dev/null 2>&1; then
   jq . "$RESP_FILE"
   UUID=$(jq -r '.uuid' "$RESP_FILE")
+  PREVIEW_URL=$(jq -r '.previewUrl // empty' "$RESP_FILE")
 else
   cat "$RESP_FILE"
   echo
   UUID=$(grep -o '"uuid":"[^"]*"' "$RESP_FILE" | head -1 | sed -e 's/^"uuid":"//' -e 's/"$//')
+  # previewUrl is a string only for private artifacts (else JSON null → no match).
+  PREVIEW_URL=$(grep -o '"previewUrl":"[^"]*"' "$RESP_FILE" | head -1 | sed -e 's/^"previewUrl":"//' -e 's/"$//')
 fi
 
 echo
@@ -156,6 +165,11 @@ if [ "$TYPE" = "storage" ]; then
   echo "download: $BASE_URL/download/$UUID"
 else
   echo "serve:    $BASE_URL/sites/$IDENTIFIER-$UUID/"
+fi
+# Private artifacts return a tokenized preview link (owner + same workspace)
+# that renders the site/download without making it public. Only set when private.
+if [ -n "${PREVIEW_URL:-}" ]; then
+  echo "preview:  $PREVIEW_URL"
 fi
 # Owner download (any status/visibility), names the folder after the identifier.
 echo "fetch:    ./download-artifact.sh --uuid $UUID"

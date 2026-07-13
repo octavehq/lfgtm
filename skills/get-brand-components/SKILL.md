@@ -81,11 +81,11 @@ The whole value of this skill is that output looks like it came **off the page**
 1. Normalize the input to a base URL (`https://www.<domain>` if only a bare domain is given; keep an explicit URL as the seed).
 2. Derive the `<slug>` from the registrable domain.
 3. **Cache check (do this first).** If a kit already exists at `~/.octave/brands/<slug>/` (has `manifest.json`), **reuse it by default**: print a one-line summary from `manifest.json`, `open` the gallery, and **stop — do not re-walk or spend scrape credits.** Only proceed to Step 2 when the user passed `refresh` (or explicitly asked to rebuild/re-scrape), or the kit is missing/partial/stale. Mention they can pass `refresh` to rebuild.
-4. **Asset-store fallback (on local miss only).** No local kit? Before spending scrape credits, check whether this kit was already published as a hosted asset. If the Octave MCP asset tools aren't available, skip this silently and continue to Step 2.
+4. **Asset-store fallback (on local miss only).** No local kit? Before spending scrape credits, check whether this kit was already published as a hosted asset — **by you or a workspace teammate** (workspace-shared assets appear in the list with their `owner`). If the Octave MCP asset tools aren't available, skip this silently and continue to Step 2.
    - Run the `assets_list` MCP tool — an **actual tool call**, never a bash/python simulation, and never "assume" its result. If the `assets_list` result is not in your transcript, this check did not happen and you may not proceed to Step 2. Look for identifier `<slug>-brand-kit` — exact first, then fuzzy (identifier or description containing the slug/company name plus "brand").
-   - **Match found** → tell the user: *"A brand kit for <domain> is already published: <link>"* and ask (AskUserQuestion): **Use it (Recommended)** — download it as the local cache — or **Rebuild fresh** — walk the site anyway.
-     - *Use it*: follow the asset-manager download workflow in [`../asset-manager/SKILL.md`](../asset-manager/SKILL.md) (mint the token, then `download-artifact.sh --uuid <uuid> --out ~/.octave/brands/<slug>`), verify `manifest.json` landed, then treat it exactly like a local cache hit: summarize, open the gallery, **stop** — no scrape credits spent. Update the asset-manager registry per its rules.
-     - *Rebuild fresh*: continue to Step 2, but remember the asset's uuid — Step 8.5 will offer to **update** the hosted kit rather than create a duplicate.
+   - **Match found** → tell the user: *"A brand kit for <domain> is already published (owner: <me | teammate name>): <link>"* and ask (AskUserQuestion): **Use it (Recommended)** — download it as the local cache — or **Rebuild fresh** — walk the site anyway.
+     - *Use it*: follow the asset-manager download workflow in [`../asset-manager/SKILL.md`](../asset-manager/SKILL.md) — mint the token, then `download-artifact.sh --uuid <uuid> --out "${TMPDIR:-/tmp}"` (files land in `${TMPDIR:-/tmp}/<identifier>/`), then `rm -rf ~/.octave/brands/<slug> && mv "${TMPDIR:-/tmp}/<identifier>" ~/.octave/brands/<slug>`. Verify `manifest.json` landed, then treat it exactly like a local cache hit: summarize, open the gallery, **stop** — no scrape credits spent. Update the asset-manager registry per its rules.
+     - *Rebuild fresh*: continue to Step 2, but remember the asset's uuid and owner — Step 8.5 will offer to **update** the hosted kit if it is yours; a teammate-owned kit can't be modified, so you'd publish your own copy instead.
    - **No match** → continue to Step 2 without extra chatter.
 
 #### Step 2: Walk the key pages
@@ -333,17 +333,17 @@ The kit is built and reviewed — offer to publish it so it's reachable by link 
 1. Ask (AskUserQuestion): **"Host this brand kit as a shareable asset?"** — options: `Host it (public link)` / `Host privately + share` / `Not now`.
 2. On host, hand off to the asset-manager publish workflow in [`../asset-manager/SKILL.md`](../asset-manager/SKILL.md) — it owns the token lifecycle and the registry — with these prefills (still user-confirmable per that skill's flow):
    - Identifier suggestion: **`<slug>-brand-kit`**. Description: *"Brand component kit for <Company> (<domain>) — design tokens, component gallery, fonts, and logo"*.
-   - `--type website --entry-point components.html --status published`; visibility from the choice above.
+   - `--type website --entry-point components.html --status published`; visibility from the choice above; **workspace sharing: recommend `--share-workspace true`** — that is what lets teammates find and reuse the kit instead of rebuilding it.
    - Source: a staged copy WITHOUT the heavy `screenshots/` rebuild artifacts (keeps the upload well under the size cap):
      ```bash
      STAGE="${TMPDIR:-/tmp}/<slug>-brand-kit" && rm -rf "$STAGE" && \
        cp -R ~/.octave/brands/<slug> "$STAGE" && rm -rf "$STAGE/screenshots"
      ```
      then upload the staged folder with `zip-and-upload-artifact.sh`.
-3. If Step 1.4 found this kit already hosted (or the upload returns 409): offer to **update the existing hosted kit** instead — `update-artifact.sh --uuid <uuid> --src "$STAGE"` (full replace) — never create a duplicate.
+3. If Step 1.4 found this kit already hosted (or the upload returns 409): offer to **update the existing hosted kit** instead — `update-artifact.sh --uuid <uuid> --src "$STAGE"` (full replace) — never create a duplicate. Only possible when the hosted kit is YOURS (`owner: "me"`); a teammate-owned kit is read-only — publish your own copy.
    The entire hosting step is **2 MCP tool calls + the one-line staging + one upload command** (see the asset-manager skill's "Exact Publish Sequence"). More shell than that means you're doing it wrong.
 4. Private choice → asset-manager's share flow (emails and/or allowed domains; the one-time share URL goes into its registry).
-5. Report the final link: the live site URL (public) or the share URL (private).
+5. Report the final link: the live site URL (public), or for private/draft the `preview:` link (works for you and workspace members) plus the share URL for people outside the workspace.
 
 ---
 
