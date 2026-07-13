@@ -11,7 +11,7 @@
   "plugins": [
     {
       "name": "octave",
-      "source": "./",
+      "source": "./plugins/octave",
       "description": "Access Octave's GTM knowledge base for positioning, research, content generation, and sales enablement",
       "version": "1.16.0",
       "author": {
