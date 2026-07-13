@@ -67,9 +67,10 @@ fi
 
 if [ -z "$TOKEN" ]; then
   echo "error: no access token — set ARTIFACTS_ACCESS_TOKEN" >&2
-  echo "mint one: curl -X POST $BASE_URL/api/v1/user/access-token \\" >&2
-  echo '  -H "Authorization: Bearer <service-key>" -H "Content-Type: application/json" \' >&2
-  echo '  -d '"'"'{"userOId":"...","workspaceOId":"...","firstName":"...","lastName":"...","email":"..."}'"'" >&2
+  echo "hint: mint one via the asset_generate_access_token MCP tool, then pass it inline:" >&2
+  echo "      ARTIFACTS_ACCESS_TOKEN='<token>' $0 ..." >&2
+  echo "      (Do NOT curl /api/v1/user/access-token — that needs a service key the" >&2
+  echo "       asset-manager skill does not have.)" >&2
   exit 1
 fi
 
@@ -87,17 +88,37 @@ if [ "$HTTP_CODE" != "200" ]; then
   exit 1
 fi
 
-# 2. Extract the identifier and metadata.filesMap[].path — jq when available,
-#    sed/grep fallback (the filesMap array contains no nested arrays, so the
-#    first ] ends it).
+# 2. Extract the identifier and metadata.filesMap[].path. Prefer a real JSON
+#    parser (jq, then python3); fall back to sed/grep only if neither exists.
+#    The sed fallback is intentionally last: it truncates filesMap at the first
+#    literal `]`, so a filename containing `]` (e.g. "logo [1x].png") would
+#    silently drop that file and every file after it — the JSON parsers do not.
 if command -v jq >/dev/null 2>&1; then
   IDENTIFIER=$(jq -r '.identifier // empty' "$META_FILE")
   PATHS=$(jq -r '.metadata.filesMap[].path' "$META_FILE")
+elif command -v python3 >/dev/null 2>&1 || command -v python >/dev/null 2>&1; then
+  PY=$(command -v python3 || command -v python)
+  IDENTIFIER=$("$PY" -c 'import json,sys; print(json.load(open(sys.argv[1])).get("identifier") or "")' "$META_FILE")
+  PATHS=$("$PY" -c 'import json,sys
+d=json.load(open(sys.argv[1]))
+for f in (d.get("metadata") or {}).get("filesMap") or []:
+    p=f.get("path")
+    if p: print(p)' "$META_FILE")
 else
   IDENTIFIER=$(grep -o '"identifier":"[^"]*"' "$META_FILE" | head -1 |
     sed -e 's/^"identifier":"//' -e 's/"$//')
   PATHS=$(sed -e 's/.*"filesMap":\[//' -e 's/\].*//' "$META_FILE" |
     grep -o '"path":"[^"]*"' | sed -e 's/^"path":"//' -e 's/"$//')
+  # Guard against the sed truncation above silently dropping files: the parsed
+  # count must match the number of "path": entries in the whole response.
+  EXPECTED=$(grep -o '"path":"' "$META_FILE" | wc -l | tr -d ' ')
+  GOT=$(printf '%s\n' "$PATHS" | grep -c .)
+  if [ "$GOT" != "$EXPECTED" ]; then
+    echo "error: could not reliably parse the file list without jq/python" >&2
+    echo "       (got $GOT of $EXPECTED paths — a filename may contain a special" >&2
+    echo "        character). Install jq or python3 and retry." >&2
+    exit 1
+  fi
 fi
 
 if [ -z "$PATHS" ]; then
@@ -119,7 +140,22 @@ echo "downloading into $DEST/"
 COUNT=0
 while IFS= read -r FILE_PATH; do
   [ -n "$FILE_PATH" ] || continue
-  ENCODED=$(printf '%s' "$FILE_PATH" | sed 's/ /%20/g')
+  # Defense in depth: the server sanitizes upload paths, but this client writes
+  # whatever the response says. Refuse anything that could escape $DEST — an
+  # absolute path or a `..` segment — so a compromised/MITM'd response can't make
+  # curl -o / rm -f touch files outside the download folder.
+  case "/$FILE_PATH/" in
+    //* | */../* | *//* )
+      echo "error: refusing unsafe file path from server response: $FILE_PATH" >&2
+      exit 1
+      ;;
+  esac
+  # Percent-encode the characters that would otherwise break the request URL
+  # (`%` first, so we don't double-encode). Path separators are left intact
+  # because the download route is a wildcard path.
+  ENCODED=$(printf '%s' "$FILE_PATH" | sed \
+    -e 's/%/%25/g' -e 's/ /%20/g' -e 's/#/%23/g' -e 's/?/%3F/g' \
+    -e 's/+/%2B/g' -e 's/&/%26/g')
   mkdir -p "$DEST/$(dirname "$FILE_PATH")"
   HTTP_CODE=$(curl -sS -o "$DEST/$FILE_PATH" -w "%{http_code}" \
     -H "Authorization: Bearer $TOKEN" \

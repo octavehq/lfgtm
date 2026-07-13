@@ -116,7 +116,7 @@ All in `${CLAUDE_PLUGIN_ROOT:-.}/skills/asset-manager/scripts/` (bash + curl; jq
 | `update-artifact.sh` | Replace an asset's files (FULL REPLACE) | `--uuid <u> --src <path>` |
 | `download-artifact.sh` | Download all files of an owned or workspace-shared asset | `--uuid <u> --out <parent-dir>` — files always land in `<parent-dir>/<identifier>/` |
 
-Script gotcha: metadata values are interpolated into JSON **without escaping** — `--identifier` and `--description` values must contain no double quotes or backslashes. If the description needs them, upload with a plain placeholder and set the real text afterward via `asset_update` (which is JSON-safe).
+Script gotcha: metadata values are interpolated into JSON **without escaping** — `--identifier`, `--description`, and `--entry-point` values must contain no double quotes or backslashes (the scripts now reject them rather than corrupt the payload). If the description needs them, upload with a plain placeholder and set the real text afterward via `asset_update` (which is JSON-safe).
 
 ## Workflow: Publish a New Asset
 
@@ -140,24 +140,25 @@ Script gotcha: metadata values are interpolated into JSON **without escaping** �
 7. **Upload.**
    - Source is already a `.zip` → `upload-artifact.sh --src <file>.zip ...`
    - Source is a folder → `zip-and-upload-artifact.sh --src <folder> ...` (fall back to `upload-artifact.sh` per-file multipart only if zipping fails)
-   - Always pass explicitly: `--identifier`, `--description`, `--visibility`, `--status`, `--share-workspace`, and `--entry-point` for websites. Never rely on script defaults.
+   - Always pass explicitly: `--type`, `--identifier`, `--description`, `--visibility`, `--status`, `--share-workspace`, and `--entry-point` for websites. Never rely on script defaults — `--type` in particular defaults to `website`, and `type` is immutable after create, so a storage bundle uploaded without it can only be fixed by delete-and-recreate.
 8. **Record and report.** Update the registry (uuid, identifier, description, type, visibility, status, workspace sharing, url). Then ALWAYS report the link:
    - Published + public → `Public — anyone with the link can view: <siteUrl>` (website) or `<base>/download/<uuid>` (storage)
    - Private, draft, or archived → `Preview (you + workspace members): <previewUrl>` from the upload output's `preview:` line, and **offer a share link now** for people outside the workspace (see Shares workflow)
 
-**The Exact Publish Sequence** — the ENTIRE publish is these five actions and nothing else:
+**The Exact Publish Sequence** — the ENTIRE publish is these actions and nothing else:
 
 ```
 1. assets_list                    ← MCP tool call (Cache Rule)
-2. AskUserQuestion                ← identifier, then visibility + workspace sharing + status
-3. asset_generate_access_token    ← MCP tool call; capture accessToken from the result
-4. ONE bash command               ← ARTIFACTS_ACCESS_TOKEN='<accessToken>' \
+2. AskUserQuestion (identifier)   ← offer suggestion + alternates
+3. AskUserQuestion (one call)     ← visibility + workspace sharing + status
+4. asset_generate_access_token    ← MCP tool call; capture accessToken from the result
+5. ONE bash command               ← ARTIFACTS_ACCESS_TOKEN='<accessToken>' \
                                       bash "${CLAUDE_PLUGIN_ROOT:-.}"/skills/asset-manager/scripts/zip-and-upload-artifact.sh \
-                                      --src … --identifier … --description … --visibility … --status … --share-workspace … [--entry-point …]
-5. Update the registry, report the link
+                                      --src … --type … --identifier … --description … --visibility … --status … --share-workspace … [--entry-point …]
+6. Update the registry, report the link
 ```
 
-A publish that runs more than one upload command, or any script outside the bundled four, is off the rails — stop and restart from this sequence.
+A publish that creates more than one asset, or runs any script outside the bundled four, is off the rails — stop and restart from this sequence. (The documented recoveries are NOT off the rails: the `zip → upload-artifact.sh` per-file fallback when zipping fails, and a single 401/502 retry, each stay within this one publish.)
 
 ## Workflow: Update an Asset's Files
 

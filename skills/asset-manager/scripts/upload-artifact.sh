@@ -83,9 +83,10 @@ SRC="${SRC%/}"
 
 if [ -z "$TOKEN" ]; then
   echo "error: no access token — set ARTIFACTS_ACCESS_TOKEN" >&2
-  echo "mint one: curl -X POST $BASE_URL/api/v1/user/access-token \\" >&2
-  echo '  -H "Authorization: Bearer <service-key>" -H "Content-Type: application/json" \' >&2
-  echo '  -d '"'"'{"userOId":"...","workspaceOId":"...","firstName":"...","lastName":"...","email":"..."}'"'" >&2
+  echo "hint: mint one via the asset_generate_access_token MCP tool, then pass it inline:" >&2
+  echo "      ARTIFACTS_ACCESS_TOKEN='<token>' $0 ..." >&2
+  echo "      (Do NOT curl /api/v1/user/access-token — that needs a service key the" >&2
+  echo "       asset-manager skill does not have.)" >&2
   exit 1
 fi
 
@@ -98,6 +99,22 @@ case "$SHARE_WORKSPACE" in true | false) ;; *) echo "error: --share-workspace mu
 NAME=$(basename "$SRC")
 NAME="${NAME%.zip}"
 IDENTIFIER="${IDENTIFIER:-$NAME}"
+
+# These string fields are interpolated into the metadata JSON without escaping.
+# A `"` or `\` in any of them would break the JSON — and because entryPoint is
+# appended last, a crafted value there can inject overriding keys (e.g.
+# `...","visibility":"public`) that silently defeat --visibility/--status. Reject
+# rather than try to escape. (--identifier defaults to the folder basename, which
+# can legally contain these, so this must run after the default is applied.)
+for _field in "identifier=$IDENTIFIER" "description=$DESCRIPTION" "entry-point=$ENTRY_POINT"; do
+  case "${_field#*=}" in
+    *\"* | *\\*)
+      echo "error: --${_field%%=*} must not contain double quotes or backslashes" >&2
+      exit 1
+      ;;
+  esac
+done
+
 METADATA=$(printf '{"identifier":"%s","description":"%s","type":"%s","visibility":"%s","status":"%s","shareWithWorkspace":%s' \
   "$IDENTIFIER" "$DESCRIPTION" "$TYPE" "$VISIBILITY" "$STATUS" "$SHARE_WORKSPACE")
 # entryPoint is website-only; storage artifacts ignore it.
@@ -113,6 +130,17 @@ if [ -d "$SRC" ]; then
   FILE_COUNT=0
   while IFS= read -r FILE; do
     REL="${FILE#"$SRC"/}"
+    # curl's `-F files=@path;filename=REL` shorthand parses `;` `,` and `"` as
+    # directive/quote characters, so a file whose relative path contains any of
+    # them corrupts the part or aborts the whole upload. Reject with a clear,
+    # per-file message instead of failing cryptically inside curl.
+    case "$REL" in
+      *\;* | *,* | *\"*)
+        echo "error: file path contains an unsupported character (; , or \"): $REL" >&2
+        echo "       rename the file and retry (curl multipart cannot encode these)." >&2
+        exit 1
+        ;;
+    esac
     FORM_ARGS+=("-F" "files=@$FILE;filename=$REL")
     FILE_COUNT=$((FILE_COUNT + 1))
   done < <(find "$SRC" -type f ! -path '*/.*' ! -name '.*' | sort)
@@ -152,22 +180,24 @@ else
   cat "$RESP_FILE"
   echo
   UUID=$(grep -o '"uuid":"[^"]*"' "$RESP_FILE" | head -1 | sed -e 's/^"uuid":"//' -e 's/"$//')
-  # previewUrl is a string only for private artifacts (else JSON null → no match).
+  # previewUrl is a string for any non-public artifact (private, draft, or
+  # archived); it is JSON null (→ no match) only once published + public.
   PREVIEW_URL=$(grep -o '"previewUrl":"[^"]*"' "$RESP_FILE" | head -1 | sed -e 's/^"previewUrl":"//' -e 's/"$//')
 fi
 
 echo
 echo "created: $UUID"
 if [ "$VISIBILITY" != "public" ] || [ "$STATUS" != "published" ]; then
-  echo "publish:  curl -X POST $BASE_URL/api/v1/artifacts/$UUID/publish -H \"Authorization: Bearer \$ARTIFACTS_ACCESS_TOKEN\""
+  echo "note:     not yet public. Via the asset-manager skill, publish with the" >&2
+  echo "          asset_update MCP tool (status=published, visibility=public)." >&2
 fi
 if [ "$TYPE" = "storage" ]; then
   echo "download: $BASE_URL/download/$UUID"
 else
   echo "serve:    $BASE_URL/sites/$IDENTIFIER-$UUID/"
 fi
-# Private artifacts return a tokenized preview link (owner + same workspace)
-# that renders the site/download without making it public. Only set when private.
+# Non-public artifacts (private, draft, or archived) return a tokenized preview
+# link (owner + same workspace) that renders without making them public.
 if [ -n "${PREVIEW_URL:-}" ]; then
   echo "preview:  $PREVIEW_URL"
 fi

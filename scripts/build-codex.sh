@@ -155,7 +155,7 @@ See the [upstream README](https://github.com/octavehq/lfgtm#skills) for full des
 
 ## Not included
 
-The upstream plugin ships four subagent personas (\`octave-assistant\`, \`pmm-strategist\`, \`sdr-coach\`, \`revenue-strategist\`). Codex has no subagent concept, so these are not available in this build. Use the corresponding skills directly.
+The upstream plugin ships five subagent personas (\`octave-assistant\`, \`pmm-strategist\`, \`sdr-coach\`, \`revenue-strategist\`, \`asset-manager\`). Codex has no subagent concept, so these are not available in this build. Use the corresponding skills directly.
 EOF
 
 # 8. Summary

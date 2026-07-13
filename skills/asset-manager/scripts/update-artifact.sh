@@ -85,9 +85,10 @@ SRC="${SRC%/}"
 
 if [ -z "$TOKEN" ]; then
   echo "error: no access token — set ARTIFACTS_ACCESS_TOKEN" >&2
-  echo "mint one: curl -X POST $BASE_URL/api/v1/user/access-token \\" >&2
-  echo '  -H "Authorization: Bearer <service-key>" -H "Content-Type: application/json" \' >&2
-  echo '  -d '"'"'{"userOId":"...","workspaceOId":"...","firstName":"...","lastName":"...","email":"..."}'"'" >&2
+  echo "hint: mint one via the asset_generate_access_token MCP tool, then pass it inline:" >&2
+  echo "      ARTIFACTS_ACCESS_TOKEN='<token>' $0 ..." >&2
+  echo "      (Do NOT curl /api/v1/user/access-token — that needs a service key the" >&2
+  echo "       asset-manager skill does not have.)" >&2
   exit 1
 fi
 
@@ -103,8 +104,18 @@ if [ -n "$SHARE_WORKSPACE" ]; then
 fi
 
 # Assemble a metadata patch from only the flags that were passed. Values are
-# interpolated as-is (matches upload-artifact.sh — keep them free of embedded
-# double quotes/backslashes).
+# interpolated as-is, so reject embedded double quotes/backslashes: they would
+# break the JSON, and (since entryPoint can be appended before visibility/status)
+# a crafted value could inject overriding keys. Same guard as upload-artifact.sh.
+for _field in "identifier=$IDENTIFIER" "description=$DESCRIPTION" "entry-point=$ENTRY_POINT"; do
+  case "${_field#*=}" in
+    *\"* | *\\*)
+      echo "error: --${_field%%=*} must not contain double quotes or backslashes" >&2
+      exit 1
+      ;;
+  esac
+done
+
 META_PARTS=()
 if [ -n "$IDENTIFIER" ];  then META_PARTS+=("\"identifier\":\"$IDENTIFIER\""); fi
 if [ -n "$DESCRIPTION" ]; then META_PARTS+=("\"description\":\"$DESCRIPTION\""); fi
@@ -137,6 +148,16 @@ if [ -n "$SRC" ]; then
     FILE_COUNT=0
     while IFS= read -r FILE; do
       REL="${FILE#"$SRC"/}"
+      # curl's `-F files=@path;filename=REL` shorthand parses `;` `,` and `"`
+      # specially, so a file whose relative path contains any of them corrupts
+      # the part or aborts the upload. Reject with a clear, per-file message.
+      case "$REL" in
+        *\;* | *,* | *\"*)
+          echo "error: file path contains an unsupported character (; , or \"): $REL" >&2
+          echo "       rename the file and retry (curl multipart cannot encode these)." >&2
+          exit 1
+          ;;
+      esac
       FORM_ARGS+=("-F" "files=@$FILE;filename=$REL")
       FILE_COUNT=$((FILE_COUNT + 1))
     done < <(find "$SRC" -type f ! -path '*/.*' ! -name '.*' | sort)
@@ -199,21 +220,23 @@ IDENT=$(json_field identifier)
 TYPE=$(json_field type)
 STATUS_OUT=$(json_field status)
 VIS_OUT=$(json_field visibility)
-# previewUrl is present only for private artifacts (json_field yields "" for null).
+# previewUrl is present for any non-public artifact — private, draft, or archived
+# (json_field yields "" for the null it becomes once published + public).
 PREVIEW_URL=$(json_field previewUrl)
 
 echo
 echo "updated: $UUID"
 if [ "$STATUS_OUT" != "published" ] || [ "$VIS_OUT" != "public" ]; then
-  echo "publish:  curl -X POST $BASE_URL/api/v1/artifacts/$UUID/publish -H \"Authorization: Bearer \$ARTIFACTS_ACCESS_TOKEN\""
+  echo "note:     not yet public. Via the asset-manager skill, publish with the" >&2
+  echo "          asset_update MCP tool (status=published, visibility=public)." >&2
 fi
 if [ "$TYPE" = "storage" ]; then
   echo "download: $BASE_URL/download/$UUID"
 else
   echo "serve:    $BASE_URL/sites/$IDENT-$UUID/"
 fi
-# Private artifacts return a tokenized preview link (owner + same workspace)
-# that renders the site/download without making it public.
+# Non-public artifacts (private, draft, or archived) return a tokenized preview
+# link (owner + same workspace) that renders without making them public.
 if [ -n "${PREVIEW_URL:-}" ]; then
   echo "preview:  $PREVIEW_URL"
 fi

@@ -82,9 +82,10 @@ fi
 
 if [ -z "$TOKEN" ]; then
   echo "error: no access token — set ARTIFACTS_ACCESS_TOKEN" >&2
-  echo "mint one: curl -X POST $BASE_URL/api/v1/user/access-token \\" >&2
-  echo '  -H "Authorization: Bearer <service-key>" -H "Content-Type: application/json" \' >&2
-  echo '  -d '"'"'{"userOId":"...","workspaceOId":"...","firstName":"...","lastName":"...","email":"..."}'"'" >&2
+  echo "hint: mint one via the asset_generate_access_token MCP tool, then pass it inline:" >&2
+  echo "      ARTIFACTS_ACCESS_TOKEN='<token>' $0 ..." >&2
+  echo "      (Do NOT curl /api/v1/user/access-token — that needs a service key the" >&2
+  echo "       asset-manager skill does not have.)" >&2
   exit 1
 fi
 
@@ -96,6 +97,22 @@ case "$SHARE_WORKSPACE" in true | false) ;; *) echo "error: --share-workspace mu
 
 NAME=$(basename "$SRC")
 IDENTIFIER="${IDENTIFIER:-$NAME}"
+
+# These string fields are interpolated into the metadata JSON without escaping.
+# A `"` or `\` in any of them would break the JSON — and because entryPoint is
+# appended last, a crafted value there can inject overriding keys (e.g.
+# `...","visibility":"public`) that silently defeat --visibility/--status. Reject
+# rather than try to escape. (--identifier defaults to the folder basename, which
+# can legally contain these, so this must run after the default is applied.)
+for _field in "identifier=$IDENTIFIER" "description=$DESCRIPTION" "entry-point=$ENTRY_POINT"; do
+  case "${_field#*=}" in
+    *\"* | *\\*)
+      echo "error: --${_field%%=*} must not contain double quotes or backslashes" >&2
+      exit 1
+      ;;
+  esac
+done
+
 METADATA=$(printf '{"identifier":"%s","description":"%s","type":"%s","visibility":"%s","status":"%s","shareWithWorkspace":%s' \
   "$IDENTIFIER" "$DESCRIPTION" "$TYPE" "$VISIBILITY" "$STATUS" "$SHARE_WORKSPACE")
 # entryPoint is website-only; storage artifacts ignore it.
@@ -105,22 +122,44 @@ fi
 METADATA="$METADATA}"
 
 TMP_ZIP="${TMPDIR:-/tmp}/artifact-$NAME-$$.zip"
+STAGE_DIR="${TMPDIR:-/tmp}/artifact-stage-$NAME-$$"
 RESP_FILE="$(mktemp)"
-trap 'rm -f "$TMP_ZIP" "$RESP_FILE"' EXIT
+trap 'rm -rf "$STAGE_DIR"; rm -f "$TMP_ZIP" "$RESP_FILE"' EXIT
 
-# Zip the folder contents (paths relative to the folder root, dotfiles
-# excluded — the server rejects dotfile segments anyway).
+# Stage a clean copy containing only the non-dotfile files, preserving structure.
+# Two reasons: (1) the server rejects any dotfile path segment, and the three zip
+# backends below differ in whether they exclude dotfiles (zip's -x does; python's
+# `./*` and PowerShell's Compress-Archive do NOT), so zipping the staged copy
+# makes every backend upload the exact same, server-valid file set; (2) it gives
+# a single empty-folder guard, so we never silently upload a zero-file zip.
+rm -rf "$STAGE_DIR"
+FILE_COUNT=0
+while IFS= read -r FILE; do
+  REL="${FILE#"$SRC"/}"
+  mkdir -p "$STAGE_DIR/$(dirname "$REL")"
+  cp "$FILE" "$STAGE_DIR/$REL"
+  FILE_COUNT=$((FILE_COUNT + 1))
+done < <(find "$SRC" -type f ! -path '*/.*' ! -name '.*' | sort)
+if [ "$FILE_COUNT" -eq 0 ]; then
+  echo "error: no files found under $SRC (dotfiles are skipped)" >&2
+  exit 1
+fi
+
+# Zip the staged copy (already dotfile-free) with the first available backend.
 if command -v zip >/dev/null 2>&1; then
-  (cd "$SRC" && zip -r -q "$TMP_ZIP" . -x '.*' -x '*/.*')
+  (cd "$STAGE_DIR" && zip -r -q "$TMP_ZIP" .)
 elif command -v powershell.exe >/dev/null 2>&1; then
-  # Windows Git Bash: cygpath converts POSIX paths for PowerShell.
-  WIN_SRC=$(cygpath -w "$SRC")
+  # Windows Git Bash: cygpath converts POSIX paths for PowerShell. Single quotes
+  # in the path are doubled so they can't break out of the PowerShell string.
+  WIN_SRC=$(cygpath -w "$STAGE_DIR")
   WIN_ZIP=$(cygpath -w "$TMP_ZIP")
+  WIN_SRC_ESC=${WIN_SRC//\'/\'\'}
+  WIN_ZIP_ESC=${WIN_ZIP//\'/\'\'}
   powershell.exe -NoProfile -Command \
-    "Compress-Archive -Path '$WIN_SRC\\*' -DestinationPath '$WIN_ZIP' -Force"
+    "Compress-Archive -Path '$WIN_SRC_ESC\\*' -DestinationPath '$WIN_ZIP_ESC' -Force"
 elif command -v python3 >/dev/null 2>&1 || command -v python >/dev/null 2>&1; then
   PY=$(command -v python3 || command -v python)
-  (cd "$SRC" && "$PY" -m zipfile -c "$TMP_ZIP" ./*)
+  (cd "$STAGE_DIR" && "$PY" -m zipfile -c "$TMP_ZIP" ./*)
 else
   echo "error: need one of: zip, powershell.exe, python3/python to create a zip" >&2
   exit 1
@@ -150,22 +189,24 @@ else
   cat "$RESP_FILE"
   echo
   UUID=$(grep -o '"uuid":"[^"]*"' "$RESP_FILE" | head -1 | sed -e 's/^"uuid":"//' -e 's/"$//')
-  # previewUrl is a string only for private artifacts (else JSON null → no match).
+  # previewUrl is a string for any non-public artifact (private, draft, or
+  # archived); it is JSON null (→ no match) only once published + public.
   PREVIEW_URL=$(grep -o '"previewUrl":"[^"]*"' "$RESP_FILE" | head -1 | sed -e 's/^"previewUrl":"//' -e 's/"$//')
 fi
 
 echo
 echo "created: $UUID"
 if [ "$VISIBILITY" != "public" ] || [ "$STATUS" != "published" ]; then
-  echo "publish:  curl -X POST $BASE_URL/api/v1/artifacts/$UUID/publish -H \"Authorization: Bearer \$ARTIFACTS_ACCESS_TOKEN\""
+  echo "note:     not yet public. Via the asset-manager skill, publish with the" >&2
+  echo "          asset_update MCP tool (status=published, visibility=public)." >&2
 fi
 if [ "$TYPE" = "storage" ]; then
   echo "download: $BASE_URL/download/$UUID"
 else
   echo "serve:    $BASE_URL/sites/$IDENTIFIER-$UUID/"
 fi
-# Private artifacts return a tokenized preview link (owner + same workspace)
-# that renders the site/download without making it public. Only set when private.
+# Non-public artifacts (private, draft, or archived) return a tokenized preview
+# link (owner + same workspace) that renders without making them public.
 if [ -n "${PREVIEW_URL:-}" ]; then
   echo "preview:  $PREVIEW_URL"
 fi
