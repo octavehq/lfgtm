@@ -75,7 +75,7 @@ Great! Now let's define how to repurpose this content.
 WHO is this for?
 (Select a persona, segment, or describe the audience)
 
-1. [List personas from library via list_all_entities]
+1. [List personas from library via list_entities]
 2. [List segments from library]
 3. Describe a custom audience
 
@@ -127,7 +127,7 @@ list_motion_icps({ motionOId: "<motion_oId>" })
 find_motion_icp({ motionIcpOId: "<motion_icp_oId>", includeLearnings: true })
 
 # Get brand voice if adjusting tone
-list_all_entities(entityType: "brand_voice")
+list_entities(entityType: "brand_voice")
 
 # Get writing style if specified
 list_writing_styles()
@@ -153,7 +153,7 @@ find_motion_icp({ motionIcpOId: "<motion_icp_oId>", includeLearnings: true })
 **For Format/Channel Changes:**
 ```
 # Get brand voice guidelines
-list_all_entities(entityType: "brand_voice")
+list_entities(entityType: "brand_voice")
 
 # Get writing style for target format
 search_knowledge_base({
@@ -288,8 +288,8 @@ See [common-scenarios.md](references/common-scenarios.md) for the four common re
 ## MCP Tools Used
 
 ### Read Operations
-- `list_all_entities` - Get available personas and segments
-- `list_all_entities` (entityType: "brand_voice") - Get available brand voice configurations
+- `list_entities` - Get available personas and segments
+- `list_entities` (entityType: "brand_voice") - Get available brand voice configurations
 - `list_writing_styles` - Get available writing style configurations
 - `get_entity` - Get full details for persona and segment entities by oId
 - `list_motions` - List Motions in the workspace

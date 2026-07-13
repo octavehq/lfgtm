@@ -12,7 +12,7 @@ Start with enrichment and qualification — this drives the personalization that
 | Motion ICP cell narrative | `find_motion_icp({ personaOId, segmentOId, includeLearnings: true })` | Always — once qualification names the matched persona × segment, fetch the cell directly. If multiple cells come back (several playbooks cover the slot), prefer the one on the DEFAULT-narrative playbook unless the chosen angle matches a specialized one |
 | Persona × segment matrix | `list_motion_icps({ motionOId })` | Only when browsing — the matrix can run to hundreds of paginated cells, so don't scan it to find one cell; use the filtered `find_motion_icp` call above instead |
 | Custom Motion Playbooks | `list_motion_playbooks({ motionOId })` + `get_motion_playbook` | Pull any Thematic / Milestone / Account / Competitive angles layered on the Motion |
-| Brand voice | `list_all_entities(entityType: "brand_voice")` | Always — consistent tone across the microsite |
+| Brand voice | `list_entities(entityType: "brand_voice")` | Always — consistent tone across the microsite |
 
 ---
 
@@ -47,7 +47,7 @@ When the angle is competitive displacement:
 
 | What you need | Tool | When to use |
 |---------------|------|-------------|
-| All competitors | `list_all_entities({ entityType: "competitor" })` | Quick scan of competitive landscape |
+| All competitors | `list_entities({ entityType: "competitor" })` | Quick scan of competitive landscape |
 | Competitor details | `get_entity({ oId })` | Deep dive on the specific competitor they likely use |
 | Competitive positioning | `search_knowledge_base({ query: "<competitor> differentiation", entityTypes: ["competitor"] })` | Messaging angles for competitive deals |
 | Competitive Motion Playbook | `list_motion_playbooks({ motionOId })` then `get_motion_playbook` on any `COMPETITIVE` narrative-type playbook | Pull a dedicated competitive Custom Motion Playbook if one exists for the relevant competitor |
@@ -71,6 +71,6 @@ When the angle is tied to a recent event or news:
 
 | What you need | Tool | When to use |
 |---------------|------|-------------|
-| Products | `list_all_entities({ entityType: "product" })` | When you need product capabilities for the solution section |
-| Use cases | `list_all_entities({ entityType: "use_case" })` | When you want to show relevant use cases |
+| Products | `list_entities({ entityType: "product" })` | When you need product capabilities for the solution section |
+| Use cases | `list_entities({ entityType: "use_case" })` | When you want to show relevant use cases |
 | Synthesized prep | `generate_call_prep({ companyDomain })` | When you want a comprehensive brief to work from |

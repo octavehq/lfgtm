@@ -119,7 +119,7 @@ search_knowledge_base({ query: "<campaign topic>", entityTypes: ["proof_point", 
 get_entity({ oId: "<competitor_oId>" })
 
 # Get brand voice
-list_all_entities(entityType: "brand_voice")
+list_entities(entityType: "brand_voice")
 
 # Get writing style
 list_writing_styles()
@@ -275,7 +275,7 @@ See [generation-modes.md](../shared/generation-modes.md) for the default generat
 ## MCP Tools Used
 
 ### Library Context
-- `list_all_entities` - List available personas, products
+- `list_entities` - List available personas, products
 - `get_entity` - Get full entity details
 - `list_motions` - List all Motions in the workspace
 - `list_motion_icps` - List Motion ICP cells (persona × segment intersections) for a Motion
@@ -283,7 +283,7 @@ See [generation-modes.md](../shared/generation-modes.md) for the default generat
 - `list_motion_playbooks` - List Default + Custom Motion Playbooks under a Motion (when a Thematic / Milestone / Account / Competitive angle applies)
 - `get_motion_playbook` - Full details for a Motion Playbook
 - `search_knowledge_base` - Find proof points, references, messaging
-- `list_all_entities` (entityType: "brand_voice") - Get brand voice for consistency
+- `list_entities` (entityType: "brand_voice") - Get brand voice for consistency
 - `list_writing_styles` - Get writing style guidelines
 
 ### Content Generation

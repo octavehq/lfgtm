@@ -46,18 +46,18 @@ Starting analysis...
 
 ```
 # Get current segments (this IS the ICP definition)
-list_all_entities({ entityType: "segment" })
+list_entities({ entityType: "segment" })
 
 # Get full segment details
 get_entity({ oId: "<segment_oId>" })  // for each segment
 
 # Get current personas
-list_all_entities({ entityType: "persona" })
+list_entities({ entityType: "persona" })
 get_entity({ oId: "<persona_oId>" })  // for key personas
 
 # Get products/services (what we're selling)
-list_all_entities({ entityType: "product" })
-list_all_entities({ entityType: "service" })
+list_entities({ entityType: "product" })
+list_entities({ entityType: "service" })
 ```
 
 ### Step 3: Analyze Deal Outcomes
@@ -184,7 +184,7 @@ What would you like to do next?
 ## MCP Tools Used
 
 ### Library Context
-- `list_all_entities` - Segments, personas, products
+- `list_entities` - Segments, personas, products
 - `get_entity` - Full entity details for ICP definition
 
 ### Deal Analytics

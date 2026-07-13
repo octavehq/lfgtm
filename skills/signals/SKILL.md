@@ -75,7 +75,12 @@ Bucket the returned findings by type yourself (objections, competitors, value pr
 
 **D. Library Context (for gap detection)**
 ```
-list_all_entities({})
+list_entities({ entityType: "persona" })
+list_entities({ entityType: "segment" })
+list_entities({ entityType: "use_case" })
+list_entities({ entityType: "competitor" })
+list_entities({ entityType: "objection" })
+list_entities({ entityType: "proof_point" })
 ```
 
 ### Step 2: Analyze and Prioritize Signals
@@ -191,7 +196,7 @@ Suggest the appropriate follow-up skill based on signal type:
 - `get_event_detail` - Drill into specific events
 
 ### Library Context
-- `list_all_entities` - Full library inventory for gap detection
+- `list_entities` - Full library inventory for gap detection
 - `list_motions` - List Motions in the workspace
 - `list_motion_playbooks` - List Motion Playbooks under a Motion
 - `list_motion_icps` - List Motion ICP cells under a Motion

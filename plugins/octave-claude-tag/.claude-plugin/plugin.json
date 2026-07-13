@@ -1,0 +1,9 @@
+{
+  "name": "octave-claude-tag",
+  "version": "1.0.0",
+  "description": "Claude Tag only — declares the Octave MCP server (https://mcp.octavehq.com/mcp) without embedding credentials, for access bundles where an admin attaches an Octave API-key credential and the proxy injects it at the network layer. Do NOT install in Claude Code or Claude Desktop: this declaration carries no credential or workspace context there — use `claude mcp add` with your workspace URL instead (see the lfgtm README).",
+  "author": {
+    "name": "Octave",
+    "url": "https://octavehq.com"
+  }
+}

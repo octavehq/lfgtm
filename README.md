@@ -42,6 +42,38 @@ This repo is the source of truth. On every push to `main`, the same skills are a
 
 Install from the matching repo (see its README). Don't edit those repos directly — they're generated and overwritten. File issues and PRs here.
 
+### Claude Tag (Claude in Slack)
+
+[Claude Tag](https://claude.com/product/tag) lets a whole Slack workspace @-mention Claude in channels. It connects to Octave through an admin-provisioned **access bundle** rather than per-user OAuth, so setup differs from Claude Code:
+
+1. **Create an Octave API key** in Octave under **Settings → API Keys**. Claude Tag credentials are shared by everyone in the bundle's scope, so we recommend a **read-only** key (create one directly, or use the row menu → "Make read-only") unless you want channel members writing to your Library.
+2. **Add the credential**: in [claude.ai admin settings](https://claude.ai/admin-settings/claude-tag), open your access bundle → **Credentials → Connect another tool**. Choose credential type **Bearer**, name it "Octave MCP", set **Allowed websites** to `mcp.octavehq.com`, and paste the API key as the token. (The Octave MCP server accepts API keys via `Authorization: Bearer` or an `x-api-key` header.)
+3. **Attach the plugins (recommended)**: the credential alone is enough for Claude to reach Octave — it can discover and drive the MCP server ad hoc from a channel. Attaching the plugins upgrades that to a first-class integration and is what we recommend for real rollouts:
+   - **`octave-claude-tag`** — a credential-less `.mcp.json` that registers the Octave MCP server (`https://mcp.octavehq.com/mcp`) natively, so the tool list and schemas are loaded up front instead of Claude re-discovering the API every thread — faster, cheaper, and consistent across users. No `ctx` parameter is needed: the API key identifies your workspace, and the bundle's credential is injected at the network layer.
+   - **`octave`** — the skills and agents in this repo, which teach Claude *when* and *how* to use those tools well.
+
+   Claude Tag currently only accepts **private repositories** as plugin sources, so you can't point it at this public repo directly. Three ways in, easiest first:
+
+   **Option A — download the ready-made zip (no terminal, no GitHub account):**
+   Download [`octave-plugin.zip`](https://github.com/octavehq/lfgtm/releases/download/claude-tag-plugin/octave-plugin.zip) — an upload-ready bundle rebuilt automatically on every change to this repo — and upload it in the bundle's **Plugins** tab. To get updates later, re-download and re-upload the same file. (Don't use GitHub's native "Download ZIP" — it wraps everything in an `lfgtm-main/` folder, so `.claude-plugin/` isn't at the archive root where the console looks for it.)
+
+   **Option B — private mirror in the browser (no terminal):**
+   Open GitHub's [repository import](https://github.com/new/import), paste `https://github.com/octavehq/lfgtm.git` as the source, choose your organization as the owner, set visibility to **Private**, and import. Then connect `YOUR_ORG/lfgtm` in the bundle's **Plugins** tab and enable both plugins. (Imports don't auto-sync — to update later, use the CLI sync in Option C, or just switch to the zip flow.)
+
+   **Option C — private mirror via CLI (updatable):**
+   ```bash
+   gh repo create YOUR_ORG/lfgtm --private
+   git clone https://github.com/octavehq/lfgtm.git && cd lfgtm
+   git remote add mirror https://github.com/YOUR_ORG/lfgtm.git
+   git push mirror main
+   ```
+   Connect `YOUR_ORG/lfgtm` in the bundle's **Plugins** tab and enable both plugins. To pull future updates: `git pull origin main && git push mirror main`.
+4. **Verify**: attach the bundle to a channel and send `@Claude verify your Octave connection`.
+
+The in-app guide (Octave → Settings → API Keys → Connect MCP → **Claude Tag**) walks through the same steps with copy buttons.
+
+> **Note:** `octave-claude-tag` is for externally injected credentials (Claude Tag), which is why it isn't part of the Claude Code install steps above. In Claude Code, keep using `claude mcp add` with your workspace URL as described below — the bare server declaration in `octave-claude-tag` has no credential and no workspace context on its own, so installing it there just produces a failing server.
+
 ## Quick Start
 
 ### 1. Configure MCP Server
@@ -553,14 +585,13 @@ Authentication is handled via OAuth at the MCP server level. No API keys are sto
 
 ## MCP Tools
 
-The plugin uses the single Octave MCP server you configure (e.g. `octave-acme`). Call tools by name (e.g. `verify_connection()`, `get_entity(...)`, `list_all_entities(...)`).
+The plugin uses the single Octave MCP server you configure (e.g. `octave-acme`). Call tools by name (e.g. `verify_connection()`, `get_entity(...)`, `list_entities(...)`).
 
 ### Connection
 - `verify_connection` - Verify workspace connection and authentication status
 
 ### Library Read
-- `list_all_entities` - Quick list with basic fields
-- `list_entities` - Detailed list with pagination
+- `list_entities` - List entities by type; slim rows by default, `includeDetails: true` for full data, plus `search`, `all`, and pagination
 - `get_entity` - Full entity details
 - `list_revisions` - List version history for library entities
 - `get_revision` - Get a specific historical revision of an entity
@@ -594,7 +625,7 @@ Still available for workspaces operating on legacy standalone playbooks, but Mot
 ### Configuration
 - `list_writing_styles` - List all writing style configurations
 
-> Brand voices are retrieved via the generic entity tools: `list_all_entities({ entityType: "brand_voice" })` or `list_entities({ entityType: "brand_voice" })`.
+> Brand voices are retrieved via the generic entity tool: `list_entities({ entityType: "brand_voice" })`.
 
 ### Resources
 - `list_resources` - List global resources (documents, websites) with filtering

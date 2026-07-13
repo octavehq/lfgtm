@@ -6,7 +6,7 @@ Shared reference for the Octave document and deck skills: how to choose between 
 
 | Tool | Purpose | Use when... |
 |------|---------|-------------|
-| `list_all_entities({ entityType })` | Fetch all entities of a type (minimal fields) | You want a quick inventory — "show me all our personas" |
+| `list_entities({ entityType })` | Fetch all entities of a type (minimal fields) | You want a quick inventory — "show me all our personas" |
 | `list_entities({ entityType })` | Fetch entities with full data (paginated) | You need the actual content — "get full proof point details" |
 | `get_entity({ oId })` | Deep dive on one specific entity | You found something relevant and need the complete picture |
 | `search_knowledge_base({ query })` | Semantic search across library + resources | You have a concept or question — "how do we position for healthcare?" |
@@ -64,7 +64,7 @@ This turns a generic "here's our product" asset into "here's what we heard from 
 
 | What you need | Tool | When to use |
 |---------------|------|-------------|
-| Competitor scan | `list_all_entities({ entityType: "competitor" })` | Who's in the landscape |
+| Competitor scan | `list_entities({ entityType: "competitor" })` | Who's in the landscape |
 | Competitor deep dive | `get_entity({ oId })` | Full strengths, weaknesses, positioning |
 | Competitive positioning | `search_knowledge_base({ query: "<competitor> differentiation", entityTypes: ["competitor"] })` | Messaging angles when a competitor is in the deal |
 | Competitive Motion Playbook | `list_motion_playbooks({ motionOId })` filtered by `narrativeType === "COMPETITIVE"` + `get_motion_playbook` | A dedicated competitive narrative layered on the Motion |
@@ -84,7 +84,7 @@ This turns a generic "here's our product" asset into "here's what we heard from 
 |---------------|------|-------------|
 | Positioning/messaging content | `generate_content({ instructions, customContext })` | Synthesize gathered library data into structured content |
 | Email content | `generate_email({ ... })` | Follow-up email copy |
-| Brand voices | `list_all_entities({ entityType: "brand_voice" })` | Available brand voices in the workspace |
+| Brand voices | `list_entities({ entityType: "brand_voice" })` | Available brand voices in the workspace |
 | Writing styles | `list_writing_styles()` | Available writing styles in the workspace |
 
 ## Standard error handling

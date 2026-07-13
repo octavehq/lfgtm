@@ -4,7 +4,7 @@
 
 | Tool | Purpose | Use when... |
 |------|---------|-------------|
-| `list_all_entities({ entityType })` | Fetch all entities of a type (minimal fields) | You want a quick inventory — "show me all competitors" |
+| `list_entities({ entityType })` | Fetch all entities of a type (minimal fields) | You want a quick inventory — "show me all competitors" |
 | `list_entities({ entityType })` | Fetch entities with full data (paginated) | You need actual content — "get full persona details" |
 | `get_entity({ oId })` | Deep dive on one specific entity | You found something notable and need the complete picture |
 | `search_knowledge_base({ query })` | Semantic search across library + resources | You have a concept — "how do we position against price objections?" |
@@ -47,10 +47,10 @@
 
 | What you need | Tool call | When to use |
 |---------------|-----------|-------------|
-| All competitors | `list_all_entities({ entityType: "competitor" })` | Quick inventory for breakdown charts |
+| All competitors | `list_entities({ entityType: "competitor" })` | Quick inventory for breakdown charts |
 | Competitor details | `get_entity({ oId })` | Deep dive when a competitor dominates losses |
-| All segments | `list_all_entities({ entityType: "segment" })` | Segment breakdown analysis |
-| All personas | `list_all_entities({ entityType: "persona" })` | Persona win rate analysis |
+| All segments | `list_entities({ entityType: "segment" })` | Segment breakdown analysis |
+| All personas | `list_entities({ entityType: "persona" })` | Persona win rate analysis |
 | Proof points | `list_entities({ entityType: "proof_point" })` | Evidence for "what's working" section |
 | All Motions | `list_motions()` | Inventory of Motions for Motion-level win rate analysis |
 | Motion ICP cells | `list_motion_icps({ motionOId })` | Cell-level breakdown (persona × segment) |

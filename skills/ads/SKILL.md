@@ -8,7 +8,7 @@ argument-hint: "[describe the campaign target and angle]"
 
 Generate platform-ready ad campaign plans grounded in your Octave library intelligence. Creates one ad set per persona or ICP, with creative variants generated from real prospect language extracted from calls and emails. Source cards are persisted to disk so `/octave:ads-resonance` can later map performance back to the exact derivation chain behind each headline.
 
-**MCP Server**: This skill requires the Octave MCP server. Look for available MCP tools that match the Octave tool names (e.g., `list_all_entities`, `list_findings`, `search_knowledge_base`, `get_entity`). The MCP server prefix varies by workspace — it may be `{octave_mcp}__`, `mcp__octave_myworkspace__`, or another name. If multiple Octave-like MCP servers are available and you're unsure which to use, ask the user which workspace to target.
+**MCP Server**: This skill requires the Octave MCP server. Look for available MCP tools that match the Octave tool names (e.g., `list_entities`, `list_findings`, `search_knowledge_base`, `get_entity`). The MCP server prefix varies by workspace — it may be `{octave_mcp}__`, `mcp__octave_myworkspace__`, or another name. If multiple Octave-like MCP servers are available and you're unsure which to use, ask the user which workspace to target.
 
 ---
 
@@ -118,7 +118,7 @@ Ask about voice and tone for the creative:
 
 If they choose "Use my Octave brand voice", fetch it in Step 2:
 ```
-→ {octave_mcp}__list_all_entities(entityType: "brand_voice")
+→ {octave_mcp}__list_entities(entityType: "brand_voice")
 → {octave_mcp}__get_entity(oId: "{brand_voice_oId}")  // fetch full voice guidelines (tone, word choice, style rules)
 ```
 
@@ -139,10 +139,10 @@ Based on the ad set structure chosen in Step 1, fetch the relevant data from Oct
 
 ```
 If ICP or Persona mode:
-  → {octave_mcp}__list_all_entities(entityType: "persona")
+  → {octave_mcp}__list_entities(entityType: "persona")
 
 If ICP or Segment mode:
-  → {octave_mcp}__list_all_entities(entityType: "segment")
+  → {octave_mcp}__list_entities(entityType: "segment")
 ```
 
 Present the list to the user and ask them to confirm which ones to build ad sets for, or select "all."
@@ -152,10 +152,10 @@ Present the list to the user and ask them to confirm which ones to build ad sets
 Fetch all use cases and competitors — these inform creative themes and negative targeting.
 
 ```
-→ {octave_mcp}__list_all_entities(entityType: "use_case")
-→ {octave_mcp}__list_all_entities(entityType: "competitor")
-→ {octave_mcp}__list_all_entities(entityType: "proof_point")
-→ {octave_mcp}__list_all_entities(entityType: "reference")
+→ {octave_mcp}__list_entities(entityType: "use_case")
+→ {octave_mcp}__list_entities(entityType: "competitor")
+→ {octave_mcp}__list_entities(entityType: "proof_point")
+→ {octave_mcp}__list_entities(entityType: "reference")
 ```
 
 ### 2C: Fetch Field Intelligence

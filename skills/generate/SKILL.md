@@ -259,7 +259,7 @@ search_knowledge_base({ query: "<topic> <persona>", entityTypes: ["persona"] })
 get_entity({ oId: "<persona_oId>" })
 
 # Get product details
-list_all_entities({ entityType: "product" })
+list_entities({ entityType: "product" })
 get_entity({ oId: "<product_oId>" })
 
 # Find the matching Motion + Motion ICP cell for this topic and persona
@@ -271,7 +271,7 @@ find_motion_icp({ motionIcpOId: "<motion_icp_oId>", includeLearnings: true })
 search_knowledge_base({ query: "<topic>", entityTypes: ["proof_point", "reference"] })
 
 # Get brand voice
-list_all_entities(entityType: "brand_voice")
+list_entities(entityType: "brand_voice")
 
 # Get competitive positioning if relevant
 search_knowledge_base({ query: "<topic>", entityTypes: ["competitor"] })
@@ -368,7 +368,7 @@ Your choice:
 - `find_motion_icp` - Get full Motion ICP cell narrative (Target ICP overview, Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References) plus Learning Loop learnings
 - `list_motion_playbooks` - List Default + Custom Motion Playbooks under a Motion (when a Thematic / Milestone / Account / Competitive angle applies)
 - `get_motion_playbook` - Full details for a Motion Playbook
-- `list_all_entities` (entityType: "brand_voice") - Get brand voice for consistency
+- `list_entities` (entityType: "brand_voice") - Get brand voice for consistency
 
 ### Octave Generation
 - `generate_email` - Email sequence generation (Octave Default mode)

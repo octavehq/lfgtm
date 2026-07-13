@@ -37,7 +37,7 @@ Start with company enrichment and contact discovery:
 | Motion ICP matrix | `list_motion_icps({ motionOId })` | See the persona × segment matrix under a Motion |
 | Motion ICP narrative | `find_motion_icp({ motionIcpOId, includeLearnings: true })` | Full Target ICP overview, Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References, plus Learning Loop learnings for the target cell |
 | Custom Motion Playbook details | `get_motion_playbook({ motionPlaybookOId })` | When a Custom Motion Playbook (Thematic / Milestone / Account / Competitive) layers on the relevant Motion |
-| All competitors | `list_all_entities({ entityType: "competitor" })` | Quick scan of competitive landscape |
+| All competitors | `list_entities({ entityType: "competitor" })` | Quick scan of competitive landscape |
 | Competitor details | `get_entity({ oId })` | Deep dive on a specific relevant competitor |
 | Proof points | `list_entities({ entityType: "proof_point" })` | Full proof points for the evidence section |
 | References | `list_entities({ entityType: "reference" })` | Customer references for social proof |

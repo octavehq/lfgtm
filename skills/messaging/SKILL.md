@@ -66,11 +66,11 @@ Your choice:
 
 ```
 # Get all core entities for messaging context
-list_all_entities({ entityType: "product" })
-list_all_entities({ entityType: "persona" })
-list_all_entities({ entityType: "segment" })
-list_all_entities({ entityType: "use_case" })
-list_all_entities({ entityType: "competitor" })
+list_entities({ entityType: "product" })
+list_entities({ entityType: "persona" })
+list_entities({ entityType: "segment" })
+list_entities({ entityType: "use_case" })
+list_entities({ entityType: "competitor" })
 
 # Get full product details
 get_entity({ oId: "<product_oId>" })
@@ -93,7 +93,7 @@ search_knowledge_base({
 })
 
 # Get brand voice
-list_all_entities(entityType: "brand_voice")
+list_entities(entityType: "brand_voice")
 
 # Get conversation insights for what resonates
 list_findings({
@@ -165,10 +165,10 @@ update_entity({
 ## MCP Tools Used
 
 ### Library Context
-- `list_all_entities` - List products, personas, segments, use cases, competitors
+- `list_entities` - List products, personas, segments, use cases, competitors
 - `get_entity` - Get full entity details
 - `search_knowledge_base` - Find proof points, references, competitive intel
-- `list_all_entities` (entityType: "brand_voice") - Brand voice for tone consistency
+- `list_entities` (entityType: "brand_voice") - Brand voice for tone consistency
 - `list_findings` - What resonates in real conversations
 
 ### Motions

@@ -13,7 +13,18 @@
       "name": "octave",
       "source": "./",
       "description": "Access Octave's GTM knowledge base for positioning, research, content generation, and sales enablement",
-      "version": "1.16.0",
+      "version": "1.17.0",
+      "author": {
+        "name": "Octave",
+        "url": "https://octavehq.com"
+      },
+      "homepage": "https://octavehq.com"
+    },
+    {
+      "name": "octave-claude-tag",
+      "source": "./plugins/octave-claude-tag",
+      "description": "Claude Tag only — credential-less declaration of the Octave MCP server, paired with an access bundle's API-key credential. Not for Claude Code/Desktop (use `claude mcp add` instead)",
+      "version": "1.0.0",
       "author": {
         "name": "Octave",
         "url": "https://octavehq.com"

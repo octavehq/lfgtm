@@ -41,7 +41,7 @@ description: Find personas, use cases, and proof points for the theme. Layer in 
 
 Ensure content consistency.
 
-tool: list_all_entities
+tool: list_entities
 params:
   entityType: "brand_voice"
 save_as: brand_voices

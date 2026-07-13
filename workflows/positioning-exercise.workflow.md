@@ -24,25 +24,25 @@ End-to-end workflow for building a complete Messaging & Positioning system — f
 
 Check that all required entity types exist before generating frameworks.
 
-tool: list_all_entities
+tool: list_entities
 params:
   entityType: "product"
 save_as: products
 description: Verify products exist — the positioning system needs at least one product. If multiple products exist and no product_name input was given, ask the user which one to position; save the chosen product's oId as selected_product_oId.
 
-tool: list_all_entities
+tool: list_entities
 params:
   entityType: "persona"
 save_as: personas
 description: Check personas — needed for Message Framework, Persona Messaging, Homepage Messaging.
 
-tool: list_all_entities
+tool: list_entities
 params:
   entityType: "use_case"
 save_as: use_cases
 description: Check use cases — needed for Use Case Canvas and Lifecycle.
 
-tool: list_all_entities
+tool: list_entities
 params:
   entityType: "competitor"
 save_as: competitors
@@ -85,18 +85,21 @@ description: Full product details — category, capabilities, features, position
 tool: list_entities
 params:
   entityType: "persona"
+  includeDetails: true
 save_as: persona_details
 description: Full persona data — roles, pain points, priorities, workflows.
 
 tool: list_entities
 params:
   entityType: "segment"
+  includeDetails: true
 save_as: segment_details
 description: Full segment data — firmographics, criteria, sizing.
 
 tool: list_entities
 params:
   entityType: "use_case"
+  includeDetails: true
 save_as: use_case_details
 description: Full use case data — descriptions, workflows, outcomes.
 
@@ -122,6 +125,7 @@ description: List Motion Playbooks (Default + any Custom). Fetch each Custom Mot
 tool: list_entities
 params:
   entityType: "proof_point"
+  includeDetails: true
 save_as: proof_points
 description: Proof points for evidence in Strategy table and Anchors.
 
@@ -134,9 +138,10 @@ params:
 save_as: positive_findings
 description: What resonates in real conversations — grounds Anchors and Awareness Funnel.
 
-tool: list_all_entities
+tool: list_entities
 params:
   entityType: "brand_voice"
+  includeDetails: true
 save_as: brand_voices
 description: Brand voice for Homepage Messaging tone consistency.
 

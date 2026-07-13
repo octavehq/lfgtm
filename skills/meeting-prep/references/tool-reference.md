@@ -47,7 +47,7 @@ Grounding starts here. Before anything names a person or states a "fact," confir
 | References | `list_entities({ entityType: "reference" })` | Customer references with full details |
 | Topic-matched proof | `search_knowledge_base({ query: "<industry> <use case> results", entityTypes: ["proof_point", "reference"] })` | Find proof relevant to *their* specific situation |
 | Known objections | `list_entities({ entityType: "objection" })` | Likely objections + grounded counters |
-| Competitors (scan) | `list_all_entities({ entityType: "competitor" })` | Who's in the landscape |
+| Competitors (scan) | `list_entities({ entityType: "competitor" })` | Who's in the landscape |
 | Competitor deep-dive | `get_entity({ oId })` / `get_competitive_insights({ ... })` | Where they win, where we win, the one differentiator that matters here |
 
 ## 2e. Deal state & conversation history (for the Snapshot)

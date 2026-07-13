@@ -109,10 +109,10 @@ search_knowledge_base({
 })
 
 # Get competitors for context
-list_all_entities({ entityType: "competitor" })
+list_entities({ entityType: "competitor" })
 
 # Get brand voice
-list_all_entities(entityType: "brand_voice")
+list_entities(entityType: "brand_voice")
 ```
 
 ### Step 3: Generate Content Type
@@ -179,7 +179,7 @@ See [generation-modes.md](../shared/generation-modes.md) for the default generat
 ## MCP Tools Used
 
 ### Library Context
-- `list_all_entities` - All entity types for comprehensive coverage
+- `list_entities` - All entity types for comprehensive coverage
 - `get_entity` - Full entity details
 - `list_motions` - List Motions in the workspace
 - `list_motion_playbooks` - List Motion Playbooks under a Motion (Default + Custom)
@@ -195,7 +195,7 @@ See [generation-modes.md](../shared/generation-modes.md) for the default generat
 
 ### Content Generation
 - `generate_content` - All enablement content types
-- `list_all_entities` (entityType: "brand_voice") - Brand voice consistency
+- `list_entities` (entityType: "brand_voice") - Brand voice consistency
 
 ## Error Handling
 
