@@ -111,6 +111,7 @@ See [**docs/org-instructions/**](docs/org-instructions/) for short and long reco
 |-------|-------------|
 | `/octave:workspace` | View current Octave MCP server connection status |
 | `/octave:library` | Browse, search, create, and update library entities |
+| `/octave:ingest` | Ingest a case study, URL, or doc into the library — diff gaps, then apply or queue |
 | `/octave:generate` | Quick content generation (emails, LinkedIn messages) |
 
 ### Strategy & Messaging Skills
@@ -772,6 +773,7 @@ The workspace's own company profile (singleton).
 │   ├── repurpose/               # Content repurposing
 │   ├── research/                # Research & prep
 │   ├── signals/                 # Morning intelligence briefing
+│   ├── ingest/                  # Ingest a source document into the library
 │   ├── train/                   # Sales training & role-play
 │   ├── wins-losses/             # Deal outcome analysis (--format report for HTML)
 │   ├── workflow/                # Workflow engine
