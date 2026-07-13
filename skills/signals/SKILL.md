@@ -75,7 +75,9 @@ Bucket the returned findings by type yourself (objections, competitors, value pr
 
 **D. Library Context (for gap detection)**
 ```
-list_entities({})
+list_entities({ entityType: "<type>" })   # entityType is required — one call per type
+                                          # you need: persona, segment, use_case,
+                                          # competitor, objection, proof_point
 ```
 
 ### Step 2: Analyze and Prioritize Signals
