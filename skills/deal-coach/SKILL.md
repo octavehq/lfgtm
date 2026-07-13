@@ -170,7 +170,7 @@ list_events({
 })
 list_entities({ entityType: "persona" })
 list_entities({ entityType: "competitor" })
-list_entities({ entityType: "proofPoint" })
+list_entities({ entityType: "proof_point" })
 ```
 
 **Motion ICP (after enrichment / persona / segment inference):**
@@ -195,7 +195,7 @@ For generic mode, gather library-level data only:
 ```
 list_entities({ entityType: "persona" })
 list_entities({ entityType: "competitor" })
-list_entities({ entityType: "proofPoint" })
+list_entities({ entityType: "proof_point" })
 ```
 
 Then load the Default Motion Playbook narrative for the most relevant Motion:
