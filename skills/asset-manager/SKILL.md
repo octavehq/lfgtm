@@ -61,7 +61,9 @@ Assets are **shared with the workspace by default** (`shareWithWorkspace`, defau
 
 - Every asset response carries `owner`: `"me"` for your own, otherwise the teammate's `"First Last <email>"`. **Teammate-owned assets are read-only** — never call `asset_update`, `asset_delete`, or any share tool on them; if the user wants changes, create their own copy.
 - Non-public assets (private, draft, or archived) carry a **`previewUrl`**: a tokenized link that renders the site/download for the owner and workspace members without making it public. It is `null` once the asset is published + public (use `siteUrl` then). It is **short-lived and minted per read — NEVER store it in the registry**; fetch a fresh one with `asset_get_by_id` when someone needs it.
-- Link reporting rule: published + public → `siteUrl`. Anything else → `previewUrl` (for the user and workspace members) plus a share link for people outside the workspace.
+- **Always include the link.** Every time you list, upload, update, or otherwise mention an asset, include its link:
+  - published + public → `Public — anyone with the link can view: <siteUrl>` (websites) or `<base>/download/<uuid>` (storage)
+  - private, draft, or archived → `Preview (you + workspace members): <previewUrl>` — taken fresh from the response in hand (list/get) or the script's `preview:` output line, never from the registry. Add a share link for people outside the workspace when relevant.
 
 ## MCP Server Detection
 
@@ -139,10 +141,9 @@ Script gotcha: metadata values are interpolated into JSON **without escaping** �
    - Source is already a `.zip` → `upload-artifact.sh --src <file>.zip ...`
    - Source is a folder → `zip-and-upload-artifact.sh --src <folder> ...` (fall back to `upload-artifact.sh` per-file multipart only if zipping fails)
    - Always pass explicitly: `--identifier`, `--description`, `--visibility`, `--status`, `--share-workspace`, and `--entry-point` for websites. Never rely on script defaults.
-8. **Record and report.** Update the registry (uuid, identifier, description, type, visibility, status, workspace sharing, url). Then report:
-   - Published + public website → the live `siteUrl`
-   - Private or draft → the `preview:` link from the upload output (works for the user and workspace members), and **offer a share link now** for people outside the workspace (see Shares workflow)
-   - Storage → the `/download/<uuid>` link (public) or the preview/share-link note (private)
+8. **Record and report.** Update the registry (uuid, identifier, description, type, visibility, status, workspace sharing, url). Then ALWAYS report the link:
+   - Published + public → `Public — anyone with the link can view: <siteUrl>` (website) or `<base>/download/<uuid>` (storage)
+   - Private, draft, or archived → `Preview (you + workspace members): <previewUrl>` from the upload output's `preview:` line, and **offer a share link now** for people outside the workspace (see Shares workflow)
 
 **The Exact Publish Sequence** — the ENTIRE publish is these five actions and nothing else:
 
@@ -199,7 +200,7 @@ Update the registry after every share mutation.
 ## Workflow: Download / List / Delete
 
 - **Download**: mint token, then `download-artifact.sh --uuid <uuid> --out <parent-dir>` — files always land in `<parent-dir>/<identifier>/`. Works for any asset the user owns or a teammate workspace-shared, regardless of status/visibility.
-- **List**: "what assets are available / do we have X?" → run a fresh `assets_list`, show identifier, owner ("me" vs teammate), and link for each, and reconcile the registry while you're at it. The registry alone is only enough for quick recall of what was published from this project.
+- **List**: "what assets are available / do we have X?" → run a fresh `assets_list` and show EVERY asset with its identifier, owner ("me" vs teammate), and link — no row without a link: published + public → the public URL ("anyone with the link"); private/draft/archived → the `previewUrl` from that same list response. Reconcile the registry while you're at it. The registry alone is only enough for quick recall of what was published from this project.
 - **Delete**: `asset_delete` — irreversible, deletes the files too. Always confirm with the user first. Then remove the entry from the registry.
 
 ## Error Handling
@@ -256,5 +257,5 @@ last_reconciled: 2026-07-07
 
 ## Output Style
 
-- Always end a publish/share operation by presenting the working URL (or the explicit reason there isn't one yet) plus a one-line summary of identifier, visibility, and status.
+- Always end a publish/share operation by presenting the working URL plus a one-line summary of identifier, visibility, and status. Label public links `Public — anyone with the link can view`; for private/draft/archived assets give the fresh `previewUrl` instead.
 - Report every assumption made (e.g. auto-detected entry point) so the user can correct it.

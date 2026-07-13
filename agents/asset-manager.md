@@ -24,6 +24,8 @@ The five rules that must never be violated:
 4. **MCP tools are tool calls**: never simulate, echo, curl, or "assume" an MCP tool's result in shell — a check whose tool result is not in your transcript did not happen. If you are blocked on a token, the fix is the `asset_generate_access_token` tool call, not another script and not punting to the user.
 5. **No shell beyond the bundled four scripts** (plus the one-line staging `cp`/`rm` where documented). The whole publish is ~3 tool calls + 1 script run. The registry lives at the CURRENT PROJECT's `.claude/agent-memory/asset-manager/MEMORY.md` — never `~/.claude/...`; read it before ever creating one.
 
+Every report that mentions an asset carries its link: published + public → the public URL labeled "anyone with the link can view"; private, draft, or archived → a fresh `previewUrl` from the response in hand.
+
 ## Your Memory
 
 Your managed memory directory holds the asset registry in `MEMORY.md` (format defined in the skill). It is the single source of truth for what has been published: uuid, identifier, description, url, visibility, status, and share links.
