@@ -46,7 +46,7 @@ jq '{
   skills: "./skills/",
   agents: "./agents/",
   commands: "./commands/"
-}' "$SRC_ROOT/.claude-plugin/plugin.json" \
+}' "$SRC_ROOT/plugins/octave/.claude-plugin/plugin.json" \
   > "$OUT/.cursor-plugin/plugin.json"
 
 # 2. .cursor-plugin/marketplace.json — Cursor schema differs from Claude's
@@ -68,22 +68,22 @@ jq '{
 # 3. skills/ — identical format, copy verbatim (names + /octave: refs preserved;
 #    includes skills/shared/, the cross-skill reference dir that skills read)
 echo "→ skills/"
-cp -R "$SRC_ROOT"/skills/. "$OUT/skills/"
+cp -R "$SRC_ROOT"/plugins/octave/skills/. "$OUT/skills/"
 
 # 4. agents/ — Cursor supports agents natively, copy verbatim
 echo "→ agents/"
-cp "$SRC_ROOT"/agents/*.md "$OUT/agents/"
+cp "$SRC_ROOT"/plugins/octave/agents/*.md "$OUT/agents/"
 
 # 5. workflows/ — ship the templates verbatim so the workflow engine skill
 #    (/octave:workflow) can discover and run them, same as in Claude Code.
 echo "→ workflows/"
-cp "$SRC_ROOT"/workflows/*.workflow.md "$OUT/workflows/"
+cp "$SRC_ROOT"/plugins/octave/workflows/*.workflow.md "$OUT/workflows/"
 
 # 6. commands/ — one thin wrapper per workflow. The wrapper hands off to the
 #    workflow engine skill rather than embedding the workflow DSL, so command
 #    execution and /octave:workflow runs share a single source of truth.
 echo "→ commands/ (wrappers for workflows/)"
-for f in "$SRC_ROOT"/workflows/*.workflow.md; do
+for f in "$SRC_ROOT"/plugins/octave/workflows/*.workflow.md; do
   base="$(basename "$f" .workflow.md)"
   wf_name="$(awk '/^name:/{sub(/^name:[[:space:]]*/,""); print; exit}' "$f")"
   wf_desc="$(awk '/^description:/{sub(/^description:[[:space:]]*/,""); print; exit}' "$f")"

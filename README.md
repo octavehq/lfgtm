@@ -48,17 +48,17 @@ Install from the matching repo (see its README). Don't edit those repos directly
 
 1. **Create an Octave API key** in Octave under **Settings → API Keys**. Claude Tag credentials are shared by everyone in the bundle's scope, so we recommend a **read-only** key (create one directly, or use the row menu → "Make read-only") unless you want channel members writing to your Library.
 2. **Add the credential**: in [claude.ai admin settings](https://claude.ai/admin-settings/claude-tag), open your access bundle → **Credentials → Connect another tool**. Choose credential type **Bearer**, name it "Octave MCP", set **Allowed websites** to `mcp.octavehq.com`, and paste the API key as the token. (The Octave MCP server accepts API keys via `Authorization: Bearer` or an `x-api-key` header.)
-3. **Attach the plugins (recommended)**: the credential alone is enough for Claude to reach Octave — it can discover and drive the MCP server ad hoc from a channel. Attaching the plugins upgrades that to a first-class integration and is what we recommend for real rollouts:
-   - **`octave-claude-tag`** — a credential-less `.mcp.json` that registers the Octave MCP server (`https://mcp.octavehq.com/mcp`) natively, so the tool list and schemas are loaded up front instead of Claude re-discovering the API every thread — faster, cheaper, and consistent across users. No `ctx` parameter is needed: the API key identifies your workspace, and the bundle's credential is injected at the network layer.
-   - **`octave`** — the skills and agents in this repo, which teach Claude *when* and *how* to use those tools well.
+3. **Attach the plugin (recommended)**: the credential alone is enough for Claude to reach Octave — it can discover and drive the MCP server ad hoc from a channel. Attaching the `octave` plugin upgrades that to a first-class integration and is what we recommend for real rollouts. The **Claude Tag build of the plugin** carries two things:
+   - a credential-less `.mcp.json` that registers the Octave MCP server (`https://mcp.octavehq.com/mcp`) natively, so the tool list and schemas are loaded up front instead of Claude re-discovering the API every thread — faster, cheaper, and consistent across users. No `ctx` parameter is needed: the API key identifies your workspace, and the bundle's credential is injected at the network layer. (This declaration is injected only into the Claude Tag zip — it's deliberately excluded from Claude Code installs, where a credential-less server would just fail. See the note at the end of this section.)
+   - the **skills and agents** in this repo, which teach Claude *when* and *how* to use those tools well.
 
    Claude Tag currently only accepts **private repositories** as plugin sources, so you can't point it at this public repo directly. Three ways in, easiest first:
 
-   **Option A — download the ready-made zip (no terminal, no GitHub account):**
-   Download [`octave-plugin.zip`](https://github.com/octavehq/lfgtm/releases/download/claude-tag-plugin/octave-plugin.zip) — an upload-ready bundle rebuilt automatically on every change to this repo — and upload it in the bundle's **Plugins** tab. To get updates later, re-download and re-upload the same file. (Don't use GitHub's native "Download ZIP" — it wraps everything in an `lfgtm-main/` folder, so `.claude-plugin/` isn't at the archive root where the console looks for it.)
+   **Option A — download the ready-made zip (recommended; no terminal, no GitHub account):**
+   Download [`octave-plugin.zip`](https://github.com/octavehq/lfgtm/releases/download/claude-tag-plugin/octave-plugin.zip) — an upload-ready bundle rebuilt automatically on every change to this repo, **with the MCP declaration already injected** — and upload it in the bundle's **Plugins** tab. To get updates later, re-download and re-upload the same file. (Don't use GitHub's native "Download ZIP" — it wraps everything in an `lfgtm-main/` folder, so `.claude-plugin/` isn't at the archive root where the console looks for it.)
 
    **Option B — private mirror in the browser (no terminal):**
-   Open GitHub's [repository import](https://github.com/new/import), paste `https://github.com/octavehq/lfgtm.git` as the source, choose your organization as the owner, set visibility to **Private**, and import. Then connect `YOUR_ORG/lfgtm` in the bundle's **Plugins** tab and enable both plugins. (Imports don't auto-sync — to update later, use the CLI sync in Option C, or just switch to the zip flow.)
+   Open GitHub's [repository import](https://github.com/new/import), paste `https://github.com/octavehq/lfgtm.git` as the source, choose your organization as the owner, set visibility to **Private**, and import. Then connect `YOUR_ORG/lfgtm` in the bundle's **Plugins** tab and enable the `octave` plugin. (Imports don't auto-sync — to update later, use the CLI sync in Option C, or just switch to the zip flow.)
 
    **Option C — private mirror via CLI (updatable):**
    ```bash
@@ -67,12 +67,14 @@ Install from the matching repo (see its README). Don't edit those repos directly
    git remote add mirror https://github.com/YOUR_ORG/lfgtm.git
    git push mirror main
    ```
-   Connect `YOUR_ORG/lfgtm` in the bundle's **Plugins** tab and enable both plugins. To pull future updates: `git pull origin main && git push mirror main`.
+   Connect `YOUR_ORG/lfgtm` in the bundle's **Plugins** tab and enable the `octave` plugin. To pull future updates: `git pull origin main && git push mirror main`.
+
+   > Options B and C mirror the **raw repo**, where the MCP declaration is not part of the plugin (it lives in `claude-tag/` and is injected only into the Option A zip). So a mirror install gives you the skills and agents, and Claude reaches Octave through the bundle **credential** (discovered ad hoc) rather than a preloaded server. For the native, tools-loaded-up-front experience, use **Option A**.
 4. **Verify**: attach the bundle to a channel and send `@Claude verify your Octave connection`.
 
 The in-app guide (Octave → Settings → API Keys → Connect MCP → **Claude Tag**) walks through the same steps with copy buttons.
 
-> **Note:** `octave-claude-tag` is for externally injected credentials (Claude Tag), which is why it isn't part of the Claude Code install steps above. In Claude Code, keep using `claude mcp add` with your workspace URL as described below — the bare server declaration in `octave-claude-tag` has no credential and no workspace context on its own, so installing it there just produces a failing server.
+> **Note:** the credential-less `.mcp.json` (`claude-tag/octave.mcp.json`) is injected into the plugin **only** for the Claude Tag zip, where the bundle supplies the credential at the network layer. It is intentionally kept out of the plugin that **Claude Code / Desktop** installs, because a credential-less, workspace-less server there would just fail. In Claude Code, install the plugin for its skills and agents and add your workspace separately with `claude mcp add` (see below).
 
 ## Quick Start
 
@@ -718,75 +720,81 @@ The workspace's own company profile (singleton).
 ├── .claude/
 │   └── settings.json            # Project settings
 ├── .claude-plugin/
-│   ├── plugin.json              # Plugin metadata
-│   └── marketplace.json         # Marketplace configuration
+│   └── marketplace.json         # Marketplace config — lists the octave plugin under plugins/
 ├── .github/
-│   └── workflows/
-│       └── sync-downstream.yml  # Builds and mirrors the Codex and Cursor plugin repos
-├── agents/
-│   ├── asset-manager.md         # Hosted asset publishing/sharing agent
-│   ├── octave-assistant.md      # General GTM assistant agent
-│   ├── pmm-strategist.md        # Product marketing strategist agent
-│   ├── sdr-coach.md             # SDR coaching agent
-│   └── revenue-strategist.md    # Revenue strategy advisor agent
+│   └── workflows/               # CI: sync-downstream (Codex/Cursor mirrors) + publish-claude-tag-zip
+├── claude-tag/                  # Claude Tag overlay — injected into the zip build, not the plugin
+│   ├── octave.mcp.json          # Octave MCP declaration (credential-less; injected only into the Claude Tag zip)
+│   └── README.md
 ├── docs/
 │   └── org-instructions/        # Recommended Claude org preferences for Octave-first routing
-├── scripts/
+├── scripts/                     # Repo CI tooling (not shipped inside the plugin)
 │   ├── build-codex.sh           # Generate the Codex plugin artifact
-│   ├── build-cursor.sh          # Generate the Cursor plugin artifact
-│   ├── deploy.sh                # Deploy a generated deck or page to Vercel
-│   ├── export-pdf.sh            # Export an HTML presentation to PDF
-│   └── extract-pptx.py          # Extract content from .pptx for /octave:deck
-├── skills/                      # Skill definitions (each: SKILL.md + optional references/)
-│   ├── shared/                  # Cross-skill references (entity model, presentation principles, style presets, …) — not a skill
-│   ├── abm/                     # Account-based planning
-│   ├── ads/                     # Ad campaign builder
-│   ├── ads-resonance/           # Ad performance resonance loop + prediction cards
-│   ├── analyzer/                # Conversation analysis
-│   ├── asset-manager/           # Publish & manage hosted assets (bundled upload/download scripts)
-│   ├── audit/                   # Library health check
-│   ├── battlecard/              # Competitive intelligence (--format doc for HTML)
-│   ├── brainstorm/              # GTM ideation
-│   ├── brief/                   # Account dossier (HTML)
-│   ├── campaign/                # Multi-channel campaigns
-│   ├── deal-coach/              # Deal coaching (Resonate/Elevate/Compel)
-│   ├── deck/                    # Presentation builder (HTML)
-│   ├── enablement/              # Sales enablement materials
-│   ├── explore-agents/          # Agent management
-│   ├── generate/                # Quick content generation
-│   ├── get-brand-components/    # Brand kit capture for on-brand documents
-│   ├── icp-refine/              # ICP refinement
-│   ├── insights/                # Field intelligence
-│   ├── launch/                  # Launch planning
-│   ├── library/                 # Library CRUD
-│   ├── meeting-prep/            # Meeting battle plan (HTML)
-│   ├── messaging/               # Messaging frameworks
-│   ├── microsite/               # ABM microsite (HTML)
-│   ├── one-pager/               # One-pager / leave-behind (HTML)
-│   ├── pipeline/                # Deal coaching
-│   ├── pmm/                     # Product marketing content
-│   ├── positioning/             # Positioning system (HTML)
-│   ├── proposal/                # Business case / proposal (HTML)
-│   ├── prospector/              # Prospect discovery
-│   ├── qual-doctor/             # Qualification agent tuning
-│   ├── repurpose/               # Content repurposing
-│   ├── research/                # Research & prep
-│   ├── signals/                 # Morning intelligence briefing
-│   ├── train/                   # Sales training & role-play
-│   ├── wins-losses/             # Deal outcome analysis (--format report for HTML)
-│   ├── workflow/                # Workflow engine
-│   └── workspace/               # Connection status
-├── workflows/                   # Workflow templates (run via /octave:workflow)
-│   ├── account-based-research.workflow.md
-│   ├── competitive-deal-prep.workflow.md
-│   ├── competitive-response.workflow.md
-│   ├── content-sprint.workflow.md
-│   ├── deal-acceleration.workflow.md
-│   ├── full-outbound-pipeline.workflow.md
-│   ├── new-market-entry.workflow.md
-│   ├── persona-targeted-outreach.workflow.md
-│   ├── positioning-exercise.workflow.md
-│   └── quarterly-gtm-review.workflow.md
+│   └── build-cursor.sh          # Generate the Cursor plugin artifact
+├── plugins/
+│   └── octave/                  # The plugin — skills, workflows, agents, runtime scripts
+│       ├── .claude-plugin/
+│       │   └── plugin.json      # Plugin metadata
+│       ├── agents/
+│       │   ├── asset-manager.md         # Hosted asset publishing/sharing agent
+│       │   ├── octave-assistant.md      # General GTM assistant agent
+│       │   ├── pmm-strategist.md        # Product marketing strategist agent
+│       │   ├── sdr-coach.md             # SDR coaching agent
+│       │   └── revenue-strategist.md    # Revenue strategy advisor agent
+│       ├── scripts/                     # Runtime helpers (resolved via ${CLAUDE_PLUGIN_ROOT})
+│       │   ├── deploy.sh                # Deploy a generated deck or page to Vercel
+│       │   ├── export-pdf.sh            # Export an HTML presentation to PDF
+│       │   └── extract-pptx.py          # Extract content from .pptx for /octave:deck
+│       ├── skills/                      # Skill definitions (each: SKILL.md + optional references/)
+│       │   ├── shared/                  # Cross-skill references (entity model, presentation principles, style presets, …) — not a skill
+│       │   ├── abm/                     # Account-based planning
+│       │   ├── ads/                     # Ad campaign builder
+│       │   ├── ads-resonance/           # Ad performance resonance loop + prediction cards
+│       │   ├── analyzer/                # Conversation analysis
+│       │   ├── asset-manager/           # Publish & manage hosted assets (bundled upload/download scripts)
+│       │   ├── audit/                   # Library health check
+│       │   ├── battlecard/              # Competitive intelligence (--format doc for HTML)
+│       │   ├── brainstorm/              # GTM ideation
+│       │   ├── brief/                   # Account dossier (HTML)
+│       │   ├── campaign/                # Multi-channel campaigns
+│       │   ├── deal-coach/              # Deal coaching (Resonate/Elevate/Compel)
+│       │   ├── deck/                    # Presentation builder (HTML)
+│       │   ├── enablement/              # Sales enablement materials
+│       │   ├── explore-agents/          # Agent management
+│       │   ├── generate/                # Quick content generation
+│       │   ├── get-brand-components/    # Brand kit capture for on-brand documents
+│       │   ├── icp-refine/              # ICP refinement
+│       │   ├── insights/                # Field intelligence
+│       │   ├── launch/                  # Launch planning
+│       │   ├── library/                 # Library CRUD
+│       │   ├── meeting-prep/            # Meeting battle plan (HTML)
+│       │   ├── messaging/               # Messaging frameworks
+│       │   ├── microsite/               # ABM microsite (HTML)
+│       │   ├── one-pager/               # One-pager / leave-behind (HTML)
+│       │   ├── pipeline/                # Deal coaching
+│       │   ├── pmm/                     # Product marketing content
+│       │   ├── positioning/             # Positioning system (HTML)
+│       │   ├── proposal/                # Business case / proposal (HTML)
+│       │   ├── prospector/              # Prospect discovery
+│       │   ├── qual-doctor/             # Qualification agent tuning
+│       │   ├── repurpose/               # Content repurposing
+│       │   ├── research/                # Research & prep
+│       │   ├── signals/                 # Morning intelligence briefing
+│       │   ├── train/                   # Sales training & role-play
+│       │   ├── wins-losses/             # Deal outcome analysis (--format report for HTML)
+│       │   ├── workflow/                # Workflow engine
+│       │   └── workspace/               # Connection status
+│       └── workflows/                   # Workflow templates (run via /octave:workflow)
+│           ├── account-based-research.workflow.md
+│           ├── competitive-deal-prep.workflow.md
+│           ├── competitive-response.workflow.md
+│           ├── content-sprint.workflow.md
+│           ├── deal-acceleration.workflow.md
+│           ├── full-outbound-pipeline.workflow.md
+│           ├── new-market-entry.workflow.md
+│           ├── persona-targeted-outreach.workflow.md
+│           ├── positioning-exercise.workflow.md
+│           └── quarterly-gtm-review.workflow.md
 ├── EXAMPLES.md                  # Detailed usage examples
 ├── .gitignore
 ├── LICENSE
