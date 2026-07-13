@@ -35,7 +35,7 @@ Do you want to filter the analysis?
 Your choice:
 ```
 
-If competitor or segment is selected, use `list_all_entities({ entityType: "competitor" })` or `list_all_entities({ entityType: "segment" })` to show available options.
+If competitor or segment is selected, use `list_entities({ entityType: "competitor" })` or `list_entities({ entityType: "segment" })` to show available options.
 
 **Depth — "How detailed?"**
 

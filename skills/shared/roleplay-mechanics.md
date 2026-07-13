@@ -12,7 +12,7 @@ Collect three choices before starting (via `AskUserQuestion` when not provided a
 
 1. **Scenario** — what conversation is being practiced. The invoking skill supplies the options (e.g., discovery call, objection handling, demo pitch, competitive displacement; or a single coaching stage vs. a full journey simulation).
 2. **Difficulty** — how much resistance the buyer gives (see tiers below).
-3. **Buyer persona** — dynamically populated from `list_all_entities({ entityType: "persona" })`. Present up to 4 personas with title and key concern. If the invoking context already fixes the persona (e.g., a specific deal's stakeholder), skip this question.
+3. **Buyer persona** — dynamically populated from `list_entities({ entityType: "persona" })`. Present up to 4 personas with title and key concern. If the invoking context already fixes the persona (e.g., a specific deal's stakeholder), skip this question.
 
 ### 2. Difficulty Tiers
 

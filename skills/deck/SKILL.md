@@ -409,7 +409,7 @@ Common research, library, signals, and generation tools: see [../shared/octave-r
 - `get_external_brand_assets` — Scrape a URL for brand colors, logo variants, backdrop images, brand name (Tier 1 brand extraction)
 - `get_external_brand_logo` — Single best logo URL for a domain
 - `scrape_website` — Fetch a page as markdown/html with an optional screenshot (`{ format, includeScreenshot }`) — used to read components/typography for brand emulation (Tier 2)
-- `list_all_entities` (entityType: "brand_voice") — Available brand voices in workspace
+- `list_entities` (entityType: "brand_voice") — Available brand voices in workspace
 - `list_writing_styles` — Available writing styles in workspace
 
 ## Error Handling

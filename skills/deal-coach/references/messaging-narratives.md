@@ -47,7 +47,7 @@ Build the mindset assessment from:
 | Octave Source | Selection Logic |
 |---------------|----------------|
 | `find_motion_icp` → Pains and consequences, Strategic narrative | Select props that mirror the buyer's stated pain — validate, don't prescribe |
-| `list_all_entities` → proof points (benchmarks) | Use industry benchmarks to show "we understand this problem at scale" |
+| `list_entities` → proof points (benchmarks) | Use industry benchmarks to show "we understand this problem at scale" |
 | `search_knowledge_base` → relevant research | Pull research that expands the problem scope (supports going wide) |
 
 **Selection filter:** At Resonate, only surface value props that validate pain or expand problem scope. Exclude solution-focused, ROI-focused, or competitive props.
@@ -56,9 +56,9 @@ Build the mindset assessment from:
 
 | Discovery Principle | Octave Source | Grounded Output Pattern |
 |-------------------|---------------|------------------------|
-| Go wide | `list_all_entities` → personas; `list_findings` → stakeholder mentions | "Who else is affected by [pain from findings]? How does this look from [persona's] perspective?" |
+| Go wide | `list_entities` → personas; `list_findings` → stakeholder mentions | "Who else is affected by [pain from findings]? How does this look from [persona's] perspective?" |
 | Go deep | `find_motion_icp` → Methodology (discovery questions); `list_findings` → pain points | "You mentioned [pain from findings]. In our experience with [industry from enrichment] companies, that usually traces back to [root cause from Motion ICP narrative]. Is that what you're seeing?" |
-| Go high | `list_all_entities` → proof points (metrics); `find_motion_icp` → Benefits and impacts (business impact messaging) | "When [similar company from proof points] faced this, it was affecting [business metric]. How is that showing up at the leadership level for you?" |
+| Go high | `list_entities` → proof points (metrics); `find_motion_icp` → Benefits and impacts (business impact messaging) | "When [similar company from proof points] faced this, it was affecting [business metric]. How is that showing up at the leadership level for you?" |
 
 **Example grounded talking point:**
 
@@ -87,8 +87,8 @@ Build the mindset assessment from:
 | Octave Source | Selection Logic |
 |---------------|----------------|
 | `find_motion_icp` → Strategic narrative (differentiators, positioning) | Core: what's unique in the Motion ICP narrative that matters to this buyer |
-| `list_all_entities` → competitors | Filter: cross-reference to find differentiated value (unique + important + competitor can't match) |
-| `list_all_entities` → proof points (results) | Proof points: specific customer results that make differentiation credible |
+| `list_entities` → competitors | Filter: cross-reference to find differentiated value (unique + important + competitor can't match) |
+| `list_entities` → proof points (results) | Proof points: specific customer results that make differentiation credible |
 | `find_motion_icp` → Benefits and impacts (outcomes) | Future state vision: what the changed state looks like |
 
 **Selection filter:** At Elevate, prioritize props that represent differentiated value. Deprioritize parity capabilities and irrelevant uniqueness.
@@ -100,8 +100,8 @@ Build the Case for Change by chaining Octave data across three narrative beats. 
 | Narrative Beat | Octave Source | Grounded Output Pattern |
 |---------------|---------------|------------------------|
 | **The Shift** | `enrich_company` → industry trends, news; `search_knowledge_base` → market research; `list_findings` → pain points; `find_motion_icp` → Operating landscape, Pains and consequences (problem framing) | "I've been talking to [industry from enrichment] leaders, and [specific trend from knowledge base] is creating pressure. Teams still doing [current approach from findings] built it for a world where [old assumption from Motion ICP Operating landscape]. Under [trend], that approach breaks because [specific flaw]..." |
-| **The Stakes** | `list_all_entities` → proof points (metrics); `find_motion_icp` → Strategic narrative (positioning, blind spots) | "Companies that didn't adapt saw [quantified impact from proof points]. And here's what most people miss: this isn't about [surface problem from findings]. It's about [reframed need from Motion ICP Strategic narrative]..." |
-| **The Possibility** | `find_motion_icp` → Benefits and impacts (outcomes); `list_all_entities` → proof points (results) | "Customers who made this shift saw [specific outcome from proof points]..." |
+| **The Stakes** | `list_entities` → proof points (metrics); `find_motion_icp` → Strategic narrative (positioning, blind spots) | "Companies that didn't adapt saw [quantified impact from proof points]. And here's what most people miss: this isn't about [surface problem from findings]. It's about [reframed need from Motion ICP Strategic narrative]..." |
+| **The Possibility** | `find_motion_icp` → Benefits and impacts (outcomes); `list_entities` → proof points (results) | "Customers who made this shift saw [specific outcome from proof points]..." |
 
 For Value Framing:
 ```
@@ -130,16 +130,16 @@ Question: "[Question that highlights the gap] — it matters because [connected 
 | `find_crm_records` → deal amount, stage, close date | Deal position and financial scope | Frame the business case relative to deal size |
 | `find_crm_activities` → exec engagement | Whether economic buyer is in play | If no exec engagement → champion enablement is priority |
 | `generate_crm_context` → synthesized narrative | Full deal story | Understand decision dynamics, competing priorities |
-| `list_all_entities` → personas (champion) | Champion's role and influence | Assess: can they sell internally, or do they need heavy coaching? |
+| `list_entities` → personas (champion) | Champion's role and influence | Assess: can they sell internally, or do they need heavy coaching? |
 
 ### Value Propositions Grounding
 
 | Octave Source | Selection Logic |
 |---------------|----------------|
-| `list_all_entities` → proof points (quantified) | Core: props with specific ROI metrics from similar customers |
+| `list_entities` → proof points (quantified) | Core: props with specific ROI metrics from similar customers |
 | `enrich_company` → strategic initiatives | Alignment: props that map to the buyer's stated priorities |
 | `find_motion_icp` → Benefits and impacts (ROI data, outcomes) | Financial: props with quantifiable outcomes for business case |
-| `list_all_entities` → personas | Stakeholder mapping: tailor props per decision maker's priorities |
+| `list_entities` → personas | Stakeholder mapping: tailor props per decision maker's priorities |
 
 **Selection filter:** At Compel, only surface props with quantified outcomes or strategic alignment. Exclude discovery-stage props and generic positioning.
 
@@ -150,16 +150,16 @@ Question: "[Question that highlights the gap] — it matters because [connected 
 | Phase | Octave Source | Grounded Output Pattern |
 |-------|---------------|------------------------|
 | **Value Discovery** | `find_crm_records` → deal amount; `enrich_company` → revenue, headcount | "Based on [company size from enrichment], if [metric] improves by [benchmark from proof points]..." |
-| **Value Proof — Before/After** | `list_findings` → pain points; `find_motion_icp` → Benefits and impacts; `list_all_entities` → use cases | "Today your team spends [current effort from findings] on [process]. In the new model, [future state from Motion ICP Benefits and impacts]..." |
-| **Value Proof — Quantify** | `list_all_entities` → proof points (quantified) | "Based on what [similar customer from proof points] achieved — [metric improvement] — that translates to [dollar impact]..." |
+| **Value Proof — Before/After** | `list_findings` → pain points; `find_motion_icp` → Benefits and impacts; `list_entities` → use cases | "Today your team spends [current effort from findings] on [process]. In the new model, [future state from Motion ICP Benefits and impacts]..." |
+| **Value Proof — Quantify** | `list_entities` → proof points (quantified) | "Based on what [similar customer from proof points] achieved — [metric improvement] — that translates to [dollar impact]..." |
 | **Value Chain** | `find_motion_icp` → Benefits and impacts + Strategic narrative (full chain) | "[Capability] → [workflow improvement] → [business outcome] → [$financial_result] — mapped through [buyer's org from personas]" |
 
 #### Why Now Case
 
 | Dimension | Octave Source | Grounded Output Pattern |
 |-----------|---------------|------------------------|
-| Business urgency | `enrich_company` → strategic initiatives; `generate_crm_context`; `find_crm_records` → timeline; `list_all_entities` → proof points | "Your company prioritized [initiative from enrichment]. This supports it. Every month of delay costs [monthly_burn from benchmarks]. Over [timeline from CRM], that's [total]..." |
-| Personal urgency | `list_all_entities` → personas (champion); `find_crm_activities` → interactions | "As [champion's role from persona], delivering this initiative gives you visibility on [strategic priority]..." |
+| Business urgency | `enrich_company` → strategic initiatives; `generate_crm_context`; `find_crm_records` → timeline; `list_entities` → proof points | "Your company prioritized [initiative from enrichment]. This supports it. Every month of delay costs [monthly_burn from benchmarks]. Over [timeline from CRM], that's [total]..." |
+| Personal urgency | `list_entities` → personas (champion); `find_crm_activities` → interactions | "As [champion's role from persona], delivering this initiative gives you visibility on [strategic priority]..." |
 
 #### Champion Enablement (Executive Decision Kit)
 

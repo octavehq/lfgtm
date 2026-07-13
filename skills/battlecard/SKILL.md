@@ -42,7 +42,7 @@ If no competitor specified, list available competitors:
 
 ```
 # Get all competitors
-list_all_entities({ entityType: "competitor" })
+list_entities({ entityType: "competitor" })
 ```
 
 Present:
@@ -129,7 +129,7 @@ list_events({
 })
 
 # Get product details for comparison
-list_all_entities({ entityType: "product" })
+list_entities({ entityType: "product" })
 get_entity({ oId: "<product_oId>" })
 ```
 
@@ -221,8 +221,8 @@ For the full interactive mode selector, use `/octave:generate`.
 ## MCP Tools Used
 
 ### Competitive Intelligence
-- `list_all_entities` (competitor) - List all competitors
-- `list_entities` (competitor / product / proof_point / reference) - Full entity data
+- `list_entities` (competitor) - List competitors (slim; add `all: true` for the full set)
+- `list_entities` (competitor / product / proof_point / reference) with `includeDetails: true` - Full entity data
 - `get_entity` - Get competitor or product details
 - `search_knowledge_base` - Find competitive positioning, proof points
 - `list_findings` - Real conversation mentions and objections

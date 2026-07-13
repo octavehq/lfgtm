@@ -301,7 +301,7 @@ Common research, library, signals, and generation tools: see [../shared/octave-r
 
 ### Brand & Style
 - `get_external_brand_assets` / `get_external_brand_logo` / `scrape_website` — Brand extraction (Tiers 1-2)
-- `list_all_entities` (entityType: "brand_voice") - Available brand voices in workspace
+- `list_entities` (entityType: "brand_voice") - Available brand voices in workspace
 - `list_writing_styles` - Available writing styles in workspace
 
 ## Error Handling

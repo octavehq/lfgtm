@@ -31,12 +31,12 @@ Pull from the library to ground the deck in your actual GTM data:
 
 | What you need | Tool | When to use |
 |---------------|------|-------------|
-| Personas | `list_all_entities({ entityType: "persona" })` | Quick scan of all personas |
+| Personas | `list_entities({ entityType: "persona" })` | Quick scan of all personas |
 | Persona details | `list_entities({ entityType: "persona" })` | Full persona data — pain points, priorities, messaging |
-| Segments | `list_all_entities({ entityType: "segment" })` | Quick scan of market segments |
-| Competitors | `list_all_entities({ entityType: "competitor" })` | Quick scan of competitive landscape |
-| Products | `list_all_entities({ entityType: "product" })` | Quick scan of product capabilities |
-| Use cases | `list_all_entities({ entityType: "use_case" })` | When deck covers how customers use the product |
+| Segments | `list_entities({ entityType: "segment" })` | Quick scan of market segments |
+| Competitors | `list_entities({ entityType: "competitor" })` | Quick scan of competitive landscape |
+| Products | `list_entities({ entityType: "product" })` | Quick scan of product capabilities |
+| Use cases | `list_entities({ entityType: "use_case" })` | When deck covers how customers use the product |
 | Entity details | `get_entity({ oId })` | Deep dive on any specific entity found above |
 | Positioning by topic | `search_knowledge_base({ query: "<topic>", entityTypes: ["product"] })` | When you have a concept and need relevant positioning |
 | Motions | `list_motions()` | Available Motions to ground the deck in |
@@ -54,7 +54,7 @@ Focus on the specific competitor(s) and evidence from real deals:
 
 | What you need | Tool | When to use |
 |---------------|------|-------------|
-| All competitors | `list_all_entities({ entityType: "competitor" })` | Quick scan of all competitors |
+| All competitors | `list_entities({ entityType: "competitor" })` | Quick scan of all competitors |
 | Competitor full data | `list_entities({ entityType: "competitor" })` | Full competitor profiles — strengths, weaknesses, positioning |
 | Competitor deep dive | `get_entity({ oId })` | Everything about one specific competitor |
 | Competitive positioning | `search_knowledge_base({ query: "<competitor> differentiation", entityTypes: ["competitor"] })` | When you have a concept — "how do we beat them on security?" |

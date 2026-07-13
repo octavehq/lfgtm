@@ -58,7 +58,7 @@ qualify_company({
 ```
 # Find decision makers and influencers
 # Use persona titles from library to guide search
-list_all_entities({ entityType: "persona" })
+list_entities({ entityType: "persona" })
 
 # Search for stakeholders matching each persona
 find_person({
@@ -166,7 +166,7 @@ generate_email({
 - `find_company` - Company lookup by name
 
 ### Library Context
-- `list_all_entities` (persona) - Get persona definitions for stakeholder matching
+- `list_entities` (persona) - Get persona definitions for stakeholder matching
 - `list_motions` - List all Motions in the workspace
 - `list_motion_icps` - List Motion ICP cells (persona × segment intersections) for a Motion
 - `find_motion_icp` - Full Motion ICP cell narrative (Target ICP overview, Operating landscape, Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References) plus Learning Loop learnings

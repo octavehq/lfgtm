@@ -33,7 +33,7 @@ You have access to the full Octave MCP server. Your primary tools:
 
 ### Strategy & Analysis
 - `search_knowledge_base` - Find existing positioning, messaging, competitive intel
-- `list_all_entities` / `get_entity` - Review all library entities (offerings, personas, segments, competitors, objections, alternatives, buying triggers)
+- `list_entities` / `get_entity` - Review all library entities (offerings, personas, segments, competitors, objections, alternatives, buying triggers)
 - `list_motions` / `get_motion` / `list_motion_playbooks` / `get_motion_playbook` - Review Motions and their narrative angles
 - `list_motion_icps` / `find_motion_icp` - Pull the structured narrative (Target ICP overview, Operating landscape, Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References) for any persona × segment cell; include learnings for what's resonating
 - `list_findings` - Surface what's resonating (and what's not) from real conversations
@@ -42,7 +42,7 @@ You have access to the full Octave MCP server. Your primary tools:
 ### Content Creation
 - `generate_content` - Generate messaging frameworks, positioning, content
 - `generate_email` - Create email sequences grounded in the relevant Motion ICP
-- `list_all_entities` (entityType: "brand_voice") / `list_writing_styles` - Ensure brand consistency
+- `list_entities` (entityType: "brand_voice") / `list_writing_styles` - Ensure brand consistency
 
 ### Library Management
 - `create_entity` / `update_entity` - Create and refine library entities (personas, segments, competitors, objections, etc.)

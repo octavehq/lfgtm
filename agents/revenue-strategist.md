@@ -51,7 +51,7 @@ You have access to the full Octave MCP server. Your primary tools:
 - `generate_call_prep` - Meeting preparation for critical calls (uses Motion ICP narrative)
 
 ### Library Management
-- `list_all_entities` / `get_entity` - Review ICP definitions, personas, segments, objections
+- `list_entities` / `get_entity` - Review ICP definitions, personas, segments, objections
 - `list_motions` / `get_motion` / `list_motion_playbooks` / `get_motion_playbook` - Review Motions and their narrative angles
 - `find_motion_icp` - Pull the rep-facing narrative for any persona × segment intersection (Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References)
 - `update_entity` / `update_motion` / `update_motion_playbook` - Refine strategy based on field data

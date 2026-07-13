@@ -220,7 +220,7 @@ Apply approved library updates via `update_entity` (competitors, personas, segme
 
 ### Library Context
 - `get_entity` - Competitor, persona details
-- `list_all_entities` / `list_entities` - Competitor, segment, persona, proof point inventories
+- `list_entities` - Competitor, segment, persona, proof point inventories
 - `list_motions` - List Motions in the workspace
 - `list_motion_icps` - List Motion ICP cells under a Motion
 - `find_motion_icp` - Motion ICP narrative + Learning Loop learnings

@@ -14,7 +14,7 @@ Add to the standard library fetch:
 ```
 - list_motions() — all Motions in workspace
 - For each Motion: list_motion_icps({ motionOId }) — Motion ICP cell state
-- list_all_entities({ entityType: "playbook" }) — all standalone playbooks
+- list_entities({ entityType: "playbook" }) — all standalone playbooks
 - get_playbook({ oId }) for each standalone playbook — linked personas, segments, value props, type
 - list_agents() — all saved agents with their configurations
 ```

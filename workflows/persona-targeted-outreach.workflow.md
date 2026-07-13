@@ -43,7 +43,7 @@ params:
 save_as: persona
 description: Fetch the full persona definition from your library including common job titles, pain points, key objectives, and qualification criteria.
 
-If the user provided a persona name rather than an oId, first use `list_all_entities({ entityType: "persona" })` to find the matching persona and save its oId as persona_oId.
+If the user provided a persona name rather than an oId, first use `list_entities({ entityType: "persona" })` to find the matching persona and save its oId as persona_oId.
 
 Present the persona overview to confirm this is the right target.
 

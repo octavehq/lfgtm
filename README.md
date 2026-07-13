@@ -561,14 +561,13 @@ Authentication is handled via OAuth at the MCP server level. No API keys are sto
 
 ## MCP Tools
 
-The plugin uses the single Octave MCP server you configure (e.g. `octave-acme`). Call tools by name (e.g. `verify_connection()`, `get_entity(...)`, `list_all_entities(...)`).
+The plugin uses the single Octave MCP server you configure (e.g. `octave-acme`). Call tools by name (e.g. `verify_connection()`, `get_entity(...)`, `list_entities(...)`).
 
 ### Connection
 - `verify_connection` - Verify workspace connection and authentication status
 
 ### Library Read
-- `list_all_entities` - Quick list with basic fields
-- `list_entities` - Detailed list with pagination
+- `list_entities` - List entities by type; slim rows by default, `includeDetails: true` for full data, plus `search`, `all`, and pagination
 - `get_entity` - Full entity details
 - `list_revisions` - List version history for library entities
 - `get_revision` - Get a specific historical revision of an entity
@@ -602,7 +601,7 @@ Still available for workspaces operating on legacy standalone playbooks, but Mot
 ### Configuration
 - `list_writing_styles` - List all writing style configurations
 
-> Brand voices are retrieved via the generic entity tools: `list_all_entities({ entityType: "brand_voice" })` or `list_entities({ entityType: "brand_voice" })`.
+> Brand voices are retrieved via the generic entity tool: `list_entities({ entityType: "brand_voice" })`.
 
 ### Resources
 - `list_resources` - List global resources (documents, websites) with filtering

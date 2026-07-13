@@ -9,7 +9,7 @@ Show which Octave MCP server is connected.
 
 ## Instructions
 
-1. **Find the Octave MCP server** by looking at your available tools for ones like `verify_connection`, `get_entity`, `list_all_entities`.
+1. **Find the Octave MCP server** by looking at your available tools for ones like `verify_connection`, `get_entity`, `list_entities`.
 
 2. **Call `verify_connection`** to confirm the API key is valid and to fetch the authoritative workspace/organization names. This is the canonical probe.
 

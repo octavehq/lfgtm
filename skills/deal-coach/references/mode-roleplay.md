@@ -36,7 +36,7 @@ AskUserQuestion({
 })
 ```
 
-If in specific-deal mode, identify the buyer persona from entities gathered in Step 2 of the skill. If generic, let the user choose from available personas (dynamically populated from `list_all_entities({ entityType: "persona" })`, up to 4 options with title/role descriptions).
+If in specific-deal mode, identify the buyer persona from entities gathered in Step 2 of the skill. If generic, let the user choose from available personas (dynamically populated from `list_entities({ entityType: "persona" })`, up to 4 options with title/role descriptions).
 
 ## RP-2: Load Stage-Specific Intelligence
 

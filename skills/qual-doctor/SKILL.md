@@ -107,9 +107,9 @@ Dynamically build the options list from the agent's active sections only — do 
 #### 1e: Identify Target Entities + Determine Tuning Mode
 
 For each selected section, list the entities in the library:
-- Product/Offering → `list_all_entities({ entityType: "product" })`
-- Persona → `list_all_entities({ entityType: "persona" })`
-- Segment → `list_all_entities({ entityType: "segment" })`
+- Product/Offering → `list_entities({ entityType: "product" })`
+- Persona → `list_entities({ entityType: "persona" })`
+- Segment → `list_entities({ entityType: "segment" })`
 - Motion → `list_motions()` (then `list_motion_icps({ motionOId })` to see the persona × segment cells the agent matches against)
 
 **Determine tuning mode based on entity count:**
@@ -434,7 +434,7 @@ See [cost-reference.md](references/cost-reference.md) for the credits-per-run co
 - `verify_connection` — workspace check
 - `list_agents` (QUALIFY_COMPANY + QUALIFY_PERSON) — find qual agents
 - `get_agent` — full agent config (sections, model, strategy)
-- `list_all_entities` — list entities by type
+- `list_entities` — list entities by type
 - `get_entity` — full entity with qualifying questions + description
 - `find_company` / `find_similar_companies` — find test case companies
 - `find_person` / `find_similar_people` — find test case people

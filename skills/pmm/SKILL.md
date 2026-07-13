@@ -177,7 +177,7 @@ Use MCP tools to gather library context:
 
 ```
 # Always get brand voice
-list_all_entities(entityType: "brand_voice")
+list_entities(entityType: "brand_voice")
 
 # Get product info
 get_entity({ oId: "<product_oId>" })
@@ -261,7 +261,7 @@ Which format?
 Always check for brand voices and apply:
 
 ```
-list_all_entities(entityType: "brand_voice")
+list_entities(entityType: "brand_voice")
 ```
 
 If multiple voices exist, ask:
@@ -282,8 +282,8 @@ See [generation-modes.md](../shared/generation-modes.md) for the default generat
 ## MCP Tools Used
 
 ### Library Context
-- `list_all_entities` (entityType: "brand_voice") - Get available brand voices
-- `list_all_entities` - List products, personas, etc.
+- `list_entities` (entityType: "brand_voice") - Get available brand voices
+- `list_entities` - List products, personas, etc.
 - `get_entity` - Get full entity details
 - `search_knowledge_base` - Find relevant messaging, proof points
 

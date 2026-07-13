@@ -2,6 +2,15 @@
 
 The single source of truth for Octave entity types, their `entityType` values, and their oId prefixes. Skills that list, create, update, or audit library entities should use these names and prefixes consistently.
 
+## Fetching entities
+
+`list_entities` is the single tool for listing any type. It returns **slim rows** (oId, name, description) by default for cheap discovery — start there and escalate only when a step needs more:
+
+- `search: "<name>"` — filter by name/description (resolve an entity by name)
+- `all: true` — return every match in one response instead of paginating
+- `includeDetails: true` — include each entity's full body (narrow with `search` or a small page first)
+- `get_entity({ oId })` — full detail for a single entity once you have its oId
+
 ## Library Entities
 
 | Entity type | `entityType` value | oId prefix | Notes |
