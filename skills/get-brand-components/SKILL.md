@@ -1,6 +1,6 @@
 ---
 name: get-brand-components
-description: Capture a brand's visual design system from its website and build a reusable component kit. Walks key pages on a domain (screenshots + HTML via the Octave scrape tool), derives design tokens (colors, type, spacing, radius, shadow), and produces a minimal component library (buttons, cards, headers, stats, tables, badges, hero, footer) as a self-contained HTML reference plus CSS tokens. Use when the user says "get brand components", "capture the brand", "build a component kit for <domain>", "make outputs look like <company>", or wants other skills to generate on-brand HTML for a target company.
+description: Capture a brand's visual design system from its website and build a reusable component kit. Walks key pages on a domain (screenshots + HTML via the Octave scrape tool), derives design tokens (colors, type, spacing, radius, shadow), and produces a minimal component library (buttons, cards, headers, stats, tables, badges, hero, footer) as a self-contained HTML reference plus CSS tokens. Use when the user says "get brand components", "capture the brand", "build a component kit for <domain>", "make outputs look like <company>", wants other skills to generate on-brand HTML for a target company, or wants to reuse an already-published brand kit from the asset store or host/share a kit as a live link (via asset-manager).
 argument-hint: <domain-or-url> [refresh] | list | show <slug> | export <slug> | delete <slug>
 ---
 
@@ -81,6 +81,12 @@ The whole value of this skill is that output looks like it came **off the page**
 1. Normalize the input to a base URL (`https://www.<domain>` if only a bare domain is given; keep an explicit URL as the seed).
 2. Derive the `<slug>` from the registrable domain.
 3. **Cache check (do this first).** If a kit already exists at `~/.octave/brands/<slug>/` (has `manifest.json`), **reuse it by default**: print a one-line summary from `manifest.json`, `open` the gallery, and **stop — do not re-walk or spend scrape credits.** Only proceed to Step 2 when the user passed `refresh` (or explicitly asked to rebuild/re-scrape), or the kit is missing/partial/stale. Mention they can pass `refresh` to rebuild.
+4. **Asset-store fallback (on local miss only).** No local kit? Before spending scrape credits, check whether this kit was already published as a hosted asset — **by you or a workspace teammate** (workspace-shared assets appear in the list with their `owner`). If the Octave MCP asset tools aren't available, skip this silently and continue to Step 2.
+   - Run the `assets_list` MCP tool — an **actual tool call**, never a bash/python simulation, and never "assume" its result. If the `assets_list` result is not in your transcript, this check did not happen and you may not proceed to Step 2. Look for identifier `<slug>-brand-kit` — exact first, then fuzzy (identifier or description containing the slug/company name plus "brand").
+   - **Match found** → tell the user: *"A brand kit for <domain> is already published (owner: <me | teammate name>): <link>"* and ask (AskUserQuestion): **Use it (Recommended)** — download it as the local cache — or **Rebuild fresh** — walk the site anyway.
+     - *Use it*: follow the asset-manager download workflow in [`../asset-manager/SKILL.md`](../asset-manager/SKILL.md) — mint the token, then `download-artifact.sh --uuid <uuid> --out "${TMPDIR:-/tmp}"` (files land in `${TMPDIR:-/tmp}/<identifier>/`, where `<identifier>` is the matched asset's actual identifier — for a fuzzy match it may not be exactly `<slug>-brand-kit`). **Only if the download exits 0 and `${TMPDIR:-/tmp}/<identifier>/manifest.json` exists**, promote it: `mkdir -p ~/.octave/brands && rm -rf ~/.octave/brands/<slug> && mv "${TMPDIR:-/tmp}/<identifier>" ~/.octave/brands/<slug>` (the `mkdir -p` is required on a fresh machine — `mv` will not create the parent). If the download failed or `manifest.json` is missing, leave `~/.octave/brands/` untouched and continue to Step 2. Then treat it exactly like a local cache hit: summarize, open the gallery, **stop** — no scrape credits spent. Update the asset-manager registry per its rules.
+     - *Rebuild fresh*: continue to Step 2, but remember the asset's uuid and owner — Step 8.5 will offer to **update** the hosted kit if it is yours; a teammate-owned kit can't be modified, so you'd publish your own copy instead.
+   - **No match** → continue to Step 2 without extra chatter.
 
 #### Step 2: Walk the key pages
 
@@ -320,6 +326,25 @@ The user can also set a standing preference per run ("always auto-fix", "skip th
 2. Summarize: the palette (with hex), fonts, the signature moves, and the files written.
 3. Confirm: **"Brand kit saved to `~/.octave/brands/<slug>/`. Other skills can now generate on-brand output for <Company> — or run `/octave:get-brand-components show <slug>` to view it."**
 
+#### Step 8.5: Offer to host / share the kit (asset-manager)
+
+The kit is built and reviewed — offer to publish it so it's reachable by link and reusable as a cache by future runs (Step 1.4). If the Octave MCP asset tools aren't available, skip the offer and mention `export <slug>` as the offline alternative.
+
+1. Ask (AskUserQuestion): **"Host this brand kit as a shareable asset?"** — options: `Host it (public link)` / `Host privately + share` / `Not now`.
+2. On host, hand off to the asset-manager publish workflow in [`../asset-manager/SKILL.md`](../asset-manager/SKILL.md) — it owns the token lifecycle and the registry — with these prefills (still user-confirmable per that skill's flow):
+   - Identifier suggestion: **`<slug>-brand-kit`**. Description: *"Brand component kit for <Company> (<domain>) — design tokens, component gallery, fonts, and logo"*.
+   - `--type website --entry-point components.html --status published`; visibility from the choice above; **workspace sharing: recommend `--share-workspace true`** — that is what lets teammates find and reuse the kit instead of rebuilding it.
+   - Source: a staged copy WITHOUT the heavy `screenshots/` rebuild artifacts (keeps the upload well under the size cap):
+     ```bash
+     STAGE="${TMPDIR:-/tmp}/<slug>-brand-kit" && rm -rf "$STAGE" && \
+       cp -R ~/.octave/brands/<slug> "$STAGE" && rm -rf "$STAGE/screenshots"
+     ```
+     then upload the staged folder with `zip-and-upload-artifact.sh`.
+3. If Step 1.4 found this kit already hosted (or the upload returns 409): offer to **update the existing hosted kit** instead — `update-artifact.sh --uuid <uuid> --src "$STAGE"` (full replace) — never create a duplicate. Only possible when the hosted kit is YOURS (`owner: "me"`); a teammate-owned kit is read-only — publish your own copy.
+   The entire hosting step is **2 MCP tool calls + the one-line staging + one upload command** (see the asset-manager skill's "Exact Publish Sequence"). More shell than that means you're doing it wrong.
+4. Private choice → asset-manager's share flow (emails and/or allowed domains; the one-time share URL goes into its registry).
+5. Report the final link: the live site URL (public), or for private/draft the `preview:` link (works for you and workspace members) plus the share URL for people outside the workspace.
+
 ---
 
 ### Subcommand: list
@@ -347,6 +372,7 @@ Zip a cached kit so it can be shared / handed to a designer. Self-contained (fon
    zip -r -X "<dest>/<slug>-brand-kit.zip" "<slug>" -x '*.DS_Store'
    ```
 4. Confirm with the path and a one-line `unzip -l` summary of what's inside (tokens.css, components.html, brand-kit.md, manifest.json, logo, fonts/, screenshots/).
+5. Mention: to share as a **live link** instead of a zip, use the hosting offer (Step 8.5) or `/octave:asset-manager`.
 
 ### Subcommand: delete <slug>
 
