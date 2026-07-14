@@ -703,13 +703,21 @@ The workspace's own company profile (singleton).
 - `asset_refresh_access_token` - Rotate the access token (e.g. after a 401)
 - `assets_list` - List your assets and your workspace's assets, with status/privacy filters
 - `asset_get_by_id` - Get one asset by uuid
-- `asset_update` - Update metadata: identifier, description, entry point, privacy (only_me/workspace/public), status
+- `asset_update` - Update metadata: identifier, description, entry point, privacy (only_me/workspace/public), status, vanity slug (pretty `/s/<handle>/<slug>/` URL)
 - `asset_delete` - Permanently delete an asset and its files
 - `asset_share_create` - Create a share link for a non-public asset (emails and/or domains; never expires unless set; the returned URL is shown only once)
 - `asset_shares_list` - List an asset's share links
 - `asset_share_revoke` - Revoke a share link (cuts active sessions)
 - `asset_share_add_recipients` / `asset_share_remove_recipients` - Manage a share's email allowlist
 - `asset_share_add_domains` / `asset_share_remove_domains` - Manage a share's domain allowlist
+- `asset_versions_list` - List an asset's immutable file versions (every file update mints one)
+- `asset_version_restore` - Roll the served files back to a version (instant repoint; newer versions stay restorable)
+- `asset_version_delete` - Delete an old version to free storage (the current version can't be deleted)
+- `asset_stats_get` - Per-day unique visit and download counts for an asset (owner-only)
+- `asset_visitors_list` - Identified viewers: verified share recipients and workspace members (anonymous public visits are counted, never named)
+- `asset_access_requests_list` - Cross-asset access-request inbox (filter by status; pending = needs action)
+- `asset_access_request_grant` - Grant a request by minting a single-recipient share (the returned URL is shown only once; no email is sent)
+- `asset_access_request_dismiss` - Dismiss a request ("not now" - the requester can re-request)
 
 ## Directory Structure
 

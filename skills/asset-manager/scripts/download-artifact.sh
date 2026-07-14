@@ -4,6 +4,7 @@
 # Usage:
 #   ARTIFACTS_ACCESS_TOKEN=<token> ./download-artifact.sh --uuid <artifact-uuid>
 #   ARTIFACTS_ACCESS_TOKEN=<token> ./download-artifact.sh --uuid <uuid> --out ./dir
+#   ARTIFACTS_ACCESS_TOKEN=<token> ./download-artifact.sh --uuid <uuid> --version 2
 #
 # Flags:
 #   --uuid <uuid>   (required) the artifact to download
@@ -11,6 +12,10 @@
 #                   placed inside a folder named after the artifact identifier,
 #                   i.e. <dir>/<identifier>/...  (default: the current
 #                   directory, so ./<identifier>/...)
+#   --version <N>   download historical version N instead of the current files.
+#                   Arrives as ONE download — the version's single file, or a
+#                   .zip of everything when it holds several — saved to
+#                   <dir>/<identifier>-v<N>[.zip|.<ext>], not unpacked.
 #   -h, --help      show this help
 #
 # Auth / environment (the access token is env-only):
@@ -25,6 +30,9 @@
 # regardless of status or privacy tier, no publish required:
 #   GET /api/v1/artifacts/:uuid              -> identifier + metadata.filesMap
 #   GET /api/v1/artifacts/:uuid/download/... -> each file's bytes
+# With --version, historical files aren't in the current filesMap, so the
+# per-file walk is replaced by one call:
+#   GET /api/v1/artifacts/:uuid/versions/<N>/download -> single file or .zip
 #
 # Tip: for a one-shot grab, GET /api/v1/artifacts/:uuid/download returns the
 # single file directly, or a .zip of everything when there are multiple files.
@@ -47,13 +55,16 @@ usage() {
 }
 
 UUID=""
-# --out is the PARENT dir; the <identifier>/ folder is always created inside it.
+# --out is the PARENT dir; the <identifier>/ folder (or the <identifier>-v<N>
+# file with --version) is always created inside it.
 OUT_DIR="."
+VERSION=""
 
 while [ $# -gt 0 ]; do
   case "$1" in
     --uuid) UUID="${2:?--uuid requires a value}"; shift 2 ;;
     --out)  OUT_DIR="${2:?--out requires a value}"; shift 2 ;;
+    --version) VERSION="${2:?--version requires a value}"; shift 2 ;;
     -h|--help) usage; exit 0 ;;
     *) echo "error: unexpected argument: $1" >&2; usage; exit 1 ;;
   esac
@@ -63,6 +74,12 @@ if [ -z "$UUID" ]; then
   echo "error: --uuid is required" >&2
   usage
   exit 1
+fi
+
+# Fail fast on a malformed version number (the server validates too, but this
+# saves a round-trip).
+if [ -n "$VERSION" ]; then
+  case "$VERSION" in *[!0-9]*) echo "error: --version must be a positive integer" >&2; exit 1 ;; esac
 fi
 
 if [ -z "$TOKEN" ]; then
@@ -121,17 +138,61 @@ else
   fi
 fi
 
+# Filesystem-safe identifier (no slashes/control chars/leading dots; uuid
+# fallback) — names the download folder, or the -v<N> file with --version.
+SAFE_ID=$(printf '%s' "$IDENTIFIER" | tr '/\\' '--' | tr -d '[:cntrl:]' |
+  sed -e 's/^[[:space:].]*//' -e 's/[[:space:]]*$//')
+
+# Pinned-version path: historical files aren't in the current filesMap, so
+# fetch the version download endpoint instead. It returns the version's single
+# file directly, or a .zip of everything when the version holds several —
+# Content-Disposition/Content-Type decide the local filename.
+if [ -n "$VERSION" ]; then
+  HDR_FILE="$(mktemp)"
+  BODY_FILE="$(mktemp)"
+  trap 'rm -f "$META_FILE" "$HDR_FILE" "$BODY_FILE"' EXIT
+  HTTP_CODE=$(curl -sS -D "$HDR_FILE" -o "$BODY_FILE" -w "%{http_code}" \
+    -H "Authorization: Bearer $TOKEN" \
+    "$BASE_URL/api/v1/artifacts/$UUID/versions/$VERSION/download")
+  if [ "$HTTP_CODE" != "200" ]; then
+    echo "error: GET /api/v1/artifacts/$UUID/versions/$VERSION/download -> $HTTP_CODE" >&2
+    cat "$BODY_FILE" >&2
+    echo >&2
+    echo "hint: 401 -> bad/expired access token; 404 -> wrong uuid, not yours" >&2
+    echo "      (nor workspace-shared), or no such version — the asset_versions_list" >&2
+    echo "      MCP tool shows which versions exist." >&2
+    exit 1
+  fi
+  # Pick the extension: the Content-Disposition filename wins (keep only
+  # alphanumerics so a crafted header can't smuggle path characters); else
+  # Content-Type application/zip -> .zip; else save it extension-less.
+  EXT=""
+  DISP_NAME=$(sed -n 's/^[Cc]ontent-[Dd]isposition:.*filename="\{0,1\}\([^";]*\)"\{0,1\}.*/\1/p' "$HDR_FILE" |
+    head -1 | tr -d '\r')
+  case "$DISP_NAME" in
+    *.*)
+      EXT=$(printf '%s' "${DISP_NAME##*.}" | tr -cd 'A-Za-z0-9')
+      if [ -n "$EXT" ]; then EXT=".$EXT"; fi
+      ;;
+  esac
+  if [ -z "$EXT" ] && grep -qi '^content-type:[[:space:]]*application/zip' "$HDR_FILE"; then
+    EXT=".zip"
+  fi
+  DEST_FILE="${OUT_DIR%/}/${SAFE_ID:-$UUID}-v$VERSION$EXT"
+  mkdir -p "${OUT_DIR%/}"
+  mv "$BODY_FILE" "$DEST_FILE"
+  echo "done: version $VERSION -> $DEST_FILE"
+  exit 0
+fi
+
 if [ -z "$PATHS" ]; then
   echo "artifact $UUID has no files (empty filesMap)" >&2
   exit 1
 fi
 
 # Always nest the files under a single top-level folder named after the
-# artifact identifier (filesystem-safe: no slashes/control chars/leading dots;
-# uuid fallback). --out is the PARENT directory that folder is created in, so
-# the parent folder of every downloaded file is the identifier.
-SAFE_ID=$(printf '%s' "$IDENTIFIER" | tr '/\\' '--' | tr -d '[:cntrl:]' |
-  sed -e 's/^[[:space:].]*//' -e 's/[[:space:]]*$//')
+# artifact identifier. --out is the PARENT directory that folder is created
+# in, so the parent folder of every downloaded file is the identifier.
 DEST="${OUT_DIR%/}/${SAFE_ID:-$UUID}"
 
 # 3. Download each file from the owner-scoped download endpoint (token auth,
