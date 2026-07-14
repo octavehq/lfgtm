@@ -330,10 +330,10 @@ The user can also set a standing preference per run ("always auto-fix", "skip th
 
 The kit is built and reviewed — offer to publish it so it's reachable by link and reusable as a cache by future runs (Step 1.4). If the Octave MCP asset tools aren't available, skip the offer and mention `export <slug>` as the offline alternative.
 
-1. Ask (AskUserQuestion): **"Host this brand kit as a shareable asset?"** — options: `Host it (public link)` / `Host privately + share` / `Not now`.
+1. Ask (AskUserQuestion): **"Host this brand kit as a shareable asset?"** — options: `Host for the workspace (Recommended)` ("teammates can find, open, and reuse it") / `Host it (public link)` / `Not now`.
 2. On host, hand off to the asset-manager publish workflow in [`../asset-manager/SKILL.md`](../asset-manager/SKILL.md) — it owns the token lifecycle and the registry — with these prefills (still user-confirmable per that skill's flow):
    - Identifier suggestion: **`<slug>-brand-kit`**. Description: *"Brand component kit for <Company> (<domain>) — design tokens, component gallery, fonts, and logo"*.
-   - `--type website --entry-point components.html --status published`; visibility from the choice above; **workspace sharing: recommend `--share-workspace true`** — that is what lets teammates find and reuse the kit instead of rebuilding it.
+   - `--type website --entry-point components.html --status published`; `--privacy` from the choice above (**recommend `workspace`** — that is what lets teammates find and reuse the kit instead of rebuilding it; `public` only when the user wants an open link).
    - Source: a staged copy WITHOUT the heavy `screenshots/` rebuild artifacts (keeps the upload well under the size cap):
      ```bash
      STAGE="${TMPDIR:-/tmp}/<slug>-brand-kit" && rm -rf "$STAGE" && \
@@ -342,8 +342,8 @@ The kit is built and reviewed — offer to publish it so it's reachable by link 
      then upload the staged folder with `zip-and-upload-artifact.sh`.
 3. If Step 1.4 found this kit already hosted (or the upload returns 409): offer to **update the existing hosted kit** instead — `update-artifact.sh --uuid <uuid> --src "$STAGE"` (full replace) — never create a duplicate. Only possible when the hosted kit is YOURS (`owner: "me"`); a teammate-owned kit is read-only — publish your own copy.
    The entire hosting step is **2 MCP tool calls + the one-line staging + one upload command** (see the asset-manager skill's "Exact Publish Sequence"). More shell than that means you're doing it wrong.
-4. Private choice → asset-manager's share flow (emails and/or allowed domains; the one-time share URL goes into its registry).
-5. Report the final link: the live site URL (public), or for private/draft the `preview:` link (works for you and workspace members) plus the share URL for people outside the workspace.
+4. If someone OUTSIDE the workspace needs the kit → asset-manager's share flow (emails and/or allowed domains; the one-time share URL goes into its registry).
+5. Report the final link: the live site URL (public — anyone; workspace — teammates verify their work email once), plus the `preview:` link for a zero-friction internal open, plus any share URL for people outside the workspace.
 
 ---
 

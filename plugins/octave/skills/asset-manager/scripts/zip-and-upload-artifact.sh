@@ -6,16 +6,17 @@
 # Usage:
 #   ARTIFACTS_ACCESS_TOKEN=<token> ./zip-and-upload-artifact.sh --src /path/to/artifact
 #   ARTIFACTS_ACCESS_TOKEN=<token> ./zip-and-upload-artifact.sh --src ./site \
-#     --type storage --visibility public --identifier docs
+#     --type storage --privacy public --identifier docs
 #
 # Flags:
 #   --src <folder>        (required) site folder to zip and upload
 #   --type <t>            website | storage        (default: website)
-#   --visibility <v>      public | private         (default: private)
-#   --status <s>          draft | published | archived  (default: published)
-#   --share-workspace <b> true | false             (default: true) — let
-#                         same-workspace teammates read this artifact via the
-#                         API; pass false to keep it owner-only
+#   --privacy <p>         only_me | workspace | public  (default: workspace)
+#                         One ladder: only_me = owner only; workspace = owner +
+#                         workspace members (the default); public = anyone with
+#                         the URL. External people get access via share links
+#                         on any non-public asset.
+#   --status <s>          published | unpublished  (default: published)
 #   --identifier <id>     artifact identifier      (default: --src basename)
 #   --description <d>     description              (default: "Uploaded via curl-templates")
 #   --entry-point <path>  entry point (website only; sent only when set)
@@ -47,9 +48,8 @@ usage() {
 # Defaults (all overridable by flags).
 SRC=""
 TYPE="website"
-VISIBILITY="private"
+PRIVACY="workspace"
 STATUS="published"
-SHARE_WORKSPACE="true"
 IDENTIFIER=""
 DESCRIPTION="Uploaded via curl-templates"
 ENTRY_POINT=""
@@ -58,9 +58,8 @@ while [ $# -gt 0 ]; do
   case "$1" in
     --src)         SRC="${2:?--src requires a value}"; shift 2 ;;
     --type)        TYPE="${2:?--type requires a value}"; shift 2 ;;
-    --visibility)  VISIBILITY="${2:?--visibility requires a value}"; shift 2 ;;
+    --privacy)     PRIVACY="${2:?--privacy requires a value}"; shift 2 ;;
     --status)      STATUS="${2:?--status requires a value}"; shift 2 ;;
-    --share-workspace) SHARE_WORKSPACE="${2:?--share-workspace requires a value}"; shift 2 ;;
     --identifier)  IDENTIFIER="${2:?--identifier requires a value}"; shift 2 ;;
     --description) DESCRIPTION="${2:?--description requires a value}"; shift 2 ;;
     --entry-point) ENTRY_POINT="${2:?--entry-point requires a value}"; shift 2 ;;
@@ -91,9 +90,8 @@ fi
 
 # Fail fast on typo'd enums (the server validates too, but this saves a round-trip).
 case "$TYPE" in website | storage) ;; *) echo "error: --type must be website|storage" >&2; exit 1 ;; esac
-case "$VISIBILITY" in public | private) ;; *) echo "error: --visibility must be public|private" >&2; exit 1 ;; esac
-case "$STATUS" in draft | published | archived) ;; *) echo "error: --status must be draft|published|archived" >&2; exit 1 ;; esac
-case "$SHARE_WORKSPACE" in true | false) ;; *) echo "error: --share-workspace must be true|false" >&2; exit 1 ;; esac
+case "$PRIVACY" in only_me | workspace | public) ;; *) echo "error: --privacy must be only_me|workspace|public" >&2; exit 1 ;; esac
+case "$STATUS" in published | unpublished) ;; *) echo "error: --status must be published|unpublished" >&2; exit 1 ;; esac
 
 NAME=$(basename "$SRC")
 IDENTIFIER="${IDENTIFIER:-$NAME}"
@@ -101,7 +99,7 @@ IDENTIFIER="${IDENTIFIER:-$NAME}"
 # These string fields are interpolated into the metadata JSON without escaping.
 # A `"` or `\` in any of them would break the JSON — and because entryPoint is
 # appended last, a crafted value there can inject overriding keys (e.g.
-# `...","visibility":"public`) that silently defeat --visibility/--status. Reject
+# `...","privacy":"public`) that silently defeat --privacy/--status. Reject
 # rather than try to escape. (--identifier defaults to the folder basename, which
 # can legally contain these, so this must run after the default is applied.)
 for _field in "identifier=$IDENTIFIER" "description=$DESCRIPTION" "entry-point=$ENTRY_POINT"; do
@@ -113,8 +111,8 @@ for _field in "identifier=$IDENTIFIER" "description=$DESCRIPTION" "entry-point=$
   esac
 done
 
-METADATA=$(printf '{"identifier":"%s","description":"%s","type":"%s","visibility":"%s","status":"%s","shareWithWorkspace":%s' \
-  "$IDENTIFIER" "$DESCRIPTION" "$TYPE" "$VISIBILITY" "$STATUS" "$SHARE_WORKSPACE")
+METADATA=$(printf '{"identifier":"%s","description":"%s","type":"%s","privacy":"%s","status":"%s"' \
+  "$IDENTIFIER" "$DESCRIPTION" "$TYPE" "$PRIVACY" "$STATUS")
 # entryPoint is website-only; storage artifacts ignore it.
 if [ "$TYPE" = "website" ] && [ -n "$ENTRY_POINT" ]; then
   METADATA="$METADATA,\"entryPoint\":\"$ENTRY_POINT\""
@@ -189,26 +187,26 @@ else
   cat "$RESP_FILE"
   echo
   UUID=$(grep -o '"uuid":"[^"]*"' "$RESP_FILE" | head -1 | sed -e 's/^"uuid":"//' -e 's/"$//')
-  # previewUrl is a string for any non-public artifact (private, draft, or
-  # archived); it is JSON null (→ no match) only once published + public.
+  # previewUrl is a string for any non-public artifact (only_me, workspace, or
+  # unpublished); it is JSON null (→ no match) only once published + public.
   PREVIEW_URL=$(grep -o '"previewUrl":"[^"]*"' "$RESP_FILE" | head -1 | sed -e 's/^"previewUrl":"//' -e 's/"$//')
 fi
 
 echo
 echo "created: $UUID"
-if [ "$VISIBILITY" != "public" ] || [ "$STATUS" != "published" ]; then
-  echo "note:     not yet public. Via the asset-manager skill, publish with the" >&2
-  echo "          asset_update MCP tool (status=published, visibility=public)." >&2
+if [ "$PRIVACY" != "public" ] || [ "$STATUS" != "published" ]; then
+  echo "note:     not public. To open it to anyone with the URL, set" >&2
+  echo "          privacy=public via the asset_update MCP tool." >&2
 fi
 if [ "$TYPE" = "storage" ]; then
   echo "download: $BASE_URL/download/$UUID"
 else
   echo "serve:    $BASE_URL/sites/$IDENTIFIER-$UUID/"
 fi
-# Non-public artifacts (private, draft, or archived) return a tokenized preview
-# link (owner + same workspace) that renders without making them public.
+# Non-public artifacts (only_me, workspace, or unpublished) return a tokenized
+# preview link (owner + same workspace) that renders without making them public.
 if [ -n "${PREVIEW_URL:-}" ]; then
   echo "preview:  $PREVIEW_URL"
 fi
-# Owner download (any status/visibility), names the folder after the identifier.
+# Owner download (any status/privacy), names the folder after the identifier.
 echo "fetch:    ./download-artifact.sh --uuid $UUID"
