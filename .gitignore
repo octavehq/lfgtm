@@ -15,11 +15,6 @@
 # production
 /build
 
-# Claude Tag MCP overlay: injected into the installable plugin only at zip-build
-# time (see .github/workflows/publish-claude-tag-zip.yml). Never commit it — a
-# credential-less .mcp.json in the plugin leaves a failing octave server in Claude Code.
-/plugins/octave/.mcp.json
-
 # misc
 .DS_Store
 *.pem
