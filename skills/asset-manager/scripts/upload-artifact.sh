@@ -201,5 +201,5 @@ fi
 if [ -n "${PREVIEW_URL:-}" ]; then
   echo "preview:  $PREVIEW_URL"
 fi
-# Owner download (any status/visibility), names the folder after the identifier.
+# Owner download (any status/privacy), names the folder after the identifier.
 echo "fetch:    ./download-artifact.sh --uuid $UUID"
