@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 # Update an existing artifact: replace its files and/or patch its metadata
-# (identifier, description, entry point, visibility, status).
+# (identifier, description, entry point, privacy, status).
 #
 # Usage:
 #   # Replace the site AND switch the entry point, in one atomic request:
 #   ARTIFACTS_ACCESS_TOKEN=<token> ./update-artifact.sh --uuid <uuid> \
 #     --src /path/to/site --entry-point serve.html
 #
-#   # Metadata only (no upload) — e.g. make it private:
+#   # Metadata only (no upload) — e.g. restrict it to just the owner:
 #   ARTIFACTS_ACCESS_TOKEN=<token> ./update-artifact.sh --uuid <uuid> \
-#     --visibility private
+#     --privacy only_me
 #
 # Flags:
 #   --uuid <uuid>         (required) artifact to update
@@ -19,9 +19,10 @@
 #   --description <d>     new description
 #   --entry-point <path>  new entry point (website only). Without --src the file
 #                         must already exist in the artifact, or the site 404s.
-#   --visibility <v>      public | private
-#   --status <s>          draft | published | archived
-#   --share-workspace <b> true | false — share/unshare with the workspace
+#   --privacy <p>         only_me | workspace | public — the single privacy
+#                         ladder (owner only / owner + workspace / anyone with
+#                         the URL)
+#   --status <s>          published | unpublished
 #   -h, --help            show this help
 #
 # With --src the upload and any metadata flags are sent together as one atomic
@@ -57,9 +58,8 @@ SRC=""
 IDENTIFIER=""
 DESCRIPTION=""
 ENTRY_POINT=""
-VISIBILITY=""
+PRIVACY=""
 STATUS=""
-SHARE_WORKSPACE=""
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -68,9 +68,8 @@ while [ $# -gt 0 ]; do
     --identifier)  IDENTIFIER="${2:?--identifier requires a value}"; shift 2 ;;
     --description) DESCRIPTION="${2:?--description requires a value}"; shift 2 ;;
     --entry-point) ENTRY_POINT="${2:?--entry-point requires a value}"; shift 2 ;;
-    --visibility)  VISIBILITY="${2:?--visibility requires a value}"; shift 2 ;;
+    --privacy)     PRIVACY="${2:?--privacy requires a value}"; shift 2 ;;
     --status)      STATUS="${2:?--status requires a value}"; shift 2 ;;
-    --share-workspace) SHARE_WORKSPACE="${2:?--share-workspace requires a value}"; shift 2 ;;
     -h|--help)     usage; exit 0 ;;
     *) echo "error: unexpected argument: $1" >&2; usage; exit 1 ;;
   esac
@@ -93,19 +92,16 @@ if [ -z "$TOKEN" ]; then
 fi
 
 # Fail fast on typo'd enums (the server validates too, but this saves a round-trip).
-if [ -n "$VISIBILITY" ]; then
-  case "$VISIBILITY" in public | private) ;; *) echo "error: --visibility must be public|private" >&2; exit 1 ;; esac
+if [ -n "$PRIVACY" ]; then
+  case "$PRIVACY" in only_me | workspace | public) ;; *) echo "error: --privacy must be only_me|workspace|public" >&2; exit 1 ;; esac
 fi
 if [ -n "$STATUS" ]; then
-  case "$STATUS" in draft | published | archived) ;; *) echo "error: --status must be draft|published|archived" >&2; exit 1 ;; esac
-fi
-if [ -n "$SHARE_WORKSPACE" ]; then
-  case "$SHARE_WORKSPACE" in true | false) ;; *) echo "error: --share-workspace must be true|false" >&2; exit 1 ;; esac
+  case "$STATUS" in published | unpublished) ;; *) echo "error: --status must be published|unpublished" >&2; exit 1 ;; esac
 fi
 
 # Assemble a metadata patch from only the flags that were passed. Values are
 # interpolated as-is, so reject embedded double quotes/backslashes: they would
-# break the JSON, and (since entryPoint can be appended before visibility/status)
+# break the JSON, and (since entryPoint can be appended before privacy/status)
 # a crafted value could inject overriding keys. Same guard as upload-artifact.sh.
 for _field in "identifier=$IDENTIFIER" "description=$DESCRIPTION" "entry-point=$ENTRY_POINT"; do
   case "${_field#*=}" in
@@ -120,10 +116,8 @@ META_PARTS=()
 if [ -n "$IDENTIFIER" ];  then META_PARTS+=("\"identifier\":\"$IDENTIFIER\""); fi
 if [ -n "$DESCRIPTION" ]; then META_PARTS+=("\"description\":\"$DESCRIPTION\""); fi
 if [ -n "$ENTRY_POINT" ]; then META_PARTS+=("\"entryPoint\":\"$ENTRY_POINT\""); fi
-if [ -n "$VISIBILITY" ];  then META_PARTS+=("\"visibility\":\"$VISIBILITY\""); fi
+if [ -n "$PRIVACY" ];     then META_PARTS+=("\"privacy\":\"$PRIVACY\""); fi
 if [ -n "$STATUS" ];      then META_PARTS+=("\"status\":\"$STATUS\""); fi
-# shareWithWorkspace is a boolean -> no surrounding quotes.
-if [ -n "$SHARE_WORKSPACE" ]; then META_PARTS+=("\"shareWithWorkspace\":$SHARE_WORKSPACE"); fi
 
 METADATA=""
 if [ "${#META_PARTS[@]}" -gt 0 ]; then
@@ -219,24 +213,25 @@ fi
 IDENT=$(json_field identifier)
 TYPE=$(json_field type)
 STATUS_OUT=$(json_field status)
-VIS_OUT=$(json_field visibility)
-# previewUrl is present for any non-public artifact — private, draft, or archived
-# (json_field yields "" for the null it becomes once published + public).
+PRIVACY_OUT=$(json_field privacy)
+# previewUrl is present for any non-public artifact — only_me, workspace, or
+# unpublished (json_field yields "" for the null it becomes once published +
+# public).
 PREVIEW_URL=$(json_field previewUrl)
 
 echo
 echo "updated: $UUID"
-if [ "$STATUS_OUT" != "published" ] || [ "$VIS_OUT" != "public" ]; then
-  echo "note:     not yet public. Via the asset-manager skill, publish with the" >&2
-  echo "          asset_update MCP tool (status=published, visibility=public)." >&2
+if [ "$STATUS_OUT" != "published" ] || [ "$PRIVACY_OUT" != "public" ]; then
+  echo "note:     not public. To open it to anyone with the URL, set" >&2
+  echo "          privacy=public via the asset_update MCP tool." >&2
 fi
 if [ "$TYPE" = "storage" ]; then
   echo "download: $BASE_URL/download/$UUID"
 else
   echo "serve:    $BASE_URL/sites/$IDENT-$UUID/"
 fi
-# Non-public artifacts (private, draft, or archived) return a tokenized preview
-# link (owner + same workspace) that renders without making them public.
+# Non-public artifacts (only_me, workspace, or unpublished) return a tokenized
+# preview link (owner + same workspace) that renders without making them public.
 if [ -n "${PREVIEW_URL:-}" ]; then
   echo "preview:  $PREVIEW_URL"
 fi

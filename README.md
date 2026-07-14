@@ -187,7 +187,7 @@ Visual battlecards and win/loss reports are document formats of their parent ski
 
 | Skill | Description |
 |-------|-------------|
-| `/octave:asset-manager` | Publish and manage hosted assets — upload, visibility, private share links, asset registry; checks for existing assets before creating so work isn't duplicated |
+| `/octave:asset-manager` | Publish and manage hosted assets — upload, privacy tiers (only_me/workspace/public), share links, asset registry; checks for existing assets before creating so work isn't duplicated |
 
 ## Agents
 
@@ -199,7 +199,7 @@ Specialized agent personas for sustained, multi-turn work sessions.
 | `pmm-strategist` | Senior PMM focused on positioning, messaging, and launch strategy |
 | `sdr-coach` | SDR manager focused on outreach quality, reply rates, and coaching |
 | `revenue-strategist` | VP Revenue advisor for pipeline strategy and deal coaching |
-| `asset-manager` | Publish and manage hosted assets: upload, visibility, private share links, persistent registry; cache-aware — reuses existing assets instead of duplicating them |
+| `asset-manager` | Publish and manage hosted assets: upload, privacy tiers, share links, persistent registry; cache-aware — reuses existing assets instead of duplicating them |
 
 ## Skill Details
 
@@ -537,9 +537,9 @@ Build Octave-powered HTML presentations with brand styling:
 ### /octave:asset-manager
 Publish and manage hosted assets on the Octave assets service:
 - Cache-aware: lists existing assets before creating and offers matches (with links) so the same work isn't done twice
-- Upload local HTML sites, docs, or file bundles (interactive identifier + visibility intake)
-- Update published files or metadata; flip public/private
-- Create private share links for specific emails or whole domains; add/remove recipients, revoke
+- Upload local HTML sites, docs, or file bundles (interactive identifier + privacy intake — only_me / workspace / public)
+- Update published files or metadata; move assets up or down the privacy ladder
+- Create share links for specific emails or whole domains (never expire by default); add/remove recipients, revoke
 - Persistent per-project registry of everything published (URLs, share links, status)
 
 ```
@@ -701,11 +701,11 @@ The workspace's own company profile (singleton).
 ### Assets
 - `asset_generate_access_token` - Mint the per-user access token used by the upload/download scripts (rotates the previous one)
 - `asset_refresh_access_token` - Rotate the access token (e.g. after a 401)
-- `assets_list` - List your assets and workspace-shared teammates' assets, with status/visibility filters
+- `assets_list` - List your assets and your workspace's assets, with status/privacy filters
 - `asset_get_by_id` - Get one asset by uuid
-- `asset_update` - Update metadata: identifier, description, entry point, visibility, status, workspace sharing
+- `asset_update` - Update metadata: identifier, description, entry point, privacy (only_me/workspace/public), status
 - `asset_delete` - Permanently delete an asset and its files
-- `asset_share_create` - Create a private share link (emails and/or domains; the returned URL is shown only once)
+- `asset_share_create` - Create a share link for a non-public asset (emails and/or domains; never expires unless set; the returned URL is shown only once)
 - `asset_shares_list` - List an asset's share links
 - `asset_share_revoke` - Revoke a share link (cuts active sessions)
 - `asset_share_add_recipients` / `asset_share_remove_recipients` - Manage a share's email allowlist

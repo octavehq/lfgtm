@@ -22,7 +22,7 @@
 # How it works: both the file list and the file bodies come from the
 # authenticated artifacts API (guarded by the per-user access token). It works
 # for any artifact you own — or one a teammate shared with your workspace —
-# regardless of status or visibility, no publish required:
+# regardless of status or privacy tier, no publish required:
 #   GET /api/v1/artifacts/:uuid              -> identifier + metadata.filesMap
 #   GET /api/v1/artifacts/:uuid/download/... -> each file's bytes
 #
@@ -135,7 +135,7 @@ SAFE_ID=$(printf '%s' "$IDENTIFIER" | tr '/\\' '--' | tr -d '[:cntrl:]' |
 DEST="${OUT_DIR%/}/${SAFE_ID:-$UUID}"
 
 # 3. Download each file from the owner-scoped download endpoint (token auth,
-#    preserves paths). Works for any status/visibility of an artifact you own.
+#    preserves paths). Works for any status/privacy of an artifact you own.
 echo "downloading into $DEST/"
 COUNT=0
 while IFS= read -r FILE_PATH; do
