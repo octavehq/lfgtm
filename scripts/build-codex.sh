@@ -36,13 +36,10 @@ jq '{
     shortDescription: .description,
     category: "Productivity"
   }
-}' "$SRC_ROOT/.claude-plugin/plugin.json" \
+}' "$SRC_ROOT/plugins/octave/.claude-plugin/plugin.json" \
   > "$OUT/.codex-plugin/plugin.json"
 
 # 2. marketplace.json: Codex schema is different from Claude's — rebuild from scratch.
-#    Only the octave plugin is mirrored: octave-claude-tag is a Claude-Tag-only
-#    server declaration (plugins/octave-claude-tag/), and mapping every marketplace
-#    entry to path "./" would advertise it as a phantom copy of this repo.
 echo "→ .agents/plugins/marketplace.json"
 jq '{
   name: .name,
@@ -62,7 +59,7 @@ jq '{
 #    Dirs without a SKILL.md (e.g. skills/shared/, the cross-skill reference
 #    dir) are copied unrenamed so relative ../shared/ links keep resolving.
 echo "→ skills/ (prefix='$NAMESPACE_PREFIX')"
-for dir in "$SRC_ROOT"/skills/*/; do
+for dir in "$SRC_ROOT"/plugins/octave/skills/*/; do
   src_name="$(basename "$dir")"
 
   if [[ ! -f "$dir/SKILL.md" ]]; then
@@ -89,7 +86,7 @@ done
 
 # 4. workflows/: plain markdown, safe to copy as-is
 echo "→ workflows/"
-cp -R "$SRC_ROOT"/workflows/*.md "$OUT/workflows/"
+cp -R "$SRC_ROOT"/plugins/octave/workflows/*.md "$OUT/workflows/"
 
 # 5. agents/: no Codex equivalent
 case "$CONVERT_AGENTS" in
@@ -99,7 +96,7 @@ case "$CONVERT_AGENTS" in
   skills)
     echo "→ agents/ converted to skills/ (invocation semantics differ — see README note)"
     mkdir -p "$OUT/skills"
-    for f in "$SRC_ROOT"/agents/*.md; do
+    for f in "$SRC_ROOT"/plugins/octave/agents/*.md; do
       base="$(basename "$f" .md)"
       dst="$OUT/skills/${NAMESPACE_PREFIX}${base}"
       mkdir -p "$dst"
