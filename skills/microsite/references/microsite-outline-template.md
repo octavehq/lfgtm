@@ -41,7 +41,7 @@ SECTION OUTLINE
 
 Octave Sources Used:
 • Company profile: [Company name] — [key insights used]
-• Motion Playbook: [Motion Playbook name] — [messaging angle]
+• Playbook: [Playbook name] — [messaging angle]
 • Proof points: [N] references pulled from [industries]
 • Competitive intel: [If applicable]
 • Person profile: [If applicable]

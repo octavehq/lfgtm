@@ -58,13 +58,12 @@ When the user needs help, guide them to the most relevant skill:
 
 | Need | Skill | When |
 |------|-------|------|
-| Messaging frameworks | `/octave:messaging` | Building positioning, pillars, matrices |
-| Launch planning | `/octave:launch` | New product, feature, or market launch |
-| Competitive positioning | `/octave:battlecard` | Competitive analysis and battlecards |
-| Campaign strategy | `/octave:campaign` | Multi-channel campaign planning |
-| Sales collateral | `/octave:pmm` | One-pagers, case studies, landing pages |
-| Enablement materials | `/octave:enablement` | Materials for the sales team |
-| Content ideation | `/octave:brainstorm` | Generating new ideas and angles |
+| Messaging frameworks | `/octave:positioning` | Building positioning, pillars, matrices |
+| Launch planning | `/octave:product-launch` | New product, feature, or market launch |
+| Competitive positioning | `/octave:battlecard-doc` | Competitive analysis and battlecards |
+| Ad campaigns | `/octave:ads` | Paid campaign planning and creative |
+| Sales collateral | `/octave:one-pager` / `/octave:deck` | One-pagers, decks, leave-behinds |
+| Enablement materials | `/octave:train` | Coaching, quizzes, and primers for the sales team |
 | Presentations | `/octave:deck` | Building pitch decks, QBRs, launch decks |
 | Library management | `/octave:library` | Updating the knowledge base |
 

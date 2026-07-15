@@ -90,22 +90,9 @@ def logo_img(kitdir, render, dark, height=None):
 
 
 def inline_img(kitdir, ref, attrs=""):
-    """Inline an image as a data-URI so the output stays self-contained.
-    Kit-relative paths are read from disk; remote URLs are downloaded and inlined
-    (never hotlinked). Returns '' with a stderr warning if the image can't be sourced."""
+    """Inline a kit-relative image as a data-URI (self-contained), or pass a remote URL through."""
     if ref.startswith("http"):
-        import urllib.request
-        try:
-            req = urllib.request.Request(ref, headers={"User-Agent": "Mozilla/5.0"})
-            with urllib.request.urlopen(req, timeout=15) as r:
-                data = r.read()
-                mime = r.headers.get_content_type() or "image/png"
-            uri = f"data:{mime};base64," + base64.b64encode(data).decode()
-            return f'<img src="{uri}" {attrs} alt="">'
-        except Exception as e:
-            print(f"WARNING: could not download image {ref} ({e}) — omitted to keep output self-contained.",
-                  file=sys.stderr)
-            return ""
+        return f'<img src="{ref}" {attrs} alt="">'
     p = kitdir / ref
     mime = "image/svg+xml" if p.suffix == ".svg" else f"image/{p.suffix.lstrip('.')}"
     return f'<img src="{b64_file(p, mime)}" {attrs} alt="">'
@@ -163,17 +150,13 @@ def r_hero(b, ctx):
             f'<p class="lead">{para(b["lead"])}</p>'
             f'<div class="actions">{cta}</div></div>') if b.get("lead") else \
            (f'<div class="copy">{eyebrow}<h1>{emph(b["title"])}</h1><div class="actions">{cta}</div></div>')
-    # featured customer logo (possibly from another kit) — degrade gracefully if that kit is missing
+    # featured customer logo (possibly from another kit)
     cust = ""
     if b.get("featured"):
         fk = b["featured"].get("logoKit", ctx["slug"])
-        try:
-            fkd, frender = load_kit(fk)
-            flogo = logo_img(fkd, frender, dark=True, height=30)
-            cust = (f'<div class="cust"><span class="lab">{html.escape(b["featured"].get("label","Customer"))}</span>{flogo}</div>')
-        except (Exception, SystemExit) as e:
-            print(f"WARNING: featured logo kit '{fk}' unavailable ({e}) — omitting the featured customer logo.",
-                  file=sys.stderr)
+        fkd, frender = load_kit(fk)
+        flogo = logo_img(fkd, frender, dark=True, height=30)
+        cust = (f'<div class="cust"><span class="lab">{html.escape(b["featured"].get("label","Customer"))}</span>{flogo}</div>')
     # visual
     visual = ""
     vis = b.get("visual", render.get("heroVisual", "none"))
@@ -283,7 +266,7 @@ def r_cta(b, ctx):
     cls = "cta is-dark" if dark else "cta"
     cta = f'<a class="btn btn-primary">{html.escape(b["cta"]["label"])} {ARROW}</a>' if b.get("cta") else ""
     sub = f'<p>{para(b["sub"])}</p>' if b.get("sub") else ""
-    cust = f'<div class="cust-line">{emph(b["custLine"])}</div>' if b.get("custLine") else ""
+    cust = f'<div class="cust-line">{b["custLine"]}</div>' if b.get("custLine") else ""
     return f'<div class="{cls}"><h2>{emph(b["heading"])}</h2>{sub}{cta}{cust}</div>'
 
 
@@ -401,10 +384,7 @@ def main():
             buf.clear()
     for blk in spec["blocks"]:
         t = blk["type"]
-        renderer = RENDERERS.get(t)
-        if renderer is None:
-            sys.exit(f"ERROR: unknown block type '{t}'. Known types: {', '.join(sorted(RENDERERS))}")
-        rendered = renderer(blk, ctx)
+        rendered = RENDERERS[t](blk, ctx)
         if t in WRAP_BLOCKS and blk.get("surface") == "dark":
             # break a content block out of the light .wrap into a full-bleed dark band
             flush()

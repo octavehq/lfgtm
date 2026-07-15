@@ -1,12 +1,25 @@
 ---
 name: insights
-description: Surface findings, trends, and conversation patterns from calls, emails, and deals. Use when user says "what are prospects saying", "common objections", "conversation trends", "conversation patterns", "field intelligence", or asks about aggregate conversation insights. Do NOT use for a single pasted conversation (use /octave:analyzer) or deal-level win/loss analysis (use /octave:wins-losses).
-argument-hint: "[--type <finding-type>] [--period <range>] [--segment <name>] [--persona <name>] [--company <domain>]"
+description: Surface findings, trends, and patterns from calls, emails, and deals. Use when user says "what are prospects saying", "common objections", "conversation trends", "field intelligence", "what patterns", or asks about aggregate conversation insights. Do NOT use for deal-level win/loss analysis — use /octave:win-loss-report instead.
 ---
 
 # /octave:insights - Field Intelligence
 
 Surface insights from your sales conversations—objections, pain points, questions, and what's resonating. Learn from the field to improve your library and messaging.
+
+## Principles
+
+Follow these standards during generation. Read each before producing output.
+
+**Content and language:**
+- [Editorial rules](../shared/editorial-rules.md) — no AI-isms, banned vocabulary, honest analyst tone
+- [Information principles](../shared/information-principles.md) — lead with conclusions, evidence-backed claims, narrative arc
+
+**Presentation:**
+- [Presentation principles](../shared/presentation-principles.md) — use for any visual output (HTML, dashboards, tables); text follows the editorial rules above
+
+**Octave data:**
+- [Octave value](../shared/octave-value.md) — prioritize grounded workspace data over generic AI content
 
 ## Usage
 
@@ -56,33 +69,31 @@ Your choice (or just ask a question):
 
 ### Step 2: Query Events and Findings
 
-Use the MCP tools to gather data. `list_events` takes event types inside `filters`; `list_findings` requires a natural-language `query` describing the kind of findings you want, with entity and outcome filters inside `eventFilters`.
+Use the MCP tools to gather data:
 
 **For Overview:**
 ```
 # Get recent events
 list_events({
+  filters: { eventTypes: ["CALL_TRANSCRIPT", "EMAIL_SENT", "EMAIL_REPLY_RECEIVED"] },
   startDate: "<30 days ago>",
   endDate: "<today>",
-  limit: 50,
-  filters: { eventTypes: ["CALL_TRANSCRIPT", "EMAIL_SENT", "EMAIL_REPLY_RECEIVED"] }
+  limit: 50
 })
 
-# Get findings across the main types
+# Get finding aggregates
 list_findings({
-  query: "objections, pain points, questions about the offering, competitor mentions, value props presented",
+  query: "objections, business problems, questions or confusion about the offering, competitor mentions, and value prop presentations",
   startDate: "<30 days ago>",
   endDate: "<today>",
   limit: 100
 })
 ```
 
-Group the returned findings by type yourself (objections, pain points, questions, competitors, value props) before presenting the overview.
-
 **For Specific Type (e.g., Objections):**
 ```
 list_findings({
-  query: "objections and pushback raised by prospects in calls and emails",
+  query: "objections and pushback raised by prospects",
   startDate: "<period start>",
   endDate: "<period end>",
   limit: 50
@@ -92,7 +103,7 @@ list_findings({
 **With Persona/Segment Filter:**
 ```
 list_findings({
-  query: "<finding type description>",
+  query: "<topic>",
   eventFilters: {
     personas: ["<persona_oId>"]
   },
@@ -166,7 +177,7 @@ Value Props Delivered:
 
 ---
 
-[View full transcript] (uses get_event_detail with includeTranscript: true)
+[View full transcript] (uses get_event_detail with includeFullContent: true)
 ```
 
 ### Step 5: Apply Updates to Library
@@ -197,17 +208,15 @@ If yes, use `update_entity` to apply.
 
 ## Finding Types Reference
 
-Express the finding type in the `list_findings` query text:
-
-| Type | Description | Example query |
-|------|-------------|---------------|
-| objections | Pushback and concerns raised | "objections and pushback raised by prospects" |
-| pain-points | Problems prospects mention | "business problems and pain points prospects described" |
-| questions | Questions asked about offering | "questions or confusion about our offering" |
-| competitors | Competitor mentions | "competitors mentioned or compared against our offering" |
-| value-props | Value props that resonated | "value props presented and how prospects responded" |
-| use-cases | Use cases discussed | "use cases brought up in conversations" |
-| proof-points | Proof points referenced | "proof points and customer stories cited" |
+| Type | Description | Extraction Types |
+|------|-------------|------------------|
+| objections | Pushback and concerns raised | `CALL_EXTERNAL_OBJECTIONS`, `EMAIL_OBJECTION` |
+| pain-points | Problems prospects mention | `CALL_EXTERNAL_BUSINESS_PROBLEMS`, `EMAIL_PAIN_POINT` |
+| questions | Questions asked about offering | `CALL_EXTERNAL_QUESTIONS_OR_CONFUSION_ABOUT_OFFERING`, `EMAIL_QUESTION` |
+| competitors | Competitor mentions | `CALL_EXTERNAL_COMPETITORS_TO_OUR_OFFERING`, `EMAIL_COMPETITOR_MENTION` |
+| value-props | Value props that resonated | `CALL_INTERNAL_VALUE_PROP_PRESENTATIONS`, `EMAIL_VALUE_PROP` |
+| use-cases | Use cases discussed | `CALL_INTERNAL_USE_CASES_BROUGHT_UP`, `EMAIL_USE_CASE` |
+| proof-points | Proof points referenced | `CALL_INTERNAL_PROOF_POINTS`, `EMAIL_PROOF_POINT` |
 
 ## MCP Tools Used
 
@@ -250,10 +259,10 @@ Express the finding type in the `list_findings` query text:
 
 ## Related Skills
 
-- `/octave:analyzer` - Analyze specific conversations in depth
-- `/octave:wins-losses` - Focus on deal outcomes
+- `/octave:call-analyzer` - Analyze specific conversations in depth
+- `/octave:win-loss-report` - Focus on deal outcomes
 - `/octave:audit` - Ensure library captures field learnings
 - `/octave:library` - Update library with insights
-- `/octave:battlecard` - Competitive intelligence from conversation data
+- `/octave:battlecard-doc` - Competitive intelligence from conversation data
 - `/octave:icp-refine` - Use conversation patterns to refine ICP
-- `/octave:enablement` - Turn field insights into team enablement materials
+- `/octave:train` - Turn field insights into team training

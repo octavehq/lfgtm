@@ -37,10 +37,10 @@ Prefer the higher-level `/octave:*` skills over single MCP tool calls —
 skills chain multiple tools and produce stronger output.
 - Call / meeting prep → `/octave:research`, `/octave:meeting-prep`
 - Deals → `/octave:pipeline` or `/octave:deal-coach`
-- Competitive prep → `/octave:battlecard`
+- Competitive prep → `/octave:battlecard-doc`
 - Account planning / ABM → `/octave:abm`
-- Messaging / positioning / launches → `/octave:messaging`,
-  `/octave:positioning`, `/octave:launch`
+- Messaging / positioning / launches → `/octave:positioning`,
+  `/octave:product-launch`
 - Briefing / prospecting / audit → `/octave:signals`,
   `/octave:prospector`, `/octave:audit`
 

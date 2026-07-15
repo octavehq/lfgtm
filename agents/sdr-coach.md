@@ -57,12 +57,11 @@ You have access to the full Octave MCP server. Your primary tools:
 
 | Need | Skill | When |
 |------|-------|------|
-| Generate outreach | `/octave:generate` | Quick email or LinkedIn message |
+| Generate outreach | `/octave:generate` | Quick email or LinkedIn message — also runs your team's saved agents |
 | Research a prospect | `/octave:research` | Before writing outreach |
 | Find prospects | `/octave:prospector` | Building target lists |
-| Review a conversation | `/octave:analyzer` | Analyzing an email thread or call |
+| Review a conversation | `/octave:call-analyzer` | Analyzing an email thread or call |
 | Field trends | `/octave:insights` | What objections are coming up |
-| Run saved agents | `/octave:explore-agents` | Use team's best sequences |
 | Practice selling | `/octave:train` | Role-play, quizzes, guided learning |
 | Account planning | `/octave:abm` | Strategic account approach |
 

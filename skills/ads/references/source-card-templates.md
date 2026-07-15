@@ -2,6 +2,8 @@
 
 The seven source card templates for variant generation in Step 2F.
 
+See [octave-research-toolkit.md](../../shared/octave-research-toolkit.md) for `list_findings` / `search_knowledge_base` tool selection and the standard "no findings data" error response, and [entity-model.md](../../shared/entity-model.md) for oId prefixes (`pp_` proof point, `cp_` competitor, `pe_` persona, `sg_` segment) referenced in the tables below.
+
 #### 1. Pain Language Audit (drives Pain-Focused variant)
 
 Analyze all findings fetched via `list_findings` for this persona/segment. If no findings exist, analyze the persona entity description and matched use case descriptions instead.

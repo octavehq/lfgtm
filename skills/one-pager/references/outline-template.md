@@ -44,7 +44,7 @@ PROPOSED SECTIONS
 
 Octave Sources Used:
 - Company profile: [Company name] — [key insights]
-- Motion Playbook: [Motion Playbook name] — [messaging angle]
+- Playbook: [Playbook name] — [messaging angle]
 - Proof points: [N] references pulled
 - Findings: [N] recent signals (if follow-up)
 

@@ -1,12 +1,25 @@
 ---
 name: signals
-description: Morning intelligence briefing that surfaces the deals and signals demanding attention right now. Use when user says "what should I focus on", "morning briefing", "what happened", "signals", "what needs attention", "daily update", or asks what changed since they last checked. Flips from pull-based to push-based — the data tells you what to work on.
-argument-hint: "[--period today|3d|week|2w] [--focus deals|patterns|pipeline|content] [--segment <name>] [--motion <name>]"
+description: Morning intelligence briefing that surfaces the deals, patterns, and signals demanding attention right now. Use when user says "what should I focus on", "morning briefing", "what happened", "signals", "what needs attention", "daily update", or asks what changed since they last checked. Flips from pull-based to push-based — the data tells you what to work on.
 ---
 
 # /octave:signals - Morning Intelligence Briefing
 
 Your daily command center. Surfaces the deals that moved, objections trending up, competitors appearing, stakeholders going silent, and messaging themes gaining or losing traction — so you know exactly what to work on today.
+
+## Principles
+
+Follow these standards during generation. Read each before producing output.
+
+**Content and language:**
+- [Editorial rules](../shared/editorial-rules.md) — no AI-isms, banned vocabulary, honest analyst tone
+- [Information principles](../shared/information-principles.md) — lead with conclusions, evidence-backed claims, narrative arc
+
+**Presentation:**
+- [Presentation principles](../shared/presentation-principles.md) — use for any visual output (HTML, dashboards, tables); text follows the editorial rules above
+
+**Octave data:**
+- [Octave value](../shared/octave-value.md) — prioritize grounded workspace data over generic AI content
 
 ## Usage
 
@@ -37,24 +50,22 @@ When the user runs `/octave:signals`:
 
 ### Step 1: Gather All Signal Data
 
-Run these queries **in parallel** to gather the full picture. Use the period option to set date ranges (default: last 7 days). Note the call shapes: `list_events` takes event types inside `filters`; `list_findings` requires a natural-language `query` with any filters inside `eventFilters`.
+Run these queries **in parallel** to gather the full picture. Use the period option to set date ranges (default: last 7 days).
 
 **A. Recent Events (activity stream)**
 ```
 list_events({
+  filters: { eventTypes: ["CALL_TRANSCRIPT", "EMAIL_SENT", "EMAIL_REPLY_RECEIVED", "DEAL_WON", "DEAL_LOST", "OPPORTUNITY_CREATED"] },
   startDate: "<period start>",
   endDate: "<today>",
-  limit: 100,
-  filters: {
-    eventTypes: ["CALL_TRANSCRIPT", "EMAIL_SENT", "EMAIL_REPLY_RECEIVED", "DEAL_WON", "DEAL_LOST", "OPPORTUNITY_CREATED", "MEETING_BOOKED"]
-  }
+  limit: 100
 })
 ```
 
-**B. Current Period Findings (signal extraction)**
+**B. All Finding Types (signal extraction)**
 ```
 list_findings({
-  query: "objections, pain points, questions or confusion about the offering, competitor mentions, value props presented, proof points cited, use cases discussed",
+  query: "objections, business problems, questions or confusion about the offering, competitor mentions and comparisons, value prop presentations, proof points, use cases, and pain points",
   startDate: "<period start>",
   endDate: "<today>",
   limit: 200
@@ -64,14 +75,12 @@ list_findings({
 **C. Previous Period Findings (for trend comparison)**
 ```
 list_findings({
-  query: "objections, competitor mentions, value props presented, proof points cited",
+  query: "objections, competitor mentions and comparisons, value prop presentations, and proof points",
   startDate: "<two periods ago>",
   endDate: "<period start>",
   limit: 200
 })
 ```
-
-Bucket the returned findings by type yourself (objections, competitors, value props, proof points, and so on), then diff the current-period buckets against the previous-period buckets to detect trends.
 
 **D. Library Context (for gap detection)**
 ```
@@ -151,11 +160,11 @@ search_knowledge_base({
 **Deal Signal → Route to Skill:**
 Suggest the appropriate follow-up skill based on signal type:
 - Silent champion → `/octave:pipeline stalled <domain>`
-- New competitor → `/octave:battlecard --competitor "<name>"`
+- New competitor → `/octave:battlecard-doc --competitor "<name>"`
 - Deal advanced → `/octave:pipeline close <domain>`
 - New stakeholder needed → `/octave:pipeline multi-thread <domain>`
-- Objection spike → `/octave:enablement objections --topic "<topic>"`
-- Win pattern → `/octave:wins-losses --status won`
+- Objection spike → `/octave:train --topic "<topic>"`
+- Win pattern → `/octave:win-loss-report --status won`
 
 ## Signal Detection Logic
 
@@ -163,7 +172,7 @@ Suggest the appropriate follow-up skill based on signal type:
 | Signal | Detection | Priority |
 |--------|-----------|----------|
 | Champion silent | No reply from primary contact in >2x their avg response time | CRITICAL |
-| New competitor | Competitor-mention finding appears for a deal where it wasn't before | CRITICAL |
+| New competitor | Competitor extraction type appears for a deal where it wasn't before | CRITICAL |
 | Deal moved backward | Deal stage change event where new stage is earlier than previous | CRITICAL |
 | Deal advanced | Deal stage change event moving forward | HIGH |
 | Stalled deal | Active deal with no events in 14+ days | HIGH |
@@ -174,7 +183,7 @@ Suggest the appropriate follow-up skill based on signal type:
 ### Pattern Signals
 | Signal | Detection | Priority |
 |--------|-----------|----------|
-| Objection spike | >2x increase in objection findings vs previous period | HIGH |
+| Objection spike | >2x increase in extraction count vs previous period | HIGH |
 | New objection | Objection theme appears that wasn't in previous period | HIGH |
 | Competitor trending | Competitor mentions increased >50% vs previous period | HIGH |
 | Hot proof point | Proof point cited in >3 conversations this period | MEDIUM |
@@ -238,8 +247,8 @@ Suggest the appropriate follow-up skill based on signal type:
 
 - `/octave:insights` - Deep dive into specific finding types
 - `/octave:pipeline` - Deal-level coaching for flagged deals
-- `/octave:wins-losses` - Pattern analysis across deal outcomes
-- `/octave:battlecard` - Competitive intelligence for new competitors
-- `/octave:enablement` - Turn trending objections into team materials
+- `/octave:win-loss-report` - Pattern analysis across deal outcomes
+- `/octave:battlecard-doc` - Competitive intelligence for new competitors
+- `/octave:train` - Turn trending objections into team coaching
 - `/octave:audit` - Full library health check
 - `/octave:library` - Create/update entities for detected gaps

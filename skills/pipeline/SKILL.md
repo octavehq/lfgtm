@@ -8,6 +8,10 @@ argument-hint: "[stalled|multi-thread|competitive|executive|close|expand] <accou
 
 Deal-level strategy for live deals. Diagnose stalled deals, plan multi-threading, counter competitive threats, engage executives, and generate deal-specific next steps — all informed by your library's Motion ICP narratives and real conversation data.
 
+## Principles
+
+Every output follows the shared principles: [presentation principles](../shared/presentation-principles.md) for visuals (tables, any rendered output), [editorial rules](../shared/editorial-rules.md) for text.
+
 ## Usage
 
 ```
@@ -112,7 +116,7 @@ find_motion_icp({ motionIcpOId: "<motion_icp_oId>", includeLearnings: true })  #
 
 # If a Custom Motion Playbook (COMPETITIVE / MILESTONE / ACCOUNT / THEMATIC) is more relevant:
 list_motion_playbooks({ motionOId: "<motion_oId>" })
-get_motion_playbook({ motionPlaybookOId: "<mp_oId>" })
+get_motion_playbook({ motionPlaybookOId: "<mpb_oId>" })
 
 # Get competitive intel if relevant
 search_knowledge_base({
@@ -214,8 +218,8 @@ What would you like to do next?
 
 - `/octave:deal-coach` - Methodology practice and coaching assets (role-play, coaching microsites, decks, quizzes)
 - `/octave:research` - Deep research on any stakeholder
-- `/octave:battlecard` - Full competitive intelligence
+- `/octave:battlecard-doc` - Full competitive intelligence
 - `/octave:abm` - Complete account plan (broader than deal-level)
 - `/octave:generate` - Quick content generation
-- `/octave:wins-losses` - Learn from similar deal outcomes
-- `/octave:analyzer` - Analyze a specific conversation from this deal
+- `/octave:win-loss-report` - Learn from similar deal outcomes
+- `/octave:call-analyzer` - Analyze a specific conversation from this deal

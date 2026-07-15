@@ -1,12 +1,30 @@
 ---
 name: generate
 description: Generate GTM content (emails, LinkedIn messages, call prep) using saved agents, Octave AI, or Claude direct — your choice. Use when user says "generate an email", "write a LinkedIn message", "prep for a call", "create outreach", or asks for single-asset content generation with mode selection.
-argument-hint: "[email|linkedin|call-prep|content] [--to <person>] [--about <topic>] [--mode agent|octave|claude]"
 ---
 
 # /octave:generate - GTM Content Generator
 
 Generate GTM content using your Octave library context. Choose how to generate: run a saved agent for consistency, use Octave's built-in AI, or have Claude draft it directly with Octave context.
+
+## Principles
+
+Follow these standards during generation. Read each before producing output.
+
+**Content and language:**
+- [Editorial rules](../shared/editorial-rules.md) — no AI-isms, banned vocabulary, honest analyst tone
+- [Information principles](../shared/information-principles.md) — lead with conclusions, evidence-backed claims, narrative arc
+
+**Presentation:**
+- [Presentation principles](../shared/presentation-principles.md) — use for any visual output (HTML, dashboards, tables); text follows the editorial rules above
+
+**Octave data:**
+- [Octave value](../shared/octave-value.md) — prioritize grounded workspace data over generic AI content
+- [Octave research toolkit](../shared/octave-research-toolkit.md) — tool selection (list vs. search) and standard error handling when gathering context for Mode B/C
+- [Entity model](../shared/entity-model.md) — canonical entity types and oId prefixes referenced throughout (persona, product, Motion, Motion ICP, etc.)
+
+**Review:**
+- For Mode C (Claude Direct), the content is Claude's own draft: run the review from [protocol.md](../shared/protocol.md) before presenting it — for HTML output the protocol is a mandatory gate; for text output run the preflight and the editorial checks. Modes A and B hand generation to a saved agent or Octave's own generation tools, so the protocol's reviewer pass doesn't apply — those outputs still get the Step 4/5 present-and-refine loop below.
 
 ## Usage
 
@@ -66,7 +84,17 @@ Three ways to generate content, each with different trade-offs:
 | Octave Default | Balanced quality + library grounding | `generate_email` / `generate_content` / `generate_call_prep` |
 | Claude Direct | Maximum control, rapid iteration, custom formats | Fetch Octave context, Claude generates directly |
 
-Mode selection rules (inference + when to ask) are in Step 2 below.
+### Smart Inference Rules
+
+Skip the mode question when intent is obvious:
+
+- **"Run my cold outreach agent"** / **"use the enterprise agent"** → Saved Agent
+- **"Generate an email for..."** / **"create a sequence"** → Octave Default
+- **"Write me an email using our Motion narrative"** / **"draft this yourself"** / **"I want more control"** → Claude Direct
+
+### When Ambiguous, Ask (via AskUserQuestion tool)
+
+When the mode is not obvious from the request, **always use the `AskUserQuestion` tool** to present the three options as a UI selector. Never silently default to one mode — let the user choose.
 
 ## Instructions
 
@@ -83,10 +111,9 @@ Identify:
 
 ### Step 2: Determine Generation Mode
 
-Apply smart inference rules from the request wording — skip the mode question when intent is obvious:
+Apply smart inference rules from the request wording:
 - **"Run my cold outreach agent"** / **"use the enterprise agent"** → Saved Agent (skip the question)
-- **"Generate an email for..."** / **"create a sequence"** → Octave Default (skip the question)
-- **"Write me an email using our Motion narrative"** / **"draft this yourself"** / **"I want more control"** / **"write it yourself"** → Claude Direct (skip the question)
+- **"Draft this yourself"** / **"I want more control"** / **"write it yourself"** → Claude Direct (skip the question)
 
 **If mode is not obvious from the request, use the `AskUserQuestion` tool** to ask — do NOT default silently:
 
@@ -187,7 +214,7 @@ No [type] agents found in your library.
 Options:
 1. Generate with Octave (default AI)
 2. I'll draft it directly (Claude + Octave context)
-3. Browse all agents: /octave:explore-agents
+3. Browse all agents with the `list_agents` tool
 
 Your choice:
 ```
@@ -203,6 +230,7 @@ Gather context, then call Octave's generation tools directly.
 - If company specified, use `find_company` to get company info
 - Use `search_knowledge_base` to get relevant messaging
 - Match to appropriate persona and Motion ICP cell
+- See [octave-research-toolkit.md](../shared/octave-research-toolkit.md) for the full list/search tool tables and standard error-handling responses (Octave connection failed, person/company not found, no matching Motion ICP cell, no proof points, no findings)
 
 **For Email Sequences:**
 ```
@@ -251,6 +279,8 @@ generate_call_prep({
 #### Mode C: Claude Direct
 
 Gather the same Octave context, but Claude generates the content itself — no `generate_*` MCP calls.
+
+See [entity-model.md](../shared/entity-model.md) for the canonical `entityType` values and oId prefixes used below (persona `pe_`, product `px_`, service `sc_`, competitor `cp_`, proof point `pp_`, Motion `mot_`, Motion ICP `micp_`).
 
 **Gather Context (same as Octave Default):**
 ```
@@ -377,9 +407,9 @@ Your choice:
 
 ## Related Skills
 
-- `/octave:explore-agents` - Browse and manage all saved agents
+- Browse and run saved agents with the `list_agents` / `run_agent` MCP tools
 - `/octave:research` - Research recipients before generating
 - `/octave:library` - Save successful messaging patterns back to library
-- `/octave:campaign` - Multi-channel campaign content (emails, social, ads, blog)
-- `/octave:pmm` - Deep-dive collateral (case studies, one-pagers, decks)
-- `/octave:messaging` - Build messaging frameworks to inform outreach
+- `/octave:ads` - Ad campaign creative grounded in the library
+- `/octave:one-pager` / `/octave:deck` - Deep-dive collateral
+- `/octave:positioning` - Build messaging frameworks to inform outreach

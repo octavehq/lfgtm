@@ -1,12 +1,12 @@
 # Product Positioning Coaching Framework
 
-A positioning coaching framework based on April Dunford's methodology ("Obviously Awesome" and "Sales Pitch"). Apply these frameworks when preparing **talking points and conversation beats** — the ideas and moments to land in a customer-facing conversation. These are points to hit in your own words, **not word-for-word scripts to recite.** A canned quote is easy to poke holes in and hard to deliver naturally; a beat survives contact with a real conversation. Lead every beat with the customer's business problem, not with closing language.
+A positioning coaching framework based on April Dunford's methodology ("Obviously Awesome" and "Sales Pitch"). Apply these frameworks when preparing talk tracks, scripting meeting narratives, or structuring how you present your product in any customer-facing conversation.
 
 ---
 
-## The Positioned Narrative (5 Steps)
+## The Positioned Sales Pitch (5 Steps)
 
-April Dunford's signature pitch structure. Turn each step into **talking points** for the specific meeting and audience — the beat to hit, not a line to read. The example phrasings below illustrate the *idea* of each beat; deliver it in your own voice, anchored in their world.
+April Dunford's signature sales pitch structure. Script each step for the specific meeting and audience.
 
 ### Step 1: Set the Status Quo
 Describe the world as the customer knows it today. Acknowledge how they currently solve the problem. This builds credibility — you understand their reality before prescribing a solution.
@@ -98,7 +98,7 @@ Harvest the customer's exact words for pain, priorities, and desired outcomes. P
 
 **How to apply:**
 1. During discovery or prior calls, write down the exact phrases the customer uses
-2. Mirror those phrases back in your talking points and beats
+2. Mirror those phrases back in your meeting talk tracks
 3. In the battle plan, note "customer language" vs "our language" — always default to theirs
 4. Pay special attention to how they describe their pain — that's your marketing copy
 

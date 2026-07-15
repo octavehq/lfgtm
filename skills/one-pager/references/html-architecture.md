@@ -36,6 +36,7 @@
     .heading-1 { font-size: clamp(1.75rem, 4vw, 2.75rem); }
     .heading-2 { font-size: clamp(1.25rem, 2.5vw, 1.75rem); }
     .heading-3 { font-size: clamp(1rem, 1.8vw, 1.25rem); }
+    .lede { font-size: clamp(1rem, 1.5vw, 1.125rem); font-weight: 500; } /* section intro line — one clear tier above body/card text */
     .body-text { font-size: clamp(0.875rem, 1.3vw, 1rem); }
     .body-sm { font-size: clamp(0.75rem, 1.1vw, 0.875rem); }
 
@@ -50,8 +51,10 @@
     /* === Components === */
     .card { ... }
     .metric-card { ... }
+    .customer-favicon { width: 16px; height: 16px; border-radius: 3px; vertical-align: -2px; margin-right: 6px; }
     .proof-quote { ... }
     .cta-block { ... }
+    .cta-list { list-style: none; } /* two action bullets; style markers to match brand, keep lines to one row each */
     .divider { ... }
 
     /* === Print Styles === */
@@ -73,8 +76,8 @@
 <body>
   <div class="page">
     <!-- Header -->
-    <!-- The Challenge -->
-    <!-- Our Approach -->
+    <!-- The Problem Today -->
+    <!-- How [Product] Helps -->
     <!-- Key Differentiators -->
     <!-- Proof Points -->
     <!-- Next Steps -->

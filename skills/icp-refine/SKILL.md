@@ -1,12 +1,25 @@
 ---
 name: icp-refine
-description: Compare deal outcomes and conversation evidence against your segment and persona definitions, then update the ICP criteria in your library. Use when user says "refine ICP", "update our ICP", "ideal customer profile", "should we change who we target", or wants segment/persona definitions updated from deal evidence. Do NOT use for win/loss pattern analysis itself — use /octave:wins-losses instead.
-argument-hint: "[--period <days>] [--segment <name>] [--focus wins|losses|both]"
+description: Analyze deal outcomes and conversation patterns to refine ICP definitions and targeting criteria. Use when user says "refine ICP", "who should we target", "update our ICP", "ideal customer profile", or asks why deals are being won or lost.
 ---
 
 # /octave:icp-refine - ICP Intelligence
 
 Analyze deal outcomes, conversation patterns, and qualification scores to refine your ICP definitions. Compares what your library says your ideal customer looks like against what actually wins — then recommends updates.
+
+## Principles
+
+Follow these standards during generation. Read each before producing output.
+
+**Content and language:**
+- [Editorial rules](../shared/editorial-rules.md) — no AI-isms, banned vocabulary, honest analyst tone
+- [Information principles](../shared/information-principles.md) — lead with conclusions, evidence-backed claims, narrative arc
+
+**Presentation:**
+- [Presentation principles](../shared/presentation-principles.md) — use for any visual output (HTML, dashboards, tables); text follows the editorial rules above
+
+**Octave data:**
+- [Octave value](../shared/octave-value.md) — prioritize grounded workspace data over generic AI content
 
 ## Usage
 
@@ -231,7 +244,7 @@ What would you like to do next?
 
 ## Related Skills
 
-- `/octave:wins-losses` - Deeper win/loss analysis (complements ICP refinement)
+- `/octave:win-loss-report` - Deeper win/loss analysis (complements ICP refinement)
 - `/octave:insights` - Field intelligence trends
 - `/octave:prospector` - Use refined ICP to find new prospects
 - `/octave:audit` - Check library health after updates

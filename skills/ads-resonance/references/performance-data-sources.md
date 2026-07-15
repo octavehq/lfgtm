@@ -1,6 +1,6 @@
 # Ad Performance Data Sources
 
-This reference covers the four ways the resonance loop (SKILL.md Step 1) can pull ad performance data, in order of preference. The SKILL detects what's available and falls through this list automatically. This doc owns all SQL and API queries — the SKILL describes the procedure and points here.
+This reference covers the four ways the Resonance Loop (Step 6) can pull ad performance data, in order of preference. The SKILL detects what's available and falls through this list automatically.
 
 | Priority | Source | Freshness | Setup effort | Best for |
 |---------|--------|-----------|--------------|----------|
@@ -110,24 +110,14 @@ The skill should consider Path 2 available if any of these are true:
 bq ls --project_id=<project> <dataset>
 ```
 
-If you see tables matching `ads_Campaign_<MCC>` and `ads_CampaignBasicStats_<MCC>`, the transfer is set up. Then run the two-stage smoke test:
-
-**Stage 1 — freshness probe.** Proves data exists and is landing:
+If you see tables matching `ads_Campaign_<MCC>` and `ads_CampaignBasicStats_<MCC>`, the transfer is set up and data is landing. Then probe with:
 
 ```sql
-SELECT
-  COUNT(*) AS row_count,
-  MIN(_DATA_DATE) AS earliest,
-  MAX(_DATA_DATE) AS most_recent
-FROM `<project>.<dataset>.ads_CampaignBasicStats_<MCC>`
-WHERE _DATA_DATE >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
+SELECT COUNT(*) FROM `<project>.<dataset>.ads_CampaignBasicStats_<MCC>`
+WHERE _DATA_DATE >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)
 ```
 
-If `row_count` is zero, the transfer config exists but hasn't completed its first run yet — trigger a backfill or note that data will be available within ~24h. If `most_recent` is more than 2 days old, the transfer has stalled.
-
-**Stage 2 — meaningful-data probe.** Proves the data has signal worth analyzing: run the **"Ad-group-level CPC comparison"** query below. Path 2 is good if it returns ≥ 2 ad groups with `clicks > 5`.
-
-**Stage 2b — mandatory sanity cross-check.** Immediately after Stage 2, run the **"Sanity cross-check"** query below and verify per-ad-group totals match Stage 2 exactly. Any mismatch means a dim-join inflation bug (see Gotcha #4) — stop the loop and report it rather than analyzing inflated numbers. The most likely cause is a modified query that dropped the `ag_latest` / `c_latest` CTE pattern; the fix is to restore the CTEs.
+If the count is zero, the transfer config exists but hasn't completed its first run yet. Fall through to Path 4 with a note that data will be available within ~24h.
 
 ### Setup (if user wants to enable it)
 
@@ -172,7 +162,7 @@ Why this matters: **the last 7 days of data in your BigQuery tables are unstable
 
 For the resonance loop, this has direct consequences:
 - **Query results for the last 7 days can change between runs**, even if no time has passed.
-- **Predictions with evaluation windows ending in the last 7 days are tentative** — see [prediction-cards.md](prediction-cards.md) § "Common pitfalls" #7.
+- **Predictions with evaluation windows ending in the last 7 days are tentative** — see `references/prediction-cards.md` § "Common pitfalls" #7.
 - **For a stable backward-looking analysis**, query data more than 7 days old.
 - **For fresh-as-possible analysis**, query through yesterday but expect the numbers to shift as the transfer refreshes.
 
@@ -193,7 +183,7 @@ The transfer creates ~30 tables in the destination dataset. The ones the resonan
 | `ads_Keyword_<MCC>` | Keyword metadata |
 | `ads_KeywordBasicStats_<MCC>` | Daily keyword metrics |
 
-The numeric suffix is the **MCC ID** the transfer is bound to. Each table has a `customer_id` column inside it that identifies the actual sub-account each row belongs to — filter by it to scope to a specific sub-account.
+The numeric suffix is the **MCC ID** the transfer is bound to. Each table has a `customer_id` column inside it that identifies the actual sub-account each row belongs to — filter by it to scope to a specific Octave sub-account.
 
 Tables are partitioned by `_DATA_DATE` (a DATE column). Always include a date predicate — querying without one scans the entire table.
 
@@ -214,7 +204,7 @@ The table schemas do **not** match GAQL field names. Four things will trip you u
 
 4. **The `ads_Campaign_<MCC>`, `ads_AdGroup_<MCC>`, and `ads_Ad_<MCC>` tables are DAILY-SNAPSHOTTED dimension tables, not static dim tables.** Each entity has one row per `_DATA_DATE` — not one row total. After N days of transfer activity, each ad_group_id has N rows in `ads_AdGroup_<MCC>`, each campaign_id has N rows in `ads_Campaign_<MCC>`, and so on. Joining a BasicStats row to these tables without a snapshot-dedup step produces a **cartesian explosion**: each stats row is multiplied by the number of snapshot dates in each joined dim table. If you JOIN both `ads_AdGroup` and `ads_Campaign` raw, the multiplier is approximately N² over time.
 
-   **Symptom**: Your totals look plausible but are wrong by a constant factor. E.g., a raw `SUM(metrics_clicks)` from the stats table returns 66 clicks, but the same SUM with dim joins returns 264 (4× inflated because the dim tables had 2 snapshots each). The bug is invisible if you only trust the joined query — there's nothing in the output that screams "wrong". The only way to catch it is a cross-check against the stats table alone. **The Stage 2b smoke test in `SKILL.md` Step 1 enforces this cross-check and will abort the loop if totals diverge. Never skip it.**
+   **Symptom**: Your totals look plausible but are wrong by a constant factor. E.g., a raw `SUM(metrics_clicks)` from the stats table returns 66 clicks, but the same SUM with dim joins returns 264 (4× inflated because the dim tables had 2 snapshots each). The bug is invisible if you only trust the joined query — there's nothing in the output that screams "wrong". The only way to catch it is a cross-check against the stats table alone. **The Stage 2 smoke test in `SKILL.md` step 6A enforces this cross-check and will abort the loop if totals diverge. Never skip it.**
 
    **Fix pattern**: Never JOIN `ads_Campaign_*` or `ads_AdGroup_*` or `ads_Ad_*` directly. Always wrap them in a "latest snapshot" CTE first:
 
@@ -323,7 +313,7 @@ HAVING impressions > 100
 ORDER BY ctr DESC
 ```
 
-This is the query that powers SKILL.md Step 2 (Map Performance Back to Source Cards). The `headlines` column is what gets matched against the variant headlines generated by `/octave:ads`. Keep `headlines_json` if you need the per-headline metadata (pinned fields, performance labels, approval status) — extract it client-side.
+This is the query that powers Step 6B (Map Performance Back to Source Cards). The `headlines` column is what gets matched against the variant headlines generated in Step 3. Keep `headlines_json` if you need the per-headline metadata (pinned fields, performance labels, approval status) — extract it client-side.
 
 **Ad-group-level CPC comparison (the most actionable single query at small spend):**
 

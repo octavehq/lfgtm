@@ -61,12 +61,10 @@ Route procedural, multi-step work to the plugin's skills rather than improvising
 | Research a company or person, call prep | `/octave:research` |
 | Generate a single email / LinkedIn message / call prep | `/octave:generate` |
 | Find and qualify prospects | `/octave:prospector` |
-| Multi-channel campaigns | `/octave:campaign` |
-| Competitive battlecards and displacement | `/octave:battlecard` |
+| Ad campaigns | `/octave:ads` |
+| Competitive battlecards and displacement | `/octave:battlecard-doc` |
 | Field intelligence and trends | `/octave:insights` |
 | Library health check | `/octave:audit` |
-| Multi-step workflows | `/octave:workflow` |
-| Connection status | `/octave:workspace` |
 
 For sustained specialist work, hand off to the specialist agents: **pmm-strategist** (positioning / messaging / launches), **sdr-coach** (outbound / prospecting quality), **revenue-strategist** (pipeline / deals).
 

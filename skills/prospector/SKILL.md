@@ -1,12 +1,25 @@
 ---
 name: prospector
 description: Find, enrich, and qualify prospects against your library's ICP criteria. Use when user says "find prospects", "who should I target", "find VPs at [company]", "build a list", "prospect for", or asks to find people matching ICP. Do NOT use for single-account deep research — use /octave:research instead.
-argument-hint: "[--motion <name>] [--segment <name>] [--persona <name>] [--company <domain>] [--similar-to <domain>] [--count <n>]"
 ---
 
 # /octave:prospector - ICP-Fit Prospecting
 
 Find companies and people that match your Ideal Customer Profile. Uses your library's segments, personas, and Motion ICP cells to search for and score prospects. Returns qualified prospect lists with fit reasoning, recommended approaches, and filter suggestions for scaling in Apollo, Clay, or LinkedIn Sales Navigator.
+
+## Principles
+
+Follow these standards during generation. Read each before producing output.
+
+**Content and language:**
+- [Editorial rules](../shared/editorial-rules.md) — no AI-isms, banned vocabulary, honest analyst tone
+- [Information principles](../shared/information-principles.md) — lead with conclusions, evidence-backed claims, narrative arc
+
+**Presentation:**
+- [Presentation principles](../shared/presentation-principles.md) — use for any visual output (HTML, dashboards, tables); text follows the editorial rules above
+
+**Octave data:**
+- [Octave value](../shared/octave-value.md) — prioritize grounded workspace data over generic AI content
 
 ## Usage
 
@@ -324,7 +337,6 @@ DataFlow,dataflow.io,85,SaaS,230,New York,Growth Outbound — CTO × Growth SaaS
 
 - `/octave:research` - Deep dive on specific prospects
 - `/octave:generate` - Create outreach for prospects
-- `/octave:brainstorm` - Generate campaign ideas for prospect lists
 - `/octave:audit` - Ensure library has good ICP definitions
 - `/octave:abm` - Full account plan for top prospects
 - `/octave:icp-refine` - Refine ICP definitions from deal data

@@ -1,446 +1,258 @@
 ---
 name: deal-coach
-description: "Methodology practice and coaching assets built around Resonate → Elevate → Compel — role-play, coaching microsites, coaching decks, and quizzes grounded in your Octave library. Use when user says 'deal coach role play', 'coaching quiz', 'coaching deck', 'coaching microsite', 'practice the methodology', 'sales methodology training', or asks to practice or be coached on a deal. Do NOT use for live-deal strategy and next steps — use /octave:pipeline instead."
-argument-hint: "[domain|email] [--mode roleplay|microsite|deck|quiz] [--stage resonate|elevate|compel]"
+description: "Per-deal coaching plan built around the Resonate → Elevate → Compel methodology, rendered as a self-contained HTML coaching microsite grounded in your Octave library. Use when user says 'deal coach', 'coach this deal', 'coaching plan', 'coaching microsite', 'how do I advance this deal', 'what stage is this deal', or asks to be coached on a specific opportunity. Do NOT use for live-deal next-step strategy (use /octave:pipeline) or generic role-play/quiz practice (use /octave:train)."
+argument-hint: "[domain|email] [--stage resonate|elevate|compel]"
 ---
 
-# /octave:deal-coach — Methodology Coaching
+# /octave:deal-coach — Per-Deal Coaching Microsite
 
-An interactive coaching skill built around the **Resonate → Elevate → Compel** sales methodology. Choose your output mode — role play, coaching microsite, coaching deck, or interactive quiz — and get coaching grounded in deal context AND your actual GTM messaging.
+Generate a coaching plan for a specific deal, rendered as a scrollable, self-contained HTML **coaching microsite** and grounded in your Octave GTM intelligence. This is the doc a rep opens before their next call, or a manager hands a rep to coach the deal forward.
 
-**Three Stages:**
-| Stage | Focus |
-|-------|-------|
-| **Resonate** | Understand and resonate with the buyer |
-| **Elevate** | Confirm the fit and elevate the opportunity |
-| **Compel** | Deliver the value and compel the buyer to action |
+The methodology is **Resonate → Elevate → Compel**:
 
-**Three Coaching Outputs per Stage:**
-| Field | Type | Purpose |
-|-------|------|---------|
-| **Buyer Mindset** | String | Where the buyer's head is — psychology, fears, motivations |
-| **Value Propositions** | Array | Which value props to deploy and why they fit this stage |
-| **Talking Points** | Array | Specific things to say, grounded in deal context |
+| Stage | Objective |
+|-------|-----------|
+| **Resonate** | Drive awareness — get the buyer to agree the problem is real and worth solving |
+| **Elevate** | Drive urgency — disrupt the status quo, differentiate on value |
+| **Compel** | Drive action — build the business case, enable the champion |
 
-This skill reads five coaching reference files at runtime:
-- `references/frameworks.md` — Resonate / Elevate / Compel: Buyer Mindset + Value Props + Talking Points
-- `references/coaching-agents.md` — 3 coaching agent personas + 2 cross-stage + scoring rubrics
-- `references/stage-mapping.md` — Buyer's Journey → coaching stage mapping + inference rules
-- `references/html-templates.md` — HTML section/slide templates per output mode
-- `references/messaging-narratives.md` — How coaching grounds in GTM context
+The output is built around **six jobs**, not a kitchen-sink of sections: (1) where this deal stands, (2) where the buyer's head is, (3) what to do now, (4) the path to close, (5) top risks, (6) practice and what good looks like. The full spec — job order, density caps, groundedness rules, and the review checklist — lives in [coaching-microsite-sections.md](references/coaching-microsite-sections.md). The CSS and HTML skeleton live in [html-scaffold.md](references/html-scaffold.md).
 
-If reference files are not found, fall back to general coaching methodology and note the limitation.
+**The crown-jewel move:** `find_motion_icp({ ..., includeLearnings: true })` returns a `salesMethodology` block for the matched persona × segment cell, with Resonate / Elevate / Compel stages, each carrying **Buyer Mindset**, **Value Propositions**, and **Talking Points**. That maps almost 1:1 onto the coaching jobs. This is what makes the plan read as "only Octave could write this," not a generic methodology handout.
 
-**How this differs from `/octave:pipeline`:**
-- `/octave:pipeline` gives live-deal strategy — diagnosis and next steps to move a specific deal forward
-- `/octave:deal-coach` produces practice and coaching materials organized around the three coaching stages
+**How this differs from neighboring skills:**
+- `/octave:pipeline` gives live-deal next-step strategy (rescue a stalled deal, multi-thread). This produces a coaching plan organized around the methodology stages.
+- `/octave:train` is generic practice (role-play, quiz) on your GTM. This is deal-specific and stage-structured.
+- `/octave:meeting-prep` is a battle plan for one upcoming meeting. This coaches the whole stage of the deal.
 
-**How this differs from `/octave:train`:**
-- `/octave:train` is generic sales training (objection handling, personas, product knowledge)
-- `/octave:deal-coach` is methodology-specific — every output is structured around Resonate/Elevate/Compel, scored against coaching rubrics, and coached by stage-specific agents
+## On-brand styling — brand kit first, then generate
 
-**How this differs from `/octave:meeting-prep`:**
-- `/octave:meeting-prep` produces a strategic battle plan for an upcoming meeting
-- `/octave:deal-coach` produces training and coaching materials organized around the three coaching stages
+**Resolve the brand before generating (do not skip this step).** The coaching microsite is an **internal** asset, styled in the **workspace company's brand** (the Octave customer whose workspace you are operating in). The target account is named in the content, never in the design system.
 
-## On-brand styling — use a brand kit if one exists
+**Step 1: Identify the workspace company.** Call `get_workspace_company` for the company name, domain/URL, and positioning.
 
-Before generating HTML output, decide whose brand this coaching asset should match (usually the **target company**; sometimes your own company), then follow [brand-kit-usage.md](../shared/brand-kit-usage.md): check for a cached kit, offer to use it, offer to capture one if missing, and fall back to a style preset if declined. The brand kit is the strongest styling signal — prefer it over generic `--style` presets.
+**Step 2: Resolve the workspace company's brand kit.** Slugify the workspace company name and check for a cached kit at `~/.octave/brands/<slug>/manifest.json`. If a complete kit exists (has `manifest.json` and `tokens.css`), use it automatically:
+   - inline the kit's `tokens.css` (`:root` + the embedded `@font-face`) **and** `../get-brand-components/assets/kit_base.css` into the output `<style>`;
+   - follow the kit's `brand-kit.md` → **Signature moves**; embed the kit's real **logo** as a data URI in the hero. **Before embedding a logo, open it and confirm it is actually the workspace company's mark** — cached kits can carry a mislabeled or contaminated asset. If a logo file looks wrong or ambiguous, verify it (a white wordmark on a transparent PNG reads blank on a white background; composite it on a dark background to inspect), and fall back to the kit's text `wordmark` in the display font rather than ship the wrong logo. Embed the brand-defining display font as a data URI (commercial fonts are not on Google Fonts); Inter / mono fallbacks may load from Google Fonts.
+   **If no complete kit exists → build one.** Run the `get-brand-components` skill for the workspace company's domain. Retry up to 3 times (root domain, `www.`, `/about`). Only fall back to a generic preset after 3 genuine failures.
 
-## Review pass (runs by default)
+**Step 3: Generic preset is a last resort** — only after the brand kit genuinely cannot be built.
 
-After generating, **run the review pass by default** — don't wait to be asked. In interactive mode, tell the user at intake that you'll review before finishing (recommended) and that they can opt out with `--skip-review` or "skip review". Follow [review-pass.md](../shared/review-pass.md) for the preflight and visual pass. When generating, follow the output rules in [presentation-principles.md](../shared/presentation-principles.md) — label every value, no tool names in the output, confirmed vs hypothesized, lean and deal-specific.
+## Principles
+
+Follow these standards during generation. Read each before producing output.
+
+**Content and language:**
+- [Editorial rules](../shared/editorial-rules.md) — no AI-isms, banned vocabulary, honest analyst tone, no em/en-dashes, conclusion-carrying (not theatrical) headers
+- [Information principles](../shared/information-principles.md) — lead with conclusions, evidence-backed claims, narrative arc
+
+**Visual design:**
+- [Presentation principles](../shared/presentation-principles.md) — typography, layout, visual restraint
+- [HTML document format](../shared/formats/html-document.md) — scrollable internal-document specifics
+
+**Octave data:**
+- [Octave value](../shared/octave-value.md) — prioritize grounded workspace data over generic AI content
+
+**Mandatory review:** Every generated microsite goes through the review pipeline (Step 5) before delivery. This is a gate, not an offer — see [review protocol](../shared/protocol.md).
 
 ## Usage
 
 ```
-/octave:deal-coach
-/octave:deal-coach [company domain or name]
-/octave:deal-coach --mode [roleplay|microsite|deck|quiz]
-/octave:deal-coach --stage [resonate|elevate|compel]
-/octave:deal-coach [domain] --mode roleplay --stage elevate
+/octave:deal-coach <domain|email> [--stage resonate|elevate|compel]
 ```
 
 ## Examples
 
 ```
-/octave:deal-coach
-/octave:deal-coach acme.com
-/octave:deal-coach --mode roleplay
-/octave:deal-coach acme.com --mode microsite --stage compel
-/octave:deal-coach --mode quiz --stage resonate
-/octave:deal-coach acme.com --mode deck --stage elevate
+/octave:deal-coach acme.com                          # Coach the Acme deal, stage inferred
+/octave:deal-coach jane@acme.com                     # Resolve the account from a contact
+/octave:deal-coach acme.com --stage elevate          # Force the current stage
+/octave:deal-coach "the DataCorp expansion"          # Context-based
 ```
 
 ## Instructions
 
-Follow these steps precisely. Do not skip or reorder them.
+Follow these steps in order. Do not skip or reorder them.
 
----
+### Step 1: Identify the Deal
 
-### Step 1: Choose Output Type (CT-1)
+If the user provided a domain, name, or email, use it. Otherwise ask which account to coach (domain or contact email). This skill is deal-specific; for methodology practice with no account, point the user to `/octave:train`.
 
-If the user specified `--mode`, use that. Otherwise, ask:
+### Step 2: Octave Context Gathering
 
-```
-AskUserQuestion({
-  questions: [{
-    question: "What kind of coaching output do you want?",
-    header: "Output Mode",
-    options: [
-      {
-        label: "Role Play",
-        description: "Practice a coaching-backed conversation scored against Buyer Mindset, Value Props, and Talking Points. 8-12 exchanges, then a scorecard."
-      },
-      {
-        label: "Coaching Microsite",
-        description: "Self-contained HTML coaching page organized around Buyer Mindset / Value Propositions / Talking Points — with deal context, priority actions, and stage-grounded messaging."
-      },
-      {
-        label: "Coaching Deck",
-        description: "Slide presentation walking through the coaching framework for a specific deal, with stage-specific content and talk tracks."
-      },
-      {
-        label: "Interactive Quiz",
-        description: "Test coaching methodology knowledge with deal-grounded scenarios. Scoring breaks down by Resonate/Elevate/Compel."
-      }
-    ],
-    multiSelect: false
-  }]
-})
-```
+Build a complete picture of the deal and the methodology content. **Tell the user what you are researching and why.** Run independent calls in parallel.
 
-Store the selected mode for routing in Step 5.
+**Account and conversation context:**
+- `enrich_company({ companyDomain })` — profile, industry, tech stack, strategic context
+- `find_crm_records` / `find_crm_activities` / `generate_crm_context` — deal stage, activities, synthesized narrative (may be absent; see below)
+- `list_findings({ eventFilters: { companyDomains: [domain] } })` — objections, pain points, competitor mentions, agreements, all traced to real calls
+- `list_events({ filters: { companyDomains: [domain] } })` — call history, stage changes
+- `get_event_detail({ eventOId })` — deep dive on a specific call to pull exact, verbatim buyer language
 
----
+**Buyer and library context (parallel):**
+- `find_person` / `enrich_person` — confirm the real buyer(s); never synthesize a name, title, or LinkedIn slug
+- `list_entities({ entityType: "competitor" })` — resolve competitors named on the calls to real library entities
 
-### Step 2: Identify Deal Context (CT-2)
-
-Determine if coaching should be grounded in a specific deal or run in generic/practice mode.
-
-If the user already provided a domain, name, or email, skip to 2b.
-
-#### 2a. Ask for deal context
-
-```
-AskUserQuestion({
-  questions: [{
-    question: "Should this be grounded in a specific deal, or do you want generic practice?",
-    header: "Deal Context",
-    options: [
-      {
-        label: "Specific Deal",
-        description: "Ground coaching in a real account — uses CRM data, findings, events, and the matched Motion ICP narrative to make coaching deal-specific."
-      },
-      {
-        label: "Generic Practice",
-        description: "Practice the methodology with library-level data only (personas, Motion ICP narrative, proof points). No specific account context."
-      }
-    ],
-    multiSelect: false
-  }]
-})
-```
-
-If **Generic Practice**: Skip to Step 2c.
-
-If **Specific Deal**: Ask for the company domain or contact email (e.g., `acme.com` or `jane@acme.com`).
-
-#### 2b. Gather deal-specific context
-
-Run these MCP tool calls to build a complete picture. Run independent calls in parallel:
-
-**Company & CRM Context (parallel):**
-```
-enrich_company({ companyDomain: "<domain>" })
-find_crm_records({ companyDomain: "<domain>" })
-find_crm_activities({ companyDomain: "<domain>" })
-generate_crm_context({ companyDomain: "<domain>" })
-```
-
-**Library Context (parallel):**
-```
-search_knowledge_base({ query: "<company name> OR <industry>" })
-list_findings({
-  query: "objections pain points competitor mentions next steps",
-  eventFilters: { companyDomains: ["<domain>"] }
-})
-list_events({
-  filters: { companyDomains: ["<domain>"] }
-})
-list_entities({ entityType: "persona" })
-list_entities({ entityType: "competitor" })
-list_entities({ entityType: "proof_point" })
-```
-
-**Motion ICP (after enrichment / persona / segment inference):**
+**Motion ICP — the crown jewel:**
 ```
 list_motions()
-list_motion_icps({ motionOId: "<motion_oId>" })
-find_motion_icp({ motionIcpOId: "<matched_motion_icp_oId>", includeLearnings: true })
+list_motion_icps({ motionOId })                              # find the persona × segment cell
+find_motion_icp({ motionIcpOId, includeLearnings: true })   # returns the salesMethodology R/E/C block
 ```
+Match the cell to the real buyer's persona and the account's segment. The returned `salesMethodology` array is the spine of the coaching content: each stage's Buyer Mindset feeds Job 2, its Value Propositions and Talking Points feed Job 3, and Elevate/Compel feed Job 4.
 
-If a Custom Motion Playbook (Thematic / Milestone / Account / Competitive) applies, also fetch its narrative:
-```
-list_motion_playbooks({ motionOId: "<motion_oId>" })
-get_motion_playbook({ motionPlaybookOId: "<custom_motion_playbook_oId>" })
-```
+**Groundedness is a hard bar.** Every named person, title, prior employer, LinkedIn URL, competitor, quote, and count must trace to a real tool result, not a plausible synthesis. Do not assert a call count you have not verified. If deal data is missing, say so and use a placeholder (see Job 1) rather than invent a stage, amount, or date. Honest gaps beat inventions. Tag anything unconfirmed with `.unconfirmed`.
 
-If any tool call fails, note the gap and continue. Coach with available data and flag missing context.
+**Data-caveat awareness:** some workspaces carry seeded CRM/pipeline data (provider "generic", `seed-*` IDs). Never render seeded pipeline numbers as real. Infer the stage from the calls and hand the deal-record fields back to the seller via the Job 1 placeholder.
 
-#### 2c. Generic practice mode context
+Load the methodology references: [frameworks.md](references/frameworks.md), [stage-mapping.md](references/stage-mapping.md), [messaging-narratives.md](references/messaging-narratives.md), and [coaching-agents.md](references/coaching-agents.md) (for buyer psychology and the Job 6 rubric).
 
-For generic mode, gather library-level data only:
+**Infer the coaching stage.** If the user passed `--stage`, use it. Otherwise infer with the weighted algorithm in [stage-mapping.md](references/stage-mapping.md) (CRM stage, findings, activities, time in stage). CRM absence is a data-hygiene issue, not a deal signal — redistribute its weight. Present the inferred stage and evidence to the user briefly; proceed unless they override.
 
-```
-list_entities({ entityType: "persona" })
-list_entities({ entityType: "competitor" })
-list_entities({ entityType: "proof_point" })
-```
+### Step 3: Resolve the Brand
 
-Then load the Default Motion Playbook narrative for the most relevant Motion:
-```
-list_motions()
-list_motion_icps({ motionOId: "<motion_oId>" })
-find_motion_icp({ motionIcpOId: "<representative_motion_icp_oId>", includeLearnings: true })
-```
+Follow the "On-brand styling" section above: `get_workspace_company` → cached kit at `~/.octave/brands/<slug>/` → build via `get-brand-components` (retry up to 3) → preset fallback. Confirm the logo asset is genuinely the workspace company's before embedding it.
 
-#### 2d. Load coaching reference files
+### Step 4: Generate HTML
 
-Read the references needed for the inferred or selected stage:
+**Load the shared rules before writing any HTML. Read each before producing output:**
+- [Editorial rules](../shared/editorial-rules.md)
+- [Information principles](../shared/information-principles.md)
+- [Presentation principles](../shared/presentation-principles.md)
+- [HTML document format](../shared/formats/html-document.md)
+- [Octave value](../shared/octave-value.md)
 
-```
-Read: references/frameworks.md
-Read: references/stage-mapping.md
-Read: references/coaching-agents.md
-Read: references/messaging-narratives.md
-```
+Apply these rules during generation, not just during review.
 
-If generating HTML output (microsite or deck), also read:
-```
-Read: references/html-templates.md
-```
+Build the microsite to the spec in [coaching-microsite-sections.md](references/coaching-microsite-sections.md) (the six jobs, their order, density caps, and groundedness rules) using the CSS and skeleton in [html-scaffold.md](references/html-scaffold.md). Build a single, self-contained HTML file. **No external dependencies** except Google Fonts (plus data-URI-embedded brand font and logo).
 
----
+**After writing the file, proceed immediately to Step 5. Do NOT open the file or present it yet.**
 
-### Step 3: Infer Coaching Stage + User Override (CT-3)
+#### Output Directory
 
-If the user specified `--stage`, use that and skip to Step 3b.
-
-#### 3a. Infer stage from signals
-
-Use the weighted inference algorithm from `references/stage-mapping.md`:
-
-| Signal | Weight | Source |
-|--------|--------|--------|
-| CRM deal stage | 40% | `find_crm_records` → map to Resonate/Elevate/Compel |
-| Conversation findings | 30% | `list_findings` — pain points (→Resonate), competitor mentions (→Elevate), ROI/budget (→Compel) |
-| Deal activity patterns | 20% | `list_events` — discovery call (→Resonate), demo (→Elevate), proposal (→Compel) |
-| Time in stage | 10% | Days in current stage vs. expectation |
-
-**For generic practice mode:** Skip inference. Let the user choose a stage:
-
-```
-AskUserQuestion({
-  questions: [{
-    question: "Which coaching stage do you want to practice?",
-    header: "Stage",
-    options: [
-      { label: "Resonate", description: "Understand and resonate with the buyer — discovery principles, building trust through understanding" },
-      { label: "Elevate", description: "Confirm the fit and elevate the opportunity — disrupt status quo, differentiate on value, build credibility" },
-      { label: "Compel", description: "Deliver the value and compel the buyer to action — business case, Why Now, champion enablement" }
-    ],
-    multiSelect: false
-  }]
-})
-```
-
-#### 3b. Present inference and allow override
-
-**Confidence calibration:** CRM absence is a data hygiene issue, not a deal health signal. If CRM data is missing but activity signals are strong, redistribute the CRM weight across other signals.
-
-Present the inference:
-
-```
-STAGE INFERENCE
-===============
-Stage: [Resonate / Elevate / Compel]
-Confidence: [High / Medium / Low]
-Buyer's Journey Phase: [Phase Name]
-
-EVIDENCE
---------
-CRM Stage (40%): "[Stage Name]" → maps to [Stage]  [or "No CRM record — data gap, not deal gap"]
-Findings (30%): [Key signals]
-Activities (20%): [Key activities]
-Time (10%): [Assessment]
-```
-
-Then confirm with the user: proceed with the inferred stage, override and pick a different one, or see all three stages with descriptions before choosing (same list as generic mode above).
-
-#### 3c. Stall detection
-
-If time-in-stage signals indicate a stalled deal (>2x expected time), flag it — but don't re-implement deal rescue here:
-
-```
-STALL DETECTION
-===============
-This deal appears stalled at [Journey Phase].
-Time in stage: [X] days (expected: [Y] days)
-
-Root Cause Hypothesis: [Stage] gap
-- [Explanation of why this stage gap is likely the root cause]
-- [Specific evidence from findings/activities]
-
-For a re-engagement strategy and next steps on this deal, run:
-/octave:pipeline stalled [domain]
-
-For coaching, I'll focus on [Root Cause Stage], not the nominal CRM stage.
-```
-
-Route coaching to the root cause stage's coaching agent, not the nominal stage. Deal-rescue strategy itself belongs to `/octave:pipeline`.
-
----
-
-### Step 4: Route to Coaching Agent (CT-4)
-
-Based on the confirmed stage, activate the appropriate coaching agent from `references/coaching-agents.md`:
-
-| Stage | Coaching Agent | Focus |
-|-------|---------------|-------|
-| Resonate | Resonance Coach | Discovery principles (wide, deep, high), trust building |
-| Elevate | Elevation Coach | Case for Change, Value Framing, differentiated value, proof points |
-| Compel | Compel Coach | Business case building, Why Now Case, champion enablement |
-
-**Cross-stage agents** (available as supplements):
-- **Negotiation Strategist** — Available when stage is Compel and negotiation dynamics surface
-- **Objection Handler** — Available at any stage when objections surface in findings
-
-Load the agent's persona, coaching criteria, scoring rubric, and grounding instructions from the reference file. Use the grounding map from `references/messaging-narratives.md` to connect the agent's outputs to the seller's Octave library data.
-
----
-
-### Step 5: Generate Output (CT-5)
-
-Branch based on the output mode selected in Step 1. Each mode has its own reference file with the full flow — read it and follow it:
-
-| Mode | Reference | What it covers |
-|------|-----------|----------------|
-| Role Play | [mode-roleplay.md](references/mode-roleplay.md) | Scenario setup, stage-specific buyer psychology, running the conversation, coaching scorecard (RP-1 → RP-4) |
-| Coaching Microsite | [mode-microsite.md](references/mode-microsite.md) | Style selection, content outline, HTML generation with grounding rules and density limits (MS-1 → MS-3) |
-| Coaching Deck | [mode-deck.md](references/mode-deck.md) | Style selection, stage-specific slide outlines, HTML deck generation on the deck skill's architecture (DK-1 → DK-3) |
-| Interactive Quiz | [mode-quiz.md](references/mode-quiz.md) | Quiz type and length, question construction, running the quiz, results (QZ-1 → QZ-4) |
-
-Role Play and Quiz run on the shared engine in [roleplay-mechanics.md](../shared/roleplay-mechanics.md) — the mode files layer the Resonate/Elevate/Compel specifics on top.
-
----
-
-### Step 6: Delivery + Next Actions (CT-6)
-
-After delivering any output, offer iterations:
-
-For **Role Play** and **Quiz**: Next actions are included in RP-4 and QZ-4 in the mode references.
-
-For **Microsite** and **Deck**: After opening the HTML file, present:
-
-```
-Coaching [microsite/deck] generated and opened in your browser.
-
-File: [file path]
-Company: [Company Name or "Generic Practice"]
-Stage: [Resonate / Elevate / Compel] — [Stage subLabel]
-Coaching Agent: [Agent Name]
-Style: [Preset Name]
-
-Want to:
-1. Practice this stage with a role play
-2. Add MEDDPICC deal gap analysis [if not already included]
-3. Move to the next stage ([Next Stage]: [subLabel])
-4. Try a different output mode for this stage
-5. Regenerate with a different style
-6. Done
-```
-
-If the user picks option 3 (next stage), return to Step 3b with the next stage pre-selected and flow through Steps 4-5 again.
-
----
-
-## Output Directory
-
-All HTML outputs go to `.octave-deal-coach/` in the project root:
+Write to `.octave-deal-coach/` in the user's **home directory** (`~/.octave-deal-coach/`, not the skill or project folder):
 
 ```
 .octave-deal-coach/
-  [company-kebab]-[stage]-[YYYY-MM-DD]/
-    [company-kebab]-[stage].html            # Microsite
-  [company-kebab]-deck-[stage]-[YYYY-MM-DD]/
-    [company-kebab]-deck-[stage].html       # Deck
+└── <company-kebab>-<stage>-<YYYY-MM-DD>/
+    └── <company-kebab>-coaching.html
 ```
 
-This directory should be in `.gitignore`.
+The entire `.octave-deal-coach/` directory is in `.gitignore`.
 
----
+### Step 5: Review Pipeline — MANDATORY GATE
+
+**Do NOT open the microsite, present the delivery summary, or tell the user it is ready until the review pipeline has completed and you have a scorecard.**
+
+Load the [review protocol](../shared/protocol.md) and execute the review loop against the generated HTML file.
+
+**5a: Mechanical lint** (before spawning reviewers):
+```bash
+bash <skill-dir>/scripts/lint.sh <path-to-coaching.html>
+```
+Fix every violation. The em/en-dash check is a hard gate.
+
+**5b: Spawn two reviewers in parallel** (both Task calls in a single message).
+
+**Editorial reviewer:**
+```
+Task tool:
+  subagent_type: "octave-editorial-reviewer"
+Prompt:
+Review the file at [FILE PATH]. Read these principle docs and run each Review Checklist:
+  1. [skill-dir]/../shared/editorial-rules.md
+  2. [skill-dir]/../shared/information-principles.md
+  3. [skill-dir]/../shared/octave-value.md (Data Grounding — verify every named
+     person, quote, competitor, and count against the real tool results; flag, do not
+     invent, anything that reads as synthesized)
+Context: this is an INTERNAL coaching plan, so conclusion-carrying plain-English headers
+are correct, but reject theatrical / clickbait framing. HARD RULE: no em/en-dashes; if you
+edit copy, never introduce one. Fix violations inline. Return a scorecard.
+```
+
+**Presentation reviewer:**
+```
+Task tool:
+  subagent_type: "octave-presentation-reviewer"
+Prompt:
+Review the file at [FILE PATH]. Read these docs and run each Review Checklist:
+  1. [skill-dir]/../shared/presentation-principles.md
+  2. [skill-dir]/../shared/formats/html-document.md
+  3. [skill-dir]/references/html-scaffold.md
+  4. [skill-dir]/references/coaching-microsite-sections.md
+Verify responsive behavior at 375px (no horizontal overflow), print styles, keyboard focus,
+token-based colors, and that any CSS-grid list item wrapping inline <em> keeps it inline
+(wrap item text in a <span>). Fix violations inline. Return a scorecard.
+```
+
+**5c: Loop decision.** Max 3 cycles. Re-run both reviewers each loop.
+
+| Cycle | 0 fixes | 1-2 fixes | 3+ fixes |
+|---|---|---|---|
+| Cycle 1 | CLEAN → 5d | Apply, loop | Apply, loop |
+| Cycle 2 | CLEAN → 5d | Apply, STOP | Apply, loop |
+| Cycle 3 (cap) | CLEAN → 5d | Apply, STOP | Apply, STOP |
+
+**5d: Output the combined scorecard** to the user. This is proof the pipeline ran. Step 6 cannot start without it.
+
+```
+REVIEW PIPELINE COMPLETE
+=========================
+Mechanical lint: [PASS / N fixed]
+Editorial:       [N fixes / PASS]
+Presentation:    [N fixes / PASS]
+Total fixes: [N]   Cycles: [1-3]   Status: [CLEAN / N remaining]
+```
+
+### Step 6: Delivery
+
+After the scorecard is output:
+
+1. **Open the microsite** in the default browser (serve the output folder over `http://127.0.0.1:<port>` so embedded fonts and the logo load; opening the `file://` path also works).
+2. **Present a short summary:**
+
+```
+COACHING MICROSITE READY
+========================
+File:     [path]
+Account:  [Company]  ·  Buyer: [Name, Title]
+Stage:    [Resonate / Elevate / Compel] — [objective]
+Cell:     [Persona] × [Segment]
+
+Next: 1) practice this stage with /octave:train  2) prep the next meeting with
+/octave:meeting-prep  3) live-deal strategy with /octave:pipeline
+```
 
 ## MCP Tools Used
 
-### Research & Enrichment
 | Tool | Purpose |
 |------|---------|
-| `enrich_company` | Company profile, industry, tech stack, strategic context |
-| `find_crm_records` | Deal stage, amount, close date, pipeline position |
-| `find_crm_activities` | Recent interactions — calls, emails, meetings |
-| `generate_crm_context` | AI-synthesized CRM narrative |
-
-### Library — Fetching
-| Tool | Purpose |
-|------|---------|
-| `list_motions` | List all Motions in the workspace |
-| `list_motion_playbooks` | List Motion Playbooks (Default + Custom) under a Motion |
-| `get_motion_playbook` | Full details for a Motion Playbook |
-| `list_motion_icps` | List Motion ICP cells (persona × segment intersections) for a Motion |
-| `find_motion_icp` | Full Motion ICP cell narrative (Target ICP overview, Operating landscape, Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References) plus Learning Loop learnings |
-| `get_entity` | Individual entity details (persona, competitor, proof point) |
-
-### Library — Searching
-| Tool | Purpose |
-|------|---------|
-| `search_knowledge_base` | Find matching guides and research |
-| `search_resources` | Find relevant resources (docs, presentations) |
-| `list_entities` | List personas, competitors, proof points, references |
-| `list_findings` | Objections, pain points, competitor mentions from conversations |
-| `list_events` | Deal history, stage changes, activity timeline |
-
-### Content Generation
-| Tool | Purpose |
-|------|---------|
-| `generate_content` | Generate supporting content if needed |
-
----
+| `get_workspace_company` | Workspace company identity for brand resolution |
+| `enrich_company` | Company profile, industry, tech stack |
+| `find_crm_records` / `find_crm_activities` / `generate_crm_context` | Deal stage, activities, narrative |
+| `find_person` / `enrich_person` | Confirm the real buyer(s) — groundedness |
+| `list_findings` | Objections, pains, competitor mentions, agreements from real calls |
+| `list_events` / `get_event_detail` | Call history and verbatim call language |
+| `list_motions` / `list_motion_icps` / `find_motion_icp` | The Motion ICP cell + `salesMethodology` R/E/C block (crown jewel) |
+| `list_entities` / `get_entity` | Competitors, proof points, personas |
+| `search_knowledge_base` | Semantic search across library and resources |
 
 ## Error Handling
 
-> **No CRM data found:** "I couldn't find CRM records for [domain]. I'll proceed with library-level data only. Stage inference will rely on findings and events. You can also manually select a stage."
+> **No CRM / deal record:** Infer the stage from calls and findings; render the Job 1 deal-data placeholder rather than invent a stage, amount, or date.
 
-> **No Motion ICP found:** "No matching Motion ICP cell found. I'll use general coaching methodology without Motion-specific grounding. Talk tracks will reference the framework but won't include your specific Strategic narrative, Benefits and impacts, or Methodology content. Consider creating a Motion for this offering, or layering a Custom Motion Playbook (Thematic / Milestone / Account / Competitive) onto an existing Motion."
+> **No Motion ICP cell:** Coach from the general framework in `frameworks.md` and note the limitation. The talk tracks will lack the cell's specific Value Propositions and Talking Points. Suggest creating a Motion for this offering.
 
-> **No findings/events:** "No conversation findings or events found for [domain]. Stage inference will rely primarily on CRM stage. For more accurate coaching, ensure conversation data is synced to Octave."
+> **No findings / events:** Stage inference relies on CRM stage; note that thinner call data means thinner coaching.
 
-> **Reference file not found:** "Could not load [reference file]. Falling back to general coaching methodology. For full coaching, ensure reference files are in `skills/deal-coach/references/`."
+> **Reference file missing:** Fall back to general coaching methodology and note it.
 
-> **Stage inference low confidence:** "I'm not confident about the coaching stage — multiple stages scored similarly. I'd recommend selecting manually. Here are all options: [present all three stages]."
-
-> **MCP connection failed:** "Could not connect to Octave. Check your connection with `/octave:workspace`. This skill requires Octave MCP tools for deal context and library data."
-
-> **HTML write failed:** "Could not write the HTML file. Check that `.octave-deal-coach/` is writable. Try: `mkdir -p .octave-deal-coach`"
-
----
+> **MCP connection failed:** This skill requires Octave MCP tools. Ask the user to check their Octave MCP configuration and reconnect.
 
 ## Related Skills
 
-- `/octave:pipeline` — Live-deal strategy: stalled-deal rescue, multi-threading, competitive threats, closing
-- `/octave:train` — Generic sales training (role play, quiz, guided learning) without the coaching methodology
-- `/octave:meeting-prep` — Strategic meeting battle plan as HTML
-- `/octave:deck` — General-purpose slide deck builder
-- `/octave:enablement` — Sales enablement materials (cheat sheets, objection guides)
-- `/octave:battlecard` — Competitive intelligence and battlecards
-- `/octave:research` — Account and person research
+- `/octave:pipeline` — Live-deal strategy: stalled-deal rescue, multi-threading, closing
+- `/octave:train` — Generic role-play and quiz practice on your GTM
+- `/octave:meeting-prep` — Battle plan for one upcoming meeting
+- `/octave:proposal` — Customer-facing business case for the Compel stage
+- `/octave:battlecard-doc` — Visual competitive reference (if a competitor is in the deal)
