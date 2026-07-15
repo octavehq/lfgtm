@@ -1,5 +1,5 @@
 {
-  "_comment": "STARTER TEMPLATE for ~/.octave/predictions/<MCC_ID>.json. The resonance loop copies this file to that location on first run, replaces the REPLACE_WITH_* placeholders with real values from the user's BigQuery setup, and starts appending real predictions to the empty `predictions` array. The `_example_card` field below is reference-only — the loop never reads it, it's just there to show the canonical shape of a prediction card. See prediction-cards.md (in this references directory) for the full schema and the prediction type taxonomy.",
+  "_comment": "STARTER TEMPLATE for ~/.octave/predictions/<MCC_ID>.json. The resonance loop copies this file to that location on first run, replaces the REPLACE_WITH_* placeholders with real values from the user's BigQuery setup, and starts appending real predictions to the empty `predictions` array. The `_example_card` field below is reference-only — the loop never reads it, it's just there to show the canonical shape of a prediction card. See skills/ads/references/prediction-cards.md for the full schema and the prediction type taxonomy.",
   "schema_version": "0.2",
   "account": {
     "mcc_id": "REPLACE_WITH_YOUR_MCC_ID",

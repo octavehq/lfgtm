@@ -27,7 +27,7 @@ IMMEDIATE ACTIONS
 
 ---
 
-[Pull from /octave:battlecard intelligence for this competitor]
+[Pull from /octave:battlecard-doc intelligence for this competitor]
 
 TRAP QUESTIONS FOR THIS DEAL
 -----------------------------

@@ -19,7 +19,7 @@ command -v jq >/dev/null || { echo "jq required"; exit 1; }
 
 echo "→ cleaning $OUT"
 rm -rf "$OUT"
-mkdir -p "$OUT/.codex-plugin" "$OUT/skills" "$OUT/workflows" "$OUT/.agents/plugins"
+mkdir -p "$OUT/.codex-plugin" "$OUT/skills" "$OUT/.agents/plugins"
 
 # ----- NOTE on MCP config -----
 # Codex's MCP config is TOML (~/.codex/config.toml with [mcp_servers.<name>] tables).
@@ -84,10 +84,6 @@ for dir in "$SRC_ROOT"/skills/*/; do
   fi
 done
 
-# 4. workflows/: plain markdown, safe to copy as-is
-echo "→ workflows/"
-cp -R "$SRC_ROOT"/workflows/*.md "$OUT/workflows/"
-
 # 5. agents/: no Codex equivalent
 case "$CONVERT_AGENTS" in
   drop)
@@ -106,7 +102,7 @@ case "$CONVERT_AGENTS" in
 esac
 
 # 6. Rewrite inline skill references in every shipped markdown file
-#    (SKILL.md, references/, shared/, workflows/, converted agents):
+#    (SKILL.md, references/, shared/, converted agents):
 #    /octave:foo → /octave-foo
 if [[ -n "$NAMESPACE_PREFIX" ]]; then
   echo "→ rewriting /octave: refs in shipped markdown"
@@ -162,4 +158,3 @@ EOF
 echo
 echo "✓ Built Codex artifact at $OUT"
 echo "  skills:    $(find "$OUT/skills" -name SKILL.md | wc -l | tr -d ' ')"
-echo "  workflows: $(find "$OUT/workflows" -name '*.md' | wc -l | tr -d ' ')"

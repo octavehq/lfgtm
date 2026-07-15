@@ -20,7 +20,7 @@ The full contents of [`viewport-base.css`](viewport-base.css) are **mandatory** 
   <style>
     /* === CSS Variables (from chosen preset) === */
     :root {
-      ...                              /* colors/fonts/radius from ../../shared/style-presets.md */
+      ...                              /* colors/fonts/radius from style-presets.md */
       --stage-bg: #000;                /* letterbox color behind the stage */
       --slide-bg: var(--bg);           /* slide canvas background */
     }
@@ -48,7 +48,265 @@ The full contents of [`viewport-base.css`](viewport-base.css) are **mandatory** 
     .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; }
     .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
 
-    /* === Components (cards, pills, metrics, etc.) — px-sized === */
+    /* === Components — reusable building blocks for slide content ===
+     *
+     * Component          | Purpose                                | Use on
+     * -------------------|----------------------------------------|---------------------------
+     * .card              | Multi-element content container         | Grid/card slides, overviews
+     * .card-brand        | Highlighted card variant                | Comparison slides (winner)
+     * .card-accent-left  | Card with left border accent            | Ranked/categorized items
+     * .metric-card       | Single stat + label                     | Metric slides (2-4 numbers)
+     * .pill              | Orienting tag / category label          | Title slide only
+     * .feature-list/item | Vertical bullet stack with border       | Content slides (3-5 points)
+     * .bullet-list/item  | Colored-dot bullet stack                | Deep-dive slides (scannable)
+     * .entity-name       | Large focal heading for entities        | Deep-dive slides
+     * .entity-subtitle   | Colored subtitle below entity name      | Deep-dive slides
+     * .deck-nav          | Persistent top bar (all sections)       | Multi-section decks
+     * .section-nav/num/label | Section number + label              | Every slide in a section
+     * .section-bar       | Thin left-edge color stripe             | Every slide in a section
+     * .slide-body        | Consistent content container            | Deep-dive, overview, content
+     * .glow-orb          | Gradient blur for emphasis slides       | Title, divider, CTA slides
+     * .brand-line        | Accent divider line                     | Between content blocks
+     * .quote-mark        | Large decorative open-quote             | Quote slides
+     * .big-number        | Oversized stat number                   | Inside .metric-card
+     *
+     * === */
+
+    /* Cards — primary content container for multi-element content blocks.
+       Use when: grouping related text (heading + body + details) into a
+       distinct visual container. Must lift off the slide background with
+       box-shadow — a card without depth doesn't register as a container.
+       Variants: .card-brand (stronger shadow, highlighted option),
+       .card-accent-left (left border accent for ranked/categorized items). */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 48px;
+      box-shadow: 0 4px 20px var(--shadow-brand), 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .card-brand {
+      border-color: var(--border-strong);
+      box-shadow: 0 4px 24px var(--shadow-brand-md), 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .card-accent-left {
+      border-left: 3px solid var(--brand-500);
+      border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+    }
+
+    /* Pills / Badges — structural labels for categories or section markers.
+       Use when: title slide needs an orienting tag the audience doesn't
+       already know (product name, audience). Do NOT use on content slides
+       as labels above headlines — the headline should carry the message. */
+    .pill {
+      display: inline-block;
+      padding: 10px 28px;
+      border-radius: var(--radius-pill);
+      font-size: 16px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 500;
+      color: var(--brand-500);
+      background: var(--shadow-brand-md);
+      border: 1px solid var(--border);
+    }
+
+    /* Metric card — single stat + label with accent bar on top.
+       Use when: a slide presents 2-4 key numbers as the visual anchor.
+       Each metric card holds one .big-number and one .body-text label.
+       Place in a .grid-2 or .grid-3. */
+    .metric-card {
+      position: relative;
+      overflow: hidden;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 48px 40px;
+      text-align: center;
+      box-shadow: 0 4px 20px var(--shadow-brand);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .metric-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--brand-primary), var(--brand-500));
+    }
+
+    /* Brand line — decorative accent divider */
+    .brand-line {
+      width: 80px; height: 3px;
+      background: linear-gradient(90deg, var(--brand-primary), var(--brand-500));
+      border-radius: 2px;
+    }
+
+    /* Quote mark — large decorative open-quote for quote slides */
+    .quote-mark {
+      font-size: 140px; line-height: 0.5;
+      font-family: Georgia, serif;
+      color: var(--brand-500); opacity: 0.25;
+    }
+
+    /* Feature list — vertical stack with left accent border.
+       Use when: a content slide lists 3-5 key points with optional
+       subtext. Each .feature-item gets the left border accent.
+       For deep-dive slides, prefer .bullet-list instead. */
+    .feature-list { display: flex; flex-direction: column; gap: 28px; }
+    .feature-item {
+      padding-left: 24px;
+      border-left: 3px solid var(--border-strong);
+    }
+
+    /* Emphasis slide glow — radial gradient orb for title/divider/CTA slides.
+       Use when: title, section divider, or CTA/closing slides need a
+       visually distinct surface from content slides. Position with inline
+       styles (top/right/bottom/left). Use 1-2 orbs max per slide. */
+    .glow-orb {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(120px);
+      opacity: 0.4;
+      background: var(--brand-primary);
+    }
+
+    /* Text color utilities */
+    .text-secondary { color: var(--text-secondary); }
+    .text-muted { color: var(--text-muted); }
+    .text-brand { color: var(--brand-500); }
+
+    /* === Navigation Components === */
+
+    /* Deck-level top nav — persistent bar showing all major sections.
+       Use when: deck has 2+ major sections. Place at absolute top of every
+       slide except title/closing. Highlights the current section. */
+    .deck-nav {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      padding: 0 120px;
+      gap: 48px;
+      border-bottom: 1px solid var(--border);
+      font-size: 20px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .deck-nav .active { color: var(--text-primary); }
+
+    /* Section nav — section number + label, positioned below deck nav.
+       Use when: slides belong to a numbered or color-coded section.
+       Place at the same absolute position on every slide in that section. */
+    .section-nav {
+      position: absolute;
+      left: 120px;
+      top: 76px;        /* below .deck-nav (52px + 24px gap) */
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .section-num {
+      font-size: 52px;
+      font-weight: 200;
+      line-height: 1;
+    }
+    .section-label {
+      font-size: 20px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    /* Section identity bar — thin vertical color stripe on the left edge.
+       Use when: slides belong to a color-coded section. Reinforces section
+       identity without competing with content. */
+    .section-bar {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 6px;
+    }
+
+    /* === Slide Body Container === */
+
+    /* Slide body — absolute-positioned content area below nav elements.
+       Use when: slides need consistent vertical alignment across a section
+       (deep dives, overview cards, any slide with deck-nav + section-nav).
+       All content starts at the same y-position; `justify-content:center`
+       vertically centers content within the remaining space. */
+    .slide-body {
+      position: absolute;
+      left: 120px;
+      right: 120px;
+      top: 172px;       /* below deck-nav (52px) + section-nav (~96px) + gap */
+      bottom: 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 36px;
+    }
+
+    /* === Entity Components (deep-dive slides) === */
+
+    /* Entity name — large bold focal heading for deep-dive slides.
+       Use when: a slide is about a specific company, account, or product.
+       The entity name IS the visual focal point; the action title becomes
+       the subtitle below. */
+    .entity-name {
+      font-size: 96px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      font-family: var(--font-display);
+    }
+    .entity-subtitle {
+      font-size: 32px;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    /* === Bullet List (scannable deep-dive content) === */
+
+    /* Bullet list — vertical stack with colored dot markers.
+       Use when: deep-dive slides need scannable per-entity details.
+       Preferred over prose paragraphs or two-column sidebar layouts —
+       bullets can be processed in 5 seconds at projection speed. */
+    .bullet-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .bullet-item {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      font-size: 30px;
+      line-height: 1.4;
+    }
+    .bullet-item::before {
+      content: '';
+      flex-shrink: 0;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--dot, var(--brand-primary));  /* override with --dot per section */
+      margin-top: 0.4em;    /* align dot with first line of text */
+    }
+
+    /* === Spacing Utilities === */
+
+    .mt-sm  { margin-top: 16px; }
+    .mt-md  { margin-top: 32px; }
+    .mt-lg  { margin-top: 48px; }
+    .gap-sm { gap: 24px; }
+    .gap-md { gap: 36px; }
+    .gap-lg { gap: 48px; }
 
     /* === Reveal animations: triggered by .visible on the active slide === */
     .animate-in {
@@ -150,4 +408,13 @@ The full contents of [`viewport-base.css`](viewport-base.css) are **mandatory** 
 | Mobile | Stage letterboxes/pillarboxes; content never reflows or cramps |
 | Reduced motion | `prefers-reduced-motion` block in viewport-base.css neutralizes animations |
 
-This only applies to **decks** (slides). The document-style skills (one-pager, proposal, brief, microsite, wins-losses reports, etc.) remain scrolling pages and keep their `clamp()`/reflow model — they share the *color/font* presets, not this stage model.
+This only applies to **decks** (slides). The document-style skills (one-pager, proposal, brief, microsite, win-loss-report, etc.) remain scrolling pages and keep their `clamp()`/reflow model — they share the *color/font* presets, not this stage model.
+
+## Known render traps
+
+Check for these before shipping a deck. Each has bitten a real deck.
+
+1. **Background specificity.** `viewport-base.css` sets `.slide{background:var(--slide-bg)}` and is pasted after the preset CSS, so at equal specificity it wins over a themed slide background. Theme slide backgrounds with a higher-specificity selector (`.slide.gradient`, `.slide.dark`), or gradient/dark bands silently render as flat `--slide-bg`.
+2. **Equal-height card rows.** In a `.grid-2`/`.grid-3` card row, the tallest card sets the row height, and shorter siblings get a dead band of bottom padding. Balance the copy across cards to similar length, or vertically center the card content instead of top-aligning it.
+3. **Stat numbers with arrows or symbols.** In a `.big-number`, put spaces around arrows (`6mo -> 3wk`), set `white-space:nowrap`, and size the number for its column so it doesn't wrap or cramp. A lone symbol reads as a glyph, not a metric, so give it a worded value.
+4. **Brandmark vs eyebrow.** A top-left logo collides with a top-left `.pill` or section label on content slides. Put the brandmark top-right when slide content is left-aligned.

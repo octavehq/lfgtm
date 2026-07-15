@@ -1,200 +1,433 @@
-# Meeting Prep HTML Scaffold
-
-The prep is a scrollable reference document built on the shared scaffold in [../../shared/doc-scaffold.md](../../shared/doc-scaffold.md) — Google Fonts head, preset `:root` variables, reset, themed scrollbars, `target="_blank"` link rule, sticky nav dots with Intersection Observer, `<details>`/`<summary>` collapsible sections, cards, grids, print and responsive rules. This file lists only what's **prep-specific** on top of that base.
-
-**This is a component-pattern reference, not a fixed stylesheet to reproduce verbatim.** Adapt it: drive the palette, type, and logo from the brand kit (`~/.octave/brands/<slug>/`) so the output reads like the sender's real collateral, not a generic dark template. The `[…]` are placeholders — fill with real values, never literal brackets.
-
-```css
-/* === Meeting Type / Duration Badges (header) === */
-.meeting-badge {
-  display: inline-block; padding: 0.25rem 0.75rem;
-  border-radius: var(--radius-pill);
-  background: var(--brand-primary); color: white;
-  font-size: 0.75rem; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.05em;
-}
-.duration-badge {
-  display: inline-block; padding: 0.25rem 0.75rem;
-  border-radius: var(--radius-pill);
-  background: var(--bg-elevated); border: 1px solid var(--border-strong);
-  color: var(--text-secondary); font-size: 0.75rem; font-weight: 600;
-}
-
-/* === Stakeholder Cards === */
-.stakeholder-card { display: flex; gap: 1rem; align-items: flex-start; }
-.stakeholder-avatar {
-  width: 48px; height: 48px; border-radius: 50%;
-  background: var(--brand-primary);
-  display: flex; align-items: center; justify-content: center;
-  color: white; font-weight: 700; flex-shrink: 0;
-}
-
-/* === Buying Role Badge === */
-.role-badge {
-  display: inline-block; padding: 0.2rem 0.6rem;
-  border-radius: var(--radius-pill);
-  font-size: 0.7rem; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.05em;
-}
-.role-badge.economic-buyer { background: var(--brand-primary); color: white; }
-.role-badge.champion       { background: var(--success); color: white; }
-.role-badge.evaluator      { background: var(--secondary); color: white; }
-.role-badge.influencer     { background: var(--bg-elevated); color: var(--text-secondary); border: 1px solid var(--border-strong); }
-.role-badge.blocker        { background: var(--error); color: white; }
-
-/* === Unconfirmed flag (grounding) === */
-.unconfirmed {
-  display: inline-block; padding: 0.15rem 0.5rem;
-  border-radius: var(--radius-pill);
-  font-size: 0.68rem; font-weight: 600;
-  background: transparent; border: 1px dashed var(--warning); color: var(--warning);
-}
-.unconfirmed::before { content: "\26A0 "; }
-
-/* === Snapshot strip (deal state — merged, not repeated lower) === */
-.snapshot-strip {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: clamp(0.75rem, 1.5vw, 1.25rem);
-  margin: 1rem 0;
-}
-.snapshot-cell { text-align: center; padding: 0.75rem; }
-.snapshot-cell .label {
-  font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
-  letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.25rem;
-}
-.snapshot-cell .value { font-family: var(--font-display); font-size: 1.05rem; font-weight: 600; }
-.outcome-line {
-  border-left: 3px solid var(--brand-primary);
-  padding: 0.75rem 1rem; background: var(--bg-elevated);
-  border-radius: 0 var(--radius) var(--radius) 0; margin-top: 1rem;
-}
-
-/* === News items (dated + sourced) === */
-.news-item { padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
-.news-item .meta { font-size: 0.75rem; color: var(--text-muted); }
-.news-item .so-what { font-size: 0.85rem; color: var(--text-secondary); font-style: italic; margin-top: 0.25rem; }
-
-/* === Similar-customer / reference cards === */
-.reference-card { border-left: 3px solid var(--success); }
-
-/* === Per-persona block (why-us per persona) === */
-.persona-block {
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: clamp(1rem, 2vw, 1.5rem);
-  margin-bottom: 1rem;
-}
-.persona-block h4 { font-family: var(--font-display); margin-bottom: 0.5rem; }
-.persona-block .lane-label {
-  font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
-  letter-spacing: 0.05em; color: var(--brand-primary); margin: 0.5rem 0 0.25rem;
-}
-
-/* === The Winning Story (numbered beats) === */
-.story-beat {
-  display: grid; grid-template-columns: 32px 1fr; gap: 0.75rem;
-  padding: 0.6rem 0; align-items: start;
-}
-.story-beat .num {
-  width: 28px; height: 28px; border-radius: 50%;
-  background: var(--brand-primary); color: white;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 700; font-size: 0.85rem;
-}
-
-/* === How to Run the Conversation — beats / listen-for / ask-for === */
-.beat {
-  background: var(--bg-elevated);
-  border-left: 3px solid var(--brand-primary);
-  padding: 0.9rem 1.1rem;
-  border-radius: 0 var(--radius) var(--radius) 0;
-  margin-bottom: 0.9rem;
-}
-.beat .point { font-weight: 600; }
-.beat .listen-for, .beat .ask-for {
-  font-size: 0.82rem; margin-top: 0.4rem; color: var(--text-secondary);
-}
-.beat .listen-for::before { content: "Listen for — "; color: var(--text-muted); font-weight: 600; }
-.beat .ask-for::before    { content: "Ask for — ";    color: var(--success);    font-weight: 600; }
-
-/* === Discovery questions === */
-.question-item { padding: 0.6rem 0; border-bottom: 1px solid var(--border); }
-.question-item .reveals { font-size: 0.8rem; color: var(--text-muted); font-style: italic; margin-top: 0.2rem; }
-.question-item .reveals::before { content: "Reveals: "; }
-
-/* === Objections === */
-.objection-item { padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
-.objection-item .obj { font-weight: 600; }
-.objection-item .response { font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.25rem; }
-.objection-item .response::before { content: "\21B3 "; color: var(--success); }
-
-/* === Competitors / alternatives === */
-.competitor-row {
-  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem;
-  padding: 0.75rem 0; border-bottom: 1px solid var(--border);
-}
-.competitor-row .col-label {
-  font-size: 0.68rem; font-weight: 600; text-transform: uppercase;
-  letter-spacing: 0.05em; color: var(--text-muted);
-}
-.watch-out { border-left: 3px solid var(--warning); padding: 0.6rem 1rem; margin-top: 0.75rem; }
-
-/* === The Line (featured closing statement) === */
-.the-line {
-  text-align: center; padding: 2rem;
-  border: 2px solid var(--brand-primary);
-  border-radius: var(--radius-lg); margin-top: 2rem;
-}
-.the-line blockquote {
-  font-family: var(--font-display);
-  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
-  font-weight: 500; font-style: italic;
-  color: var(--text-primary);
-}
-
-/* Responsive delta */
-@media (max-width: 768px) { .competitor-row { grid-template-columns: 1fr; } }
-/* Print delta */
-@media print { .card, .persona-block, .beat { break-inside: avoid; } }
-```
-
-**Body structure deltas from the shared scaffold** (section-by-section markup patterns):
+# Battle Plan HTML Scaffold
 
 ```html
-<!-- 1. Header -->
-<header class="doc-section">
-  <span class="meeting-badge">[Meeting Type] Prep</span>
-  <span class="duration-badge">[Duration] min</span>
-  <h1>[Company Name] — Meeting Prep</h1>
-  <p class="text-secondary">
-    [Date] ·
-    <!-- Attendees: each linked to verified LinkedIn; ⚠ unconfirmed flag where needed. -->
-    <a href="[linkedin]" target="_blank" rel="noopener noreferrer">[Name]</a> ([Role]) ·
-    <a href="[company-website]" target="_blank" rel="noopener noreferrer">[company.com]</a>
-  </p>
-</header>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Battle Plan: [Company] — [Meeting Type]</title>
+  <!-- Google Fonts (preconnect + stylesheet) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=[fonts]&display=swap" rel="stylesheet">
+  <style>
+    /* === CSS Variables (from chosen preset) === */
+    :root { ... }
 
-<!-- 2. Snapshot (merged situation + deal state — do NOT repeat deal intel later) -->
-<section class="doc-section" id="snapshot">
-  <h2 class="section-title">Snapshot</h2>
-  <p class="body-text">[2-3 sentence situation]</p>
-  <div class="snapshot-strip">
-    <!-- Only render the cells that are actually known -->
-    <div class="snapshot-cell"><div class="label">Stage</div><div class="value">[…]</div></div>
-    <div class="snapshot-cell"><div class="label">Compelling Event</div><div class="value">[…]</div></div>
-  </div>
-  <div class="outcome-line"><strong>What we want out of this meeting:</strong> [one specific advance]</div>
-</section>
+    /* === Reset & Base === */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      line-height: 1.6;
+    }
 
-<!-- 3. Why This Company, Why Now: fit, why-now, .news-item entries (dated + linked),
-        market intel, .reference-card grid of similar customers. Internal doc: link cited
-        library entities to https://app.octavehq.com/entity/{oId}. -->
-<!-- 4. Stakeholders: .stakeholder-card grid with .role-badge / .unconfirmed flags -->
-<!-- 5. Why [Product] for Each Persona: .persona-block per persona with .lane-label lanes -->
-<!-- 6. The Winning Story: five .story-beat rows -->
-<!-- 7. How to Run the Conversation: .beat blocks (point + listen-for + ask-for) -->
-<!-- 8. Discovery Questions: .question-item entries with .reveals notes -->
-<!-- 9. Objections & Competitors: .objection-item entries, .competitor-row grid, .watch-out -->
-<!-- 10. The Line: .the-line blockquote -->
+    /* === Layout === */
+    .battle-plan-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem clamp(1rem, 4vw, 3rem);
+    }
+
+    /* === Sidebar Navigation (sticky) === */
+    .bp-nav {
+      position: fixed;
+      top: 50%;
+      right: clamp(0.5rem, 2vw, 2rem);
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      z-index: 100;
+    }
+    .bp-nav a {
+      display: block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      transition: all 0.3s ease;
+    }
+    .bp-nav a.active {
+      background: var(--brand-primary);
+      transform: scale(1.4);
+    }
+
+    /* === Section Styles === */
+    .bp-section {
+      margin-bottom: 2.5rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* === Collapsible Sections (details/summary) === */
+    details.bp-section {
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2.5rem;
+      padding-bottom: 1rem;
+    }
+    details.bp-section summary {
+      cursor: pointer;
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 2vw, 1.4rem);
+      font-weight: 600;
+      color: var(--text-primary);
+      padding: 0.75rem 0;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    details.bp-section summary::before {
+      content: "\25B6";
+      font-size: 0.7em;
+      color: var(--brand-primary);
+      transition: transform 0.2s ease;
+    }
+    details.bp-section[open] summary::before {
+      transform: rotate(90deg);
+    }
+
+    /* === Cards === */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: clamp(1rem, 2vw, 1.5rem);
+    }
+    .card:hover {
+      background: var(--bg-card-hover);
+    }
+
+    /* === Stakeholder Cards === */
+    .stakeholder-card {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .stakeholder-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--brand-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* === Buying Role Badge === */
+    .role-badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .role-badge.champion { background: var(--success); color: white; }
+    .role-badge.budget-owner { background: var(--brand-primary); color: white; }
+    .role-badge.evaluator { background: var(--secondary); color: white; }
+    .role-badge.gatekeeper { background: var(--warning); color: #1a1a1a; }
+
+    /* === Unconfirmed Person Tag === */
+    /* Use next to a stakeholder's name/title when they haven't been confirmed via
+       resolve_profile_from_email / enrich_person / find_person. Never applies to the
+       deal owner / your own AE, who is stated as fact in the header, not flagged here. */
+    .unconfirmed {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+      font-size: 0.55rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.1rem 0.4rem;
+      border-radius: var(--radius-pill);
+      background: var(--warning-soft);
+      color: var(--warning);
+      vertical-align: middle;
+    }
+
+    /* === Belief Stack === */
+    .belief-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius);
+      margin-bottom: 0.5rem;
+    }
+    .belief-status {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .belief-status.proven { background: var(--success); }
+    .belief-status.mostly-proven { background: var(--warning); }
+    .belief-status.needs-proof { background: var(--error); }
+
+    /* === Talk Track Cards === */
+    .talk-track {
+      background: var(--bg-elevated);
+      border-left: 3px solid var(--brand-primary);
+      padding: 1rem 1.25rem;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin-bottom: 1rem;
+    }
+    .talk-track .label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--brand-primary);
+      margin-bottom: 0.25rem;
+    }
+    .coaching-note {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-top: 0.5rem;
+    }
+
+    /* === Risk/Mitigation Grid === */
+    .risk-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(0.75rem, 1.5vw, 1.25rem);
+    }
+    .risk-item { border-left: 3px solid var(--error); }
+    .mitigation-item { border-left: 3px solid var(--success); }
+
+    /* === Game Plan Timeline === */
+    .game-plan-phase {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .phase-time {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--brand-primary);
+      font-weight: 600;
+    }
+
+    /* === The Line (featured) === */
+    .the-line {
+      text-align: center;
+      padding: 2rem;
+      border: 2px solid var(--brand-primary);
+      border-radius: var(--radius-lg);
+      margin-top: 2rem;
+    }
+    .the-line blockquote {
+      font-family: var(--font-display);
+      font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+      font-weight: 500;
+      font-style: italic;
+      color: var(--text-primary);
+    }
+
+    /* === Meeting Type Badge === */
+    .meeting-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius-pill);
+      background: var(--brand-primary);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .duration-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius-pill);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-strong);
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    /* === Grid Utilities === */
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(0.75rem, 1.5vw, 1.25rem); }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(0.75rem, 1.5vw, 1.25rem); }
+
+    /* === Typography === */
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 2vw, 1.4rem);
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    .body-text { font-size: clamp(0.85rem, 1.2vw, 1rem); }
+    .text-secondary { color: var(--text-secondary); }
+    .text-muted { color: var(--text-muted); }
+
+    /* === Deal Intel Cards === */
+    .deal-intel-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: clamp(0.75rem, 1.5vw, 1.25rem);
+    }
+    .deal-intel-card {
+      text-align: center;
+      padding: 1rem;
+    }
+    .deal-intel-card .label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+    .deal-intel-card .value {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    /* === Print Styles === */
+    @media print {
+      .bp-nav { display: none; }
+      .battle-plan-container { max-width: 100%; padding: 1rem; }
+      details.bp-section { open; }
+      details.bp-section[open] { break-inside: avoid; }
+      .card { break-inside: avoid; }
+      body { color: #111; background: white; }
+      .meeting-badge { border: 1px solid #111; background: transparent; color: #111; }
+    }
+
+    /* === Responsive === */
+    @media (max-width: 768px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .risk-grid { grid-template-columns: 1fr; }
+      .game-plan-phase { grid-template-columns: 80px 1fr; }
+      .bp-nav { display: none; }
+    }
+
+    /* === prefers-reduced-motion === */
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar Navigation Dots -->
+  <nav class="bp-nav" id="bp-nav">
+    <!-- Generated by JS: one dot per section -->
+  </nav>
+
+  <!-- Main Battle Plan -->
+  <main class="battle-plan-container">
+
+    <!-- 1. Header -->
+    <header class="bp-section">
+      <span class="meeting-badge">[Meeting Type] Battle Plan</span>
+      <span class="duration-badge">[Duration] min</span>
+      <h1>[Company Name] — Meeting Prep</h1>
+      <p class="text-secondary">[Date] · [Attendees summary]</p>
+    </header>
+
+    <!-- 2. TL;DR -->
+    <section class="bp-section" id="tldr">
+      <h2 class="section-title">TL;DR</h2>
+      <p class="body-text">[2-3 sentence opportunity summary]</p>
+    </section>
+
+    <!-- 3. Stakeholder Map -->
+    <details class="bp-section" open id="stakeholder-map">
+      <summary>Stakeholder Map</summary>
+      <div class="grid-2">
+        <!-- Stakeholder cards with role badges -->
+      </div>
+    </details>
+
+    <!-- 4. Their Pain -->
+    <details class="bp-section" open id="their-pain">
+      <summary>Their Pain</summary>
+      <!-- Pain points by stakeholder or theme -->
+    </details>
+
+    <!-- 5. What They Need to Believe -->
+    <details class="bp-section" open id="belief-stack">
+      <summary>What They Need to Believe</summary>
+      <!-- Belief items with status indicators -->
+    </details>
+
+    <!-- 6. Positioned Sales Pitch -->
+    <details class="bp-section" open id="sales-pitch">
+      <summary>Positioned Sales Pitch</summary>
+      <!-- 5-step talk track cards -->
+    </details>
+
+    <!-- 7. Discovery Questions -->
+    <details class="bp-section" open id="discovery-questions">
+      <summary>Discovery Questions</summary>
+      <!-- Questions segmented by stakeholder or category -->
+    </details>
+
+    <!-- 8. Landmines & Watch-Outs -->
+    <details class="bp-section" open id="landmines">
+      <summary>Landmines & Watch-Outs</summary>
+      <div class="risk-grid">
+        <!-- Risk/mitigation pairs -->
+      </div>
+    </details>
+
+    <!-- 9. Coach's Corner -->
+    <details class="bp-section" open id="coachs-corner">
+      <summary>Coach's Corner</summary>
+      <div class="grid-2">
+        <!-- Strategic coach card + Positioning coach card -->
+      </div>
+    </details>
+
+    <!-- 10. Meeting Game Plan -->
+    <details class="bp-section" open id="game-plan">
+      <summary>Meeting Game Plan</summary>
+      <!-- Phase timeline matched to duration -->
+    </details>
+
+    <!-- 11. Deal Intelligence -->
+    <details class="bp-section" open id="deal-intel">
+      <summary>Deal Intelligence</summary>
+      <div class="deal-intel-grid">
+        <!-- Budget, Champion, Decision Maker, Compelling Event cards -->
+      </div>
+    </details>
+
+    <!-- 12. The Line -->
+    <section class="bp-section" id="the-line">
+      <div class="the-line">
+        <blockquote>"[One memorable sentence]"</blockquote>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // Generate nav dots from sections
+    // Intersection Observer for active section tracking
+    // Smooth scroll on nav dot click
+    // Open all details on print (window.onbeforeprint)
+  </script>
+
+</body>
+</html>
 ```
+
+**Self-contained:** Inline CSS, zero external dependencies (except Google Fonts). No JavaScript frameworks.

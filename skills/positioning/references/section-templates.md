@@ -2,7 +2,7 @@
 
 HTML templates for all 8 sections of the Positioning System document. Each template shows the structure, CSS classes, and placeholder content. Populate with real Octave library data.
 
-All templates use the CSS classes defined in [html-scaffold.md](html-scaffold.md) and extended in [section-layouts.md](section-layouts.md).
+All templates use the CSS classes defined in the main SKILL.md and extended in [section-layouts.md](section-layouts.md).
 
 ---
 

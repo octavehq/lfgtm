@@ -1,32 +1,4 @@
-# Verification + Wrap Up Templates
-
-## Before/After Grids (Phase 5)
-
-Show the sub-score for the section being tuned, never the overall score.
-
-**Score-only mode:**
-```
-BEFORE / AFTER (Product Fit Sub-Score)
-======================================
-#   Company         Before   After   Expected    Change
-1   Snowflake         9       9      8-10        — stable
-2   Acme Corp         8       5      4-6         ↓3 FIXED
-3   Mom's Pizza       2       1      1-3         — stable
-4   DataDog           7       9      8-10        ↑2 FIXED
-```
-
-**Routing + Scoring mode:**
-```
-BEFORE / AFTER (Persona Fit — Routing + Score)
-===============================================
-#   Person          Before Match → After Match    Before → After   Expected              Verdict
-1   Jane Doe        VP Sales → VP Sales             9 → 9          VP Sales, 8-10        stable
-2   Bob Smith       VP Sales → RevOps Leader         7 → 8          RevOps Leader, 8-10   ROUTING FIXED
-3   Lisa Chen       SDR Mgr → SDR Mgr                3 → 5          SDR Mgr, 4-6          SCORE FIXED
-4   Mark Lee        VP Sales → VP Sales               2 → 2          bad fit, 1-3          stable
-```
-
-## Wrap-Up Summaries
+# Wrap Up Summary Templates
 
 **Score-only mode:**
 ```

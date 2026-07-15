@@ -58,7 +58,6 @@ You can use any name that starts with `octave-` (e.g. `octave-acme`). Skills det
 
 ### 2. Start Using Octave Skills
 ```
-/octave:workspace         # Check connection status
 /octave:library list      # Browse your library
 /octave:research john@acme.com --for discovery  # Prep for a call
 ```
@@ -77,7 +76,6 @@ See [**docs/org-instructions/**](docs/org-instructions/) for short and long reco
 
 | Skill | Description |
 |-------|-------------|
-| `/octave:workspace` | View current Octave MCP server connection status |
 | `/octave:library` | Browse, search, create, and update library entities |
 | `/octave:generate` | Quick content generation (emails, LinkedIn messages) |
 
@@ -85,10 +83,8 @@ See [**docs/org-instructions/**](docs/org-instructions/) for short and long reco
 
 | Skill | Description |
 |-------|-------------|
-| `/octave:messaging` | Build messaging frameworks, positioning statements, and matrices |
-| `/octave:campaign` | Plan and generate multi-channel campaign content |
-| `/octave:launch` | Product and feature launch planning with full content kit |
-| `/octave:battlecard` | Competitive intelligence — battlecards, displacement, trap questions. Add `--format doc` for an interactive HTML battlecard document |
+| `/octave:product-launch` | Product and feature launch planning with full content kit |
+| `/octave:battlecard-doc` | Interactive HTML competitive battlecard — single competitor or full landscape, with trap questions and objection counters grounded in real conversation evidence |
 | `/octave:ads` | Build platform-ready ad campaigns with audience targeting, creative variants, and negative keywords |
 | `/octave:ads-resonance` | Analyze ad performance (MCP, BigQuery Data Transfer, direct API, or manual paste), score falsifiable prediction cards against real data, and feed learnings back into the library |
 
@@ -105,9 +101,7 @@ See [**docs/org-instructions/**](docs/org-instructions/) for short and long reco
 | Skill | Description |
 |-------|-------------|
 | `/octave:pipeline` | Deal-level coaching — stalled deals, multi-threading, competitive |
-| `/octave:enablement` | Generate sales enablement materials — cheat sheets, objection guides |
-| `/octave:pmm` | Create sales collateral — one-pagers, case studies, landing pages |
-| `/octave:analyzer` | Analyze conversations for resonance, adherence, differentiation |
+| `/octave:call-analyzer` | Analyze conversations for resonance, adherence, differentiation |
 | `/octave:train` | Practice selling — role-play simulations, quizzes, guided learning |
 | `/octave:deal-coach` | Methodology-driven deal coaching — role-play, microsites, decks, and quizzes around Resonate/Elevate/Compel |
 
@@ -117,9 +111,8 @@ See [**docs/org-instructions/**](docs/org-instructions/) for short and long reco
 |-------|-------------|
 | `/octave:insights` | Surface findings, trends, and patterns from calls and emails |
 | `/octave:signals` | Morning intelligence briefing — deals, patterns, and signals demanding attention |
-| `/octave:wins-losses` | Analyze won/lost deals for patterns and learnings. Add `--format report` for a visual HTML report with charts |
+| `/octave:win-loss-report` | Visual win/loss analysis report as self-contained HTML with charts — patterns, competitor cuts, and deal deep dives |
 | `/octave:icp-refine` | Refine ICP definitions using deal outcome analysis |
-| `/octave:explore-agents` | Browse and run your saved Octave agents |
 | `/octave:qual-doctor` | Diagnose and tune qualification agents — test against known-fit prospects, analyze per-question scoring patterns, and recommend specific changes to questions, weights, and entity descriptions. Handles both score-only and routing+scoring tuning modes. |
 
 ### Document Builder Skills
@@ -130,25 +123,15 @@ See [**docs/org-instructions/**](docs/org-instructions/) for short and long reco
 | `/octave:meeting-prep` | Strategic meeting battle plan with coaching frameworks and talk tracks as HTML |
 | `/octave:deck` | Build Octave-powered HTML slide decks with brand styling and export |
 | `/octave:one-pager` | Personalized one-pager / leave-behind as self-contained HTML |
-| `/octave:brief` | Internal account dossier and call prep HTML document |
 | `/octave:proposal` | Formal business case and proposal as customer-facing HTML |
 | `/octave:microsite` | Personalized ABM microsite / landing page as HTML |
+| `/octave:champion-deal-room` | Internal deal room a rep hands a champion to run the buying-committee sell — business case, stakeholder map, objection handling, path to yes |
 | `/octave:positioning` | Complete visual Messaging & Positioning system (8 frameworks) as HTML |
 
-Visual battlecards and win/loss reports are document formats of their parent skills: `/octave:battlecard … --format doc` and `/octave:wins-losses --format report`.
-
-### Ideation & Content Skills
+### Library Operations
 
 | Skill | Description |
 |-------|-------------|
-| `/octave:brainstorm` | Ideation for campaigns, Custom Motion Playbooks, lead magnets, CTAs |
-| `/octave:repurpose` | Repurpose content for a different audience, persona, or channel |
-
-### Automation Skills
-
-| Skill | Description |
-|-------|-------------|
-| `/octave:workflow` | Define, run, and manage multi-step GTM workflows |
 | `/octave:audit` | Library health check — find gaps, stale content, duplicates |
 
 ### Publishing Skills
@@ -168,23 +151,11 @@ Specialized agent personas for sustained, multi-turn work sessions.
 | `sdr-coach` | SDR manager focused on outreach quality, reply rates, and coaching |
 | `revenue-strategist` | VP Revenue advisor for pipeline strategy and deal coaching |
 | `asset-manager` | Publish and manage hosted assets: upload, privacy tiers, share links, persistent registry; cache-aware — reuses existing assets instead of duplicating them |
+| `octave-editorial-reviewer` | Language + information quality reviewer spawned by the review gate after a skill generates a deliverable — audits reader-facing text against the editorial rules and information principles, fixes violations inline (not invoked directly) |
+| `octave-presentation-reviewer` | Visual + structural reviewer spawned by the review gate — renders the generated HTML and inspects the pixels, audits against the presentation principles, format rules, and skill blueprints, fixes CSS/layout violations inline (not invoked directly) |
 
 ## Skill Details
 
-### /octave:messaging
-Build structured messaging artifacts from your library:
-- Messaging frameworks (pillars, proof points, key messages by audience)
-- Positioning statements with persona and segment variations
-- Messaging matrices (persona x use case grids)
-- Elevator pitches (15s / 30s / 60s / 2min)
-- Narrative arcs and value prop hierarchies
-
-```
-/octave:messaging framework --product "Platform"
-/octave:messaging matrix
-/octave:messaging elevator
-/octave:messaging positioning
-```
 
 ### /octave:positioning
 Complete visual Messaging & Positioning system as a scrollable HTML document:
@@ -205,20 +176,8 @@ Complete visual Messaging & Positioning system as a scrollable HTML document:
 /octave:positioning --product "Platform"      # Focus on specific product
 ```
 
-### /octave:campaign
-Plan and generate multi-channel campaign content:
-- Email sequences, LinkedIn messages, ad copy, social posts
-- Blog posts and landing page copy
-- All grounded in Motions, Motion ICPs, personas, and proof points
-- Campaign strategy with channel plan and timing
 
-```
-/octave:campaign "Q1 pipeline push" --persona "CTO"
-/octave:campaign "feature launch" --channels email,linkedin,ads,social,blog
-/octave:campaign "competitive displacement" --motion "Net New Enterprise"
-```
-
-### /octave:launch
+### /octave:product-launch
 Product and feature launch planning with content kit:
 - Positioning and messaging by persona
 - Channel strategy and timeline
@@ -226,25 +185,22 @@ Product and feature launch planning with content kit:
 - Library updates for new capabilities
 
 ```
-/octave:launch "AI Analytics Dashboard" --type feature
-/octave:launch "Enterprise Tier" --type product
-/octave:launch "APAC Expansion" --type expansion
+/octave:product-launch "AI Analytics Dashboard" --type feature
+/octave:product-launch "Enterprise Tier" --type product
+/octave:product-launch "APAC Expansion" --type expansion
 ```
 
-### /octave:battlecard
-Competitive intelligence hub:
-- Full competitive battlecards with real conversation evidence
-- Displacement campaigns (email sequences for stealing competitor customers)
+### /octave:battlecard-doc
+Interactive HTML competitive battlecard grounded in real conversation evidence:
+- Single-competitor deep dives with expandable sections and color-coded comparisons
+- Full competitive landscape documents across every tracked competitor
 - Trap questions to expose competitor weaknesses
 - Objection counters ("they say X, we say Y")
-- Side-by-side comparisons and landscape overviews
+- Displacement outreach offered as a follow-up
 
 ```
-/octave:battlecard battlecard --competitor "Acme"
-/octave:battlecard battlecard --competitor "Acme" --format doc   # Interactive HTML document
-/octave:battlecard displacement --competitor "Acme"
-/octave:battlecard traps --competitor "Acme"
-/octave:battlecard landscape
+/octave:battlecard-doc --competitor "Acme"
+/octave:battlecard-doc --competitor "all"   # Full competitive landscape doc
 ```
 
 ### /octave:abm
@@ -276,19 +232,6 @@ Deal-level coaching:
 /octave:pipeline close acme.com
 ```
 
-### /octave:enablement
-Sales enablement materials:
-- Quick reference cards, objection handling guides, discovery question banks
-- Competitive cheat sheets, persona deep-dives, Motion ICP cell summaries
-- New hire onboarding kits
-- All grounded in library data and real conversation evidence
-
-```
-/octave:enablement objections --persona "CTO"
-/octave:enablement discovery --persona "VP Sales"
-/octave:enablement competitive-sheet
-/octave:enablement onboarding
-```
 
 ### /octave:icp-refine
 ICP analysis and refinement:
@@ -321,19 +264,6 @@ Comprehensive library audit to identify:
 /octave:audit --migrate          # Legacy playbook → Motions migration
 ```
 
-### /octave:brainstorm
-GTM ideation engine for:
-- Campaign concepts
-- Custom Motion Playbook ideas (Thematic / Milestone / Account / Competitive angles to layer on the Default Motion Playbook)
-- Lead magnet ideas
-- CTA and offer variations
-- Growth experiments
-
-```
-/octave:brainstorm campaigns for enterprise
-/octave:brainstorm motion playbooks
-/octave:brainstorm lead magnets for CTOs
-```
 
 ### /octave:prospector
 Find and qualify companies and people matching your ICP:
@@ -347,17 +277,6 @@ Find and qualify companies and people matching your ICP:
 /octave:prospector --company acme.com
 ```
 
-### /octave:pmm
-Product marketing assistant for collateral:
-- One-pagers, battlecards, case studies, landing pages
-- Sales decks, blog posts, datasheets, FAQs
-- Objection handling guides
-
-```
-/octave:pmm one-pager
-/octave:pmm battlecard --competitor "Salesforce"
-/octave:pmm case-study
-```
 
 ### /octave:research
 Context-aware research and prep:
@@ -372,15 +291,15 @@ Context-aware research and prep:
 /octave:research "Acme deal" --for pipeline-review
 ```
 
-### /octave:analyzer
+### /octave:call-analyzer
 Conversation analysis against your library:
 - Resonance: Did messaging land?
 - Adherence: Did we follow the Motion ICP narrative?
 - Differentiation: Did we position effectively?
 
 ```
-/octave:analyzer              # Paste content to analyze
-/octave:analyzer --type call  # Analyze call transcript
+/octave:call-analyzer              # Paste content to analyze
+/octave:call-analyzer --type call  # Analyze call transcript
 ```
 
 ### /octave:insights
@@ -395,46 +314,20 @@ Surface intelligence from sales conversations:
 /octave:insights --persona "CTO"
 ```
 
-### /octave:wins-losses
-Analyze deal outcomes to improve win rates:
+### /octave:win-loss-report
+Visual win/loss analysis as a self-contained HTML report with charts:
 - Win/loss patterns and competitor analysis
+- Period, segment, and competitor cuts
 - Deal deep dives
 
 ```
-/octave:wins-losses
-/octave:wins-losses --status lost
-/octave:wins-losses --competitor "Salesforce"
-/octave:wins-losses --format report   # Visual HTML report with charts
+/octave:win-loss-report
+/octave:win-loss-report --competitor "Salesforce"
+/octave:win-loss-report --period "2025" --segment "mid-market"
 ```
 
-### /octave:explore-agents
-Manage and run your saved Octave agents:
 
-```
-/octave:explore-agents
-/octave:explore-agents run "Enterprise Cold Outreach" --to john@acme.com
-/octave:explore-agents suggest "cold email to CTO"
-```
 
-### /octave:workflow
-Multi-step GTM workflow engine:
-- Run pre-built workflow templates
-- Create custom workflows
-- Human-in-the-loop execution with decision points
-
-```
-/octave:workflow list
-/octave:workflow run "Full Outbound Pipeline" --company acme.com
-/octave:workflow create
-```
-
-### /octave:repurpose
-Transform existing content for different audiences:
-
-```
-/octave:repurpose "Our platform reduces deployment time..." --persona "CFO"
-/octave:repurpose ./content/whitepaper.md --channel "email"
-```
 
 ### /octave:train
 Practice selling with role-play simulations and knowledge quizzes:
@@ -502,6 +395,18 @@ Build Octave-powered HTML presentations with brand styling:
 /octave:deck "demo day pitch" --style octave-brand           # Specific style preset
 ```
 
+### /octave:champion-deal-room
+Internal deal room a rep hands a champion so they can run the buying-committee sell:
+- Quantified business case built from real deal data
+- Stakeholder map with per-seat talking points
+- Objection handling and a concrete path to yes
+- Self-contained HTML — shareable inside the account
+
+```
+/octave:champion-deal-room acme.com
+/octave:champion-deal-room acme.com --champion jane@acme.com
+```
+
 ### /octave:asset-manager
 Publish and manage hosted assets on the Octave assets service:
 - Cache-aware: lists existing assets before creating and offers matches (with links) so the same work isn't done twice
@@ -519,22 +424,6 @@ Publish and manage hosted assets on the Octave assets service:
 
 File uploads go through bundled curl scripts (`skills/asset-manager/scripts/`); metadata, shares, and tokens go through the `asset_*` MCP tools.
 
-## Workflow Templates
-
-Pre-built workflow templates for common multi-step GTM processes:
-
-| Workflow | Description |
-|----------|-------------|
-| Full Outbound Pipeline | Research → qualify → find contacts → generate email |
-| Account-Based Research | Deep research dossier with contact mapping and Motion ICP matching |
-| Competitive Deal Prep | Research, competitive positioning, and displacement outreach |
-| Persona-Targeted Outreach | Find persona matches across companies, qualify, and generate outreach |
-| New Market Entry | Research → ICP → personas → messaging → Motion → outreach |
-| Competitive Response | Assess → update positioning → displacement campaign → enablement |
-| Deal Acceleration | Account intel → stakeholder mapping → coaching → outreach → meeting prep |
-| Quarterly GTM Review | Win/loss → field intel → ICP accuracy → competitive landscape |
-| Positioning Exercise | Library audit → data gathering → generate 8-framework positioning system → save back |
-| Content Sprint | Messaging → emails → LinkedIn → blog → social in one sprint |
 
 ## Configuration
 
@@ -703,6 +592,8 @@ The workspace's own company profile (singleton).
 ├── agents/
 │   ├── asset-manager.md         # Hosted asset publishing/sharing agent
 │   ├── octave-assistant.md      # General GTM assistant agent
+│   ├── octave-editorial-reviewer.md     # Review-gate agent: language + information quality
+│   ├── octave-presentation-reviewer.md  # Review-gate agent: visual + structural quality
 │   ├── pmm-strategist.md        # Product marketing strategist agent
 │   ├── sdr-coach.md             # SDR coaching agent
 │   └── revenue-strategist.md    # Revenue strategy advisor agent
@@ -713,55 +604,35 @@ The workspace's own company profile (singleton).
 │   ├── build-codex.sh           # CI: generate the Codex plugin artifact
 │   └── build-cursor.sh          # CI: generate the Cursor plugin artifact
 ├── skills/                      # Skill definitions (each: SKILL.md + optional references/)
-│   ├── shared/                  # Cross-skill references (entity model, presentation principles, style presets, …) — not a skill
+│   ├── shared/                  # Cross-skill reference layer (editorial & information rules, presentation principles, review protocol, entity model, style presets, formats/) — not a skill
 │   ├── abm/                     # Account-based planning
 │   ├── ads/                     # Ad campaign builder
 │   ├── ads-resonance/           # Ad performance resonance loop + prediction cards
-│   ├── analyzer/                # Conversation analysis
 │   ├── asset-manager/           # Publish & manage hosted assets (bundled upload/download scripts)
 │   ├── audit/                   # Library health check
-│   ├── battlecard/              # Competitive intelligence (--format doc for HTML)
-│   ├── brainstorm/              # GTM ideation
-│   ├── brief/                   # Account dossier (HTML)
-│   ├── campaign/                # Multi-channel campaigns
+│   ├── battlecard-doc/          # Interactive HTML competitive battlecard
+│   ├── call-analyzer/           # Conversation analysis
+│   ├── champion-deal-room/      # Champion-facing internal deal room (HTML)
 │   ├── deal-coach/              # Deal coaching (Resonate/Elevate/Compel)
 │   ├── deck/                    # Presentation builder (HTML)
-│   ├── enablement/              # Sales enablement materials
-│   ├── explore-agents/          # Agent management
 │   ├── generate/                # Quick content generation
 │   ├── get-brand-components/    # Brand kit capture for on-brand documents
 │   ├── icp-refine/              # ICP refinement
 │   ├── insights/                # Field intelligence
-│   ├── launch/                  # Launch planning
 │   ├── library/                 # Library CRUD
 │   ├── meeting-prep/            # Meeting battle plan (HTML)
-│   ├── messaging/               # Messaging frameworks
 │   ├── microsite/               # ABM microsite (HTML)
 │   ├── one-pager/               # One-pager / leave-behind (HTML)
 │   ├── pipeline/                # Deal coaching
-│   ├── pmm/                     # Product marketing content
 │   ├── positioning/             # Positioning system (HTML)
+│   ├── product-launch/          # Launch planning
 │   ├── proposal/                # Business case / proposal (HTML)
 │   ├── prospector/              # Prospect discovery
 │   ├── qual-doctor/             # Qualification agent tuning
-│   ├── repurpose/               # Content repurposing
 │   ├── research/                # Research & prep
 │   ├── signals/                 # Morning intelligence briefing
 │   ├── train/                   # Sales training & role-play
-│   ├── wins-losses/             # Deal outcome analysis (--format report for HTML)
-│   ├── workflow/                # Workflow engine
-│   └── workspace/               # Connection status
-├── workflows/                   # Workflow templates (run via /octave:workflow)
-│   ├── account-based-research.workflow.md
-│   ├── competitive-deal-prep.workflow.md
-│   ├── competitive-response.workflow.md
-│   ├── content-sprint.workflow.md
-│   ├── deal-acceleration.workflow.md
-│   ├── full-outbound-pipeline.workflow.md
-│   ├── new-market-entry.workflow.md
-│   ├── persona-targeted-outreach.workflow.md
-│   ├── positioning-exercise.workflow.md
-│   └── quarterly-gtm-review.workflow.md
+│   └── win-loss-report/         # Visual win/loss analysis (HTML)
 ├── EXAMPLES.md                  # Detailed usage examples
 ├── .gitignore
 ├── LICENSE

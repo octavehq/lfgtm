@@ -100,7 +100,7 @@ Content Gaps Identified:
 
 Follow-Up Actions:
 1. 3 deals have stalled objections - review with /octave:research
-2. 2 competitors gaining mentions - update battlecards with /octave:battlecard
+2. 2 competitors gaining mentions - update battlecards with /octave:battlecard-doc
 
 ---
 

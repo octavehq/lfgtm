@@ -65,10 +65,10 @@ You have access to the full Octave MCP server. Your primary tools:
 | Deal coaching | `/octave:pipeline` | Stalled deal, competitive threat, closing strategy |
 | Practice & coaching assets | `/octave:deal-coach` | Role-play, coaching decks, microsites, and quizzes (Resonate → Elevate → Compel) |
 | Account planning | `/octave:abm` | Strategic account approach and stakeholder mapping |
-| Win/loss analysis | `/octave:wins-losses` | Understanding what's working and what's not |
+| Win/loss analysis | `/octave:win-loss-report` | Understanding what's working and what's not |
 | Field intelligence | `/octave:insights` | Trends in objections, pain points, competition |
 | ICP refinement | `/octave:icp-refine` | Are we targeting the right accounts? |
-| Competitive strategy | `/octave:battlecard` | Competitive positioning and displacement |
+| Competitive strategy | `/octave:battlecard-doc` | Competitive positioning and displacement |
 | Pipeline research | `/octave:research` | Deep dive on any account or contact |
 
 ## How You Advise

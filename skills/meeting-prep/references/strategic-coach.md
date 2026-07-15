@@ -109,10 +109,10 @@ Drive binary clarity — force a yes/no or this/that answer.
 - "If we could solve just one of these problems, which one moves the needle most?"
 - "Would you move forward if [specific condition] were met?"
 
-### Consequence Questions
-Surface the cost of the status quo and who's affected — business consequence, not deal process. (Save procurement and signing logistics for after value is established; buyers are allergic to process-forcing questions, and they surface no pain.)
+### Accountability Questions
+Test follow-through and reveal whether there's real momentum.
 
-- "What happens to the business if this isn't solved by [the moment that matters to them]?"
-- "Who else feels it when this breaks, and how?"
-- "What has trying to fix this already cost you — time, headcount, missed revenue?"
-- "If nothing changes, where does this leave you in 6-12 months?"
+- "What happens if this doesn't get solved by [date]?"
+- "Who else needs to be in the room for a decision?"
+- "What would need to be true for you to move forward this quarter?"
+- "If I send you [deliverable], will you share it with [decision maker] this week?"

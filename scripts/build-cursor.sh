@@ -10,9 +10,6 @@
 # Cursor natively supports agents/. So this build is almost a 1:1 mirror. The
 # only translations are:
 #   • .claude-plugin/  → .cursor-plugin/   (manifest schema)
-#   • workflows/*.workflow.md → thin commands/*.md wrappers that invoke the
-#     workflow engine skill (the workflow templates themselves ship verbatim
-#     in workflows/, where the workflow skill discovers them)
 # Skill names and /octave: namespacing are preserved verbatim, since Cursor
 # namespaces plugin skills the same way Claude Code does.
 
@@ -25,7 +22,7 @@ command -v jq >/dev/null || { echo "jq required"; exit 1; }
 
 echo "→ cleaning $OUT"
 rm -rf "$OUT"
-mkdir -p "$OUT/.cursor-plugin" "$OUT/skills" "$OUT/agents" "$OUT/commands" "$OUT/workflows"
+mkdir -p "$OUT/.cursor-plugin" "$OUT/skills" "$OUT/agents"
 
 # ----- NOTE on MCP config -----
 # Cursor reads mcp.json at the plugin root, but — matching the Claude/Codex
@@ -38,14 +35,13 @@ mkdir -p "$OUT/.cursor-plugin" "$OUT/skills" "$OUT/agents" "$OUT/commands" "$OUT
 echo "→ .cursor-plugin/plugin.json"
 jq '{
   name, version,
-  description: "Octave GTM knowledge base integration for Cursor — grounded access to personas, Motions, messaging, and positioning as skills, agents, and commands.",
+  description: "Octave GTM knowledge base integration for Cursor — grounded access to personas, Motions, messaging, and positioning as skills and agents.",
   author: { name: .author.name },
   homepage: "https://octavehq.com",
   repository: "https://github.com/octavehq/lfgtm-cursor",
   license: "MIT",
   skills: "./skills/",
-  agents: "./agents/",
-  commands: "./commands/"
+  agents: "./agents/"
 }' "$SRC_ROOT/.claude-plugin/plugin.json" \
   > "$OUT/.cursor-plugin/plugin.json"
 
@@ -71,45 +67,16 @@ cp -R "$SRC_ROOT"/skills/. "$OUT/skills/"
 echo "→ agents/"
 cp "$SRC_ROOT"/agents/*.md "$OUT/agents/"
 
-# 5. workflows/ — ship the templates verbatim so the workflow engine skill
-#    (/octave:workflow) can discover and run them, same as in Claude Code.
-echo "→ workflows/"
-cp "$SRC_ROOT"/workflows/*.workflow.md "$OUT/workflows/"
-
-# 6. commands/ — one thin wrapper per workflow. The wrapper hands off to the
-#    workflow engine skill rather than embedding the workflow DSL, so command
-#    execution and /octave:workflow runs share a single source of truth.
-echo "→ commands/ (wrappers for workflows/)"
-for f in "$SRC_ROOT"/workflows/*.workflow.md; do
-  base="$(basename "$f" .workflow.md)"
-  wf_name="$(awk '/^name:/{sub(/^name:[[:space:]]*/,""); print; exit}' "$f")"
-  wf_desc="$(awk '/^description:/{sub(/^description:[[:space:]]*/,""); print; exit}' "$f")"
-  cat > "$OUT/commands/$base.md" <<CMD
----
-description: ${wf_desc}
----
-
-Run the "${wf_name}" Octave workflow using the workflow engine skill:
-
-/octave:workflow run "${wf_name}"
-
-Before starting, read the template at \`workflows/${base}.workflow.md\` in this
-plugin for the workflow's inputs, collect any required inputs from the user
-(or from arguments passed to this command), then execute the workflow step by
-step with the human-in-the-loop checkpoints it defines.
-CMD
-done
-
-# 7. LICENSE
+# 5. LICENSE
 cp "$SRC_ROOT/LICENSE" "$OUT/LICENSE"
 
-# 8. README — Cursor-specific
+# 6. README — Cursor-specific
 cat > "$OUT/README.md" <<'EOF'
 # Octave Cursor Plugin
 
 > Generated from [octavehq/lfgtm](https://github.com/octavehq/lfgtm). Do not edit directly — changes will be overwritten. File issues and PRs on the upstream repo.
 
-GTM knowledge base integration for [Cursor](https://cursor.com). Provides grounded access to your Octave personas, Motions, messaging, positioning, and more — as skills, agents, and commands.
+GTM knowledge base integration for [Cursor](https://cursor.com). Provides grounded access to your Octave personas, Motions, messaging, positioning, and more — as skills and agents.
 
 ## Install
 
@@ -139,18 +106,14 @@ Use any name starting with `octave-`. Skills detect the Octave server from the a
 
 ## What's included
 
-- **Skills** (`/octave:research`, `/octave:library`, `/octave:generate`, `/octave:battlecard`, …) — the full upstream skill set, invoked the same way as in Claude Code.
+- **Skills** (`/octave:research`, `/octave:library`, `/octave:generate`, `/octave:battlecard-doc`, …) — the full upstream skill set, invoked the same way as in Claude Code.
 - **Agents** (`octave-assistant`, `pmm-strategist`, `sdr-coach`, `revenue-strategist`, `asset-manager`) — Octave's specialist GTM personas.
-- **Workflows** — multi-step GTM playbooks (account-based research, competitive deal prep, full outbound pipeline, …) run via `/octave:workflow`.
-- **Commands** — one shortcut per workflow, so each playbook is also directly invocable as a command.
 
 See the [upstream README](https://github.com/octavehq/lfgtm#skills) for full descriptions.
 EOF
 
-# 9. Summary
+# 7. Summary
 echo
 echo "✓ Built Cursor artifact at $OUT"
 echo "  skills:    $(find "$OUT/skills" -name SKILL.md | wc -l | tr -d ' ')"
 echo "  agents:    $(find "$OUT/agents" -name '*.md' | wc -l | tr -d ' ')"
-echo "  workflows: $(find "$OUT/workflows" -name '*.workflow.md' | wc -l | tr -d ' ')"
-echo "  commands:  $(find "$OUT/commands" -name '*.md' | wc -l | tr -d ' ')"

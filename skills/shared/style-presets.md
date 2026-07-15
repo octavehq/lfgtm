@@ -4,9 +4,9 @@ Full CSS variable definitions for the 12 style presets shared by the Octave deck
 
 Each preset defines a complete visual system. Apply by copying the `:root` block into the generated HTML.
 
-> **Presets define color, type *family*, radius, and easing — not layout sizes.** For decks, typography and spacing are authored in **px on the 1920×1080 canvas** (see [../deck/references/html-scaffold.md](../deck/references/html-scaffold.md)); the `--pad-x`/`--pad-y` `clamp()` vars below are used by the scrolling document skills (one-pager, proposal, etc.) and are overridden by px padding in decks. The same preset file therefore serves both the fixed-canvas deck and the reflow documents.
+> **Presets define color, type *family*, radius, and easing, not layout sizes.** For decks, typography and spacing are authored in **px on the 1920×1080 canvas** (see [../deck/references/html-scaffold.md](../deck/references/html-scaffold.md)); the `--pad-x`/`--pad-y` `clamp()` vars below are used by the scrolling document skills (one-pager, proposal, etc.) and are overridden by px padding in decks. The same preset file therefore serves both the fixed-canvas deck and the reflow documents.
 >
-> **Wildcard/custom styles:** the presets are deliberate brand systems (e.g. `octave-brand` purple, `midnight-pro` Inter) and are fine as-is. But when generating a *custom* wildcard preview, follow the no-slop rules in the deck skill — avoid Inter/Roboto, generic purple-on-white, and cookie-cutter layouts.
+> **Wildcard/custom styles:** the presets are deliberate brand systems (e.g. `octave-brand` purple, `midnight-pro` Inter) and are fine as-is. But when generating a *custom* wildcard preview, follow the no-slop rules in the deck skill: avoid Inter/Roboto, generic purple-on-white, and cookie-cutter layouts.
 
 ---
 
@@ -610,7 +610,7 @@ High-contrast black and white. Statement typography. No color distractions.
 
 **Google Fonts:** `Bebas+Neue&family=Inter:wght@200;300;400;500;600&display=swap`
 
-**Note:** This preset relies on typography scale and whitespace for visual impact. Use oversized `heading-1` with `clamp(3rem, 8vw, 7rem)` for statement slides. Avoid decorative elements — let the words do the work.
+**Note:** This preset relies on typography scale and whitespace for visual impact. Use oversized `heading-1` with `clamp(3rem, 8vw, 7rem)` for statement slides. Avoid decorative elements: let the words do the work.
 
 ---
 

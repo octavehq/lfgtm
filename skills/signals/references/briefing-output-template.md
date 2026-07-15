@@ -27,7 +27,7 @@ Examples:
   🔴 2. TechFlow — Competitor mentioned for first time
      Signal: "Gong" mentioned in yesterday's call — not previously in play
      Context: Deal in Demo stage, $95K, single-threaded with VP Sales
-     Suggested: /octave:battlecard --competitor "Gong"
+     Suggested: /octave:battlecard-doc --competitor "Gong"
 
   🟡 3. DataCorp — Advanced to Negotiation
      Signal: Deal moved from Evaluation → Negotiation yesterday
@@ -45,7 +45,7 @@ Objections Trending Up:
   ↑ "[Objection theme]" — [N] instances this period (up from [M] last period)
     Affected personas: [Persona list]
     In Motion ICP narrative: [Yes/No — if No, flag as gap]
-    Suggested: /octave:enablement objections --topic "[topic]"
+    Suggested: /octave:train --topic "[topic]"
 
 Objections Trending Down:
   ↓ "[Objection theme]" — [N] this period (down from [M])
@@ -54,7 +54,7 @@ Objections Trending Down:
 New Competitors Appearing:
   🆕 "[Competitor]" mentioned [N] times — not previously tracked
     Deals affected: [Company list]
-    Suggested: /octave:battlecard --competitor "[name]"
+    Suggested: /octave:battlecard-doc --competitor "[name]"
 
 Hot Proof Points:
   🔥 "[Proof point]" cited in [N] conversations this period

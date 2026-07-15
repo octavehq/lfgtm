@@ -6,21 +6,19 @@ Real-world examples of how to use the Octave Claude Code plugin for common GTM w
 
 | Task | Command |
 |------|---------|
-| Check workspace status | `/octave:workspace` |
 | Browse personas | `/octave:library list personas` |
 | Prep for a call | `/octave:research john@acme.com --for discovery` |
 | Generate an email | `/octave:generate email --to "John at Acme" --about "reducing costs"` |
-| Analyze a conversation | `/octave:analyzer` |
-| Plan a multi-channel campaign | `/octave:campaign "Q1 pipeline push"` |
+| Analyze a conversation | `/octave:call-analyzer` |
+| Build a champion deal room | `/octave:champion-deal-room acme.com` |
 | Build a Google Search ad campaign | `/octave:ads "compliance automation for VPs of Engineering"` |
 | Competitive displacement ads | `/octave:ads "displacement campaign vs Acme"` |
 | Analyze ad performance (resonance loop) | `/octave:ads-resonance` |
-| Build a messaging framework | `/octave:messaging framework` |
 | Full positioning exercise (visual HTML) | `/octave:positioning` |
 | Just the message framework | `/octave:positioning message-framework` |
 | Homepage messaging template | `/octave:positioning homepage` |
-| Create a competitive battlecard | `/octave:battlecard battlecard --competitor "Acme"` |
-| Visual battlecard document | `/octave:battlecard battlecard --competitor "Acme" --format doc` |
+| Create a competitive battlecard | `/octave:battlecard-doc --competitor "Acme"` |
+| Full competitive landscape doc | `/octave:battlecard-doc --competitor "all"` |
 | Prep a meeting battle plan | `/octave:meeting-prep "discovery call with Acme tomorrow"` |
 | Build a slide deck | `/octave:deck "pitch for Acme Corp"` |
 | Capture a brand kit | `/octave:get-brand-components acme.com` |
@@ -28,31 +26,19 @@ Real-world examples of how to use the Octave Claude Code plugin for common GTM w
 | Coach on a stalled deal | `/octave:pipeline stalled acme.com` |
 | Deal coaching role play | `/octave:deal-coach acme.com --mode roleplay` |
 | Coaching methodology quiz | `/octave:deal-coach --mode quiz --stage resonate` |
-| Generate enablement materials | `/octave:enablement objections --persona "CTO"` |
-| Plan a product launch | `/octave:launch "New AI feature"` |
+| Plan a product launch | `/octave:product-launch "New AI feature"` |
 | Refine your ICP | `/octave:icp-refine --period 90` |
 | See what objections are trending | `/octave:insights --type objections` |
 | Morning intelligence briefing | `/octave:signals` |
 | Practice with role-play or quizzes | `/octave:train roleplay --persona "CTO"` |
-| Understand why you're losing deals | `/octave:wins-losses --status lost` |
-| Visual win/loss report | `/octave:wins-losses --format report` |
-| Run a saved agent | `/octave:explore-agents run "Enterprise Outreach" --to john@acme.com` |
+| Understand why you're losing deals | `/octave:win-loss-report` |
+| Win/loss vs one competitor | `/octave:win-loss-report --competitor "Acme"` |
 | Tune a qualification agent | `/octave:qual-doctor` |
-| Run a multi-step workflow | `/octave:workflow run "Full Outbound Pipeline" --company acme.com` |
 
 ---
 
 ## Getting Started
 
-### Check Your Workspace
-
-```
-/octave:workspace
-```
-
-Shows your current Octave MCP server connection status.
-
----
 
 ## Library Management
 
@@ -193,51 +179,6 @@ Returns:
 
 ## Campaign Planning
 
-### Plan a Multi-Channel Campaign
-
-```
-# Interactive mode
-/octave:campaign
-
-# Campaign around a topic
-/octave:campaign "AI feature launch"
-
-# Target specific persona and channels
-/octave:campaign "Q1 pipeline push" --persona "VP Engineering" --channels email,linkedin,ads,social
-
-# Competitive displacement campaign
-/octave:campaign "competitive displacement" --motion "Enterprise Net New"
-```
-
-Example flow:
-```
-/octave:campaign "Q1 pipeline push" --persona "CTO"
-
-[Gathers library intelligence: persona, Motion ICPs, proof points, brand voice]
-
-CAMPAIGN PLAN: Q1 Pipeline Acceleration
-========================================
-
-OBJECTIVE: Drive discovery meetings with CTOs at enterprise SaaS companies
-
-TARGET AUDIENCE: CTO persona, Enterprise segment
-STRATEGIC ANGLE: Lead with "engineering velocity" value prop
-PROOF POINTS: TechCorp case study (40% deployment speed increase)
-
-CHANNEL PLAN:
-| Channel   | Timing    | Purpose                |
-|-----------|-----------|------------------------|
-| Email     | Week 1-3  | Primary outreach       |
-| LinkedIn  | Week 1-4  | Warm + thought leader  |
-| Social    | Week 1-4  | Awareness              |
-| Ads       | Week 2-4  | Retargeting            |
-
-Ready to generate content for each channel? [Y/n]
-
-[Generates: 4-email sequence, LinkedIn messages + post, 5 social posts, 3 ad variants]
-```
-
----
 
 ## Ad Campaigns
 
@@ -391,53 +332,6 @@ The first time the task runs, you'll get permission prompts for the tools it nee
 
 ## Messaging & Positioning
 
-### Build a Messaging Framework
-
-```
-# Full messaging framework
-/octave:messaging framework
-
-# Positioning statement
-/octave:messaging positioning --product "Platform"
-
-# Persona x use case messaging matrix
-/octave:messaging matrix
-
-# Elevator pitches in multiple lengths
-/octave:messaging elevator
-
-# Company narrative arc
-/octave:messaging narrative
-
-# Value proposition hierarchy
-/octave:messaging value-props
-```
-
-Example output:
-```
-/octave:messaging framework --product "Platform"
-
-MESSAGING FRAMEWORK: Platform
-===============================
-
-CORE POSITIONING
-For [revenue teams] who [struggle with manual research and generic outreach],
-[Platform] is a [GTM intelligence engine] that [makes every prospect
-interaction smarter]. Unlike [static templates and tribal knowledge],
-we [learn from every conversation to improve over time].
-
-PILLAR 1: Intelligence Depth
-Core Message: "Know more about your prospects than they expect"
-...
-
-PILLAR 2: Living Knowledge
-Core Message: "Your GTM strategy gets smarter with every deal"
-...
-
-KEY MESSAGES BY AUDIENCE
-For CTO: Lead with engineering efficiency...
-For VP Sales: Lead with pipeline velocity...
-```
 
 ### Visual Positioning System
 
@@ -474,25 +368,25 @@ The output is a single scrollable HTML document with sticky navigation, collapsi
 
 ```
 # Full battlecard
-/octave:battlecard battlecard --competitor "Acme"
+/octave:battlecard-doc battlecard --competitor "Acme"
 
 # Interactive HTML battlecard document (expandable sections, color-coded comparisons)
-/octave:battlecard battlecard --competitor "Acme" --format doc
+/octave:battlecard-doc battlecard --competitor "Acme" --format doc
 
 # Displacement campaign
-/octave:battlecard displacement --competitor "Acme"
+/octave:battlecard-doc displacement --competitor "Acme"
 
 # Trap questions
-/octave:battlecard traps --competitor "Acme"
+/octave:battlecard-doc traps --competitor "Acme"
 
 # Objection counters
-/octave:battlecard objections --competitor "Acme"
+/octave:battlecard-doc objections --competitor "Acme"
 
 # Side-by-side comparison
-/octave:battlecard compare --competitor "Acme"
+/octave:battlecard-doc compare --competitor "Acme"
 
 # Full competitive landscape
-/octave:battlecard landscape
+/octave:battlecard-doc landscape
 ```
 
 Example battlecard output:
@@ -661,21 +555,21 @@ Role-plays simulate a buyer grounded in your persona and Motion ICP data; quizze
 
 ```
 # Interactive mode
-/octave:launch
+/octave:product-launch
 
 # Feature launch
-/octave:launch "New AI analytics dashboard" --type feature
+/octave:product-launch "New AI analytics dashboard" --type feature
 
 # Product launch
-/octave:launch "Enterprise tier" --type product
+/octave:product-launch "Enterprise tier" --type product
 
 # Partnership announcement
-/octave:launch "Salesforce integration" --type partnership
+/octave:product-launch "Salesforce integration" --type partnership
 ```
 
 Example output:
 ```
-/octave:launch "AI Analytics Dashboard" --type feature
+/octave:product-launch "AI Analytics Dashboard" --type feature
 
 LAUNCH PLAN: AI Analytics Dashboard
 =====================================
@@ -703,55 +597,6 @@ CONTENT KIT
 
 ## Sales Enablement
 
-### Generate Enablement Materials
-
-```
-# Quick reference card
-/octave:enablement quick-ref --product "Platform"
-
-# Objection handling guide (from real conversations)
-/octave:enablement objections --persona "CTO"
-
-# Discovery question bank
-/octave:enablement discovery --persona "VP Sales"
-
-# Competitive cheat sheet
-/octave:enablement competitive-sheet
-
-# New hire onboarding kit
-/octave:enablement onboarding
-
-# Persona deep-dive for reps
-/octave:enablement persona-guide --persona "CTO"
-
-# Motion ICP quick reference
-/octave:enablement motion-icp-summary --motion "Enterprise Net New"
-```
-
-Example objection guide:
-```
-/octave:enablement objections
-
-OBJECTION HANDLING GUIDE
-=========================
-
-PRICING OBJECTIONS
-"It's too expensive"
-Frequency: High (mentioned in 12 conversations last quarter)
-Response: "Let's look at total cost of ownership. Most teams spend..."
-Proof: "TechCorp saved $X in research tool costs alone"
-From the field: Won deal at FinCorp after demonstrating 8x ROI
-
-"We don't have budget"
-Response: "What if we could show ROI within the first quarter?..."
-
-COMPETITIVE OBJECTIONS
-"We already use [Competitor]"
-Frequency: Medium
-Response: "What's your team spending on research alongside that?"
-```
-
----
 
 ## ICP Refinement
 
@@ -812,21 +657,6 @@ RECOMMENDED UPDATES
 /octave:generate linkedin --to "Sarah Chen, VP Eng" --about "developer productivity"
 ```
 
-### Using Saved Agents
-
-```
-# List available agents
-/octave:explore-agents
-
-# Run an email agent
-/octave:explore-agents run "Enterprise Cold Outreach" --to john@acme.com
-
-# Run with additional context
-/octave:explore-agents run "Enterprise Cold Outreach" --to john@acme.com --context "Met at AWS re:Invent"
-
-# Get agent suggestions
-/octave:explore-agents suggest "I need to re-engage a stalled deal"
-```
 
 ### Tuning Qualification Agents
 
@@ -879,36 +709,7 @@ WHAT'S MISSING: You said Acme should be lower because "they use a competitor."
 
 The skill also handles cases where the issue isn't a missing question but a missing detail in the entity description itself — e.g., if the description doesn't mention that B2C companies are bad fits, the agent has no context to score B2C companies low.
 
-### PMM Content Creation
 
-```
-# Create a one-pager
-/octave:pmm one-pager
-
-# Create a case study
-/octave:pmm case-study
-
-# Create landing page copy
-/octave:pmm landing-page
-
-# Create a blog post
-/octave:pmm blog
-```
-
-### Content Repurposing
-
-```
-# Repurpose text for a different persona
-/octave:repurpose "Our platform reduces deployment time..." --persona "CFO"
-
-# Repurpose a file for a different channel
-/octave:repurpose ./content/whitepaper.md --channel "email sequence"
-
-# Repurpose from URL
-/octave:repurpose https://blog.company.com/launch-post --persona "CTO"
-```
-
----
 
 ## Prospecting
 
@@ -939,34 +740,15 @@ The skill also handles cases where the issue isn't a missing question but a miss
 
 ## Brainstorming & Ideation
 
-### Campaign Ideas
 
-```
-/octave:brainstorm campaigns for enterprise
-```
 
-### Custom Motion Playbook Ideas
-
-```
-/octave:brainstorm motion playbooks
-```
-
-Generates angles for Custom Motion Playbooks (`THEMATIC`, `MILESTONE`, `ACCOUNT`, `COMPETITIVE`) to layer on top of your existing Default Motion Playbook(s).
-
-### Lead Magnet Ideas
-
-```
-/octave:brainstorm lead magnets for CTOs
-```
-
----
 
 ## Conversation Analysis
 
 ### Analyze an Email Thread
 
 ```
-/octave:analyzer --type email
+/octave:call-analyzer --type email
 ```
 
 Then paste your email thread. Returns:
@@ -979,7 +761,7 @@ Then paste your email thread. Returns:
 ### Analyze a Call Transcript
 
 ```
-/octave:analyzer --type call
+/octave:call-analyzer --type call
 ```
 
 ---
@@ -1015,19 +797,19 @@ Flips intelligence from pull-based to push-based: surfaces the deals, patterns, 
 
 ```
 # Full report
-/octave:wins-losses
+/octave:win-loss-report
 
 # Focus on losses
-/octave:wins-losses --status lost
+/octave:win-loss-report --status lost
 
 # Deals involving specific competitor
-/octave:wins-losses --competitor "Salesforce"
+/octave:win-loss-report --competitor "Salesforce"
 
 # Deep dive on specific deal
-/octave:wins-losses --company acme.com
+/octave:win-loss-report --company acme.com
 
 # Visual HTML report with CSS-based charts
-/octave:wins-losses --format report
+/octave:win-loss-report --format report
 ```
 
 ---
@@ -1072,14 +854,6 @@ Verified stakeholders, why-this-company intel, why-us for each persona at the ta
 
 Concise, customer-facing summary grounded in the account's matched Motion ICP — pains, value, proof, next step.
 
-### Internal Account Brief
-
-```
-# Account dossier for internal prep — scannable reference page
-/octave:brief acme.com
-```
-
-Internal-facing counterpart to the one-pager: company intel, stakeholder map, conversation history, and open questions.
 
 ### Proposal / Business Case
 
@@ -1105,83 +879,9 @@ A single-page microsite speaking directly to the account's pains and priorities 
 
 Multi-step workflows chain research, qualification, and generation into reusable recipes.
 
-### Run a Template Workflow
 
-```
-# Full outbound pipeline: research → qualify → find contacts → email
-/octave:workflow run "Full Outbound Pipeline" --company acme.com
 
-# Deep account research dossier
-/octave:workflow run "Account-Based Research" --company stripe.com
 
-# Competitive deal prep with positioning
-/octave:workflow run "Competitive Deal Prep" --company acme.com --contact john@acme.com --competitor "Salesforce"
-
-# Find people matching a persona and generate outreach
-/octave:workflow run "Persona-Targeted Outreach" --persona "CTO" --industry "SaaS"
-
-# Enter a new market segment
-/octave:workflow run "New Market Entry" --market "Healthcare SaaS, 100-500 employees"
-
-# Respond to a competitive move
-/octave:workflow run "Competitive Response" --competitor "Acme" --trigger "launched AI feature"
-
-# Accelerate a high-value deal
-/octave:workflow run "Deal Acceleration" --company acme.com --contact john@acme.com
-
-# Quarterly GTM review
-/octave:workflow run "Quarterly GTM Review" --period 90
-
-# Full positioning exercise (library audit → 8-framework document → save back)
-/octave:workflow run "Positioning Exercise" --product "Platform"
-
-# Content sprint around a theme
-/octave:workflow run "Content Sprint" --theme "AI-powered analytics" --persona "CTO"
-```
-
-### Run in Auto Mode
-
-Skip confirmations and run all steps automatically:
-
-```
-/octave:workflow run "Full Outbound Pipeline" --company acme.com --auto
-```
-
-### Create a Custom Workflow
-
-```
-/octave:workflow create
-```
-
-Example interaction:
-```
-> What should this workflow accomplish?
-"Research a company, find their security team, and generate a security-focused email sequence"
-
-> Here's a suggested workflow:
-  1. Research company (enrich_company)
-  2. Qualify company (qualify_company)
-  3. Find security team (find_person)
-  4. Enrich top contacts (enrich_person)
-  5. Generate security-focused emails (generate_email)
-
-  Look good? (yes/adjust)
-
-> yes
-
-Saved to: ~/.octave/workflows/security-team-outreach.workflow.md
-Run it: /octave:workflow run "Security Team Outreach" --company acme.com
-```
-
-### List Available Workflows
-
-```
-/octave:workflow list
-```
-
-Shows both template workflows (shipped with the plugin) and your custom workflows (saved to `~/.octave/workflows/`).
-
----
 
 ## Common Multi-Skill Workflows
 
@@ -1194,8 +894,8 @@ Shows both template workflows (shipped with the plugin) and your custom workflow
 # 2. Generate personalized email
 /octave:generate email --to john@acme.com --about "the pain points we discussed"
 
-# Or use a saved agent
-/octave:explore-agents run "Enterprise Cold Outreach" --to john@acme.com
+# Or run a saved agent through generate
+/octave:generate --agent "Enterprise Cold Outreach" --to john@acme.com
 ```
 
 ### Pre-Call Preparation
@@ -1215,7 +915,7 @@ Shows both template workflows (shipped with the plugin) and your custom workflow
 
 ```
 # 1. Analyze the call
-/octave:analyzer --type call
+/octave:call-analyzer --type call
 [paste transcript]
 
 # 2. Generate follow-up based on analysis
@@ -1229,40 +929,40 @@ Shows both template workflows (shipped with the plugin) and your custom workflow
 
 ```
 # 1. Get competitive intel
-/octave:battlecard battlecard --competitor "Acme"
+/octave:battlecard-doc --competitor "Acme"
 
-# 2. Generate displacement outreach
-/octave:battlecard displacement --competitor "Acme"
+# 2. Generate displacement outreach (offered as a battlecard follow-up, or directly)
+/octave:generate email --about "displacement vs Acme"
 
-# 3. Update the team
-/octave:enablement competitive-sheet
+# 3. Train the team on the competitive story
+/octave:train --topic "competing with Acme"
 ```
 
 ### Launch → Campaign → Enable
 
 ```
 # 1. Plan the launch
-/octave:launch "New AI Feature" --type feature
+/octave:product-launch "New AI Feature" --type feature
 
-# 2. Build the campaign
-/octave:campaign "AI Feature Launch" --channels email,linkedin,social,blog
+# 2. Build the ad campaign
+/octave:ads "AI Feature Launch"
 
-# 3. Create sales enablement
-/octave:enablement quick-ref --product "Platform"
+# 3. Train the team on the launch story
+/octave:train --topic "AI Feature launch"
 ```
 
 ### Quarterly Review → Refine → Retrain
 
 ```
 # 1. Analyze the quarter
-/octave:wins-losses
+/octave:win-loss-report
 /octave:insights
 
 # 2. Refine ICP
 /octave:icp-refine --period 90
 
-# 3. Update enablement materials
-/octave:enablement onboarding
+# 3. Retrain the team on what changed
+/octave:train --topic "this quarter's win/loss learnings"
 ```
 
 ### Library Maintenance
@@ -1300,17 +1000,17 @@ Shows both template workflows (shipped with the plugin) and your custom workflow
 - Reference specific personas and Motion ICPs for consistency
 - Use saved agents for repeatable, high-quality output
 - Review and customize generated content before sending
-- Use `/octave:messaging` to build frameworks before `/octave:campaign`
+- Use `/octave:positioning` to settle messaging before generating content with `/octave:generate` or `/octave:ads`
 
 ### Competitive Intelligence
 
-- Use `/octave:battlecard landscape` quarterly for a full competitive review
+- Use `/octave:battlecard-doc landscape` quarterly for a full competitive review
 - Set up `/octave:insights` alerts for competitor mentions
 - Update battlecards after every competitive deal (win or lose)
 
 ### Staying Informed
 
 - Check `/octave:insights` regularly to see what's trending
-- Use `/octave:wins-losses` monthly for pattern analysis
+- Use `/octave:win-loss-report` monthly for pattern analysis
 - Apply learnings back to your library to improve over time
 - Run `/octave:icp-refine` each quarter to validate targeting

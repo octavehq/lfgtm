@@ -26,6 +26,7 @@ def main():
     ap.add_argument("--height", type=int, default=1200, help="viewport height px")
     ap.add_argument("--scale", type=float, default=2.0, help="device scale factor")
     ap.add_argument("--wait", type=int, default=1500, help="ms to wait for fonts/render")
+    ap.add_argument("--full", action="store_true", default=True, help="full-page (default)")
     ap.add_argument("--clip", help="fractional crop 'x,y,w,h' in 0..1 of full image (post-shot)")
     args = ap.parse_args()
 
@@ -37,13 +38,11 @@ def main():
     target = pathlib.Path(args.file).resolve().as_uri() if args.file else args.url
     with sync_playwright() as p:
         b = p.chromium.launch()
-        # reduced_motion keeps scroll-triggered reveal animations (opacity:0 until
-        # IntersectionObserver fires) from screenshotting as blank below-the-fold content
         pg = b.new_page(viewport={"width": args.width, "height": args.height},
-                        device_scale_factor=args.scale, reduced_motion="reduce")
+                        device_scale_factor=args.scale)
         pg.goto(target)
         pg.wait_for_timeout(args.wait)
-        pg.screenshot(path=args.out, full_page=True)
+        pg.screenshot(path=args.out, full_page=args.full)
         b.close()
 
     if args.clip:

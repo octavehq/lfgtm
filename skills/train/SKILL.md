@@ -1,353 +1,347 @@
 ---
 name: train
-description: Practice selling with role-play simulations, knowledge quizzes, and guided learning on your GTM library. Use when user says "role-play a call", "quiz me", "practice objections", "sales training", "test my knowledge", or asks for interactive learning. For Resonate/Elevate/Compel methodology practice, use /octave:deal-coach instead.
-argument-hint: "[roleplay|quiz] [--persona <name>] [--competitor <name>] [--scenario <type>] [--topic <topic>]"
+description: Onboarding GTM primer generator. Produces a self-contained, interactive slide lesson a new rep works through to learn the whole go-to-market: what we sell, who we sell to, how to position to each buyer, who we compete with, and proof, with checkpoint questions they must clear to advance and a score at the end. Use when user says "onboarding primer", "GTM primer", "onboard a new rep", "ramp doc", "train a new hire", or "GTM 101".
+argument-hint: "[--personas <name,name,...>] [--style <preset>]"
 ---
 
-# /octave:train - Sales Training Ground
+# /octave:train - Onboarding GTM Primer
 
-Practice and learn your GTM playbooks and Motion ICPs through interactive role-play simulations and knowledge quizzes — all grounded in your real library data. Role-play against buyer personas with realistic objections, or quiz yourself on value props, competitive positioning, and discovery techniques.
+Generate the one lesson a new rep completes on day one to learn how your company sells. The primer turns your Octave library into a self-contained, **gated interactive slide lesson**: five teaching topics, one per slide, each ending with checkpoint questions the rep must clear before Next unlocks, then a score. The topics are what we sell and the problem it solves, who we sell to, how to position to each buyer (an interactive per-persona selector), who we compete with and how we win (a tabbed competitor deep-dive), and the proof to point to (tabbed by lens).
+
+This is a **workspace-level, evergreen** lesson, not an account plan. There is no target company. It is grounded entirely in the library's own GTM: the workspace company positioning, personas and segments, Motion ICP cell narratives, competitors, proof points, and references. The full spec, slide order, interaction model, and review checklist live in [primer-sections.md](references/primer-sections.md).
+
+## On-brand styling — brand kit first, then generate
+
+**Resolve the brand before generating (do not skip this step).** The primer is an internal enablement document for the **workspace company's own team**, so it goes out on the **workspace company's brand** (the Octave customer whose workspace you are operating in). There is no target account.
+
+**Step 1: Identify the workspace company.** Call `get_workspace_company` to get the company name, domain/URL, and positioning. This is the company whose brand the primer uses and whose GTM it teaches.
+
+**Step 2: Resolve the workspace company's brand kit.** Slugify the workspace company name AND its domain, and check for a cached brand kit at `~/.octave/brands/<slug>/manifest.json` (try both slugs). If a complete kit exists (has `manifest.json` and `tokens.css`), use it automatically:
+   - inline the kit's `tokens.css` (`:root` + the embedded `@font-face`) **and** `../get-brand-components/assets/kit_base.css` into the output `<style>`;
+   - follow the kit's `brand-kit.md` → **Signature moves**.
+   - **Use the kit's real logo, resolved dynamically (never hardcode a logo).** The logo changes per company, so read it from the resolved kit's `manifest.json` `logo` block. Use the **onLight** variant on light surfaces (the topbar over content slides) and the **onDark** / white variant on the dark gradient bands (cover, completion, and the topbar while those are showing). **Inline the logo as a base64 data URI** in the HTML so the file stays self-contained and survives sharing (do not reference a local file path in the delivered file). If the kit only has one logo variant, use it as-is on light and recolor to white for dark bands (`filter: brightness(0) invert(1)`) only as a fallback.
+   - **Verify the logo is actually the workspace company's mark before using it.** Cached kits can contain a mislabeled or stray asset (a real example: the cached Octave kit's `*-logo-white.png` was actually a WorkSpan logo). Open/preview the resolved logo file; if a variant is the wrong company or clearly wrong, use another variant, another cached kit for the same company, or recolor the known-good variant. Never ship a logo you have not eyeballed.
+   **If no complete kit exists → build one.** Run the `get-brand-components` skill (read its SKILL.md and follow it) for the workspace company's domain, which captures the real logo among other assets. If the first attempt returns incomplete results, retry up to 3 times with different approaches (root domain, `www.` prefix, `/about` subpage). Only fall back to a style preset after 3 genuine failures.
+
+**Step 3: Style presets are a last resort** — only after the workspace company's brand kit cannot be built (see Step 3 in Instructions).
+
+## Principles
+
+Follow these standards during generation. Read each before producing output.
+
+**Content and language:**
+- [Editorial rules](../shared/editorial-rules.md) — no AI-isms, banned vocabulary, honest tone
+- [Information principles](../shared/information-principles.md) — lead with conclusions, evidence-backed claims, narrative arc
+
+**Visual design:**
+- [Presentation principles](../shared/presentation-principles.md) — typography, layout, visual restraint
+- [Slide deck format](../shared/formats/slide-deck.md) — paginated-slide specifics (the primer is a gated slide lesson, not a scrollable doc)
+
+**Octave data:**
+- [Octave value](../shared/octave-value.md) — prioritize grounded workspace data over generic AI content
+
+Apply these rules during generation, not just at review. After generating, the **review pipeline is a mandatory gate** (see Step 5) — the primer is not opened or delivered until the scorecard is produced.
 
 ## Usage
 
 ```
-/octave:train [mode] [--persona <name>] [--competitor <name>] [--difficulty easy|medium|hard]
+/octave:train [--personas <name,name,...>] [--style <preset>]
 ```
 
-## Modes
+## Examples
 
 ```
-/octave:train                                          # Interactive - pick a mode
-/octave:train roleplay                                 # Simulate a buyer conversation
-/octave:train roleplay --persona "CTO"                 # Role-play with a specific persona
-/octave:train roleplay --scenario discovery            # Practice discovery calls
-/octave:train quiz                                     # Test your GTM knowledge
-/octave:train quiz --topic objections                  # Quiz on objection handling
-/octave:train quiz --competitor "Acme"                 # Competitive knowledge check
+/octave:train                                          # Build the primer, pick featured personas interactively
+/octave:train --personas "CISO,Security Engineer"      # Feature specific personas in the selector
+/octave:train --style paper-minimal                    # Force a preset if no brand kit exists
 ```
 
 ## Instructions
 
 When the user runs `/octave:train`:
 
-### Step 1: Choose Mode
+### Step 1: Scope the Primer
 
-If no mode specified, ask:
+The primer teaches the whole GTM, but it cannot feature every persona in a large library without becoming a directory. Scope it first.
 
+**1a: Inventory the personas.**
 ```
-AskUserQuestion({
-  questions: [{
-    question: "What do you want to practice?",
-    header: "Train mode",
-    options: [
-      { label: "Role-Play", description: "Simulate a sales conversation — I'll play the buyer and give you feedback" },
-      { label: "Quiz", description: "Test your knowledge of personas, objections, value props, and competitive positioning" },
-      { label: "Guided Learning", description: "Walk me through a topic from your Motion ICP narrative — teach me like I'm a new hire" }
-    ],
-    multiSelect: false
-  }]
-})
-```
-
----
-
-### Mode: Role-Play
-
-Simulate realistic buyer conversations using persona data from the library.
-
-#### Step RP-1: Setup the Scenario
-
-Ask for scenario parameters (use `AskUserQuestion` for structured choices):
-
-```
-AskUserQuestion({
-  questions: [
-    {
-      question: "What scenario do you want to practice?",
-      header: "Scenario",
-      options: [
-        { label: "Discovery call", description: "First conversation — qualify the opportunity and uncover pain" },
-        { label: "Objection handling", description: "Practice responding to tough objections mid-deal" },
-        { label: "Demo pitch", description: "Present your product's value to a skeptical buyer" },
-        { label: "Competitive displacement", description: "Sell against a competitor the buyer currently uses" }
-      ],
-      multiSelect: false
-    },
-    {
-      question: "How tough should I be?",
-      header: "Difficulty",
-      options: [
-        { label: "Friendly", description: "Interested buyer, open to learning — good for building confidence" },
-        { label: "Skeptical (Recommended)", description: "Realistic buyer who pushes back and needs convincing" },
-        { label: "Hostile", description: "Tough buyer — time-pressed, has objections, hard to impress" }
-      ],
-      multiSelect: false
-    }
-  ]
-})
-```
-
-If no persona specified, present available personas:
-```
-# Get personas from library
 list_entities({ entityType: "persona" })
 ```
 
-Ask:
-```
-AskUserQuestion({
-  questions: [{
-    question: "Which buyer persona should I play?",
-    header: "Persona",
-    options: [
-      { label: "[Persona 1 name]", description: "[Title] — [key concern]" },
-      { label: "[Persona 2 name]", description: "[Title] — [key concern]" },
-      { label: "[Persona 3 name]", description: "[Title] — [key concern]" }
-    ],
-    multiSelect: false
-  }]
-})
-```
+**1b: Choose the featured personas (the persona-narrowing rule).** The persona selector in Job 3 is the crown jewel, and it only works if it is a handful of buyers a new rep can actually hold in their head.
 
-#### Step RP-2: Load Persona Intelligence
-
-```
-# Get full persona details
-get_entity({ oId: "<persona_oId>" })
-
-# Find the matching Motion ICP cell (persona × segment) for messaging context
-list_motions()
-list_motion_icps({ motionOId: "<motion_oId>" })
-find_motion_icp({ motionIcpOId: "<motion_icp_oId>", includeLearnings: true })
-
-# Get real objections from conversations (to make role-play realistic)
-list_findings({
-  query: "objections pushback concerns",
-  startDate: "<180 days ago>",
-  eventFilters: {
-    personas: ["<persona_oId>"]
-  }
-})
-
-# Get product details
-list_entities({ entityType: "product" })
-get_entity({ oId: "<product_oId>" })
-
-# Get competitor details (for competitive scenarios)
-get_entity({ oId: "<competitor_oId>" })  // if competitive scenario
-
-# Get proof points (to evaluate if rep uses them)
-search_knowledge_base({ query: "<persona> results metrics", entityTypes: ["proof_point", "reference"] })
-```
-
-#### Step RP-3: Set the Scene
-
-Present the scenario context, then begin:
-
-See [roleplay-scene-template.md](references/roleplay-scene-template.md) for the role-play scene template.
-
-**Run the conversation with the shared role-play engine** — [roleplay-mechanics.md](../shared/roleplay-mechanics.md) defines how to play the buyer at each difficulty tier, session length (8-12 exchanges), and natural endings. Train-specific grounding:
-- Reference real pain points from the persona entity
-- Raise real objections from conversation findings data (`list_findings`)
-- In competitive scenarios, use the competitor entity's strengths as the buyer's talking points
-
-#### Step RP-4: Scorecard
-
-After the role-play ends, provide detailed feedback following the scorecard mechanics in [roleplay-mechanics.md](../shared/roleplay-mechanics.md):
-
-See [roleplay-scorecard-template.md](references/roleplay-scorecard-template.md) for the role-play scorecard template.
-
----
-
-### Mode: Quiz
-
-Test knowledge of the user's own GTM library.
-
-#### Step Q-1: Choose Topic
+- If the library has **6 or fewer personas**, feature them all.
+- If the library has **more than 6 personas**, do NOT dump them all. Surface the list and ask the rep to narrow it:
 
 ```
 AskUserQuestion({
   questions: [{
-    question: "What do you want to be quizzed on?",
-    header: "Quiz topic",
-    options: [
-      { label: "Personas", description: "Pain points, priorities, buying triggers, and how to sell to each persona" },
-      { label: "Objection handling", description: "Common objections and how to respond — from your Motion ICP narratives and real conversations" },
-      { label: "Competitive positioning", description: "Differentiators, trap questions, and counters for each competitor" },
-      { label: "Full GTM review", description: "Mix of everything — personas, products, value props, objections, competitors" }
-    ],
-    multiSelect: false
+    question: "Your library has [N] personas — more than a new rep can learn at once. Which are the core buyers to feature in the primer? (Recommend the economic buyers and champions you actually sell to; the rest stay in the library.)",
+    header: "Featured personas",
+    options: [ /* the personas most central to the primary Motion's ICP, each: label = persona name, description = title + one-line concern */ ],
+    multiSelect: true
   }]
 })
 ```
 
-Also ask for quiz format:
+Recommend the personas most central to the primary Motion's ICP cells (the ones with ready versions and the richest narratives). Cap the featured set at 6. Everything else is still true and still in the library; it just does not earn a card in an onboarding doc.
+
+**1c: Confirm the scope.** Briefly tell the rep which personas will be featured and that the primer covers the full GTM (product, competitors, proof) beyond just those personas.
+
+### Step 2: Octave Context Gathering
+
+Build the primer from the library. **Tell the rep what you are pulling and why.** Each job maps to specific tools:
+
+**Job 1 — What we sell + the problem.**
 ```
-AskUserQuestion({
-  questions: [{
-    question: "What format?",
-    header: "Format",
-    options: [
-      { label: "Rapid fire (Recommended)", description: "Quick question-answer, 10 questions, scored at the end" },
-      { label: "Scenario-based", description: "Situational questions — 'A prospect says X, what do you do?'" },
-      { label: "Deep dive", description: "Fewer questions but explain your reasoning — I'll coach you on each answer" }
-    ],
-    multiSelect: false
-  }]
-})
-```
-
-#### Step Q-2: Load Quiz Material
-
-```
-# Load based on topic
-# For Personas:
-list_entities({ entityType: "persona" })
-get_entity({ oId: "<persona_oId>" })  // for each persona
-
-# For Objections:
-list_findings({
-  query: "objections pushback concerns pricing",
-  startDate: "<180 days ago>"
-})
-list_motions()
-list_motion_icps({ motionOId: "<motion_oId>" })
-find_motion_icp({ motionIcpOId: "<motion_icp_oId>", includeLearnings: true })
-
-# For Competitive:
-list_entities({ entityType: "competitor" })
-get_entity({ oId: "<competitor_oId>" })  // for each competitor
-
-# For Full GTM:
-list_entities({ entityType: "persona" })
-list_entities({ entityType: "product" })
-list_entities({ entityType: "competitor" })
-search_knowledge_base({ query: "value propositions proof points" })
-list_entities({ entityType: "use_case" })
+get_workspace_company()                                  # whyWeExist, positioning, whyCustomersBuy, whyCustomersCare
+list_entities({ entityType: "product" })             # the product(s)
+get_entity({ oId: "<product_oId>" })                     # full product narrative
 ```
 
-#### Step Q-3: Run the Quiz
-
-Run questions with the shared quiz engine — [roleplay-mechanics.md](../shared/roleplay-mechanics.md) defines question pacing, per-answer grading, and running-score display.
-
-See [quiz-formats.md](references/quiz-formats.md) for the rapid fire, scenario-based, and deep dive quiz format templates with question types per topic.
-
-#### Step Q-4: Quiz Results
-
-See [quiz-results-template.md](references/quiz-results-template.md) for the quiz results template.
-
----
-
-### Mode: Guided Learning
-
-Walk through a topic from the library like a training session.
-
-#### Step GL-1: Choose Topic
-
+**Slide 1 also needs customer archetypes.** Slide 1 opens with three customer archetype cards (their problem, why they came to us, and the real named customer). Pull these from real references, so grab the reference narratives here too:
 ```
-AskUserQuestion({
-  questions: [{
-    question: "What do you want to learn about?",
-    header: "Topic",
-    options: [
-      { label: "A persona", description: "Deep walkthrough of how to sell to a specific buyer type" },
-      { label: "A competitor", description: "Learn competitive positioning, differentiators, and counters" },
-      { label: "A Motion", description: "Walk through a Motion's Default Motion Playbook (persona × segment matrix) plus any Custom Motion Playbooks" },
-      { label: "Your product", description: "Master your product's capabilities, use cases, and proof points" }
-    ],
-    multiSelect: false
-  }]
-})
+list_entities({ entityType: "reference" })           # named customers to build archetypes from
+get_entity({ oId: "<reference_oId>" })                   # the full story for the 3 archetypes you feature
 ```
 
-#### Step GL-2: Load and Teach
+**Slide 2 — Who we sell to.**
+```
+list_entities({ entityType: "persona" })             # from Step 1
+list_entities({ entityType: "segment" })             # the market segments / ICP
+get_entity({ oId: "<segment_oId>" })                     # full narrative for the segments you feature as cards
+```
+Slide 2 teaches the buying committee (with champion vs economic-buyer roles) and the segments as real cards with substance, not just chips. Do NOT surface Motions or other internal platform vocabulary on the slide (it is Octave inside-baseball). `list_motions` is still used behind the scenes to find the primary motion for Slide 3's ICP cells, but it is not shown to the reader.
 
-Fetch the relevant entity and present it as a structured training walkthrough:
+**Slide 3 — How to sell to each buyer (the crown jewel).** For **every** featured persona, pull its Motion ICP cell narrative. This is the per-persona positioning that makes the primer Octave-only, and every persona gets a fully populated panel (not just one).
+```
+list_motions()                                           # find the primary motion (behind the scenes only)
+list_motion_icps({ motionOId: "<primary_motion_oId>", personaOIds: ["<persona_oId>"] })
+find_motion_icp({ motionIcpOId: "<micp_oId>", includeLearnings: true })
+```
+The narrative gives you, per persona: `operatingLandscape` (their world), `painsAndConsequences` (what they care about), `benefitsAndImpacts`, and a full `salesMethodology` (Resonate → Elevate → Compel with Buyer Mindset, Value Propositions, and Talking Points per stage). If a persona has cells in several segments, pick the primary segment (ready version, richest narrative) and note the segment context; do not average across cells. **Call `find_motion_icp` for each featured persona** so every tab is fully populated; a persona with no ready version uses persona-entity data only (their world + pains), tagged `.unconfirmed`, with no fabricated talk track. Slide 3 has **one checkpoint per persona**.
+
+**Slide 4 — Who we compete with + how we win (tabbed deep-dive).**
+```
+list_entities({ entityType: "competitor" })          # the named competitors
+get_entity({ oId: "<competitor_oId>" })                  # each competitor's capabilities + our differentiation
+list_findings({ query: "<competitor name>" })            # real deals the competitor came up in (for the "deals came up in" panel)
+get_competitive_insights({ ... })                        # if available, competitive deal intel
+```
+Each featured competitor gets a tab with: a verdict badge (Direct / Adjacent / Build-it-yourself), what they are, a **capability comparison table** (them vs us, every row traced to the entity description, never invented checkmarks), a you'll-hear/what-to-say pair, and a **deals-they-came-up-in** panel from `list_findings`. If findings are unavailable, show a labeled pending panel rather than inventing deals. If a competitor entity says intel is thin ("we lack verified intel"), put it on the honest-gap watchlist, do not invent a wedge.
+
+**Slide 5 — Proof (tabbed by lens).**
+```
+list_entities({ entityType: "proof_point" })         # the proof points
+list_entities({ entityType: "reference" })           # named customer references
+get_entity({ oId: "<proof_oId>" })                       # full narrative for the ones you feature
+```
+Organize proof into lenses (By objection, By buyer, By segment, By outcome). A proof point may appear under more than one lens; that reuse is intentional.
+
+**Checkpoints are woven into the slides, not a separate quiz.** Each content slide ends with checkpoint questions the rep must answer to advance (Slide 3 has one per persona). Every checkpoint and its correct answer must trace to content on that same slide.
+
+**Groundedness is a hard bar.** Every persona, competitor, proof point, customer name, and metric in the primer must trace to a real tool result, not a plausible synthesis. Do not invent a competitor wedge, a customer story, or a metric. Honest gaps ("we do not yet have verified intel on this competitor") beat inventions. Tag anything unconfirmed with `.unconfirmed`. The review pipeline's groundedness check validates the agent's self-reported sources, so verify facts against the actual tool output yourself.
+
+**Output of this step:** Present a short outline to the rep for approval before generating — the five topics, the featured personas, the competitors you will give deep-dive tabs, and the proof lenses. Wait for approval before proceeding.
+
+### Step 3: Resolve the Brand
+
+Follow the "On-brand styling" section at the top of this skill: `get_workspace_company` → cached kit at `~/.octave/brands/<slug>/` (try name-slug and domain-slug) → build via `get-brand-components` (retry up to 3 times) → preset fallback.
+
+**Only if the brand kit genuinely cannot be built**, fall back to a style preset:
+
+| Feel | Fallback Preset |
+|----------|-----------------|
+| Modern / technical | `midnight-pro` |
+| Editorial / clean | `paper-minimal` |
+| Executive | `executive-dark` |
+| General | `paper-minimal` |
+
+CSS variable definitions for presets are in the shared [style-presets.md](../shared/style-presets.md).
+
+### Step 4: Generate HTML
+
+**Load the shared rules before writing any HTML. Read each before producing output:**
+- [Editorial rules](../shared/editorial-rules.md) — universal language rules, AI-ism kill list, banned vocabulary
+- [Information principles](../shared/information-principles.md) — lead with conclusions, evidence-backed claims, narrative arc
+- [Presentation principles](../shared/presentation-principles.md) — universal visual rules, spacing, restraint
+- [Slide deck format](../shared/formats/slide-deck.md) — paginated-slide visual rules
+- [Octave value](../shared/octave-value.md) — grounded workspace data over generic AI content
+
+Apply these rules during generation, not just during review.
+
+Build a single, self-contained HTML file. **No external dependencies** except Google Fonts. Everything else inlined, including the slide navigation, checkpoint gating, and tab-selector JavaScript.
+
+**After writing the file, proceed immediately to Step 5 (Review Pipeline). Do NOT open the file in the browser or present it to the rep yet.**
+
+#### Output Directory
+
+The primer goes under `.octave-primers/` in the user's **home directory** (`~/.octave-primers/`, not the skill or project folder):
 
 ```
-# Load the entity
-get_entity({ oId: "<entity_oId>" })
-
-# Load related Motion + ICP cell
-list_motions()
-list_motion_icps({ motionOId: "<motion_oId>" })
-find_motion_icp({ motionIcpOId: "<motion_icp_oId>", includeLearnings: true })
-
-# For the "A Motion" topic, also walk the Motion's playbooks
-list_motion_playbooks({ motionOId: "<motion_oId>" })
-get_motion_playbook({ motionPlaybookOId: "<mp_oId>" })  // Default + any Custom playbooks
-
-# Load real conversation examples
-list_findings({
-  query: "<topic>",
-  startDate: "<180 days ago>"
-})
-
-# Load proof points
-search_knowledge_base({ query: "<topic>", entityTypes: ["proof_point", "reference"] })
+.octave-primers/
+└── <workspace-company-slug>-gtm-primer-<YYYY-MM-DD>/
+    └── <slug>-gtm-primer.html
 ```
 
-See [guided-learning-template.md](references/guided-learning-template.md) for the interactive guided learning lesson template.
+Example: `.octave-primers/material-security-gtm-primer-2026-07-09/material-security-gtm-primer.html`
+
+#### Primer Sections — the Six Jobs
+
+See [primer-sections.md](references/primer-sections.md) for the full specification: the six jobs, their fixed order, per-job density caps, the interactive persona selector and quiz specs, the component-fatigue rules, and the review checklist. Read it before generating — it is where the tight-jobs discipline lives.
+
+#### HTML Scaffold
+
+See [html-scaffold.md](references/html-scaffold.md) for the HTML structure, the CSS component library (cards, role badges, the persona selector, aligned proof cards, the quiz), and the required print + interaction scripts.
+
+#### Content Writing Guidelines
+
+The primer is a teaching document, not a feature list. Follow these principles:
+
+1. **Write for a rep on day one.** No prior context assumed. Define the market and the buyer before the pitch.
+2. **Lead with the buyer's world.** Every persona section opens from the buyer's perspective (their status quo, their pain), not our capability.
+3. **One idea per line.** New reps skim, then re-read. Badges, tags, and short lines beat paragraphs.
+4. **Ground every claim.** Real personas, real competitor names, real proof points. Generic = forgettable.
+5. **Teach the wedge, not the teardown.** Competitor sections are honest and respectful: how we win, in one line, not a hit piece.
+6. **The quiz reinforces, it does not trick.** Every answer is derivable from the primer above it.
+
+### Step 5: Review Pipeline — MANDATORY GATE
+
+**Do NOT open the primer in the browser, present the delivery summary, or tell the rep the primer is ready until the review pipeline has completed and you have a scorecard.**
+
+Load the [review protocol](../shared/protocol.md) and execute the review loop against the generated HTML file. Here is the train-specific wiring:
+
+**5a: Mechanical lint** (before spawning reviewers):
+
+```bash
+bash <skill-dir>/scripts/lint.sh <path-to-primer.html>
+```
+
+Fix every violation the lint surfaces.
+
+**5b: Spawn two reviewers in parallel** (both Task calls in a single message). If the `octave-editorial-reviewer` / `octave-presentation-reviewer` subagents are not in the session registry, run them as `general-purpose` agents seeded with the same prompts (their definitions live at `~/.claude/agents/*.md`).
+
+**Editorial reviewer:**
+```
+Task tool:
+  subagent_type: "octave-editorial-reviewer"
+  prompt: "Review the file at [FILE PATH].
+           Read these principle docs and run each Review Checklist:
+           1. [skill-dir]/../shared/editorial-rules.md
+           2. [skill-dir]/../shared/information-principles.md
+           3. [skill-dir]/../shared/octave-value.md
+              (Data Grounding and Framing sections — every persona,
+              competitor, proof point, and metric must trace to
+              workspace data)
+           4. [skill-dir]/references/primer-sections.md
+              (Density Rules + Review Checklist)
+           Fix violations inline. Return scorecard."
+```
+
+**Presentation reviewer:**
+```
+Task tool:
+  subagent_type: "octave-presentation-reviewer"
+  prompt: "Review the file at [FILE PATH].
+           Read these docs and run each Review Checklist:
+           1. [skill-dir]/../shared/presentation-principles.md
+           2. [skill-dir]/../shared/formats/html-document.md
+           3. [skill-dir]/references/html-scaffold.md
+           4. [skill-dir]/references/primer-sections.md
+           Also verify the interactive elements work: the persona
+           selector swaps panels, and the quiz scores and reveals
+           answers. Fix violations inline. Return scorecard."
+```
+
+**5c: Loop decision.** Read both scorecards:
+
+| Cycle | 0 fixes | 1-2 fixes | 3+ fixes |
+|---|---|---|---|
+| Cycle 1 | CLEAN → 5d | Apply, loop | Apply, loop |
+| Cycle 2 | CLEAN → 5d | Apply, STOP | Apply, loop |
+| Cycle 3 (cap) | CLEAN → 5d | Apply, STOP | Apply, STOP |
+
+Max 3 cycles. Re-run both reviewers each loop (back to 5b).
+
+**5d: Output combined scorecard** to the rep. This is proof the pipeline ran. Step 6 cannot start without it.
+
+```
+REVIEW PIPELINE COMPLETE
+=========================
+Editorial:      [N fixes / PASS]
+Presentation:   [N fixes / PASS]
+
+Total fixes: [N]
+Cycles: [1-3]
+Status: [CLEAN / N remaining issues]
+```
+
+### Step 6: Delivery
+
+After the review pipeline scorecard has been output:
+
+1. **Open the primer** in the default browser.
+2. **Present a short summary:** the featured personas, the competitors and proof covered, the quiz length, and the file path. Offer to adjust the featured personas or add a section.
+
+**PDF export guidance:**
+
+```
+To save as PDF: open the primer, press Cmd+P (Mac) or Ctrl+P (Windows),
+enable "Background graphics", and Save as PDF. The persona selector prints
+with all panels expanded and the quiz prints with answers shown.
+```
 
 ## MCP Tools Used
 
-### Library Context
-- `list_entities` - List personas, products, competitors, use cases
-- `get_entity` - Full entity details (persona pain points, competitor weaknesses, etc.)
-- `list_motions` - List Motions in the workspace
-- `list_motion_playbooks` - List Motion Playbooks under a Motion (Default + Custom)
-- `get_motion_playbook` - Full details for a Motion Playbook
-- `list_motion_icps` - List Motion ICP cells (persona × segment) for a Motion
-- `find_motion_icp` - Motion ICP narrative (Target ICP overview, Strategic narrative, Pains/Benefits, Methodology, References) + Learning Loop learnings
-- `search_knowledge_base` - Proof points, references, messaging
+### Workspace & Brand
+- `get_workspace_company` — workspace company identity, positioning, and brand resolution
 
-### Conversation Evidence
-- `list_findings` - Real objections, pain points, and signals from calls/emails
+### Library — Fetching Entities
+- `list_entities` — quick scan of personas, segments, products, competitors, proof points, references
+- `get_entity` — full narrative for a persona, product, competitor, proof point, or reference
 
-### Content Generation
-- `generate_content` - Generate scenario descriptions, coaching feedback
+### Motions
+- `list_motions` — the workspace's motions (net-new, upsell)
+- `list_motion_icps` — persona × segment cells for a motion
+- `find_motion_icp` — full per-cell narrative (operating landscape, pains, benefits, Resonate → Elevate → Compel methodology) + Learning Loop learnings
+
+### Searching
+- `search_knowledge_base` — semantic search across library entities when a specific topic needs backfilling
 
 ## Error Handling
 
-**No Personas in Library:**
-> No personas found in your library.
+**Octave Connection Failed:**
+> Could not connect to your Octave workspace.
 >
-> Role-play and quizzes work best with persona data.
-> Add personas first: `/octave:library create persona`
->
-> I can still run a general sales quiz using your product info.
+> The primer is built from your library, so I need the connection. Reconnect (check your Octave MCP configuration and reconnect) and re-run.
 
-**No Conversation Data:**
-> No conversation data available yet.
+**No Personas in Library:**
+> No personas found in your library. The primer's persona selector needs them.
 >
-> I'll use your library data for role-play and quizzes.
-> As your team logs calls and emails, training will get richer
-> with real-world objections and patterns.
+> Add personas first with `/octave:library create persona`, or I can build a lighter primer from your product, competitors, and proof only.
+
+**Too Many Personas:**
+> Your library has [N] personas — too many to feature in an onboarding doc. I'll ask you to pick the core buyers (see Step 1b) and keep the primer to a handful a new rep can actually learn.
 
 **No Competitors:**
-> No competitors in your library.
+> No competitors in your library. I'll build the primer without the "Who we compete with" section rather than invent one.
 >
-> Competitive quizzes and displacement role-plays need competitor data.
-> Add competitors: `/octave:library create competitor`
->
-> I can still quiz you on personas, value props, and general objection handling.
+> Add competitors with `/octave:library create competitor` for a complete primer.
 
-**Sparse Library:**
-> Your library has limited data for a full training session.
+**No Proof Points:**
+> No proof points or references in your library. I'll omit the Proof section rather than fabricate customer stories.
 >
-> Start with:
-> 1. `/octave:library create product` - Add your product
-> 2. `/octave:library create persona` - Add buyer personas
-> 3. `/octave:library create competitor` - Add competitors
+> Add them with `/octave:library`, or point me at a resource with results.
+
+**No Motion ICP Cells:**
+> No Motion ICP cells with ready versions, so the per-persona positioning (Job 3) would be generic.
 >
-> Even with just a product and one persona, I can run basic training.
+> I'll build the persona selector from the persona entities alone and flag it as thinner. For the full crown-jewel positioning, generate Motion ICP versions first.
 
 ## Related Skills
 
-- `/octave:deal-coach` - Methodology-specific practice (Resonate → Elevate → Compel) with coaching microsites, decks, and quizzes
-- `/octave:enablement` - Generate training materials (cheat sheets, objection guides, discovery banks)
-- `/octave:battlecard` - Deep competitive intelligence for competitive training
-- `/octave:insights` - Surface real field intelligence to inform training
-- `/octave:wins-losses` - Win/loss patterns to learn from
-- `/octave:research` - Research a real prospect before a live call
-- `/octave:generate` - Generate real outreach after practicing
+- `/octave:deal-coach` — live practice: role-play, coaching microsites, and methodology drills (Resonate → Elevate → Compel) for reps who have read the primer
+- `/octave:battlecard-doc` — a deep competitive reference document for one competitor
+- `/octave:library` — create and edit the personas, competitors, and proof points the primer is built from
+- `/octave:insights` — real field intelligence to keep the primer current as the market shifts
