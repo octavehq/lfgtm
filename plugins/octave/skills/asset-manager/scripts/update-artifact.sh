@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Update an existing artifact: replace its files and/or patch its metadata
-# (identifier, description, entry point, privacy, status).
+# (identifier, description, entry point, privacy, status). A file replace
+# mints a new immutable version; --note records "what changed" on it.
 #
 # Usage:
 #   # Replace the site AND switch the entry point, in one atomic request:
@@ -15,6 +16,8 @@
 #   --uuid <uuid>         (required) artifact to update
 #   --src <path>          site folder or .zip to upload. FULL REPLACE — any file
 #                         not included is pruned. Omit to change metadata only.
+#   --note <text>         version note ("what changed") stored on the version
+#                         this file update mints. Only valid with --src.
 #   --identifier <id>     new identifier
 #   --description <d>     new description
 #   --entry-point <path>  new entry point (website only). Without --src the file
@@ -55,6 +58,7 @@ usage() {
 # Defaults — empty means "not provided" (every field here is optional).
 UUID=""
 SRC=""
+NOTE=""
 IDENTIFIER=""
 DESCRIPTION=""
 ENTRY_POINT=""
@@ -65,6 +69,7 @@ while [ $# -gt 0 ]; do
   case "$1" in
     --uuid)        UUID="${2:?--uuid requires a value}"; shift 2 ;;
     --src)         SRC="${2:?--src requires a value}"; shift 2 ;;
+    --note)        NOTE="${2:?--note requires a value}"; shift 2 ;;
     --identifier)  IDENTIFIER="${2:?--identifier requires a value}"; shift 2 ;;
     --description) DESCRIPTION="${2:?--description requires a value}"; shift 2 ;;
     --entry-point) ENTRY_POINT="${2:?--entry-point requires a value}"; shift 2 ;;
@@ -98,12 +103,18 @@ fi
 if [ -n "$STATUS" ]; then
   case "$STATUS" in published | unpublished) ;; *) echo "error: --status must be published|unpublished" >&2; exit 1 ;; esac
 fi
+# --note annotates the version a file update mints, so it is meaningless
+# without the upload that does the minting.
+if [ -n "$NOTE" ] && [ -z "$SRC" ]; then
+  echo "error: --note is only valid together with --src (a file update mints the version the note describes)" >&2
+  exit 1
+fi
 
 # Assemble a metadata patch from only the flags that were passed. Values are
 # interpolated as-is, so reject embedded double quotes/backslashes: they would
 # break the JSON, and (since entryPoint can be appended before privacy/status)
 # a crafted value could inject overriding keys. Same guard as upload-artifact.sh.
-for _field in "identifier=$IDENTIFIER" "description=$DESCRIPTION" "entry-point=$ENTRY_POINT"; do
+for _field in "identifier=$IDENTIFIER" "description=$DESCRIPTION" "entry-point=$ENTRY_POINT" "note=$NOTE"; do
   case "${_field#*=}" in
     *\"* | *\\*)
       echo "error: --${_field%%=*} must not contain double quotes or backslashes" >&2
@@ -118,6 +129,7 @@ if [ -n "$DESCRIPTION" ]; then META_PARTS+=("\"description\":\"$DESCRIPTION\"");
 if [ -n "$ENTRY_POINT" ]; then META_PARTS+=("\"entryPoint\":\"$ENTRY_POINT\""); fi
 if [ -n "$PRIVACY" ];     then META_PARTS+=("\"privacy\":\"$PRIVACY\""); fi
 if [ -n "$STATUS" ];      then META_PARTS+=("\"status\":\"$STATUS\""); fi
+if [ -n "$NOTE" ];        then META_PARTS+=("\"note\":\"$NOTE\""); fi
 
 METADATA=""
 if [ "${#META_PARTS[@]}" -gt 0 ]; then
