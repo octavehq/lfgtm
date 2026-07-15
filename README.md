@@ -691,81 +691,77 @@ The workspace's own company profile (singleton).
 
 ```
 .
+├── .claude-plugin/
+│   ├── plugin.json              # Plugin metadata (this repo root IS the octave plugin)
+│   └── marketplace.json         # Marketplace config — publishes the root plugin as octave@lfgtm
 ├── .claude/
 │   └── settings.json            # Project settings
-├── .claude-plugin/
-│   └── marketplace.json         # Marketplace config — lists the octave plugin under plugins/
 ├── .github/
-│   └── workflows/               # CI: sync-downstream (Codex/Cursor mirrors)
+│   └── workflows/               # CI: sync-downstream (Codex/Cursor mirrors), claude-tag zip
 ├── docs/
 │   └── org-instructions/        # Recommended Claude org preferences for Octave-first routing
-├── scripts/                     # Repo CI tooling (not shipped inside the plugin)
-│   ├── build-codex.sh           # Generate the Codex plugin artifact
-│   └── build-cursor.sh          # Generate the Cursor plugin artifact
-├── plugins/
-│   └── octave/                  # The plugin — skills, workflows, agents, runtime scripts
-│       ├── .claude-plugin/
-│       │   └── plugin.json      # Plugin metadata
-│       ├── agents/
-│       │   ├── asset-manager.md         # Hosted asset publishing/sharing agent
-│       │   ├── octave-assistant.md      # General GTM assistant agent
-│       │   ├── pmm-strategist.md        # Product marketing strategist agent
-│       │   ├── sdr-coach.md             # SDR coaching agent
-│       │   └── revenue-strategist.md    # Revenue strategy advisor agent
-│       ├── scripts/                     # Runtime helpers (resolved via ${CLAUDE_PLUGIN_ROOT})
-│       │   ├── deploy.sh                # Deploy a generated deck or page to Vercel
-│       │   ├── export-pdf.sh            # Export an HTML presentation to PDF
-│       │   └── extract-pptx.py          # Extract content from .pptx for /octave:deck
-│       ├── skills/                      # Skill definitions (each: SKILL.md + optional references/)
-│       │   ├── shared/                  # Cross-skill references (entity model, presentation principles, style presets, …) — not a skill
-│       │   ├── abm/                     # Account-based planning
-│       │   ├── ads/                     # Ad campaign builder
-│       │   ├── ads-resonance/           # Ad performance resonance loop + prediction cards
-│       │   ├── analyzer/                # Conversation analysis
-│       │   ├── asset-manager/           # Publish & manage hosted assets (bundled upload/download scripts)
-│       │   ├── audit/                   # Library health check
-│       │   ├── battlecard/              # Competitive intelligence (--format doc for HTML)
-│       │   ├── brainstorm/              # GTM ideation
-│       │   ├── brief/                   # Account dossier (HTML)
-│       │   ├── campaign/                # Multi-channel campaigns
-│       │   ├── deal-coach/              # Deal coaching (Resonate/Elevate/Compel)
-│       │   ├── deck/                    # Presentation builder (HTML)
-│       │   ├── enablement/              # Sales enablement materials
-│       │   ├── explore-agents/          # Agent management
-│       │   ├── generate/                # Quick content generation
-│       │   ├── get-brand-components/    # Brand kit capture for on-brand documents
-│       │   ├── icp-refine/              # ICP refinement
-│       │   ├── insights/                # Field intelligence
-│       │   ├── launch/                  # Launch planning
-│       │   ├── library/                 # Library CRUD
-│       │   ├── meeting-prep/            # Meeting battle plan (HTML)
-│       │   ├── messaging/               # Messaging frameworks
-│       │   ├── microsite/               # ABM microsite (HTML)
-│       │   ├── one-pager/               # One-pager / leave-behind (HTML)
-│       │   ├── pipeline/                # Deal coaching
-│       │   ├── pmm/                     # Product marketing content
-│       │   ├── positioning/             # Positioning system (HTML)
-│       │   ├── proposal/                # Business case / proposal (HTML)
-│       │   ├── prospector/              # Prospect discovery
-│       │   ├── qual-doctor/             # Qualification agent tuning
-│       │   ├── repurpose/               # Content repurposing
-│       │   ├── research/                # Research & prep
-│       │   ├── signals/                 # Morning intelligence briefing
-│       │   ├── train/                   # Sales training & role-play
-│       │   ├── wins-losses/             # Deal outcome analysis (--format report for HTML)
-│       │   ├── workflow/                # Workflow engine
-│       │   └── workspace/               # Connection status
-│       └── workflows/                   # Workflow templates (run via /octave:workflow)
-│           ├── account-based-research.workflow.md
-│           ├── competitive-deal-prep.workflow.md
-│           ├── competitive-response.workflow.md
-│           ├── content-sprint.workflow.md
-│           ├── deal-acceleration.workflow.md
-│           ├── full-outbound-pipeline.workflow.md
-│           ├── new-market-entry.workflow.md
-│           ├── persona-targeted-outreach.workflow.md
-│           ├── positioning-exercise.workflow.md
-│           └── quarterly-gtm-review.workflow.md
+├── agents/
+│   ├── asset-manager.md         # Hosted asset publishing/sharing agent
+│   ├── octave-assistant.md      # General GTM assistant agent
+│   ├── pmm-strategist.md        # Product marketing strategist agent
+│   ├── sdr-coach.md             # SDR coaching agent
+│   └── revenue-strategist.md    # Revenue strategy advisor agent
+├── scripts/                     # Runtime helpers (resolved via ${CLAUDE_PLUGIN_ROOT}) + repo CI tooling
+│   ├── deploy.sh                # Deploy a generated deck or page to Vercel
+│   ├── export-pdf.sh            # Export an HTML presentation to PDF
+│   ├── extract-pptx.py          # Extract content from .pptx for /octave:deck
+│   ├── build-codex.sh           # CI: generate the Codex plugin artifact
+│   └── build-cursor.sh          # CI: generate the Cursor plugin artifact
+├── skills/                      # Skill definitions (each: SKILL.md + optional references/)
+│   ├── shared/                  # Cross-skill references (entity model, presentation principles, style presets, …) — not a skill
+│   ├── abm/                     # Account-based planning
+│   ├── ads/                     # Ad campaign builder
+│   ├── ads-resonance/           # Ad performance resonance loop + prediction cards
+│   ├── analyzer/                # Conversation analysis
+│   ├── asset-manager/           # Publish & manage hosted assets (bundled upload/download scripts)
+│   ├── audit/                   # Library health check
+│   ├── battlecard/              # Competitive intelligence (--format doc for HTML)
+│   ├── brainstorm/              # GTM ideation
+│   ├── brief/                   # Account dossier (HTML)
+│   ├── campaign/                # Multi-channel campaigns
+│   ├── deal-coach/              # Deal coaching (Resonate/Elevate/Compel)
+│   ├── deck/                    # Presentation builder (HTML)
+│   ├── enablement/              # Sales enablement materials
+│   ├── explore-agents/          # Agent management
+│   ├── generate/                # Quick content generation
+│   ├── get-brand-components/    # Brand kit capture for on-brand documents
+│   ├── icp-refine/              # ICP refinement
+│   ├── insights/                # Field intelligence
+│   ├── launch/                  # Launch planning
+│   ├── library/                 # Library CRUD
+│   ├── meeting-prep/            # Meeting battle plan (HTML)
+│   ├── messaging/               # Messaging frameworks
+│   ├── microsite/               # ABM microsite (HTML)
+│   ├── one-pager/               # One-pager / leave-behind (HTML)
+│   ├── pipeline/                # Deal coaching
+│   ├── pmm/                     # Product marketing content
+│   ├── positioning/             # Positioning system (HTML)
+│   ├── proposal/                # Business case / proposal (HTML)
+│   ├── prospector/              # Prospect discovery
+│   ├── qual-doctor/             # Qualification agent tuning
+│   ├── repurpose/               # Content repurposing
+│   ├── research/                # Research & prep
+│   ├── signals/                 # Morning intelligence briefing
+│   ├── train/                   # Sales training & role-play
+│   ├── wins-losses/             # Deal outcome analysis (--format report for HTML)
+│   ├── workflow/                # Workflow engine
+│   └── workspace/               # Connection status
+├── workflows/                   # Workflow templates (run via /octave:workflow)
+│   ├── account-based-research.workflow.md
+│   ├── competitive-deal-prep.workflow.md
+│   ├── competitive-response.workflow.md
+│   ├── content-sprint.workflow.md
+│   ├── deal-acceleration.workflow.md
+│   ├── full-outbound-pipeline.workflow.md
+│   ├── new-market-entry.workflow.md
+│   ├── persona-targeted-outreach.workflow.md
+│   ├── positioning-exercise.workflow.md
+│   └── quarterly-gtm-review.workflow.md
 ├── EXAMPLES.md                  # Detailed usage examples
 ├── .gitignore
 ├── LICENSE
