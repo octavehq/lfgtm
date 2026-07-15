@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "octave": {
-      "type": "http",
-      "url": "https://mcp.octavehq.com/mcp"
-    }
-  }
-}

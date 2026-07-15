@@ -2,8 +2,9 @@ name: Publish Claude Tag plugin zip
 
 # Claude Tag access bundles install plugins from a private repository or an
 # uploaded zip. This publishes a ready-to-upload bundle (repo contents with
-# .claude-plugin/ at the archive root) to a rolling release, so admins can
-# download one file instead of cloning and re-zipping:
+# .claude-plugin/marketplace.json at the archive root, and the octave plugin
+# under plugins/octave/) to a rolling release, so admins can download one file
+# instead of cloning and re-zipping:
 #   https://github.com/octavehq/lfgtm/releases/download/claude-tag-plugin/octave-plugin.zip
 
 on:
@@ -33,5 +34,5 @@ jobs:
           else
             gh release create claude-tag-plugin /tmp/octave-plugin.zip \
               --title "Claude Tag plugin bundle" \
-              --notes "Rolling build of the Octave plugins (octave + octave-claude-tag) as an upload-ready zip for Claude Tag access bundles. Updated on every push to main. See the README's Claude Tag section for setup."
+              --notes "Rolling build of the Octave plugin (octave) as an upload-ready zip for Claude Tag access bundles. Updated on every push to main."
           fi
