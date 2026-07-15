@@ -1,6 +1,6 @@
 {
   "name": "octave",
-  "version": "1.19.0",
+  "version": "1.20.0",
   "description": "Octave GTM knowledge base integration for Claude Code, OpenAI Codex, and Cursor — provides bidirectional access to personas, Motions, messaging, and more. Give your AI grounded context for your GTM motions.",
   "author": {
     "name": "Octave",
