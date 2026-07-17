@@ -15,6 +15,24 @@ The goal is not just "is the library complete?" but "is the library well-designe
 
 **Core operating principle:** The audit is a coach, not a builder. Push the user to think deeper about their GTM design rather than auto-generating content. Opinions are good — but only the USER's well-considered opinions. More entities isn't better. Better entities are better. The audit's job is to ask the questions that draw out the right design, not to fill templates.
 
+## The Offering Bar — Offering vs. Core Feature
+
+**The single most consequential decision in the library is what earns its own offering.** Get this wrong and everything downstream fragments: a workspace with eight "products" that are really one platform ends up with eight Motions, eight thin matrices, and agents wired to the wrong things. This bar is the spine of the audit — apply it in every mode.
+
+**Products, Services, and Solutions are the three offering types, and all three are held to the SAME high bar.** (A Solution is just a mix of a product and a service — it does not get an easier bar.) Anything that does not clear the bar is a **Core Feature** (`core_feature`, oId `cf_`), linked under the offering it belongs to — **not** a new offering.
+
+**An item earns its own offering only if it stands on its own as a go-to-market motion.** The signals that count are motion-level, not naming-level:
+- **Own quota / own line item sold on its own motion** — a rep carries it separately.
+- **Distinct buyer** — a different person owns the decision.
+- **Distinct go-to-market motion** — you'd sell it through a different play, a different sales cycle.
+- **The separate-meeting test:** you could book a completely separate sales meeting to sell it — separate conversation, separate deal, separate buyer.
+
+**The trap to watch for — this is where over-splitting comes from:** being *nameable*, *marketed as its own thing*, or even *purchasable at the same time as a separate line item* does NOT make something an offering. Two things a customer buys together — even as two line items on one order — can both still be core features. The question is never "can it be named or sold separately?" It is **"is it its own sales motion, with its own buyer and its own quota?"** If you'd sell both in the same meeting to the same buyer, it is one offering with core features — not two offerings.
+
+**When something fails the bar, nothing is lost by making it a core feature.** The feature's specific story lives in the core feature's four narrative fields — `whyThisExists`, `whatItDoes`, `howItWorks`, `whatItImpacts` — and its customer outcomes stay as Use Cases linked to the parent offering. The nuance just lands in the right place, and the offering keeps one clean Motion matrix.
+
+**Collapsing offerings is destructive — recommend, never auto-execute.** Merging feature-products into one offering means their Motions collapse, their Motion ICP narratives and agent wirings have to move, and their linked entities re-link to the survivor. The audit lays out the path and lets the user decide. See CLEANUP MODE → *Offering Structure*.
+
 ## Principles
 
 Follow these standards during generation. Read each before producing output.
@@ -31,7 +49,7 @@ Follow these standards during generation. Read each before producing output.
 
 ## Options
 
-- `--type <type>` - Focus on specific entity type (personas, products, segments, motions, etc.)
+- `--type <type>` - Focus on specific entity type (personas, products, services, solutions, core_features, segments, motions, etc.). `--type offerings` runs the Offering Bar / Offering Structure check across all Product/Service/Solution entities.
 - `--fix` - Interactive mode to address issues as they're found
 - `--detailed` - Show full details for each issue (default: summary view)
 - `--migrate` - Legacy playbook → Motions migration mode
@@ -47,21 +65,27 @@ When the user runs `/octave:audit`:
 **Fetch entities using MCP tools:**
 
 ```
-1. list_entities({ entityType: "persona" })
-2. list_entities({ entityType: "product" })
-3. list_entities({ entityType: "segment" })
-4. list_entities({ entityType: "use_case" })
-5. list_entities({ entityType: "competitor" })
-6. list_entities({ entityType: "alternative" })
-7. list_entities({ entityType: "buying_trigger" })
-8. list_entities({ entityType: "proof_point" })
-9. list_entities({ entityType: "reference" })
-10. list_entities({ entityType: "playbook" }) — legacy standalone playbooks, if any remain
-11. list_motions() — all Motions in workspace
-12. For each Motion: list_motion_icps({ motionOId }) — Motion ICP cell state
+1. list_entities({ entityType: "product" })
+2. list_entities({ entityType: "service" })
+3. list_entities({ entityType: "solution" })
+4. list_entities({ entityType: "core_feature" }) — named features that live UNDER an offering (NOT offerings themselves)
+5. list_entities({ entityType: "persona" })
+6. list_entities({ entityType: "segment" })
+7. list_entities({ entityType: "use_case" })
+8. list_entities({ entityType: "competitor" })
+9. list_entities({ entityType: "alternative" })
+10. list_entities({ entityType: "buying_trigger" })
+11. list_entities({ entityType: "objection" })
+12. list_entities({ entityType: "proof_point" })
+13. list_entities({ entityType: "reference" })
+14. list_entities({ entityType: "playbook" }) — legacy standalone playbooks, if any remain
+15. list_motions() — all Motions in workspace
+16. For each Motion: list_motion_icps({ motionOId }) — Motion ICP cell state
 ```
 
-Then use `get_entity` for entities that need deeper inspection (qualifying questions, field completeness), and `find_motion_icp({ motionIcpOId, includeLearnings: true })` for any specific Motion ICP cell you need full narrative context on.
+Products, Services, and Solutions are the three **offering** types. **Core features (`cf_`) are not offerings** — they are named pieces of a single platform that live under an offering (via `offeringOId`). Keep them straight from the start: the count of *offerings* is what the Offering Bar (above) governs.
+
+Then use `get_entity` for entities that need deeper inspection (qualifying questions, field completeness), and `find_motion_icp({ motionIcpOId, includeLearnings: true })` for any specific Motion ICP cell you need full narrative context on. For a core feature, `get_entity({ oId: "cf_..." })` returns its four narrative arrays (`whyThisExists`, `whatItDoes`, `howItWorks`, `whatItImpacts`).
 
 If `--type` is specified, only fetch that type (but still need related types for relationship checks).
 
@@ -96,6 +120,7 @@ How would you like to approach this?
 - <10 entities, missing products/personas → default-suggest onboarding
 - Legacy playbooks exist but zero Motions → default-suggest migration
 - Motions exist, 30+ entities → default-suggest cleanup
+- 3+ offerings with heavily overlapping personas/segments → suggest cleanup and lead with the Offering Structure check (likely over-split into feature-products)
 
 Present all three options regardless.
 
@@ -116,6 +141,7 @@ Here's what you have so far:
 
 Foundation:
   Offerings: [list — Product / Service / Solution]
+  Core Features: [count] — [list names, each with its parent offering]
   Personas: [count] — [list names]
   Segments: [count] — [list names]
 
@@ -143,7 +169,8 @@ Based on what exists, generate a prioritized build roadmap. The tiers represent 
 
 **Tier 1 — Foundation (build first):**
 These are the inputs everything else depends on. Agents can't do useful work without them.
-- An Offering (Product, Service, or Solution — the thing you sell)
+- An Offering (Product, Service, or Solution — the thing you sell). **Apply the Offering Bar before creating one.** Most teams need *fewer* offerings than they think. If it isn't its own sales motion with its own buyer and quota (the separate-meeting test), it is a **Core Feature** under an offering — not a new offering. Start with the smallest set of offerings that reflects how you actually sell, then capture everything else as core features.
+- Core Features (the named pieces of your platform — the things people fail the bar on and would otherwise mistakenly create as products). Each links to a parent offering and carries its own story in `whyThisExists` / `whatItDoes` / `howItWorks` / `whatItImpacts`.
 - Core personas (the people who discover, evaluate, and champion — not everyone who touches a deal)
 - Core segments (the company types where your offering fits differently)
 
@@ -181,6 +208,14 @@ For each tier, tell the user:
 ### Step 5-O: Design Challenge
 
 Before the user starts building, run a challenge pass. These are NOT tips to follow — they're hard questions the user needs to answer. The audit's job is to push the user to make deliberate choices, not to prescribe a structure.
+
+**OFFERING CHALLENGE (run this FIRST — it's the most consequential):**
+Apply the Offering Bar before the user builds a single offering. This is where over-splitting starts, and it's far cheaper to prevent than to unwind.
+- "List everything you think of as a 'product.' Now, for each one: does it carry its own quota? Does it have its own buyer? Would you sell it in its own sales motion? Or is it a named part of one platform?"
+- "The separate-meeting test: would you book a different sales meeting, with a different buyer, to sell this? If two of your 'products' would be sold in the same meeting to the same person, they're one offering — the second is a core feature."
+- "Being able to name it, market it, or even sell it as its own line item does not make it an offering. Customers can buy two things at once and have them both be core features. What makes something an offering is being its own go-to-market motion."
+- "Everything that doesn't clear the bar becomes a Core Feature under the offering it belongs to. You lose nothing: the feature's story goes in its four narrative fields, its outcomes stay as use cases. What you gain is one clean Motion matrix per real offering instead of a fragmented pile of thin ones."
+- "Remember each real offering gets its own Motion(s). If you create five feature-products, you've committed to five matrices to maintain and five sets of agents to wire. Is that how your business actually sells?"
 
 **PERSONA CHALLENGE:**
 - "Think about the last 5-10 deals you closed. Who actually drove them forward? Not who was in the room — who found you, who evaluated you, and who pushed the deal through internally? Those are your core personas."
@@ -237,7 +272,8 @@ This is the most important design decision in the library. Push hard here.
 ### Step 6-O: Quick Check on What Exists
 
 Even in onboarding mode, run a light version of the cleanup checks on whatever already exists:
-- Completeness checks on existing entities (are they fleshed out or just stubs?)
+- Completeness checks on existing entities (are they fleshed out or just stubs?) — including core features (are the four narrative arrays populated, or just a name?)
+- **Offering Bar spot-check** — if the user has already created multiple offerings, sanity-check them against the bar now, before they build a whole matrix on top of a feature-product. Catching an over-split at 2 offerings is trivial; catching it at 8 (with Motions and agents attached) is a migration.
 - Language/voice consistency (catch issues early before they multiply)
 - Offering name leakage in use cases/alternatives
 - Duplicate detection (catch overlaps before building more)
@@ -257,6 +293,7 @@ Current State
 -------------
 Total Active Entities: <count>
   - Offerings: X (Products: X / Services: X / Solutions: X)
+  - Core Features: X (under [offering names])
   - Personas: X
   - Segments: X
   - Use Cases: X
@@ -356,6 +393,25 @@ In onboarding --fix mode, offer to:
 3. **Walk through design challenges interactively** — shift into Socratic mode
 
 **IMPORTANT:** For entity creation in fix mode, prefer drawing out the user's knowledge over generating content. Shift into a guided conversation:
+
+For offerings vs. core features (do this first — it constrains everything else):
+```
+Before we build offerings, let's separate the offerings from the features.
+
+1. List everything you sell or think of as a product.
+2. For each: own quota? own buyer? sold in its own sales motion — its own
+   meeting? Or is it a named part of one platform people buy as a whole?
+3. The ones that are their own motion → offerings. Everything else →
+   core features under the offering they belong to.
+
+Two things can be bought at the same time and still both be core features.
+The test isn't "can it be sold separately" — it's "is it its own sales
+motion, with its own buyer." What clears that bar?
+```
+
+When the user confirms which items are offerings and which are features:
+- Create each true offering with `create_entity` (`entityType: "product"` / `"service"` / `"solution"`).
+- Create each feature with `create_entity({ entityType: "core_feature", ... })` and link it to its parent offering via `linkingStrategy: { mode: "SPECIFIC", offeringOIds: ["px_..."] }`. Draw out the feature's story into the four narrative fields — don't invent it.
 
 ```
 Let's build your personas. Think about the last 5 deals you closed.
@@ -459,6 +515,49 @@ Examples of observations to surface:
 - "You have 15 personas and 12 segments but only 1 Motion. All of that targeting intelligence feeds into a single matrix — is this one offering, or should some of these persona/segment combinations live in a second Motion?"
 
 The goal is to tell a story about what the library's shape means for agent capability, not to hit a minimum count.
+
+#### Offering Structure — The Bar (WARNING · DESIGN)
+
+**Run this early and prominently.** Most established libraries that come in for cleanup have the *opposite* of a coverage gap: **too many offerings.** Teams spin up a new Product for every named feature, and end up with a fragmented pile of thin Motions instead of one strong one. Pressure-test the offering list against the [Offering Bar](#the-offering-bar--offering-vs-core-feature).
+
+**How to run it:**
+1. Count the offerings — every Product + Service + Solution.
+2. For each offering, ask whether it clears the bar: own quota, distinct buyer, distinct GTM motion, would-be-a-separate-meeting.
+3. Look at what the offerings *share*. The strongest tell for over-splitting is overlap.
+
+**Signals an "offering" is really a feature-product (candidate to collapse):**
+- It shares the same buyer as another offering.
+- It would be sold in the same meeting / same deal as another offering.
+- It's essentially always bought together with another offering.
+- Its personas and segments almost entirely overlap another offering's.
+- One can't be bought without the other.
+- Its description reads like a capability of a single platform rather than an independent thing you sell.
+
+**Signals offerings genuinely deserve to stay separate:**
+- Distinct buyers who own distinct budgets.
+- Distinct quotas / distinct reps.
+- Distinct sales motions and cycles.
+- You'd run a separate meeting to sell each.
+
+**Assess the company before recommending.** Read the offering descriptions, and ask the user how they price and how reps are quota'd, before calling anything a feature-product. Do NOT collapse on name similarity alone — two similarly named offerings can be genuinely separate motions, and two very different-sounding ones can be features of the same platform.
+
+**When you find feature-products, recommend a collapse — and be honest that it is not a rename.** Never auto-execute it. Present the finding and the path (see Step 5-C → *Offering Collapse Flow*), and let the user decide. The consequences the user must weigh:
+- The collapsed offerings' **Motions** fold into the surviving offering's Motion — their Motion ICP narratives and any agent wired to them have to move.
+- Their **personas, segments, use cases, and other linked entities** re-link to the surviving offering.
+- The feature's own story is preserved as a **core feature** under the survivor.
+
+**The inverse (rarer):** a core feature that actually clears the bar — its own buyer, its own quota, its own motion — is mis-filed and should be promoted to an offering. And an offering with several genuinely distinct motions crammed under it as core features may be under-split. Flag these too, but over-splitting is the common case.
+
+#### Core Features (WARNING)
+
+Core features are the named pieces of a platform that live under an offering. A core feature that's just a name and a one-line description gives agents nothing — the four narrative arrays are what make it usable.
+
+- [ ] Linked to a parent offering (a core feature with no `offeringOId` is orphaned — it surfaces nowhere)
+- [ ] Has description (>50 chars)
+- [ ] Has `whyThisExists` populated
+- [ ] Has `whatItDoes` populated
+- [ ] Has `howItWorks` populated
+- [ ] Has `whatItImpacts` populated
 
 #### Completeness Checks (WARNING)
 
@@ -649,6 +748,9 @@ If the library has 0 proof points AND 0 references, don't just flag it as "missi
 - [ ] Alternatives that are hard to distinguish from each other (e.g., "DIY agents" vs "build your own context layer" — if a prospect wouldn't see these as different choices, they should be one entity)
 - [ ] Buying triggers that overlap use cases (a trigger should describe the organizational moment, not re-describe the use case it activates)
 - [ ] Objections that re-state competitors or alternatives instead of capturing a distinct concern
+- [ ] Core features that re-state a use case (a core feature is a named part of the platform; a use case is a customer outcome — if the core feature just describes an outcome, it's duplicating the use case)
+- [ ] Two core features that are really one feature named twice
+- [ ] A core feature that clears the Offering Bar (should be promoted to an offering) or an offering that fails it (should be demoted to a core feature) — cross-reference the Offering Structure check above
 
 #### Consistency Checks (WARNING)
 
@@ -675,8 +777,9 @@ MCP Server: <mcpServerName>
 Summary
 -------
 Total Entities: <count>
-  - Personas: X
   - Offerings: X (Products / Services / Solutions)
+  - Core Features: X
+  - Personas: X
   - Segments: X
   - Use Cases: X
   - Competitors: X
@@ -693,6 +796,23 @@ Issues Found: X total
   - Warning: X
   - Info: X
   - Design observations: X
+
+---
+
+OFFERING STRUCTURE
+==================
+Offerings: X (Products: X / Services: X / Solutions: X)
+Core Features: X
+  - [feature] → [parent offering]
+  - [feature] → (unlinked — orphaned)
+
+Bar check: X of Y offerings clearly clear the bar.
+  [If feature-products found:]
+  ⚠ [Offering B], [Offering C] look like feature-products, not offerings:
+    they share [Offering A]'s buyer and would be sold in the same meeting.
+    RECOMMENDATION: collapse [B] and [C] into [A] as core features.
+    This is destructive (Motions + agents move) — see the collapse path
+    in Recommendations. Keep [Offering D] separate: distinct buyer + quota.
 
 ---
 
@@ -828,12 +948,13 @@ Recommendations
 ===============
 
 1. IMMEDIATE: [Most critical fix]
-2. HIGH: Tune qualifying question weights (/octave:qual-doctor)
-3. HIGH: Address language/voice inconsistencies
-4. MEDIUM: Review and merge duplicate entities
-5. MEDIUM: Link orphaned entities to the right offerings
-6. CONSIDER: Design review observations above
-7. LOW: Refresh stale content
+2. HIGH: Resolve offering structure — collapse feature-products into core features, or confirm each is a genuine offering (see Offering Structure above). Do this before investing more in per-offering Motions.
+3. HIGH: Tune qualifying question weights (/octave:qual-doctor)
+4. HIGH: Address language/voice inconsistencies
+5. MEDIUM: Review and merge duplicate entities
+6. MEDIUM: Link orphaned entities to the right offerings (including orphaned core features)
+7. CONSIDER: Design review observations above
+8. LOW: Refresh stale content
 
 Run /octave:audit --fix to address issues interactively.
 Run /octave:audit --migrate to translate legacy playbooks to Motions.
@@ -971,6 +1092,55 @@ and business model (SaaS). That's not necessarily wrong, but let me push on it:
 
 What's your gut tell you?
 ```
+
+### Offering Collapse Flow (--fix, or on request)
+
+The audit **recommends** the collapse in the report; it **executes only when the user tells it to.** Enter this flow either via `--fix`, or whenever the user acts on the recommendation ("ok, collapse those," "go ahead and merge them," "make the changes"). If they haven't asked, stop at the recommendation — do not touch the workspace.
+
+When the user does ask, walk them through the collapse deliberately and run it via the MCP write tools (`create_entity`, `link_entities_to_offering`, `update_motion_playbook`, `update_entity` to archive). **This is the most destructive operation the audit can recommend — confirm at every step, and never run it silently.**
+
+```
+Offering Structure: 3 of your 4 products look like features of one platform.
+
+  "Octave Core"      → genuine offering (own buyer, own quota)
+  "Octave Library"   → feature-product (same buyer, sold in same deal)
+  "Octave Signals"   → feature-product (same buyer, sold in same deal)
+  "Octave Agents"    → feature-product (same buyer, sold in same deal)
+
+Recommended: collapse Library, Signals, and Agents into "Octave Core"
+as core features. Keep them as-is only if each is truly its own sales
+motion with its own buyer and quota.
+
+Before we touch anything — is that read right? Do any of these three get
+sold on their own, to their own buyer, with their own quota?
+```
+
+Only after the user confirms which offerings are really features, walk each collapse:
+
+```
+Collapsing "Octave Library" into "Octave Core". Here's the plan:
+
+1. Create a core feature "Library" under Octave Core, carrying Library's
+   story into whyThisExists / whatItDoes / howItWorks / whatItImpacts.
+   (I'll draft from the existing product description — you review it.)
+2. Re-link Library's personas, segments, use cases, competitors,
+   proof points, and references to Octave Core (skip any already linked).
+3. Retire Library's Motion(s): its Motion ICP narratives need to move into
+   Octave Core's matrix, and any agent wired to Library's Motion/playbooks
+   must be re-pointed. I'll list every affected agent before you commit.
+4. Archive the "Octave Library" product.
+
+This can't be undone with one click. Want me to go step by step, or just
+prep the core-feature draft and the re-link/agent list for you to run?
+```
+
+Mechanics (there is no one-shot "merge offerings" tool — it's a sequence):
+- `create_entity({ entityType: "core_feature", name, instructions, keyContext: <old offering's description/fields>, linkingStrategy: { mode: "SPECIFIC", offeringOIds: [survivingOfferingOId] } })` — seed the feature from the old offering's content; have the user review the four narrative arrays.
+- `link_entities_to_offering` — re-link the old offering's personas / segments / use cases / etc. to the survivor.
+- **Motions + agents:** enumerate the old offering's Motions (`list_motions`) and any agents referencing them (`list_agents`). Surface exactly what will break and what must be re-wired *before* archiving. Carry any hand-tuned Motion ICP nuance into the survivor's cells (`find_motion_icp` → `update_motion_playbook`), mindful of the auto-update caveat.
+- Archive the old offering last, once its content, links, and agent wiring have moved.
+
+If the user would rather not run a destructive sequence live, offer to produce a written collapse plan (per-offering steps + affected agents) they can execute in the Octave app at their own pace.
 
 ### Step 6-C: Duplicate Resolution Flow
 
@@ -1196,6 +1366,8 @@ Deductions:
 - Info: -1 point each (max -10)
 - No Motions when offering exists: -10
 - Agents still on legacy playbooks when Motions cover same offering: -3 each (max -9)
+- Offering that fails the Offering Bar (likely a feature-product), not yet confirmed intentional: -3 each (max -9)
+- Core feature missing all four narrative arrays (name/one-liner only): -3 each (max -9)
 
 Bonuses:
 - All entity types have content: +5
@@ -1203,6 +1375,7 @@ Bonuses:
 - Clean language/voice (no issues found): +5
 - Qualifying questions use varied weights: +5
 - All offerings have Motions: +5
+- Offering structure passes the bar (no feature-products detected): +3
 - Learning Loop enabled: +3
 - No legacy playbook agent references remaining: +3
 
@@ -1221,8 +1394,8 @@ Maximum score: 100
 ## MCP Tools Used
 
 ### Read Operations
-- `list_entities` - Get all entities of each type (quick scan)
-- `get_entity` - Get full details for specific entities (qualifying questions, field data, links)
+- `list_entities` - List entities of any type (quick scan). Covers all types including offerings (`product` / `service` / `solution`) and `core_feature`. Pass `offeringOId` to scope core features (and other linked types) to a specific offering; pass `includeDetails: true` for full bodies.
+- `get_entity` - Get full details for specific entities (qualifying questions, field data, links). For a core feature, returns its four narrative arrays.
 - `get_playbook` - Get a legacy standalone playbook with its linked personas, segments, and value props (migration mode only)
 - `list_value_props` - Read value props on a legacy playbook (migration mode only)
 
@@ -1235,14 +1408,15 @@ Maximum score: 100
 - `get_motion_playbook` - Full details for one Motion Playbook
 
 ### Offering Linkage
-- `link_entities_to_offering` - Link personas, segments, and other entities to an offering (determines what appears in the Motion matrix)
+- `link_entities_to_offering` - Link personas, segments, and other entities to an offering (determines what appears in the Motion matrix). Also the tool for re-linking entities onto a surviving offering during an offering collapse.
+- Core features link to a parent offering the same way — set `offeringOId` / `linkingStrategy` at creation, or re-link afterward. A core feature with no parent offering is orphaned.
 
 ### Agent Operations (migration mode)
 - `list_agents` - Get all saved agents with their configurations (offering, motion type, playbook/Motion references)
 
 ### Write Operations (--fix mode only)
 - `update_entity` - Fix incomplete entities, language issues
-- `create_entity` - Create missing entities (onboarding mode)
+- `create_entity` - Create missing entities (onboarding mode), including `core_feature` (with the four narrative arrays) and offerings. Use during an offering collapse to seed a core feature from an old offering's content.
 - `create_motion_playbook` - Create a Custom Motion Playbook (narrative type `THEMATIC`, `MILESTONE`, `ACCOUNT`, or `COMPETITIVE`) during migration
 - `update_motion_playbook` - Edit Motion Playbook narrative sections to carry over nuance from a legacy playbook
 

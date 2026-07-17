@@ -19,6 +19,7 @@ The single source of truth for Octave entity types, their `entityType` values, a
 | Product | `product` | `px_` | An offering (see also Service, Solution) |
 | Service | `service` | `sc_` | Professional service offerings — own table, own prefix |
 | Solution | `solution` | `sv_` | Packaged solution combining products/services into one buyer-facing narrative |
+| Core Feature | `core_feature` | `cf_` | A named piece of an offering (NOT its own offering) — links under a Product/Service/Solution via `offeringOId`. Body carries `whyThisExists` / `whatItDoes` / `howItWorks` / `whatItImpacts`. Use for a distinctly-named feature that isn't its own go-to-market motion (own quota / buyer / sales meeting); if it clears that bar, it's an offering instead. |
 | Segment | `segment` | `sg_` | Company types where the offering fits differently |
 | Use Case | `use_case` | `uu_` | Customer outcomes, not internal processes |
 | Competitor | `competitor` | `cp_` | Named rivals encountered in deals |
