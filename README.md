@@ -455,6 +455,16 @@ The plugin uses the single Octave MCP server you configure (e.g. `octave-acme`).
 - `search_knowledge_base` - Semantic search
 - `ask_octave` - Natural-language questions over the typed knowledge graph (entities, events, findings, opportunities)
 
+### Workspace Skills (managed)
+Octave-hosted skill folders (Anthropic Agent Skills structure: root `SKILL.md` + optional bundled files) that teach agents reusable methods. Distinct from this plugin's own Claude Code skills — these live in your Octave workspace and are retrieved by agents at generation time. Draft skills are invisible to agents until published. All members can read skills; create/update/delete require a workspace owner.
+- `find_skill` - Resolve a task to the best-fitting published skill (returns name + description + confidence; empty result = proceed without a skill)
+- `list_skills` - List skills (name + description only — progressive disclosure L1)
+- `get_skill` - A skill's SKILL.md instruction body + bundled-file listing (L2)
+- `get_skill_file` - Fetch one bundled file's content on demand (L3)
+- `create_skill` - Create a skill: authored (name/description/body), import (URL or text → drafted SKILL.md), or from_examples (example outputs → drafted SKILL.md); lands as a draft
+- `update_skill` - Update frontmatter/body/publish state (publishing makes it agent-discoverable)
+- `delete_skill` - Delete a skill and its stored folder
+
 ### Library Write
 - `create_entity` - Create new entity (AI-generated) - excludes legacy playbooks
 - `update_entity` - Update entity (AI-refined) - excludes legacy playbooks
