@@ -86,17 +86,21 @@ This turns a generic "here's our product" asset into "here's what we heard from 
 |---------------|------|-------------|
 | Verbatim quotes on any topic | `search_call_transcripts({ query })` | Semantic + keyword search over indexed call transcripts. Returns speaker-attributed moments grouped per call, with `recordingUrl` + `startSec` for jump-to-moment citations, and live-hydrated linked CRM opportunities (current `stageCategory`) |
 | Quotes by deal outcome | `search_call_transcripts({ query, dealOutcome: "WON" \| "LOST" \| "OPEN" })` | "Objection quotes on deals we won vs. lost" — outcome resolved live from CRM, not a stale snapshot |
-| What a specific persona says | `search_call_transcripts({ attributedPersonaOIds: [...] })` | "What do CTOs actually say" — moments spoken by contacts classified into those personas |
+| What a specific persona says | `search_call_transcripts({ attributedPersonaOIds: [...] })` | "What do CTOs or CISOs actually say" — moments spoken by contacts classified into ANY of those personas (OR across the array, one call) |
+| What a specific segment says | `search_call_transcripts({ attributedSegmentOIds: [...] })` | "Quotes from within a market segment" — calls whose company is classified into any of those segments, resolved live from company classifications |
 | Customer voice vs. rep talk track | `search_call_transcripts({ speakerSide: "external" \| "internal" })` | Isolate the buyer's own words from what the rep pitched |
 | Moments about a library entity | `search_call_transcripts({ entityOId })` | Moments *about* a persona, competitor, or use case via pipeline finding-links |
+| Exact phrase inside the quote | `search_call_transcripts({ query, contentFilter: { momentPhrases: ["..."] } })` | The returned quote itself must literally contain one of these phrases (case-insensitive, OR across the list) |
+| Objections raised in a specific context | `search_call_transcripts({ query: "objections raised", contentFilter: { callPhrases: ["Loops"] } })` | "What objections came up when we talked about Loops" — the CALL must mention the phrase anywhere; the objection quote itself doesn't have to. `excludeCallPhrases` works the same way in reverse, dropping calls that mention a phrase |
 | Best evidence for one entity | `get_entity_evidence({ entityOId, angle? })` | The entity-anchored version of the above: best verbatim quotes evidencing a single persona, competitor, objection, use case, or proof point. Prefers pipeline-linked moments (`linkFiltered: true`), falls back to semantic search on the entity name |
 
 **How these relate to the tools above:**
 - `list_findings` = the pipeline's extracted, paraphrased insight — best for trends and counts
 - `search_call_transcripts` = the raw verbatim conversation the findings came from — best for quotes, receipts, exact customer language, and topics extractors never captured
 - `get_entity_evidence` = the entity-anchored composition of both — "prove this library entity with customers' actual words," ideal for backing a battlecard claim or persona pain point
-- `get_event_detail` is still the deep dive on one *known* event; `search_call_transcripts` is how you find the moment across all calls in the first place (it returns `eventOId` to chain into `get_event_detail`)
+- `get_event_detail` is still the deep dive on one *known* event; `search_call_transcripts` is how you find the moment across all calls in the first place (each returned moment carries an `eventOId` to chain into `get_event_detail`)
 - Recording links + `startSec` let generated collateral cite the exact moment ("jump to 12:34")
+- Pass `originalQuery` with the user's verbatim message when one exists (analytics only — same convention as `search_knowledge_base`/`ask_octave`)
 
 Requires the `CAN_ANALYTICS` entitlement and indexed transcripts (backfilled per workspace) — if a workspace has no indexed calls yet, fall back to `list_findings`/`get_event_detail` and say so.
 
