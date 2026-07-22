@@ -245,6 +245,8 @@ PDF (recommended): bash "${CLAUDE_PLUGIN_ROOT:-.}"/scripts/export-pdf.sh .octave
 - `list_findings` -- Real conversation mentions, objections, competitor references from calls
 - `list_events` -- Deal win/loss outcomes against specific competitors
 - `get_event_detail` -- Deep dive into specific competitive deals for evidence
+- `search_call_transcripts` -- Verbatim quotes about this competitor, filterable by `dealOutcome` (WON/LOST) -- for trap questions and objection counters grounded in real language
+- `get_entity_evidence` -- Best verbatim quotes evidencing the competitor entity itself
 
 ### Library (Fetching / Searching)
 - `list_motions` -- List Motions in the workspace

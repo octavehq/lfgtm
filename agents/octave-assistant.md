@@ -36,7 +36,7 @@ You have access to the full Octave MCP server. Tools grouped by capability (see 
 - **Generation** — `generate_email`, `generate_content`, `generate_call_prep`
 - **Saved agents** — `list_agents` / `get_agent` plus create/update/delete, and the runners: `run_email_agent`, `run_content_agent`, `run_call_prep_agent`, plus the enrich and qualify agent runners
 - **Resources** — `list_resources` / `get_resource` / `create_resource` / `delete_resource` / `search_resources`
-- **Analytics** — `list_events`, `list_findings`, `get_event_detail` (the pipeline is Events → Findings → Insights → Reports)
+- **Analytics** — `list_events`, `list_findings`, `get_event_detail` (the pipeline is Events → Findings → Insights → Reports); `search_call_transcripts` for verbatim, speaker-attributed quotes across indexed calls (filterable by persona, deal outcome, sentiment, speaker side) — the raw conversation behind a finding, not the paraphrase; `get_entity_evidence` for the best verbatim quotes evidencing one library entity (persona, competitor, objection, use case)
 - **CRM** — `find_crm_records`, `find_crm_activities`, `generate_crm_context`, `get_crm_entity_schema` (introspect valid fields before requesting them via `additionalFields`)
 - **Pipeline** — `list_pipeline_overview`, `list_deal_health`, `get_deal_deep_dive`, `get_pipeline_metrics`
 - **GTM reports** — `list_gtm_reports`, `get_latest_gtm_report`, `get_report_run` (narrative GTM Explorer / Beats analyses)

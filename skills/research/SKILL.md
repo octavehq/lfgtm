@@ -151,6 +151,7 @@ If this research follows a previous interaction with the account (follow-up, QBR
 - `list_findings({ query: "<company or contact>", startDate: "<relevant period>" })` — surfaces what was actually said in calls: objections raised, features requested, pain points confirmed, competitor mentions
 - `list_events({ filters: { companyDomains: ["<company_domain>"] } })` — deal stage changes, meetings held, emails sent — shows the journey so far
 - `get_event_detail({ eventOId })` — deep dive on specific events (e.g., the discovery call, the demo) to pull exact context
+- `search_call_transcripts({ companyDomain, query: "<topic>" })` — pull the verbatim quote behind a finding, or find a moment when you don't yet know which event to open; returns `recordingUrl` + `startSec` for a citable timestamp
 
 This turns a generic "here's what we know" output into "here's what happened and what to do about it" — much more useful walking into the next conversation.
 
@@ -175,6 +176,7 @@ Start with person and company enrichment, then pull positioning context:
 | Competitive context | `search_knowledge_base({ query: "<signals>", entityTypes: ["competitor"] })` | When competitor is mentioned or likely in the deal |
 | Recent intel | `list_findings({ query: "<company or person>", startDate: "<90 days ago>" })` | Conversation-based insights from past interactions |
 | Deal history | `list_events({ filters: { companyDomains: ["<company_domain>"] } })` | Timeline of deal events |
+| What this person actually said | `search_call_transcripts({ speakerEmail: "<email>" })` or `attributedPersonaOIds: ["<persona_oId>"]` | Verbatim quotes attributed to this contact or their persona, not a paraphrase |
 | Synthesized prep | `generate_call_prep({ companyDomain })` | Quick comprehensive brief to use as a starting point |
 
 ---
@@ -201,6 +203,8 @@ Start with company enrichment and contact discovery:
 | Recent intel | `list_findings({ query: "<company>", startDate: "<90 days ago>" })` | Conversation signals from calls and meetings |
 | Deal events | `list_events({ filters: { companyDomains: ["<company_domain>"] } })` | Full deal history and timeline |
 | Event details | `get_event_detail({ eventOId })` | Deep dive on specific past interactions |
+| Verbatim call quotes | `search_call_transcripts({ companyDomain, query: "<topic>" })` | Receipts for the Recent Signals section — real quotes with recording links, not paraphrases |
+| Evidence for a matched entity | `get_entity_evidence({ entityOId })` | Best verbatim quotes backing a matched persona pain, competitor claim, or proof point |
 | Uploaded resources | `search_resources({ query: "<company or industry>" })` | Relevant uploaded docs and assets |
 
 ---
@@ -380,7 +384,7 @@ Not all sections appear in every brief. The occasion determines emphasis:
 7. **Value Props to Lead With** — 3-4 value props tailored to this account, each with a headline, supporting evidence, and a "say this" phrasing.
 8. **Competitive Landscape** — If competitors detected: comparison table with key differentiators, landmine questions to ask, traps to avoid. Omit if no competitive signals.
 9. **Proof Points to Reference** — Relevant case studies with metric highlights, customer quotes, and logo. Organized by relevance to this account's industry/size/use case.
-10. **Recent Signals** — From findings: what was said in calls, objections raised, features requested, sentiment indicators. Each signal has a date and source. Omit if no findings data.
+10. **Recent Signals** — From findings: what was said in calls, objections raised, features requested, sentiment indicators. Each signal has a date and source. Where available, pull the verbatim quote via `search_call_transcripts` instead of the paraphrase, and link the recording (`recordingUrl` + `startSec`). Omit if no findings data.
 11. **Deal Timeline** — If existing deal: visual stage history (horizontal timeline or vertical step list), key events, current stage, days in stage, next milestone. Omit for new prospects.
 12. **Quick Reference** — Sticky sidebar or footer cheat sheet: key facts at a glance, do's and don'ts for this conversation, one-line reminders. Always visible while scrolling.
 
@@ -481,6 +485,8 @@ Want me to:
 - `list_findings` — Recent conversation findings and insights
 - `list_events` — Deal events (stage changes, meetings, outcomes)
 - `get_event_detail` — Full details for a specific event
+- `search_call_transcripts` — Verbatim, speaker-attributed quotes across indexed calls, with recording links and timestamps — the receipt behind a finding
+- `get_entity_evidence` — Best verbatim quotes evidencing a matched persona, competitor, or proof point
 
 ### Content Generation
 - `generate_call_prep` — Generate full call prep materials

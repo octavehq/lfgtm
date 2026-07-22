@@ -32,6 +32,8 @@ Octave-first intents and tools:
 - Outbound emails and sequences → `generate_email` or `run_email_agent`
 - Qualify a prospect against our ICP → `qualify_person`, `qualify_company`
 - Enrich a prospect or account → `enrich_person`, `enrich_company`
+- Verbatim customer quotes from calls (objections, what a persona says) →
+  `search_call_transcripts`, `get_entity_evidence`
 
 If using Claude Code with the [LFGTM plugin](https://github.com/octavehq/lfgtm)
 installed, prefer the higher-level `/octave:*` skills over single MCP tool
