@@ -35,6 +35,8 @@
 | Competitor mentions | `list_findings({ query: "competitor mentions and comparisons", startDate })` | Competitive landscape in deals |
 | Feature requests | `list_findings({ query: "feature requests and product gaps", startDate })` | Product gaps causing losses |
 | Proof points cited | `list_findings({ query: "proof points and customer references cited", startDate })` | Social proof effectiveness |
+| Verbatim objection quotes, won vs. lost | `search_call_transcripts({ query: "pricing objection", dealOutcome: "WON" })` / `dealOutcome: "LOST"` | The evidence quotes for the Win/Loss tabs — the same objection, in the customer's own words, on both sides of the outcome |
+| Best quotes for one objection/competitor entity | `get_entity_evidence({ entityOId })` | Backs a specific objection or competitor card with real call language instead of a paraphrase |
 
 ---
 
@@ -45,6 +47,7 @@
 | All competitors | `list_entities({ entityType: "competitor" })` | Quick inventory for breakdown charts |
 | Competitor details | `get_entity({ oId })` | Deep dive when a competitor dominates losses |
 | All segments | `list_entities({ entityType: "segment" })` | Segment breakdown analysis |
+| Verbatim quotes from a segment | `search_call_transcripts({ attributedSegmentOIds: ["<oId>"] })` | Real customer language from companies classified into that segment, resolved live |
 | All personas | `list_entities({ entityType: "persona" })` | Persona win rate analysis |
 | Proof points | `list_entities({ entityType: "proof_point" })` | Evidence for "what's working" section |
 | All Motions | `list_motions()` | Inventory of Motions for Motion-level win rate analysis |
@@ -63,3 +66,6 @@
 | Deals vs competitor | `list_events({ filters: { eventTypes: ["DEAL_WON", "DEAL_LOST"], competitors: ["<oId>"] } })` | Win/loss record against this competitor |
 | Findings mentioning competitor | `list_findings({ query: "objections and mentions related to this competitor", eventFilters: { competitors: ["<oId>"] }, startDate })` | Real objections and mentions from calls |
 | Competitive positioning | `search_knowledge_base({ query: "<competitor> differentiation", entityTypes: ["competitor"] })` | Existing positioning guidance |
+| Verbatim mentions of this competitor | `search_call_transcripts({ query: "<competitor>", dealOutcome: "WON" })` / `"LOST"` | What prospects actually said about this competitor, split by outcome |
+| Objections raised when this competitor came up | `search_call_transcripts({ query: "objections raised", contentFilter: { callPhrases: ["<competitor>"] } })` | Scopes to calls that mention the competitor anywhere, then pulls the objection quotes from within them -- the objection itself doesn't need to name the competitor |
+| Best evidence for the competitor entity | `get_entity_evidence({ entityOId: "<competitor_oId>" })` | Pipeline-linked verbatim quotes evidencing this competitor's card |

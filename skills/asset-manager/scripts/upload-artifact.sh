@@ -112,6 +112,14 @@ for _field in "identifier=$IDENTIFIER" "description=$DESCRIPTION" "entry-point=$
       echo "error: --${_field%%=*} must not contain double quotes or backslashes" >&2
       exit 1
       ;;
+    *$'\n'* | *$'\r'* | *$'\t'*)
+      # Raw control characters are invalid inside a JSON string, so an
+      # interpolated value carrying one produces broken JSON the server
+      # rejects ("metadata field is not valid JSON"). Reject client-side
+      # with a message naming the flag instead.
+      echo "error: --${_field%%=*} must not contain newlines or tabs (keep it on one line)" >&2
+      exit 1
+      ;;
   esac
 done
 
@@ -127,9 +135,10 @@ METADATA="$METADATA}"
 # (busboy preservePath keeps the nested structure), or a single zip part.
 FORM_ARGS=("-F" "metadata=$METADATA")
 if [ -d "$SRC" ]; then
+  # Dotfile filter runs RELATIVE to $SRC (only relative paths reach the
+  # server), so a dotted ancestor of the source dir does not exclude everything.
   FILE_COUNT=0
-  while IFS= read -r FILE; do
-    REL="${FILE#"$SRC"/}"
+  while IFS= read -r REL; do
     # curl's `-F files=@path;filename=REL` shorthand parses `;` `,` and `"` as
     # directive/quote characters, so a file whose relative path contains any of
     # them corrupts the part or aborts the whole upload. Reject with a clear,
@@ -141,11 +150,11 @@ if [ -d "$SRC" ]; then
         exit 1
         ;;
     esac
-    FORM_ARGS+=("-F" "files=@$FILE;filename=$REL")
+    FORM_ARGS+=("-F" "files=@$SRC/$REL;filename=$REL")
     FILE_COUNT=$((FILE_COUNT + 1))
-  done < <(find "$SRC" -type f ! -path '*/.*' ! -name '.*' | sort)
+  done < <(cd "$SRC" && find . -type f ! -path '*/.*' ! -name '.*' | sed 's|^\./||' | sort)
   if [ "$FILE_COUNT" -eq 0 ]; then
-    echo "error: no files found under $SRC (dotfiles are skipped)" >&2
+    echo "error: no non-dotfile files found under $SRC (dotfiles inside the source are skipped)" >&2
     exit 1
   fi
   echo "uploading $FILE_COUNT file(s) from $SRC/ as \"$IDENTIFIER\""

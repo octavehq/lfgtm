@@ -158,7 +158,7 @@ See [sections.md](references/sections.md) for the full 4-section report breakdow
 - Segments, personas, use cases, and competitors are attributed on every card — not floating as abstract statistics
 - Section 2 (Win/Loss Analysis) is a tabbed pair: Win Analysis ←→ Loss Analysis
 - Section 3 (Head-to-Head Deals) is tabbed by dimension: By Competitor | By Segment | By Persona
-- Objections live inside the Loss tab (sorted by loss correlation, not frequency)
+- Objections live inside the Loss tab (sorted by loss correlation, not frequency); where available, back each one with a verbatim quote from `search_call_transcripts` rather than a paraphrase
 - Actionable changes live inside the Loss tab as "What to Stop Doing / Changes to Make," with an optional one-line "Winnable if: [X]" callout per pattern where the evidence points to a clean turning point
 - "No Decision / Stalled" is an optional loss pattern category, included only if the workspace's loss data actually distinguishes no-decision from competitor losses, never fabricated
 
@@ -289,6 +289,8 @@ Want me to:
 
 ### Conversation Intelligence
 - `list_findings` - Objections, value prop presentations, competitor mentions, feature requests, proof points cited in calls
+- `search_call_transcripts` - Verbatim objection/competitor quotes filtered by `dealOutcome` (WON/LOST/OPEN) — the evidence quotes behind the Win/Loss tabs
+- `get_entity_evidence` - Best verbatim quotes evidencing one objection or competitor entity, for a specific card
 
 ### Library Context
 - `list_entities` - Quick inventory of competitors, segments, personas

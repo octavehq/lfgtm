@@ -46,6 +46,8 @@ You have access to the full Octave MCP server. Your primary tools:
 - `list_findings` - What's resonating in conversations (and what's not)
 - `list_events` - Email reply rates, deal outcomes
 - `get_event_detail` - Deep dive into specific interactions
+- `search_call_transcripts` - What a target persona actually says, via `attributedPersonaOIds` ("what do CTOs say when we bring up X") — real customer language to steal for a hook or opener
+- `get_entity_evidence` - Best verbatim quotes evidencing a persona's pain point, for personalization that's grounded in something a real buyer said
 - `search_knowledge_base` - Motions, personas, value props
 - `list_motions` / `list_motion_icps` / `find_motion_icp` - Pull the Motion ICP cell for the target's persona × segment. Read its Strategic narrative, Pains and consequences, Benefits and impacts, and pinned learnings (especially `KEY_LANGUAGE` and `OBJECTION` learnings) — that's the source of truth for what to say at the top of funnel.
 

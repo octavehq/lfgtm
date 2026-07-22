@@ -195,7 +195,7 @@ Interactive HTML competitive battlecard grounded in real conversation evidence:
 - Single-competitor deep dives with expandable sections and color-coded comparisons
 - Full competitive landscape documents across every tracked competitor
 - Trap questions to expose competitor weaknesses
-- Objection counters ("they say X, we say Y")
+- Objection counters ("they say X, we say Y") backed by verbatim call quotes, not paraphrases
 - Displacement outreach offered as a follow-up
 
 ```
@@ -284,6 +284,7 @@ Context-aware research and prep:
 - Demo prep (use cases, proof points, objections)
 - Outreach prep (hooks, angles, personalization)
 - Pipeline review (deal health, next moves, risks)
+- Recent Signals backed by verbatim call quotes with recording links, not paraphrases
 
 ```
 /octave:research john@acme.com --for discovery
@@ -308,6 +309,7 @@ Surface intelligence from sales conversations:
 - What's resonating vs not
 - Trends over time
 - Library update suggestions
+- Drill into the verbatim quote behind any finding, with recording link and timestamp
 
 ```
 /octave:insights --type objections
@@ -319,6 +321,7 @@ Visual win/loss analysis as a self-contained HTML report with charts:
 - Win/loss patterns and competitor analysis
 - Period, segment, and competitor cuts
 - Deal deep dives
+- Verbatim objection and competitor quotes split by deal outcome, not paraphrases
 
 ```
 /octave:win-loss-report
@@ -374,6 +377,7 @@ Methodology-driven deal coaching built around Resonate → Elevate → Compel:
 - Coaching decks walking through the framework for a specific deal
 - Interactive quizzes with deal-grounded scenarios
 - Stage inference from CRM data, findings, and activity patterns
+- Talking points grounded in the buyer's own verbatim words, pulled across every call with the account
 
 ```
 /octave:deal-coach                                        # Interactive — picks mode and stage
@@ -519,6 +523,8 @@ Still available for workspaces operating on legacy standalone playbooks, but Mot
 - `list_events` - Search calls, emails, deals
 - `list_findings` - Aggregate extracted insights
 - `get_event_detail` - Get detailed event info with transcript/content
+- `search_call_transcripts` - Semantic + keyword search over indexed call transcripts. Returns verbatim, speaker-attributed moments grouped per call, with `recordingUrl` + `startSec` time anchors and live-hydrated linked CRM opportunities (current stage). Filterable by company, persona (`attributedPersonaOIds`, OR across the array), segment (`attributedSegmentOIds`, resolved live from company classifications), speaker side (customer vs. rep), deal outcome (WON/LOST/OPEN), sentiment, and date range. `contentFilter` narrows by exact phrase: `momentPhrases` (the quote itself must contain one), `callPhrases` (the call must mention one anywhere, e.g. "objections raised" + `callPhrases: ["Loops"]` = objections from calls that discussed Loops), and `excludeCallPhrases` (drop calls mentioning one). `list_findings` is the pipeline's paraphrased insight; this is the raw conversation it came from — requires `CAN_ANALYTICS` and indexed transcripts (per-workspace backfill)
+- `get_entity_evidence` - Best verbatim call quotes evidencing one library entity (persona, competitor, objection, use case, proof point). Prefers pipeline-linked moments, falls back to semantic search on the entity name — the entity-anchored composition of `list_findings` and `search_call_transcripts`
 
 ### GTM Reports
 Narrative GTM analyses (GTM Explorer / Beats).

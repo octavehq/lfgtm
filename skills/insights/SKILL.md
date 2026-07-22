@@ -135,6 +135,10 @@ get_event_detail({
 })
 ```
 
+When the user wants the exact quote behind a finding, not just the event it came from — "show me what they actually said," "pull the verbatim" — use `search_call_transcripts` instead of (or alongside) `get_event_detail`. It searches across all indexed calls, not just one known event, and returns speaker-attributed moments with `recordingUrl` + `startSec` for jump-to-moment citations. `list_findings` is the paraphrased trend; `search_call_transcripts` is the receipt.
+
+When the ask is scoped to a topic rather than a persona or outcome — "what objections came up when we talked about [competitor/feature]" — use `contentFilter.callPhrases`: `search_call_transcripts({ query: "objections raised", contentFilter: { callPhrases: ["<topic>"] } })` restricts to calls that mention the topic anywhere, then pulls objection quotes from within them. The objection quote itself doesn't need to mention the topic.
+
 Present the full context:
 
 ```
@@ -224,6 +228,8 @@ If yes, use `update_entity` to apply.
 - `list_events` - Search events with filters
 - `list_findings` - Aggregate findings across events
 - `get_event_detail` - Get detailed event info with transcript/content
+- `search_call_transcripts` - Verbatim, speaker-attributed quotes across all indexed calls (query, persona, sentiment, deal outcome) — the receipt behind a finding, not the paraphrase
+- `get_entity_evidence` - Best verbatim quotes evidencing one library entity (persona, competitor, objection, use case)
 
 ### Library Context
 - `get_entity` - Get persona / segment / competitor / objection details

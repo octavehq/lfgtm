@@ -30,6 +30,8 @@
 | Competitive losses | `list_events({ startDate: "<180d ago>", filters: { eventTypes: ["DEAL_LOST"], competitors: ["<oId>"] } })` | Real deal outcomes -- losses to this competitor |
 | Deal details | `get_event_detail({ eventOId })` | Deep dive on notable wins or losses for evidence |
 | Conversation evidence | `list_findings({ query: "<competitor>", eventFilters: { competitors: ["<oId>"] } })` | Real objections and mentions from calls |
+| Verbatim quotes, won vs. lost | `search_call_transcripts({ query: "<competitor>", dealOutcome: "WON" })` / `dealOutcome: "LOST"` | The customer's own words about this competitor, split by outcome — for trap questions and objection counters |
+| Best evidence for this competitor | `get_entity_evidence({ entityOId: "<competitor_oId>" })` | Pipeline-linked verbatim quotes evidencing the competitor card, preferred over a paraphrase |
 | Proof points | `list_entities({ entityType: "proof_point" })` | Competitive win proof points, switching stories |
 | References | `list_entities({ entityType: "reference" })` | Customers who switched from this competitor |
 | Proof points by topic | `search_knowledge_base({ query: "<competitor> win switch", entityTypes: ["proof_point", "reference"] })` | Switching and competitive win stories |
@@ -50,5 +52,6 @@
 | Your products | `list_entities({ entityType: "product" })` | Product capabilities for comparison context |
 | All deal outcomes | `list_events({ startDate: "<180d ago>", filters: { eventTypes: ["DEAL_WON", "DEAL_LOST"] } })` | Win rates across all competitors |
 | Conversation evidence | `list_findings({ query: "competitive", startDate: "<90d ago>" })` | Cross-competitor objection patterns |
+| Verbatim cross-competitor quotes | `search_call_transcripts({ query: "competitive", dealOutcome: "LOST" })` | Real customer language behind loss patterns, across the whole landscape |
 | Proof points | `list_entities({ entityType: "proof_point" })` | Competitive win stories across all |
 | Uploaded intel | `search_resources({ query: "competitive landscape" })` | Analyst reports, market research docs |

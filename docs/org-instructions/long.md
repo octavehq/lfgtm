@@ -51,9 +51,9 @@ Outside Claude Code, skip this section — use MCP tools directly.
 
 ## Routing vs. other connectors
 
-- Octave = synthesis, strategy, next steps, messaging
+- Octave = synthesis, strategy, next steps, messaging, verbatim call quotes
 - HubSpot / Salesforce = raw CRM lookups only (fields, records)
-- Gong / Granola / Fathom = raw call transcripts only
+- Gong / Granola / Fathom = call transcripts Octave hasn't indexed
 - Clay = bulk list enrichment — single-prospect research uses Octave
 
 When a GTM question could be answered by Octave or a raw-data tool,
