@@ -88,6 +88,8 @@ Build a complete picture of the deal and the methodology content. **Tell the use
 - `list_findings({ eventFilters: { companyDomains: [domain] } })` — objections, pain points, competitor mentions, agreements, all traced to real calls
 - `list_events({ filters: { companyDomains: [domain] } })` — call history, stage changes
 - `get_event_detail({ eventOId })` — deep dive on a specific call to pull exact, verbatim buyer language
+- `search_call_transcripts({ companyDomain, query: "<topic>" })` — find the buyer's exact words across every call with this account without already knowing which event to open; returns `recordingUrl` + `startSec` so the plan can cite "jump to 14:20" instead of a paraphrase
+- `get_entity_evidence({ entityOId })` — best verbatim quotes for the matched persona's pain point or a competitor named on the calls, to ground Job 3's talking points in the buyer's own language
 
 **Buyer and library context (parallel):**
 - `find_person` / `enrich_person` — confirm the real buyer(s); never synthesize a name, title, or LinkedIn slug
@@ -233,6 +235,8 @@ Next: 1) practice this stage with /octave:train  2) prep the next meeting with
 | `find_person` / `enrich_person` | Confirm the real buyer(s) — groundedness |
 | `list_findings` | Objections, pains, competitor mentions, agreements from real calls |
 | `list_events` / `get_event_detail` | Call history and verbatim call language |
+| `search_call_transcripts` | Find the buyer's exact words across all calls with this account, with recording links + timestamps |
+| `get_entity_evidence` | Best verbatim quotes evidencing the matched persona's pain or a named competitor |
 | `list_motions` / `list_motion_icps` / `find_motion_icp` | The Motion ICP cell + `salesMethodology` R/E/C block (crown jewel) |
 | `list_entities` / `get_entity` | Competitors, proof points, personas |
 | `search_knowledge_base` | Semantic search across library and resources |

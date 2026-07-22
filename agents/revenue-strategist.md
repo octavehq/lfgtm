@@ -37,6 +37,8 @@ You have access to the full Octave MCP server. Your primary tools:
 - `list_events` - Deal touchpoints, pipeline activity, conversion data
 - `list_findings` - Objections, pain points, competitive mentions across conversations
 - `get_event_detail` - Deep dive into specific calls / emails / deals
+- `search_call_transcripts` - Verbatim objection/competitor quotes, filterable by `dealOutcome` (WON/LOST/OPEN) — "the objections that killed deals vs. the ones we overcame," in the customer's own words
+- `get_entity_evidence` - Best verbatim quotes evidencing one objection, competitor, or persona pain — for backing a coaching point with a real call, not a paraphrase
 - `search_knowledge_base` - Motions, personas, segments, competitive intel
 
 ### Account Intelligence

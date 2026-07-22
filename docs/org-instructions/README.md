@@ -10,8 +10,8 @@ Claude org preferences cap at **3,000 characters**.
 
 | Version | Size | Use when |
 |---|---|---|
-| **[short.md](./short.md)** | ~1,800 chars | You want headroom to layer workspace-specific rules (custom ICPs, named Motions, vertical terms) on top. Covers core routing and the most common Octave intents. |
-| **[long.md](./long.md)** | ~2,900 chars | Your team also has HubSpot, Salesforce, Gong, Granola, Fathom, or Clay connected. Adds explicit rules that demote raw-data tools to fallbacks, plus routing for LFGTM plugin skills and specialized agents. |
+| **[short.md](./short.md)** | ~1,950 chars | You want headroom to layer workspace-specific rules (custom ICPs, named Motions, vertical terms) on top. Covers core routing and the most common Octave intents. |
+| **[long.md](./long.md)** | ~2,970 chars | Your team also has HubSpot, Salesforce, Gong, Granola, Fathom, or Clay connected. Adds explicit rules that demote raw-data tools to fallbacks, plus routing for LFGTM plugin skills and specialized agents. |
 
 Click into either file, view **Raw** on GitHub, copy the full contents, and paste into Claude org preferences.
 

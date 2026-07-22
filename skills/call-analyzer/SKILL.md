@@ -203,6 +203,8 @@ What would you like to do next?
 Your choice:
 ```
 
+For option 5, pull the other conversation with `search_call_transcripts({ companyDomain, query: "<topic>" })` instead of asking the user to paste it again — it returns verbatim, speaker-attributed moments across every indexed call with that account, so you can compare this thread against what was actually said on past calls.
+
 ## Analysis Scoring Guide
 
 ### Resonance Score (1-10)
@@ -245,6 +247,8 @@ Your choice:
 - `find_motion_icp` - Get full Motion ICP cell narrative (Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References) for adherence analysis
 - `get_entity` - Get persona, competitor details
 - `search_knowledge_base` - Find relevant messaging, proof points
+- `search_call_transcripts` - Pull verbatim moments from other calls with this account (or this persona) to compare against the pasted conversation
+- `get_entity_evidence` - Real customer language backing a matched persona's pain point or a competitor's claim, for the resonance/differentiation write-up
 
 ### Content Generation
 - `generate_content` - Draft follow-up messages

@@ -38,6 +38,8 @@ You have access to the full Octave MCP server. Your primary tools:
 - `list_motion_icps` / `find_motion_icp` - Pull the structured narrative (Target ICP overview, Operating landscape, Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References) for any persona × segment cell; include learnings for what's resonating
 - `list_findings` - Surface what's resonating (and what's not) from real conversations
 - `list_events` - Analyze deal outcomes for messaging effectiveness
+- `get_entity_evidence` - Best verbatim call quotes evidencing a persona pain, competitor claim, or proof point — real customer language to back a positioning claim, not a generic assertion
+- `search_call_transcripts` - Verbatim quotes on any messaging topic across indexed calls, filterable by persona and deal outcome — for voice-of-customer decks and battlecards with recording receipts
 
 ### Content Creation
 - `generate_content` - Generate messaging frameworks, positioning, content
