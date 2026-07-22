@@ -120,6 +120,14 @@ for _field in "identifier=$IDENTIFIER" "description=$DESCRIPTION" "entry-point=$
       echo "error: --${_field%%=*} must not contain double quotes or backslashes" >&2
       exit 1
       ;;
+    *$'\n'* | *$'\r'* | *$'\t'*)
+      # Raw control characters are invalid inside a JSON string, so an
+      # interpolated value carrying one produces broken JSON the server
+      # rejects ("metadata field is not valid JSON"). Reject client-side
+      # with a message naming the flag instead.
+      echo "error: --${_field%%=*} must not contain newlines or tabs (keep it on one line)" >&2
+      exit 1
+      ;;
   esac
 done
 
