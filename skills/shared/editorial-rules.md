@@ -38,6 +38,8 @@ Universal language, presentation, and writing quality rules for all Octave-gener
 
    **Conclusion-carrying, not theatrical.** A finding-stating header still fails if it reaches for drama, suspense, or urgency instead of just stating the conclusion. Watch the whole header stack, eyebrow + heading + lead together: a plausible-sounding claim can pass a "states a finding" check while the stack as a whole reads like a movie trailer. Worked example, a coaching doc's risk section that was wrongly approved: eyebrow "WHERE YOU'RE EXPOSED" + heading "The two things that stall this deal" + lead "Both are already live in the account. Have the counter ready before the next call." The heading is technically a claim, but "exposed", the ominous "the two things that stall this deal", and the command "have the counter ready" are theatrics. Fixed: eyebrow "TOP RISKS" + heading "The risks in play here, and the counter for each" + lead that names them plainly. Test: read the eyebrow, heading, and lead aloud as one unit. If it sounds like it wants a drumroll, or issues a command, or teases rather than tells, rewrite it to plainly state the conclusion.
 
+8b. **Eyebrow/kicker must not restate its heading.** A section eyebrow (the small kicker above the H2) and the heading itself must not be paraphrases of each other. "INVESTMENT & NEXT STEPS" above a heading "Investment & next steps" is the worst case; "IMPLEMENTATION" above "How it goes" is the same failure, softer. Pick one of two fixes: (a) make the eyebrow a **number-only** section marker ("06") and let the heading carry the meaning, or (b) keep a terse category eyebrow only if the heading is a genuinely distinct claim (rule 8), not a synonym. If eyebrow and heading would read as synonyms, cut the eyebrow to a number. Default to number-only eyebrows, matching the showcase house style.
+
 9. **No redundant content across sections.** If one section covers a finding, don't repeat it elsewhere. Each section earns its space independently.
 
 10. **Order by importance within every section.** Most impactful item first. Never chronological or alphabetical.
@@ -121,6 +123,8 @@ These words are legitimate individually. Two or more in the same content block s
 | **Role recitation** | "As VP Sales at [Company], you..." Reading back someone's LinkedIn headline. | Show understanding of their world, not their title. |
 | **Dramatic framing** | "What separates the winners from the losers." "The one thing every successful team does." Subtitles and intros that use rhetorical drama or mystery to create artificial suspense instead of stating content directly. | State what the content covers. "Patterns from 12 accounts" not "What separates the ones who get it from the ones who don't." |
 | **Objection phrasing trap** | Putting words in the prospect's mouth: `"We already use Glean for this"`, a quote nobody said. | Describe the risk, don't quote the prospect: `They position this as overlap with existing enterprise search`. |
+| **Unearned superlative / vague comparative** | A ranking or intensity claim with no stated baseline or evidence: "the most-engaged account," "strong fit," "the timing is live," "highly engaged," "perfect-fit account." Reads as confident but says nothing checkable. | Name the specific signal and cut the adjective: "The account booked two technical scoping calls in the last month." If you can't ground the superlative, you don't have one. |
+| **Rule-of-three filler** | Three short parallel clauses strung together for rhythm rather than information: "they closed, they kicked off, and they meet every week." The cadence does the work the content should. | State the one load-bearing fact plainly. Three facts rarely deserve equal weight in a single breath; lead with the one that matters and drop or subordinate the rest. |
 
 **Concrete examples** (these are the patterns that actually slip through):
 
@@ -131,6 +135,8 @@ These words are legitimate individually. Two or more in the same content block s
 | "The prospect's problem isn't convincing themselves. It's convincing their CFO." | "The real friction is the CFO approving a new line item." |
 | "Prospects aren't evaluating. They're recovering." | "Prospects show up pre-burned, treating the first call as triage." |
 | "The objection isn't price. It's the absence of a budget line." | "The real blocker is the absence of a budget line." |
+| "This is our most-engaged account." | "They've met with us weekly since the kickoff." (name the signal, drop the ranking) |
+| "Strong fit and the timing is live: they closed, they kicked off, and they meet every week." | "They're mid-rollout: kicked off last month, now meeting weekly." |
 
 The tell: any two-sentence pair where removing the first sentence loses nothing. If the negation adds no information, cut it and lead with the positive claim.
 
@@ -229,6 +235,14 @@ Self-contained editorial audit. Run every check against the generated file. Fix 
 **2b. Staccato Flex**
 - [ ] No runs of 3+ short declarative sentences (under ~8 words each) stacked back-to-back
 
+**2b2. Unearned superlatives / vague comparatives**
+- [ ] No ranking or intensity claim without a stated, grounded baseline: "most-engaged," "strongest," "strong fit," "perfect fit," "highly engaged," "the timing is live/right," "best-fit account"
+- Detection: search text for superlatives (`-est`, "most ", "strong fit", "perfect fit", "highly ", "timing is"). Each must be replaced by the specific signal that earns it, or cut.
+
+**2b3. Rule-of-three filler**
+- [ ] No three-parallel-clause cadence used for rhythm ("they closed, they kicked off, and they meet every week")
+- Detection: read for triads of short verb phrases joined by commas + "and." If the three items aren't a genuine parallel enumeration, collapse to the one load-bearing fact.
+
 **2c. Gerund Relay**
 - [ ] No sentences where two -ing verbs chain and restate the same thing
 
@@ -276,6 +290,7 @@ Self-contained editorial audit. Run every check against the generated file. Fix 
 **3b. Headlines**
 - [ ] Every headline states a finding, not a topic, including chart titles and stat labels
 - Test: can the reader agree or disagree? Yes = claim (correct). No = label (violation).
+- [ ] No section eyebrow/kicker paraphrases its own heading (rule 8b). Detection: for each section, read the eyebrow and the H2 as a pair. If they're synonyms ("INVESTMENT & NEXT STEPS" / "Investment & next steps"), cut the eyebrow to a number or make the heading a distinct claim. Default to number-only eyebrows.
 
 **3c. Implications / Recommendations**
 - [ ] Every recommendation is specific and actionable (messaging, positioning, enablement, materials)
