@@ -615,6 +615,8 @@ Every slide is a fixed 1920×1080 canvas; the controller scales the whole stage.
 2. **`overflow: hidden` on every `.slide`** (from viewport-base.css) — anything that doesn't fit is clipped, so it must fit by design.
 3. **Content density limits per slide type** (tighten for *speaker-led*, allow the upper bound for *reading-first* — see Step 1 density choice):
 
+**Numeric interpretation rule:** Every displayed number must state its unit in the same visual block, with the reporting period and scope nearby. If categories overlap, say so. If evidence was deduplicated, name the deduplication unit. Reader-facing slides use plain units such as calls, companies, deals, or buyer quotes. Never expose internal evidence mechanics through labels such as “receipt set.”
+
 | Slide Type | Max Content |
 |-----------|------------|
 | Title | 1 heading + 1 subtitle (2-3 lines max) |
