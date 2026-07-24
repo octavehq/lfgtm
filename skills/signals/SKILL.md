@@ -1,6 +1,6 @@
 ---
 name: signals
-description: Morning intelligence briefing that surfaces the deals, patterns, and signals demanding attention right now. Use when user says "what should I focus on", "morning briefing", "what happened", "signals", "what needs attention", "daily update", or asks what changed since they last checked. Flips from pull-based to push-based — the data tells you what to work on.
+description: Morning intelligence briefing that surfaces the deals, patterns, and signals demanding attention right now. Use when user says "what should I focus on", "morning briefing", "what happened", "signals", "what needs attention", "daily update", or asks what changed since they last checked. Flips from pull-based to push-based — the data tells you what to work on. Do NOT use for ranked next actions on one specific deal or watched-deal briefs — use /octave:next-best-action instead.
 ---
 
 # /octave:signals - Morning Intelligence Briefing

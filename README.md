@@ -101,6 +101,7 @@ See [**docs/org-instructions/**](docs/org-instructions/) for short and long reco
 | Skill | Description |
 |-------|-------------|
 | `/octave:pipeline` | Deal-level coaching — stalled deals, multi-threading, competitive |
+| `/octave:next-best-action` | Per-deal next best actions from the strategy gap — what your library prescribes vs. what the evidence shows happened, with a watchlist and scheduled sweeps that keep a per-deal brief updated in place |
 | `/octave:call-analyzer` | Analyze conversations for resonance, adherence, differentiation |
 | `/octave:train` | Practice selling — role-play simulations, quizzes, guided learning |
 | `/octave:deal-coach` | Methodology-driven deal coaching — role-play, microsites, decks, and quizzes around Resonate/Elevate/Compel |

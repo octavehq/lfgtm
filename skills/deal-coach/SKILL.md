@@ -256,6 +256,7 @@ Next: 1) practice this stage with /octave:train  2) prep the next meeting with
 ## Related Skills
 
 - `/octave:pipeline` — Live-deal strategy: stalled-deal rescue, multi-threading, closing
+- `/octave:next-best-action` — Recurring strategy-gap next actions with a watchlist and scheduled sweeps
 - `/octave:train` — Generic role-play and quiz practice on your GTM
 - `/octave:meeting-prep` — Battle plan for one upcoming meeting
 - `/octave:proposal` — Customer-facing business case for the Compel stage
