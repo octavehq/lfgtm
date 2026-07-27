@@ -18,6 +18,10 @@ Read before generating:
 - [Evidence and links](references/evidence-and-links.md) when quotes, citations, companies, people, deals, or source links are requested
 - [Format routing](references/format-routing.md) after the user selects an output format
 
+The editorial rules apply to **titles and headings**, not just body copy. Every chapter, section, and spread title must state its finding as an intelligible sentence, or, if it is a short label, be clearly decipherable on its own. A vague evocative fragment that could sit on any report ("The Pressure," "The New Owner," "The Wall") does not pass: lead with the claim it stands in for. State the finding **plainly**. A dramatic reversal or clever turn ("we won X and inherited Y," "we won the argument and lost the war") fails on the opposite end, reading as performative even when the underlying finding is real. The editorial review must audit titles the same way it audits prose.
+
+**Write like a dispatch, not an inside joke.** Frame every finding for a reader who was not on the calls and does not yet share the context. State plainly what happened, to whom, and why it matters before layering in the clever turn. An elliptical, knowing line that assumes shared context ("Buyers stopped asking why and started handing our own framing back to us," "the conversation moved") is a failure even when it is literally true: the reader has to reverse-engineer what it means. A real magazine sets the scene, then delivers the point. Prefer the sentence a smart colleague who missed the week would understand on first read over the one that sounds knowing to someone who was there.
+
 ## Workflow
 
 ### 1. Discover the available reports
@@ -77,7 +81,7 @@ For an interactive run, ask whether the user wants to go beyond that preview:
 > 2. Selected details: verified quotes and source context for the most important claims
 > 3. Full receipts: quotes, companies, people, deal context, and source links where available
 
-Explain that options 2–3 call `get_report_section_evidence` and may require additional event hydration, so they take longer and consume more tokens. Never fabricate precision to compensate for missing evidence.
+Explain that options 2 to 3 call `get_report_section_evidence` and may require additional event hydration, so they take longer and consume more tokens. Never fabricate precision to compensate for missing evidence.
 
 Follow [evidence-and-links.md](references/evidence-and-links.md). Keep private deal or person details out of externally shared output unless the user explicitly confirms the audience and inclusion.
 
@@ -147,15 +151,62 @@ Wait for approval before generating visual output.
 
 ### 8. Generate and review
 
-1. Load or capture the workspace brand kit.
+1. Load or capture the workspace brand kit **first**, and set the digest in **its** typefaces (read them from the kit's `tokens.css` / manifest), not a generic editorial pairing. Then make sure those brand fonts are actually loaded and, for any hosted or shared digest, self-contained (`@font-face` with base64 `src`, not a remote `@import`/CDN link) so the render never falls back to a system font. Using generic type when a kit exists, or leaving a font unloaded, is a defect. See the font rules in [format-routing.md](references/format-routing.md).
 2. Generate through the selected format skill or reference. Use the digest-native magazine specification in [format-routing.md](references/format-routing.md) for editorial swipe magazines; do not route magazines through `/octave:deck`.
 3. Include source notes only where they help verification.
-4. Run the mandatory review protocol used by the selected format.
-5. For internal output, include Octave report links as described in [evidence-and-links.md](references/evidence-and-links.md).
-6. For magazine output, run the multi-aspect responsive review gate in [format-routing.md](references/format-routing.md); a single desktop screenshot is insufficient.
-7. For magazine output, run the nested-surface contrast check in [format-routing.md](references/format-routing.md). Light panels inside dark spreads and dark panels inside light spreads must explicitly reset foreground colors. Text that is visible only when selected is a hard failure.
-8. Every displayed number must tell the reader what it counts. Put the unit next to the value, state the reporting period and scope nearby, and explain deduplication or overlap when categories are not mutually exclusive. Translate internal evidence mechanics into reader language: use “calls,” “companies,” “deals,” or “buyer quotes,” never an unexplained label such as “receipt set.”
-9. When defensible totals are available, put a compact sample-size line on the title or opening spread (for example: calls, companies, evidence excerpts, and completed reports). Keep the reporting window separately visible so readers can judge coverage before interpreting the story.
+4. For internal output, include Octave report links as described in [evidence-and-links.md](references/evidence-and-links.md).
+5. Every displayed number must tell the reader what it counts. Put the unit next to the value, state the reporting period and scope nearby, and explain deduplication or overlap when categories are not mutually exclusive. Translate internal evidence mechanics into reader language: use “calls,” “companies,” “deals,” or “buyer quotes,” never an unexplained label such as “receipt set.”
+6. When defensible totals are available, put a compact sample-size line on the title or opening spread (for example: calls, companies, evidence excerpts, and completed reports). Keep the reporting window separately visible so readers can judge coverage before interpreting the story.
+7. **Run the review gate. This is a mandatory step, not an option.** Do not open the artifact, present a delivery summary, or tell the user it is ready until the gate has run and produced a scorecard. Load the [review protocol](../shared/protocol.md); the wiring below is digest-specific.
+
+   **Which gate runs where.** For digest-native HTML this skill renders directly (editorial swipe magazine and executive brief), run the full gate here. For formats handed to another skill (`/octave:deck`, `/octave:microsite`, `/octave:one-pager`), that skill owns its own mandatory gate; do not duplicate it. For Markdown, run the editorial half only, since there is no visual layer. In every case the digest orchestrator stays responsible for groundedness: no claim, quote, number, or attribution ships that the source reports and evidence do not support.
+
+   **7a. Preflight (deterministic, always first).** Run the protocol preflight, then the digest lint, and fix every violation before spawning reviewers:
+
+   ```bash
+   bash <skill-dir>/scripts/lint.sh <path-to-output.html>
+   ```
+
+   **7b. Spawn the two dedicated reviewers in parallel** (both Task calls in one message):
+
+   **Editorial reviewer:**
+   ```
+   Task tool:
+     subagent_type: "octave-editorial-reviewer"
+     prompt: "Review the file at [FILE PATH].
+              Read and run the checklist in each of:
+              1. [skill-dir]/../shared/editorial-rules.md
+              2. [skill-dir]/../shared/information-principles.md
+              3. [skill-dir]/references/format-routing.md
+                 Audit titles AND body copy: every chapter, section, and
+                 spread title must state its finding as an intelligible
+                 sentence (not a vague evocative fragment, not a dramatic
+                 clever turn); body copy must frame each finding for a reader
+                 who was not on the calls, never dropping cryptic or elliptical
+                 lines that assume shared context.
+              Fix violations inline. Return scorecard."
+   ```
+
+   **Presentation reviewer:**
+   ```
+   Task tool:
+     subagent_type: "octave-presentation-reviewer"
+     prompt: "Review the file at [FILE PATH].
+              Read and run the checklist in each of:
+              1. [skill-dir]/../shared/presentation-principles.md
+              2. [skill-dir]/references/format-routing.md
+              For magazine output, run the full responsive review gate in that
+              file at 16:9, 16:10, ultrawide, and a narrow viewport: the
+              multi-aspect check, the nested-surface and per-spread contrast
+              check (including fixed navigation chrome that must stay visible
+              on both light and dark spreads), the title-states-its-finding
+              check, and the typefaces-actually-rendered check. A brand font
+              that is declared but not loaded and falls back to a system face
+              is a hard failure. A single desktop screenshot is insufficient.
+              Fix violations inline. Return scorecard."
+   ```
+
+   **7c. Loop and scorecard.** Follow the protocol's loop decision (max 3 cycles, re-run both reviewers each loop) and output the combined scorecard. Delivery cannot start without it.
 
 For internal visual output, offer a compact source appendix after the main narrative and before the closing. The appendix may include:
 
