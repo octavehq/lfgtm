@@ -111,6 +111,7 @@ See [**docs/org-instructions/**](docs/org-instructions/) for short and long reco
 | Skill | Description |
 |-------|-------------|
 | `/octave:insights` | Surface findings, trends, and patterns from calls and emails |
+| `/octave:digest` | Turn completed GTM reports into a branded magazine, slide deck, interactive microsite, one pager, executive brief, Markdown digest, or recurring published digest with selectable evidence depth |
 | `/octave:signals` | Morning intelligence briefing — deals, patterns, and signals demanding attention |
 | `/octave:win-loss-report` | Visual win/loss analysis report as self-contained HTML with charts — patterns, competitor cuts, and deal deep dives |
 | `/octave:icp-refine` | Refine ICP definitions using deal outcome analysis |
