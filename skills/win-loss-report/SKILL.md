@@ -171,7 +171,7 @@ Load the [review protocol](../shared/protocol.md) and execute the review loop ag
 **4a: Mechanical lint** (before spawning reviewers):
 
 ```bash
-bash <skill-dir>/scripts/lint.sh <path-to-report.html>
+bash <skill-dir>/../shared/scripts/lint.sh <path-to-report.html>
 ```
 
 Fix every violation the lint surfaces. Deterministic checks: em-dashes, Tier 1 banned words, banned phrases, text density, leaked internals.

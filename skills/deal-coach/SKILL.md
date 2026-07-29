@@ -150,7 +150,7 @@ Load the [review protocol](../shared/protocol.md) and execute the review loop ag
 
 **5a: Mechanical lint** (before spawning reviewers):
 ```bash
-bash <skill-dir>/scripts/lint.sh <path-to-coaching.html>
+bash <skill-dir>/../shared/scripts/lint.sh <path-to-coaching.html>
 ```
 Fix every violation. The em/en-dash check is a hard gate.
 

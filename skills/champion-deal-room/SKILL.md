@@ -209,7 +209,7 @@ Load the [review protocol](../shared/protocol.md) and execute the review loop ag
 
 **5a: Mechanical lint:**
 ```bash
-bash <skill-dir>/scripts/lint.sh <path-to-deal-room.html>
+bash <skill-dir>/../shared/scripts/lint.sh <path-to-deal-room.html>
 ```
 Fix every violation.
 
