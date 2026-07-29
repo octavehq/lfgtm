@@ -275,7 +275,7 @@ Load the [review protocol](../shared/protocol.md) and execute the review loop ag
 **5a: Mechanical lint** (before spawning reviewers):
 
 ```bash
-bash <skill-dir>/scripts/lint.sh <path-to-microsite.html>
+bash <skill-dir>/../shared/scripts/lint.sh <path-to-microsite.html>
 ```
 
 Fix every violation the lint surfaces.

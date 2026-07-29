@@ -28,13 +28,13 @@ Check for:
 - **Scrollbars.** Themed, never the bare default OS scrollbar on a styled surface.
 - **Leaked internals and placeholders.** No tool or function names, version or stream IDs, or unfilled `[…]` brackets anywhere in the rendered output.
 
-Then run any skill-specific lint script. These are deterministic checks (banned words, text density) that don't need LLM judgment and cost nothing.
+Then run the shared lint script. These are deterministic checks (banned words, text density) that don't need LLM judgment and cost nothing.
 
 ```bash
-bash <skill-dir>/scripts/lint.sh <path-to-file>
+bash <skill-dir>/../shared/scripts/lint.sh <path-to-file>
 ```
 
-Fix every violation the lint surfaces before proceeding. If no lint script exists for this skill, skip straight to Step 2.
+Fix every violation the lint surfaces before proceeding. If a skill ships its own `scripts/lint.sh` with additional checks, run that too.
 
 ## Step 2: Spawn Reviewers (Parallel)
 
@@ -172,5 +172,5 @@ Status: [CLEAN / N remaining issues]
 - **Groundedness is the highest-stakes dimension.** A hallucinated contact, an invented metric, or a paraphrase dressed up as a verbatim quote does more damage than any layout bug. When in doubt, flag a claim as unverified in the scorecard rather than letting it ship as fact.
 - **Format files are shared across skills.** If your skill produces an HTML document, it uses `formats/html-document.md`. If it produces a deck, it uses `formats/slide-deck.md`. Don't duplicate format rules in skill-specific blueprints.
 - **Skill-specific blueprints add the most specific layer.** They handle CSS component systems, HTML scaffolds, and structural requirements unique to your skill. These sit on top of the universal + format layers.
-- **The lint script is optional but recommended.** Deterministic checks beyond the preflight (banned words, text density) are cheaper and faster as a shell script than as LLM inference. If your skill generates HTML, write a lint script.
+- **The lint script is shared.** One implementation lives at `shared/scripts/lint.sh`; its word and phrase lists mirror editorial-rules.md, so update both together. Don't copy it into a skill. A skill only adds its own `scripts/lint.sh` when it has genuinely skill-specific deterministic checks, and that script runs in addition to the shared one.
 - **Principles are baked into generation.** The review pass catches what slipped through. It's not the only quality gate: it's the verification gate.

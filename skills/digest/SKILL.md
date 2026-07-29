@@ -164,7 +164,7 @@ Wait for approval before generating visual output.
    **7a. Preflight (deterministic, always first).** Run the protocol preflight, then the digest lint, and fix every violation before spawning reviewers:
 
    ```bash
-   bash <skill-dir>/scripts/lint.sh <path-to-output.html>
+   bash <skill-dir>/../shared/scripts/lint.sh <path-to-output.html>
    ```
 
    **7b. Spawn the two dedicated reviewers in parallel** (both Task calls in one message):
