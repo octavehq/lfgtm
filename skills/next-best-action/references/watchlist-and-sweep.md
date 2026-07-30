@@ -4,7 +4,8 @@ The recurring half of the skill: which deals to run, the state that makes runs d
 
 ## State file
 
-`~/.octave-nba/state.json`, keyed by workspace (from `verify_connection` — use the workspace name/identifier it returns, so one user can watch deals across workspaces without collisions). Create the directory on first use; the whole path stays out of any git repo.
+`~/.octave-nba/state.json`, keyed by workspace (from `verify_connection`; use the workspace name/identifier it returns, so one user can watch deals across workspaces without collisions). Create the directory on first use; the whole path stays out of any git repo. Workspace setup lives separately in `~/.octave-nba/config.json`; see
+[setup-and-operating-model.md](setup-and-operating-model.md).
 
 ```json
 {
@@ -28,9 +29,20 @@ The recurring half of the skill: which deals to run, the state that makes runs d
       "runs": {
         "op_abc123": {
           "lastRunAt": "2026-07-21T07:00:00Z",
-          "openActions": [
-            { "fingerprint": "G3: engage economic buyer (CFO persona)", "firstSeen": "2026-07-14" },
-            { "fingerprint": "G7: audit-cost proof point never presented", "firstSeen": "2026-07-21" }
+          "ledger": [
+            {
+              "actionId": "nba_abc123",
+              "fingerprint": "G3:persona_cfo:engaged",
+              "gapType": "G3",
+              "move": "Engage the economic-buyer persona with the audit-cost case",
+              "firstSeen": "2026-07-14",
+              "status": "proposed",
+              "acceptance": "pending",
+              "outcome": "pending",
+              "confidence": "medium",
+              "evidence": [],
+              "strategySources": []
+            }
           ]
         }
       }
@@ -39,7 +51,9 @@ The recurring half of the skill: which deals to run, the state that makes runs d
 }
 ```
 
-- `openActions` fingerprints are one-line `<gap-type>: <move>` summaries — enough to carry/de-dup actions across runs (see action-derivation § 4), not a cache of the full output.
+- `ledger` is the per-opportunity memory. Fingerprints use stable semantic ids (gap + strategy
+  entity + intended state change), not wording. Existing v0 `openActions` arrays may be read and
+  migrated lazily on the next write.
 - `filters` are stored as natural-language descriptions and re-evaluated at sweep time; there is no compiled query to go stale.
 - Read-modify-write the whole file; keep it small. If it's corrupt, say so and rebuild from an empty structure rather than crashing the sweep.
 
@@ -54,7 +68,11 @@ The recurring half of the skill: which deals to run, the state that makes runs d
 
 1. **Resolve the run set.** Union of explicit `watch` entries + deals matching each stored filter, evaluated fresh against `list_deal_health({})` (health signals included — they feed G5) or `list_pipeline_overview`. On workspaces with 100+ open deals these outputs overflow the tool-result limit and spill to a file — plan on `jq` extraction, not on reading the result inline. Store every known domain for a watched account (`accountDomains`) and query events/findings with all of them. De-dup by `opportunityOId`. Report the set size before starting. A deal that got closed (won/lost) since the last sweep: report the outcome in the digest, drop it from `runs`, and if watched explicitly, ask (interactive) or note (headless) that it was removed.
 2. **Per deal, in sequence:** run SKILL.md Steps 2–6 with the delta window set to that deal's `lastRunAt`. Sequential, not parallel — sweeps share one MCP session and per-deal ordering keeps tool volume and output attribution sane. Cap: if the run set exceeds 15 deals, run the 15 most urgent (health signal severity, then amount) and say which were deferred — never silently truncate.
-3. **Carry / retire actions.** Compare derived actions against `openActions` fingerprints: same gap still open → carried (present with "still open since"); evidence shows it was executed or the gap closed → retired (report as progress — this is the most motivating line in the digest); new → new. Write the updated fingerprints and `lastRunAt` back.
+3. **Reconcile the ledger.** Compare derived actions against stable fingerprints: same gap still
+   open → carried (present with "still open since"); positive evidence the move ran → update
+   acceptance; positive evidence the gap closed → update outcome and retire; changed world →
+   superseded; blind/stale coverage → unobservable, never failed. New recommendation → append a
+   complete decision record. Follow [action-ledger-and-learning.md](action-ledger-and-learning.md).
 4. **Asset updates** for `asset: true` deals, honoring the stability rule (SKILL.md Step 6): no new evidence and no action change → skip the upload entirely, digest says "unchanged."
 5. **Digest** (see below), most urgent deal first.
 
@@ -88,5 +106,3 @@ The sweep is idempotent and delta-aware, so any trigger works. In rough order of
 2. **Claude Code scheduled agent** — `/schedule` a weekday-morning run of `/octave:next-best-action sweep --asset`. Runs in the cloud; needs the Octave MCP server available to the scheduled environment.
 3. **cron / CI** — `claude -p "/octave:next-best-action sweep --asset"` from any box with the plugin + MCP configured. Pre-approve the needed tools via the project's `.claude/settings.json` allowlist rather than blanket permission flags.
 4. **Event-triggered** — run the single-deal form right after something happens: a call recording lands, a stage changes, a Beats digest publishes. Wire it from the caller's automation (their webhook receiver invoking `claude -p "/octave:next-best-action acme.com --asset"`). This is the "more meaningful than nightly" option: the freshest possible answer, only when there's a reason.
-
-If a customer wants Octave to own the clock (a managed learning-loop that regenerates briefs server-side), that's a product decision to take deliberately — this skill is the proving ground that tells us whether the derivation earns it.

@@ -4,6 +4,28 @@ How a raw pile of tool results becomes at most three recommended actions. This i
 
 The core invariant: **an action exists only where a prescription and an observation disagree.** No prescription (nothing in the library covers it) → it's a library gap, not a deal action; note it and move on. No observation (no evidence either way) → it's a discovery question, not an instruction. Both present and aligned → nothing to do; that's success, not a failure to find an action.
 
+## 0. Commitment integrity comes first
+
+Before G1 to G8, reconcile promises and mutually agreed next steps. This is G0, but it is not another
+strategy-gap category: a promise already made carries its own prescription.
+
+Classify commitment states with the single vocabulary in
+[action-ledger-and-learning.md](action-ledger-and-learning.md) § Commitment ledger — this section
+only says how each state ranks against other candidate actions:
+
+- **Internal commitment open:** fulfill it, renegotiate it, or provide a concrete status update.
+  This normally outranks a new play because trust is already at stake.
+- **External commitment open:** monitor until due; follow up with the promised context after due,
+  not with a generic nudge.
+- **Mutual next step booked:** treat it as coverage and prepare for it; do not recommend scheduling
+  what already exists.
+- **Fulfilled/superseded:** retire it with positive evidence.
+- **Unobservable:** say the completion channel is not visible. Never call it overdue solely from a
+  negative search.
+
+Use the structured commitment extraction types when available. Otherwise mine verbatim transcripts
+and CRM/email activity, and label the result caller-supplied or inferred as appropriate.
+
 ## 1. Establish position first
 
 Before hunting gaps, fix the deal's position on three axes. Every gap type below reads against this position.
@@ -20,7 +42,17 @@ State the position in one sentence at the top of every output: *"CRM says Negoti
 
 Walk all eight. For each, the **trigger** is a concrete evidence condition — if you can't point to the tool result that fired it, it didn't fire.
 
-**The coverage check** (used by G1, G4, G7): "no evidence the play ran" means no *internal-speaker* finding in this deal's events is entity-linked to the library play in question. Concretely: `list_findings({ query: "<play topic>", eventFilters: { companyDomains } })`, keep `speaker: "internal"` rows, and inspect their `linkedEntities` for the play's oId. An internal finding linked to that entity = the play ran (check its timestamp against when the buyer signal surfaced — a proof shown *before* the doubt doesn't count as an answer to it). This is a judgment-heavy diff today; treat a thin result as "not shown to have run," never as proof of absence, and say which you mean.
+**The coverage check** (used by G1, G4, G7): prefer
+`get_deal_strategy_evidence({ opportunityOId, entityOIds, occurredAfterIso })` when registered. It
+returns the relevant entity-linked findings and explicit zero-evidence rows. These are receipts,
+not verdicts. Otherwise, `list_findings({ query: "<play topic>", eventFilters: {
+companyDomains } })`, keep `speaker: "internal"` rows, and inspect their `linkedEntities` for the
+play's oId. `search_call_transcripts({ entityOId, speakerSide: "internal", companyDomain })` is the
+sharper second instrument: the rep's actual on-call moments about the play's entity, with timestamps
+to order against the buyer signal. An internal finding or moment linked to that entity = the play
+ran — check its timestamp against when the buyer signal surfaced; a proof shown *before* the doubt
+doesn't count as an answer to it. Treat zero/thin results as "not shown to have run" unless source
+coverage and freshness support an absence claim.
 
 ### G1 — Unanswered strategy signal
 The buyer voiced something the library has a play for, and no evidence shows the play ran.
@@ -34,7 +66,7 @@ CRM stage and methodology stage disagree, in either direction.
 
 ### G3 — Missing committee coverage
 A persona the prescription requires is absent from the observed stakeholders.
-- **Trigger:** Motion ICP cell / playbook names buyer personas (economic buyer, user champion); stakeholder rollup + findings show nobody matching one of them (title/seniority match), or `reachedSeniorBuyer: false` / `singleThreaded: true` where the prescription requires more before the current stage's exit.
+- **Trigger:** Motion ICP cell / playbook names buyer personas (economic buyer, user champion); stakeholder rollup + findings show nobody matching one of them (title/seniority match), or `reachedSeniorBuyer: false` / `singleThreaded: true` where the prescription requires more before the current stage's exit. Confirm the absence with `search_call_transcripts({ attributedPersonaOIds: [<prescribed persona>], companyDomain })` — no moment attributed to a contact classified into that persona means the gap is real, not a rollup artifact.
 - **Action shape:** who to add (find real candidates via `find_person` — never invent a name), through whom, opening with the cell's value prop *for that persona*. This is what "multi-thread" looks like when it's strategy-grounded.
 
 ### G4 — Competitive exposure without a counter
