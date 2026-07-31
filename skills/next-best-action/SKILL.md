@@ -122,7 +122,7 @@ Every action ships as four parts: **the move** (imperative, specific), **why now
 
 **Asset (`--asset` or watched-with-asset):** build/update the deal's hosted brief per [brief-spec.md](references/brief-spec.md), publish through the asset-manager route (upload scripts for files, `asset_update` for metadata — see that skill's One Decision Rule), and record the asset id in the state file. Review policy:
 - **First brief in a workspace (template validation):** full review gate per the [review protocol](../shared/protocol.md) — lint + both reviewers + scorecard. This validates the template, not just the copy; a full gate runs 10-15 minutes of wall clock, so it cannot be the per-deal price.
-- **Every other brief (new deals on the validated template, sweep updates):** mechanical lint (`bash <skill-dir>/scripts/lint.sh <file>`) + the orchestrator's own groundedness check. The full two-reviewer pass re-runs when the template's structure changes or every 10th update of a given brief.
+- **Every other brief (new deals on the validated template, sweep updates):** mechanical lint (`bash <skill-dir>/../shared/scripts/lint.sh <file>`) + the orchestrator's own groundedness check. The full two-reviewer pass re-runs when the template's structure changes or every 10th update of a given brief.
 - **Stability rule:** if no new evidence arrived and prior actions are still open, do not re-word the brief — report "no change" in the digest and leave the asset alone.
 
 **Sweep digest:** after all deals run, print the cross-deal ranking (which deal has the most perishable action first), per-deal one-liners, and any deals that returned "no strategy-grounded action." Format in [watchlist-and-sweep.md](references/watchlist-and-sweep.md) § Digest.
