@@ -1,6 +1,6 @@
 ---
 name: pipeline
-description: Deal-level strategy for live deals — diagnosis, stakeholder strategy, and next-step recommendations. Use when user says "help with this deal", "deal is stalled", "how do I close this", "competitive deal", "multi-thread", or mentions a specific stuck deal. Do NOT use for methodology practice or coaching assets (role-play, coaching decks, quizzes) — use /octave:deal-coach instead.
+description: Deal-level strategy for live deals — diagnosis, stakeholder strategy, and next-step recommendations. Use when user says "help with this deal", "deal is stalled", "how do I close this", "competitive deal", "multi-thread", or mentions a specific stuck deal. Do NOT use for methodology practice or coaching assets (role-play, coaching decks, quizzes) — use /octave:deal-coach instead. Do NOT use for recurring per-deal action tracking, watchlists, or scheduled sweeps — use /octave:next-best-action instead.
 argument-hint: "[stalled|multi-thread|competitive|executive|close|expand] <account> [--contact <email>] [--competitor <name>]"
 ---
 
@@ -216,6 +216,7 @@ What would you like to do next?
 
 ## Related Skills
 
+- `/octave:next-best-action` - Recurring strategy-gap next actions with a watchlist and scheduled sweeps
 - `/octave:deal-coach` - Methodology practice and coaching assets (role-play, coaching microsites, decks, quizzes)
 - `/octave:research` - Deep research on any stakeholder
 - `/octave:battlecard-doc` - Full competitive intelligence
