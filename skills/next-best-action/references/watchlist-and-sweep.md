@@ -33,15 +33,13 @@ The recurring half of the skill: which deals to run, the state that makes runs d
             {
               "actionId": "nba_abc123",
               "fingerprint": "G3:persona_cfo:engaged",
-              "gapType": "G3",
+              "createdAt": "2026-07-14T07:00:00Z",
+              "situation": {"gapType": "G3", "persona": "CFO", "...": "..."},
               "move": "Engage the economic-buyer persona with the audit-cost case",
-              "firstSeen": "2026-07-14",
-              "status": "proposed",
-              "acceptance": "pending",
-              "outcome": "pending",
-              "confidence": "medium",
-              "evidence": [],
-              "strategySources": []
+              "lifecycle": {"status": "proposed", "supersedes": null, "supersededBy": null},
+              "acceptance": {"status": "pending", "evidence": [], "checkedAt": null},
+              "outcome": {"status": "pending", "evidence": [], "checkedAt": null},
+              "confidence": "medium"
             }
           ]
         }
@@ -51,9 +49,12 @@ The recurring half of the skill: which deals to run, the state that makes runs d
 }
 ```
 
-- `ledger` is the per-opportunity memory. Fingerprints use stable semantic ids (gap + strategy
-  entity + intended state change), not wording. Existing v0 `openActions` arrays may be read and
-  migrated lazily on the next write.
+- `ledger` is the per-opportunity memory. Each entry is the full decision record defined in
+  [action-ledger-and-learning.md](action-ledger-and-learning.md) § Ledger record — the example
+  above elides the `situation`, `whyNowEvidence`, `strategySources`, `reasoning`, and `execution`
+  detail, but the stored record carries all of it. Fingerprints use stable semantic ids (gap +
+  strategy entity + intended state change), not wording. Existing v0 `openActions` arrays may be
+  read and migrated lazily on the next write.
 - `filters` are stored as natural-language descriptions and re-evaluated at sweep time; there is no compiled query to go stale.
 - Read-modify-write the whole file; keep it small. If it's corrupt, say so and rebuild from an empty structure rather than crashing the sweep.
 

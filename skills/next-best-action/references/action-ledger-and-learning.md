@@ -11,6 +11,7 @@ Store one append-only decision record per surfaced action in the watch state fil
 ```json
 {
   "actionId": "nba_<stable-id>",
+  "fingerprint": "G7:proofpoint_audit_cost:presented",
   "opportunityOId": "op_123",
   "accountDomains": ["acme.com"],
   "createdAt": "2026-07-24T16:00:00Z",
@@ -116,9 +117,10 @@ applies: no prescription means a library gap; no observation means a discovery q
 
 ## 5. Action lifecycle
 
-`proposed -> approved|rejected -> executed|executed_modified|not_executed|superseded|unobservable`
-
-Acceptance and outcome are independent:
+`lifecycle.status` tracks the action's own life: `proposed`, then `approved` or `rejected`, and
+eventually `retired` (closed on positive evidence) or `superseded` (the world changed first).
+What happened to the move after approval is never a lifecycle state — it is graded in two
+independent fields:
 
 ```
 acceptance ∈ {executed, executed_modified, not_executed, superseded, unobservable, pending}

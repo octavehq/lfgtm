@@ -73,7 +73,7 @@ Follow these standards during generation. Read each before producing output.
 
 `setup` follows [setup-and-operating-model.md](references/setup-and-operating-model.md): inspect the workspace and connected sources first, then ask only for the operating decisions that cannot be discovered. Write no external state.
 
-`watch` / `unwatch` / `list` manage local state only. Follow [watchlist-and-sweep.md](references/watchlist-and-sweep.md) § Watchlist and return. `sweep` resolves the run set per that reference, then executes Steps 1 to 7 per deal and finishes with the digest. A bare target executes Steps 1 to 7 for that one deal. If recurring mode has no workspace config, use conservative defaults and recommend `setup`; do not block a one-off answer.
+`watch` / `unwatch` / `list` manage local state only. Follow [watchlist-and-sweep.md](references/watchlist-and-sweep.md) § Watchlist commands and return. `sweep` resolves the run set per that reference, then executes Steps 1 to 7 per deal and finishes with the digest. A bare target executes Steps 1 to 7 for that one deal. If recurring mode has no workspace config, use conservative defaults and recommend `setup`; do not block a one-off answer.
 
 ### Step 1: Resolve the deal
 
@@ -145,14 +145,14 @@ Every action ships as four parts: **the move** (imperative, specific), **why now
 - **Every other brief (new deals on the validated template, sweep updates):** mechanical lint (`bash <skill-dir>/../shared/scripts/lint.sh <file>`) + the render gate (`node <skill-dir>/../shared/scripts/render-gate.js <file> --chrome "nav,.toc,.sticky-nav"`) + the orchestrator's own groundedness check. Both scripts are deterministic and take seconds, so they run on every brief; it is the two-reviewer pass that is expensive and re-runs only when the template's structure changes or every 10th update of a given brief. A validated template still ships a defect when one deal's content is longer than the last: that is precisely what the render gate catches and a template validation cannot.
 - **Stability rule:** if no new evidence arrived and prior actions are still open, do not re-word the brief — report "no change" in the digest and leave the asset alone.
 
-**Sweep digest:** after all deals run, print the cross-deal ranking (which deal has the most perishable action first), per-deal one-liners, and any deals that returned "no strategy-grounded action." Format in [watchlist-and-sweep.md](references/watchlist-and-sweep.md) § Digest.
+**Sweep digest:** after all deals run, print the cross-deal ranking (which deal has the most perishable action first), per-deal one-liners, and any deals that returned "no strategy-grounded action." Format in [watchlist-and-sweep.md](references/watchlist-and-sweep.md) § Digest format.
 
 ### Step 7: Update the account ledger
 
 For watched deals, follow [action-ledger-and-learning.md](references/action-ledger-and-learning.md):
 
 - carry the same action by stable fingerprint; never mint a new action because wording changed
-- retire only on positive closing evidence; otherwise use superseded or unobservable
+- retire only on positive closing evidence; a changed world marks it superseded; blind or stale coverage grades it unobservable and leaves it open
 - keep acceptance (`executed`, `executed_modified`, `not_executed`, `superseded`, `unobservable`) separate from outcome (`progressed`, `stalled`, `regressed`, `unobservable`)
 - record observed/inferred/assumed reasoning, strategy provenance, execution owner/channel/due date, consequence, and approval route for new actions
 - apply acceptance/outcome labels only on a *later* run, from fresh cited evidence — never in the run that proposed the action; learned plays are promoted only by the user
@@ -161,7 +161,7 @@ One-off runs may show the lifecycle record in the response without persisting it
 
 ## Scheduling (caller-owned, by design)
 
-The sweep is a single idempotent entry point; *when* it runs belongs to the caller — Octave does not run a nightly agent on your CRM. Recipes (cron, Claude Code scheduled agents, event-triggered after a call lands) are in [watchlist-and-sweep.md](references/watchlist-and-sweep.md) § Scheduling. Teams that want this available to MCP-only users (no plugin) can publish this skill into their workspace as an Octave managed skill via `create_skill` — same SKILL.md, invoked through `find_skill`/`get_skill`.
+The sweep is a single idempotent entry point; *when* it runs belongs to the caller — Octave does not run a nightly agent on your CRM. Recipes (cron, Claude Code scheduled agents, event-triggered after a call lands) are in [watchlist-and-sweep.md](references/watchlist-and-sweep.md) § Scheduling recipes. Teams that want this available to MCP-only users (no plugin) can publish this skill into their workspace as an Octave managed skill via `create_skill` — same SKILL.md, invoked through `find_skill`/`get_skill`.
 
 ## MCP Tools Used
 
