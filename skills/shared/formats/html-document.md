@@ -30,6 +30,13 @@ These principles supplement the universal visual rules in `presentation-principl
 
 Format-specific audit for scrollable HTML documents. Run alongside the universal presentation checklist.
 
+Run the render gate first. A scrolling document has no panes, so pass none: the contrast and font checks are what matter here, and they catch the two defects this format actually produces. The first is a light card nested inside a dark band that inherits the band's light text colour and paints near-white on near-white. The second is a brand font that was declared but never delivered, which falls back to a system face with nothing on screen to announce it.
+
+```bash
+node <skill-dir>/../shared/scripts/render-gate.js <document.html> \
+  --chrome "nav,.toc,.sticky-nav" --viewports 1600x900,1280x800
+```
+
 - [ ] **Sticky nav present.** `<nav>` element with jump links, `position: sticky`, backdrop-filter for frosted glass. Links match existing sections only: no dead links, no missing links.
 - [ ] **Section headings visible on scroll.** Each `<section>` starts with a heading large enough to signal section change during scrolling.
 - [ ] **Cards used for discrete content.** Individual insights/findings are in card containers, not floating paragraphs.

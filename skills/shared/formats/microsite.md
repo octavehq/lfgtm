@@ -32,6 +32,13 @@ These principles supplement the universal visual rules in `presentation-principl
 
 Format-specific audit for microsites and landing pages. Run alongside the universal presentation checklist.
 
+Run the render gate first, and include the 375px width the responsive check below already demands. A sticky nav over a scrolling page is the format's most common collision, and the gate decides it rather than leaving it to a screenshot.
+
+```bash
+node <skill-dir>/../shared/scripts/render-gate.js <microsite.html> \
+  --chrome "nav,.sticky-nav,.cta-bar" --viewports 1600x900,1280x800,375x812
+```
+
 - [ ] **Hero hooks fast.** Above-the-fold content communicates value proposition clearly. No scroll required to understand what this is about.
 - [ ] **CTA present and repeated.** At least one CTA above the fold. Additional CTAs after major proof sections.
 - [ ] **Narrative arc.** Sections follow a logical progression (problem → solution → proof → action or similar).

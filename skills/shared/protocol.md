@@ -40,12 +40,24 @@ Fix every violation the lint surfaces before proceeding. If a skill ships its ow
 
 The lint reads source. Some defects only exist once the page is painted, and four of them are deterministic enough that a browser can decide them without a human eye: whether the intended fonts actually loaded, whether text has contrast against the background it landed on, whether text stayed inside its content box, and whether it slid under fixed chrome.
 
+The invocation depends only on the output's shape, and the format doc for that shape gives it verbatim:
+
+| Output shape | Panes | Typical chrome | Format doc |
+|---|---|---|---|
+| Swipe magazine | `.spread` | `#nav,.folio` | [digest format routing](../digest/references/format-routing.md) |
+| Slide deck | `.slide` | `.deck-nav,.pager,.slide-number` | [slide-deck.md](formats/slide-deck.md) |
+| Scrolling document | none | `nav,.toc,.sticky-nav` | [html-document.md](formats/html-document.md) |
+| Microsite | none | `nav,.sticky-nav,.cta-bar` | [microsite.md](formats/microsite.md) |
+| One-pager | none | none | [one-pager.md](formats/one-pager.md) |
+
 ```bash
 node <skill-dir>/../shared/scripts/render-gate.js <path-to-file> \
   --panes ".spread"      `# fixed-viewport surfaces; omit for scrolling documents` \
   --chrome "#nav,.folio" `# fixed or absolutely-positioned page furniture` \
   --viewports 1600x900,1680x1050,2560x1080,1180x820
 ```
+
+Panes only affect the content-box and chrome-collision checks. **Contrast and font loading run either way**, and on a scrolling document those are the two that pay: a light card nested in a dark band inherits the band's text colour and paints near-white on near-white, and a brand font that was declared but never delivered falls back to a system face silently.
 
 Two rules make this worth the run:
 

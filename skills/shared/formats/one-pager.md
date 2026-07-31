@@ -38,6 +38,12 @@ These principles supplement the universal visual rules in `presentation-principl
 
 Format-specific audit for one-pagers and leave-behinds. Run alongside the universal presentation checklist.
 
+Run the render gate first. This format is print-first, so the check that earns its keep is contrast: a light-on-light stat block survives a screen review and then disappears on paper.
+
+```bash
+node <skill-dir>/../shared/scripts/render-gate.js <one-pager.html> --viewports 1200x1600
+```
+
 - [ ] **Fits one page.** Content renders on a single printed page (US Letter or A4) without overflow. Two pages acceptable for proposals.
 - [ ] **Print renders clean.** Light background, dark text, no dark-canvas dependencies. `@media print` optimized for paper.
 - [ ] **Grid layout.** Content organized in columns or grid, not single-column long-scroll flow.
