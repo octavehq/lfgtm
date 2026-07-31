@@ -28,13 +28,43 @@ Check for:
 - **Scrollbars.** Themed, never the bare default OS scrollbar on a styled surface.
 - **Leaked internals and placeholders.** No tool or function names, version or stream IDs, or unfilled `[…]` brackets anywhere in the rendered output.
 
-Then run the shared lint script. These are deterministic checks (banned words, text density) that don't need LLM judgment and cost nothing.
+Then run the shared lint script. These are deterministic checks (banned words, text density, leaked internals, standalone-document structure, self-containment) that don't need LLM judgment and cost nothing.
 
 ```bash
 bash <skill-dir>/../shared/scripts/lint.sh <path-to-file>
 ```
 
 Fix every violation the lint surfaces before proceeding. If a skill ships its own `scripts/lint.sh` with additional checks, run that too.
+
+### Step 1b: Render Gate (any output with a fixed-viewport or themed surface)
+
+The lint reads source. Some defects only exist once the page is painted, and four of them are deterministic enough that a browser can decide them without a human eye: whether the intended fonts actually loaded, whether text has contrast against the background it landed on, whether text stayed inside its content box, and whether it slid under fixed chrome.
+
+The invocation depends only on the output's shape, and the format doc for that shape gives it verbatim:
+
+| Output shape | Panes | Typical chrome | Format doc |
+|---|---|---|---|
+| Swipe magazine | `.spread` | `#nav,.folio` | [digest format routing](../digest/references/format-routing.md) |
+| Slide deck | `.slide` | `.deck-nav,.pager,.slide-number` | [slide-deck.md](formats/slide-deck.md) |
+| Scrolling document | none | `nav,.toc,.sticky-nav` | [html-document.md](formats/html-document.md) |
+| Microsite | none | `nav,.sticky-nav,.cta-bar` | [microsite.md](formats/microsite.md) |
+| One-pager | none | none | [one-pager.md](formats/one-pager.md) |
+
+```bash
+node <skill-dir>/../shared/scripts/render-gate.js <path-to-file> \
+  --panes ".spread"      `# fixed-viewport surfaces; omit for scrolling documents` \
+  --chrome "#nav,.folio" `# fixed or absolutely-positioned page furniture` \
+  --viewports 1600x900,1680x1050,2560x1080,1180x820
+```
+
+Panes only affect the content-box and chrome-collision checks. **Contrast and font loading run either way**, and on a scrolling document those are the two that pay: a light card nested in a dark band inherits the band's text colour and paints near-white on near-white, and a brand font that was declared but never delivered falls back to a system face silently.
+
+Two rules make this worth the run:
+
+- **Run it before you open a screenshot.** Screenshot review is the most expensive step in this protocol. Spend it on judgment — hierarchy, pacing, whether a composition feels finished — not on hunting defects a script decides in one pass.
+- **Never substitute `scrollHeight - clientHeight` for the overflow check.** Every fixed-viewport pane sets `overflow: hidden`, which makes that difference 0 while content is visibly cut off. A gate built on it reports a confident pass over broken output. The script measures element rectangles against the content box instead.
+
+If playwright is unavailable the script exits 2 and the gate did not run: say so in the scorecard rather than implying the checks passed.
 
 ## Step 2: Spawn Reviewers (Parallel)
 
@@ -173,4 +203,5 @@ Status: [CLEAN / N remaining issues]
 - **Format files are shared across skills.** If your skill produces an HTML document, it uses `formats/html-document.md`. If it produces a deck, it uses `formats/slide-deck.md`. Don't duplicate format rules in skill-specific blueprints.
 - **Skill-specific blueprints add the most specific layer.** They handle CSS component systems, HTML scaffolds, and structural requirements unique to your skill. These sit on top of the universal + format layers.
 - **The lint script is shared.** One implementation lives at `shared/scripts/lint.sh`; its word and phrase lists mirror editorial-rules.md, so update both together. Don't copy it into a skill. A skill only adds its own `scripts/lint.sh` when it has genuinely skill-specific deterministic checks, and that script runs in addition to the shared one.
+- **So is the render gate.** `shared/scripts/render-gate.js` is format-agnostic: point `--panes` and `--chrome` at whatever the skill's output uses. Prefer extending it over writing a one-off checker, because the failure mode of a hand-rolled one is a false pass, not a crash.
 - **Principles are baked into generation.** The review pass catches what slipped through. It's not the only quality gate: it's the verification gate.

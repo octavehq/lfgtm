@@ -146,6 +146,16 @@ These principles supplement the universal visual rules in `presentation-principl
 
 Format-specific audit for slide deck presentations. Run alongside the universal presentation checklist.
 
+Run the render gate first. A deck is a fixed-viewport surface, so it has the same failure modes as any paged format: content taller than the stage, and content sliding under the pager. Both are invisible in source and hidden by the stage's own `overflow`.
+
+```bash
+node <skill-dir>/../shared/scripts/render-gate.js <deck.html> \
+  --panes ".slide" --chrome ".deck-nav,.pager,.slide-number" \
+  --viewports 1920x1080,1600x900,1440x900
+```
+
+Fix everything it reports before opening a screenshot. Do not substitute a `scrollHeight` check: on a slide with `overflow: hidden` it reads 0 while content is visibly clipped.
+
 - [ ] **One idea per slide.** No slide requires processing two unrelated concepts.
 - [ ] **16:9 viewport.** Content fits without horizontal or vertical scroll at standard presentation aspect ratio.
 - [ ] **Type legibility.** Body text >= 1.2rem equivalent. Headlines significantly larger. Nothing illegible at projection distance.
