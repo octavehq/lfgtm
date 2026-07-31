@@ -12,6 +12,7 @@ This is a digest-native format. Do not invoke `/octave:deck` or reuse its slide 
 
 Create a single horizontal-swipe HTML file:
 
+- **Emit a complete standalone document**: `<!DOCTYPE html>`, `<html lang="en">`, `<meta charset="utf-8">`, `<head>`, `<body>`. A digest is served as-is by the asset service, not injected into a host page, so nothing supplies these for you. Without the doctype the browser renders in quirks mode, where `<table>` does not inherit `color` from its ancestor: a correct dark-spread stylesheet then paints body ink on a dark field and the table silently disappears. Belt and braces, set `color: inherit` on any table in a themed surface.
 - Each spread is `100vw × 100vh`
 - Horizontal scroll snap, no vertical page scrolling
 - Full-bleed, edge-to-edge editorial compositions
@@ -21,6 +22,7 @@ Create a single horizontal-swipe HTML file:
 - Cover and back cover may be sparse; analytical spreads should pair a dominant claim with inspectable evidence
 - Give every spread its own explicit background. Because spreads alternate between light and dark surfaces, a spread that inherits the page or `body` background instead of declaring its own will paint dark text on a dark field (or the reverse) and its content disappears. Set the surface and the foreground color together on each spread.
 - Add bottom navigation, ArrowLeft/ArrowRight, Home/End, touch swipe, reduced motion, and one-spread-per-page print styles. The navigation chrome is fixed over spreads of both polarities, so it must stay legible on light and dark surfaces alike: do not use white-on-transparent controls that vanish on a white spread. Use control and active-state colors that hold contrast against every surface in the magazine.
+- **Reserve a bottom band for that chrome, and keep content out of it.** Legible navigation is not enough: the last line of a prose column will happily render underneath a fixed pager, and the spread's `overflow: hidden` hides the collision rather than revealing it. Define the band once (`--navsafe`, roughly 84px) and set each spread's bottom padding to `max(<your scale>, var(--navsafe))`. Full-bleed compositions that skip the padded wrapper, such as a quadrant grid, need the same reservation on the grid itself. Pin the pager's own offset and height in px rather than in a viewport-derived unit, or the band and the chrome drift apart at different viewport sizes and the clearance you measured disappears.
 - Do not use experimental canvas or shader effects
 
 ### Art direction contract
@@ -83,6 +85,10 @@ Before delivery, inspect the cover, contents, densest editorial spread, and clos
 - A narrower tablet or mobile landscape viewport
 
 Use width-and-height-constrained type sizing such as `min(vw, vh)` or container queries. Pure `vw` display type is not acceptable because it can collide vertically on ultrawide screens. Check for overlap, clipping, unreadably small type, and unexpected vertical scrolling at every viewport.
+
+For a full-bleed spread the binding constraint is **height**, not width: a naive `min(1vw, 1.9vh)` lets a wide, short viewport pick the width term and blow the vertical budget, which is why ultrawide is usually the worst case despite having the most pixels. Weight the scale toward the height term, then verify the budget rather than trusting it: heading + prose + evidence must fit inside `viewport height − vertical padding − running head − nav band` at every ratio you claim to support.
+
+Run [`shared/scripts/render-gate.js`](../../shared/scripts/render-gate.js) before opening a single screenshot. It measures the four things this section asks for that need a browser but not a human eye: fonts actually loaded, text contrast against its painted background, text inside its content box, and text clear of fixed chrome. **Do not hand-roll the overflow check with `scrollHeight - clientHeight`** — on a `overflow: hidden` spread that returns 0 while content is visibly cut off, and it will report a confident pass over broken output. The gate is rectangle-based for exactly this reason. Spend screenshots on taste once it is green.
 
 Also inspect every composition where a light panel is nested inside a dark or saturated spread, and every dark panel nested inside a light spread. Container background changes must explicitly reset the foreground color instead of inheriting it from the parent spread.
 
