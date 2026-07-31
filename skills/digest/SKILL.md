@@ -161,11 +161,21 @@ Wait for approval before generating visual output.
 
    **Which gate runs where.** For digest-native HTML this skill renders directly (editorial swipe magazine and executive brief), run the full gate here. For formats handed to another skill (`/octave:deck`, `/octave:microsite`, `/octave:one-pager`), that skill owns its own mandatory gate; do not duplicate it. For Markdown, run the editorial half only, since there is no visual layer. In every case the digest orchestrator stays responsible for groundedness: no claim, quote, number, or attribution ships that the source reports and evidence do not support.
 
-   **7a. Preflight (deterministic, always first).** Run the protocol preflight, then the digest lint, and fix every violation before spawning reviewers:
+   **7a. Preflight (deterministic, always first).** Run the protocol preflight, then the lint, and fix every violation before going further:
 
    ```bash
    bash <skill-dir>/../shared/scripts/lint.sh <path-to-output.html>
    ```
+
+   **7a2. Render gate (visual formats).** For the magazine and the executive brief, run the shared render gate next and fix everything it reports. It decides fonts-actually-loaded, contrast, content-box overflow, and collisions with fixed chrome, so the reviewers' screenshot budget goes to judgment instead of defect hunting:
+
+   ```bash
+   node <skill-dir>/../shared/scripts/render-gate.js <path-to-output.html> \
+     --panes ".spread" --chrome "#nav,.folio" \
+     --viewports 1600x900,1680x1050,2560x1080,1180x820
+   ```
+
+   Do not replace this with a `scrollHeight` check of your own: a spread sets `overflow: hidden`, so that difference reads 0 while content is visibly clipped.
 
    **7b. Spawn the two dedicated reviewers in parallel** (both Task calls in one message):
 
