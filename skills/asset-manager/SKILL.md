@@ -1,6 +1,6 @@
 ---
 name: asset-manager
-description: Publish and manage hosted assets (HTML sites, docs, file bundles) on the Octave assets service - upload, privacy (only_me/workspace/public), share links, versions/rollback, access requests, visit stats, vanity URLs, and a persistent registry of everything published. Acts as a cache - always checks the asset store for an existing match before creating anything new, so the same work is never done twice. Use when the user says "publish this", "host this html", "store these files" (storage type), "share this with the team / workspace / with an email", "make it public/private", "who has access to", "who opened / viewed my deck", "any access requests", "roll back / restore the previous version", "give it a nicer URL / vanity URL", "update the published site", "list my published assets", "what assets are available", "is there already a ... published", "do we have a ...", or wants a shareable URL for something they built locally. Do NOT use for Vercel deploys of microsites (that is /octave:microsite's own deploy step) or for generating the content itself (use the Document Builder skills).
+description: Publish and manage hosted assets (HTML sites, docs, file bundles) on the Octave assets service - upload, privacy (only_me/workspace/public), share links, versions/rollback, access requests, visit stats, vanity URLs, and a persistent registry of everything published. Acts as a cache - always checks the asset store for an existing match before creating anything new, so the same work is never done twice. Use when the user says "publish this", "host this html", "store these files" (storage type), "share this with the team / workspace / with an email", "make it public/private", "who has access to", "who opened / viewed my deck", "any access requests", "roll back / restore the previous version", "transfer this asset to", "hand this over to", "take over my teammate's asset", "give it a nicer URL / vanity URL", "update the published site", "list my published assets", "what assets are available", "is there already a ... published", "do we have a ...", or wants a shareable URL for something they built locally. Do NOT use for Vercel deploys of microsites (that is /octave:microsite's own deploy step) or for generating the content itself (use the Document Builder skills).
 ---
 
 # /octave:asset-manager - Publish & Manage Hosted Assets
@@ -17,11 +17,12 @@ Every asset has exactly one `privacy` tier — each is strictly more open than t
 | `workspace` *(default)* | Owner + workspace members — a teammate opening the link verifies their work email once, then sees everything their team has shared |
 | `public` | Anyone with the URL |
 
-Three more facts complete the model:
+Four more facts complete the model:
 
 - `status` is a separate axis: `published` (default; discoverable in the workspace gallery) vs `unpublished` (hidden, but still viewable via preview/workspace links). Status never affects the privacy tier.
 - **"Externally shared" is not a tier.** Share links (emails/domains + verification) work on any non-`public` asset; the API reports the derived `externallyShared: true` on an asset that has at least one share link. Creating or revoking shares never changes `privacy`.
 - **Locked-out viewers can knock.** A code-verified visitor who hits an asset they can't open (workspace or share flow) can request access; those requests land in the owner's inbox (see Access Requests workflow).
+- **Workspace admins/owners can manage the team's assets.** Every asset response carries computed `canEdit` / `canManage` booleans: true for your own assets, and for any non-`only_me` asset in your workspace when your role is admin/owner. When `canManage` is true you may update files, metadata, shares, versions, stats, and transfer ownership — even for a teammate-owned asset. Never re-derive this from roles yourself; trust the fields on the response. `only_me` stays a true personal drawer: no admin override, ever.
 
 **Link lifetimes:** share links never expire by default (expiry is opt-in per share); a viewer's verified session and a `previewUrl` each last ~30 days. Rule of thumb: hand out a `previewUrl` for a teammate's quick look, a share link for an external "review this deck" — neither will rot mid-conversation. Revoking a share still cuts access immediately.
 
@@ -33,6 +34,7 @@ Three more facts complete the model:
 /octave:asset-manager update <identifier>   # Replace files or change metadata
 /octave:asset-manager share <identifier>    # Create/manage share links
 /octave:asset-manager versions <identifier> # Version history, rollback, pinned URLs
+/octave:asset-manager transfer <identifier> # Transfer ownership to a teammate
 /octave:asset-manager requests              # Access-request inbox (grant / dismiss)
 /octave:asset-manager stats <identifier>    # Visits, downloads, who opened it
 /octave:asset-manager list                  # List published assets (from registry)
@@ -69,7 +71,7 @@ Before ANY new upload:
 
 1. Run a **fresh `assets_list`**. Never trust the local registry alone for this — it is per-project and lags behind assets created elsewhere.
 2. Match the intended asset against existing ones: normalize identifiers (kebab-case → words) and compare against the intended name/topic keywords; scan descriptions; weigh `type` (website vs storage).
-3. **Plausible matches found** → AskUserQuestion with up to 3 candidates. Each option shows the identifier, and its description says what it is, **who owns it** (`owner`: "me" or a teammate's name), plus the link (siteUrl, previewUrl for non-public, or download URL). Always include a final option: `No — this is new, create it`. A teammate-owned match can be reused and downloaded, but never modified — to change one, create the user's own copy.
+3. **Plausible matches found** → AskUserQuestion with up to 3 candidates. Each option shows the identifier, and its description says what it is, **who owns it** (`owner`: "me" or a teammate's name), plus the link (siteUrl, previewUrl for non-public, or download URL). Always include a final option: `No — this is new, create it`. A teammate-owned match can be reused and downloaded; whether it can be MODIFIED is answered by its `canManage` field (true for workspace admins/owners on non-`only_me` assets) — when false, create the user's own copy instead.
    - User picks a match → show its link, then ask what next: nothing / update its files / change metadata / manage shares.
    - User says it's new → proceed to publish, choosing an identifier distinct from the matches (avoids a 409).
 4. **No match** → proceed directly, mentioning that nothing similar was found.
@@ -80,7 +82,7 @@ Ordering constraint: `assets_list` is an MCP asset call and **rotates the access
 
 Assets default to the **`workspace` tier**: teammates can READ them through the API (list/get/download) — even unpublished ones — and can open the live `/sites` link itself by verifying their work email once. All mutations and share management stay owner-only. Set `privacy: only_me` at create (or later) to keep an asset owner-only.
 
-- Every asset response carries `owner`: `"me"` for your own, otherwise the teammate's `"First Last <email>"`. **Teammate-owned assets are read-only** — never call `asset_update`, `asset_delete`, or any share tool on them; if the user wants changes, create their own copy.
+- Every asset response carries `owner`: `"me"` for your own, otherwise the teammate's `"First Last <email>"` (plus a structured `ownerEmail`). **Whether a teammate-owned asset is modifiable is decided by its `canManage` field**, computed from the caller's workspace role: false → strictly read-only (never call `asset_update`, `asset_delete`, or any share tool on it; create the user's own copy instead); true (workspace admins/owners, non-`only_me` assets) → the full management surface works, including machine-published assets like pre-captured brand kits.
 - Every asset response also carries `externallyShared` (derived): true when a non-`public` asset has at least one share link — a quick "who else can see this" signal.
 - Non-public assets (`only_me`, `workspace`, or `unpublished`) carry a **`previewUrl`**: a tokenized link that renders the site/download for the owner and workspace members without making it public. It is `null` once the asset is published + public (use `siteUrl` then). It lasts ~30 days but is **minted per read — NEVER store it in the registry**; fetch a fresh one with `asset_get_by_id` when someone needs it.
 - **Always include the link.** Every time you list, upload, update, or otherwise mention an asset, include its link:
@@ -92,7 +94,7 @@ Assets default to the **`workspace` tier**: teammates can READ them through the 
 
 Refer to tools by bare name (`asset_update`, `assets_list`, ...). The live server is named `mcp__octave-<workspace>__*` — the workspace suffix varies per user. Detect the active Octave MCP server from the available tool list; never hardcode a prefix.
 
-Available asset tools: `asset_generate_access_token`, `asset_refresh_access_token`, `assets_list`, `asset_get_by_id`, `asset_update`, `asset_delete`, `asset_share_create`, `asset_shares_list`, `asset_share_revoke`, `asset_share_add_recipients`, `asset_share_remove_recipients`, `asset_share_add_domains`, `asset_share_remove_domains`, `asset_versions_list`, `asset_version_restore`, `asset_version_delete`, `asset_access_requests_list`, `asset_access_request_grant`, `asset_access_request_dismiss`, `asset_stats_get`, `asset_visitors_list`.
+Available asset tools: `asset_generate_access_token`, `asset_refresh_access_token`, `assets_list`, `asset_get_by_id`, `asset_update`, `asset_delete`, `asset_share_create`, `asset_shares_list`, `asset_share_revoke`, `asset_share_add_recipients`, `asset_share_remove_recipients`, `asset_share_add_domains`, `asset_share_remove_domains`, `asset_transfer`, `asset_versions_list`, `asset_version_restore`, `asset_version_delete`, `asset_access_requests_list`, `asset_access_request_grant`, `asset_access_request_dismiss`, `asset_stats_get`, `asset_visitors_list`.
 
 ## Token Lifecycle (CRITICAL)
 
@@ -261,12 +263,23 @@ Surface pending requests whenever the user asks anything like "who wants access"
 
 ## Workflow: Who Opened It (Stats & Visitors)
 
-Two owner-only reads answer "how is my asset doing" — pick by the question:
+Two reads answer "how is my asset doing" — available to the owner and to workspace admins/owners (anyone whose `canManage` is true for the asset). Pick by the question:
 
 - **How many** → `asset_stats_get`: per-day unique visit and download counts. Trends, not names.
 - **Who** → `asset_visitors_list`: the identified viewers — share recipients who code-verified (`via: share`) and workspace members who verified their work email (`via: workspace`).
 
 Anonymous public visitors are **counted in stats but never identified** — never imply the visitor list is complete for a `public` asset. The honest phrasing: "N visits, of which these verified viewers: …".
+
+## Workflow: Transfer Ownership
+
+`asset_transfer` (uuid + `targetUserOId`) reassigns an asset to another member of its workspace. Use it when an asset should outlive its author's involvement: handing a deck to the teammate now running the campaign, adopting a departed colleague's asset, or claiming a machine-published asset (e.g. an auto-captured brand kit) so a human owns it.
+
+1. Allowed when you own the asset, or its `canManage` reads true (workspace admin/owner, non-`only_me`).
+2. The target is an Octave user oId; they must have used assets at least once (the tool returns a clear error otherwise — have them open the asset gallery or run any asset call, then retry).
+3. Versions and share links ride along unchanged; the previous owner keeps whatever access the privacy tier grants everyone else.
+4. Update the registry (`owner` changes; your own registry entry may now belong to someone else — note it rather than delete it) and report the asset's link.
+
+Note: offboarding is automatic — when a member is removed from the workspace, their assets (all tiers, including `only_me`) transfer to a workspace owner. Manual transfer is for everything short of that.
 
 ## Workflow: Download / List / Delete
 
