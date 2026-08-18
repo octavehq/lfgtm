@@ -151,8 +151,8 @@ Wait for approval before generating visual output.
 
 ### 8. Generate and review
 
-1. Load or capture the workspace brand kit **first**, and set the digest in **its** typefaces (read them from the kit's `tokens.css` / manifest), not a generic editorial pairing. Then make sure those brand fonts are actually loaded and, for any hosted or shared digest, self-contained (`@font-face` with base64 `src`, not a remote `@import`/CDN link) so the render never falls back to a system font. Using generic type when a kit exists, or leaving a font unloaded, is a defect. See the font rules in [format-routing.md](references/format-routing.md).
-2. Generate through the selected format skill or reference. Use the digest-native magazine specification in [format-routing.md](references/format-routing.md) for editorial swipe magazines; do not route magazines through `/octave:deck`.
+1. Load or capture the workspace brand kit **first**, and set the digest in **its** typefaces (read them from the kit's `tokens.css` / manifest), not a generic editorial pairing. Then make sure those brand fonts are actually loaded and, for any hosted or shared digest, self-contained (`@font-face` with base64 `src`, not a remote `@import`/CDN link) so the render never falls back to a system font. Using generic type when a kit exists, or leaving a font unloaded, is a defect. See the font rules in [the shared magazine spec](../shared/formats/magazine.md).
+2. Generate through the selected format skill or reference. For editorial swipe magazines, follow the shared [magazine format spec](../shared/formats/magazine.md) with its [magazine-base.css](../shared/formats/magazine-base.css) scaffold, plus the digest-specific rules in [format-routing.md](references/format-routing.md); do not route magazines through `/octave:deck`.
 3. Include source notes only where they help verification.
 4. For internal output, include Octave report links as described in [evidence-and-links.md](references/evidence-and-links.md).
 5. Every displayed number must tell the reader what it counts. Put the unit next to the value, state the reporting period and scope nearby, and explain deduplication or overlap when categories are not mutually exclusive. Translate internal evidence mechanics into reader language: use “calls,” “companies,” “deals,” or “buyer quotes,” never an unexplained label such as “receipt set.”
@@ -187,7 +187,7 @@ Wait for approval before generating visual output.
               Read and run the checklist in each of:
               1. [skill-dir]/../shared/editorial-rules.md
               2. [skill-dir]/../shared/information-principles.md
-              3. [skill-dir]/references/format-routing.md
+              3. [skill-dir]/../shared/formats/magazine.md (magazine output)
                  Audit titles AND body copy: every chapter, section, and
                  spread title must state its finding as an intelligible
                  sentence (not a vague evocative fragment, not a dramatic
@@ -204,7 +204,8 @@ Wait for approval before generating visual output.
      prompt: "Review the file at [FILE PATH].
               Read and run the checklist in each of:
               1. [skill-dir]/../shared/presentation-principles.md
-              2. [skill-dir]/references/format-routing.md
+              2. [skill-dir]/../shared/formats/magazine.md (magazine output)
+                 or [skill-dir]/references/format-routing.md for other formats
               For magazine output, run the full responsive review gate in that
               file at 16:9, 16:10, ultrawide, and a narrow viewport: the
               multi-aspect check, the nested-surface and per-spread contrast

@@ -44,7 +44,7 @@ The invocation depends only on the output's shape, and the format doc for that s
 
 | Output shape | Panes | Typical chrome | Format doc |
 |---|---|---|---|
-| Swipe magazine | `.spread` | `#nav,.folio` | [digest format routing](../digest/references/format-routing.md) |
+| Swipe magazine | `.spread` | `#nav,.folio` | [magazine.md](formats/magazine.md) |
 | Slide deck | `.slide` | `.deck-nav,.pager,.slide-number` | [slide-deck.md](formats/slide-deck.md) |
 | Scrolling document | none | `nav,.toc,.sticky-nav` | [html-document.md](formats/html-document.md) |
 | Microsite | none | `nav,.sticky-nav,.cta-bar` | [microsite.md](formats/microsite.md) |
@@ -123,6 +123,7 @@ Task tool:
 **Format mapping:** Use the format file that matches the skill's output type:
 - `html-document.md`: abm, battlecard-doc, champion-deal-room, deal-coach, meeting-prep, positioning, proposal, research (HTML mode), train, win-loss-report
 - `slide-deck.md`: deck, train (deck mode)
+- `magazine.md`: digest (magazine mode), any skill producing a swipe-magazine leave-behind
 - `one-pager.md`: one-pager
 - `microsite.md`: microsite
 
