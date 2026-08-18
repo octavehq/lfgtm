@@ -38,6 +38,11 @@
   --mag-chrome-edge: rgba(255, 255, 255, 0.28);
 }
 
+/* Spreads are sized 100vw×100svh with padding; without border-box the
+   padding grows every spread past the viewport and clips content off the
+   right and bottom edges. */
+*, *::before, *::after { box-sizing: border-box; }
+
 html, body { margin: 0; height: 100%; }
 body { overflow: hidden; }
 
@@ -66,7 +71,10 @@ body { overflow: hidden; }
   flex-direction: column;
   /* Reserve the chrome band. Compositions that bypass a padded
      wrapper (e.g. full-bleed quadrant grids) must re-apply this
-     reservation on the grid itself. */
+     reservation on the grid itself — and a spread-level `padding`
+     SHORTHAND in the brand layer silently overrides this rule, so
+     per-spread padding must be set via padding-inline /
+     padding-block-start, or the reservation re-asserted after it. */
   padding-block-end: max(48px, var(--navsafe));
 }
 
