@@ -119,11 +119,22 @@ WAVE = ('<svg class="wave" viewBox="0 0 1440 44" preserveAspectRatio="none" aria
 
 
 def emph(text):
-    """**word** -> <span class=hl>word</span>; escape the rest."""
+    """**word** -> <span class=hl>word</span>; escape the rest.
+
+    Short highlighted phrases also get .hl-tight (white-space:nowrap in
+    kit_base.css) so a heading's line break can never land inside them and
+    strand a word ("Your GTM, answerable. In / Snowflake."). 24 chars keeps
+    the nowrap run safely narrower than any doc-format heading measure;
+    longer phrases wrap normally.
+    """
     parts = re.split(r'\*\*(.+?)\*\*', text)
     out = ""
     for i, seg in enumerate(parts):
-        out += f'<span class="hl">{html.escape(seg)}</span>' if i % 2 else html.escape(seg)
+        if i % 2:
+            cls = "hl hl-tight" if len(seg) <= 24 else "hl"
+            out += f'<span class="{cls}">{html.escape(seg)}</span>'
+        else:
+            out += html.escape(seg)
     return out
 
 
