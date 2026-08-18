@@ -29,6 +29,11 @@ p{margin:0 0 14px;}
   -webkit-box-decoration-break:clone;box-decoration-break:clone;}
 .is-dark .hl{color:var(--brand-emph-ink-dark);
   background-image:var(--brand-emph-underline-dark,var(--brand-emph-underline,none));}
+/* short highlighted phrases stay on one line so a heading never strands a word
+   before them ("Your GTM, answerable. In / Snowflake."); released on narrow
+   screens where a forced run would overflow */
+.hl-tight{white-space:nowrap;}
+@media screen and (max-width:720px){ .hl-tight{white-space:normal;} }
 
 /* ---- shared dark-surface mixin ---- */
 .is-dark{color:#fff;background:var(--brand-glow,transparent),var(--brand-band);}
