@@ -28,7 +28,7 @@ Check for:
 - **Scrollbars.** Themed, never the bare default OS scrollbar on a styled surface.
 - **Leaked internals and placeholders.** No tool or function names, version or stream IDs, or unfilled `[…]` brackets anywhere in the rendered output.
 
-Then run the shared lint script. These are deterministic checks (banned words, text density, leaked internals, standalone-document structure, self-containment) that don't need LLM judgment and cost nothing.
+Then run the shared lint script. These are deterministic checks (banned words, text density, leaked internals, standalone-document structure, social share metadata, self-containment) that don't need LLM judgment and cost nothing.
 
 ```bash
 bash <skill-dir>/../shared/scripts/lint.sh <path-to-file>
@@ -205,4 +205,5 @@ Status: [CLEAN / N remaining issues]
 - **Skill-specific blueprints add the most specific layer.** They handle CSS component systems, HTML scaffolds, and structural requirements unique to your skill. These sit on top of the universal + format layers.
 - **The lint script is shared.** One implementation lives at `shared/scripts/lint.sh`; its word and phrase lists mirror editorial-rules.md, so update both together. Don't copy it into a skill. A skill only adds its own `scripts/lint.sh` when it has genuinely skill-specific deterministic checks, and that script runs in addition to the shared one.
 - **So is the render gate.** `shared/scripts/render-gate.js` is format-agnostic: point `--panes` and `--chrome` at whatever the skill's output uses. Prefer extending it over writing a one-off checker, because the failure mode of a hand-rolled one is a false pass, not a crash.
+- **Every artifact carries share metadata.** `og:title` and `og:description` are part of every scaffold head; a deliverable published public also needs a relative `assets/og.png` plus `twitter:card`, or the link never unfurls into a card. The canonical block, the relative-path rule, and the image-render chain live in [social-meta.md](social-meta.md); the lint enforces the deterministic parts, but the card copy itself is attribute text the lint cannot read, so reviewers hold it to editorial-rules.md.
 - **Principles are baked into generation.** The review pass catches what slipped through. It's not the only quality gate: it's the verification gate.

@@ -185,3 +185,4 @@ Fix everything it reports before opening a screenshot. Do not substitute a `scro
 - [ ] **Three font sizes max per slide.** Each slide uses at most three distinct font sizes. If you count more, consolidate: too many sizes creates visual noise.
 - [ ] **Source notes (where applicable).** Slides citing specific quantitative data have a small source attribution. Not needed for qualitative observations or obvious context.
 - [ ] **Print works.** Each slide renders as one page. No content lost or cropped.
+- [ ] **Share metadata.** og:title and og:description present and filled. og:image, when present, is a relative path to a real sibling file (assets/og.png); no og:url or canonical. See [social-meta.md](../social-meta.md).
