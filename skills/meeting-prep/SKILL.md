@@ -1265,6 +1265,11 @@ Section 5 uses a `<section>` element (not `<details>`) since it's always visible
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Meeting Prep: [Company] — [Meeting Type]</title>
+  <!-- Social share (link unfurl) metadata -->
+  <meta property="og:title" content="Meeting Prep: [Company]">
+  <meta property="og:description" content="[1-2 sentence summary a stranger understands]">
+  <meta property="og:image" content="assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
   <!-- Google Fonts (preconnect + stylesheet) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

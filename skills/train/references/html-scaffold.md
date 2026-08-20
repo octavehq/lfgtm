@@ -1,6 +1,6 @@
 # Onboarding GTM Primer — HTML Scaffold (gated slide lesson)
 
-A single self-contained HTML file. Inline all CSS and JS; the only external dependency is Google Fonts (or the brand kit's `@font-face`). The primer is a **gated slide lesson**: fixed-viewport slides, a progress-dot rail, per-slide checkpoints that unlock the Next button, interactive tab selectors (personas, competitors, proof lenses), and a scored completion slide.
+A single self-contained HTML file. Inline all CSS and JS; the only external dependency is Google Fonts (or the brand kit's `@font-face`). The head carries the social share block (og:title + og:description always, relative og:image when published; canonical block in [../../shared/social-meta.md](../../shared/social-meta.md)). The primer is a **gated slide lesson**: fixed-viewport slides, a progress-dot rail, per-slide checkpoints that unlock the Next button, interactive tab selectors (personas, competitors, proof lenses), and a scored completion slide.
 
 **Styling comes from the workspace company's brand kit.** Inline the kit's `tokens.css` (`:root` + `@font-face`) and `../get-brand-components/assets/kit_base.css`, then map the component classes below onto the kit's `--brand-*` variables. The classes here are structural; the brand kit supplies color, type, radius, and signature moves. (When authoring a cleaned `:root`, do not paste comment lines from the kit that contain em/en-dashes; the lint rejects them.)
 

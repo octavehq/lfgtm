@@ -55,6 +55,10 @@ The dashboard should feel like a modest internal tool — dense but not crowded,
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Prediction Dashboard — {account} — {date}</title>
+<meta property="og:title" content="Prediction Dashboard: {account}">
+<meta property="og:description" content="{one plain sentence on what this dashboard shows}">
+<meta property="og:image" content="assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {

@@ -25,6 +25,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Win/Loss Report - [Period]</title>
+  <!-- Social share (link unfurl) metadata -->
+  <meta property="og:title" content="Win/Loss Report: [Period]">
+  <meta property="og:description" content="[1-2 sentence summary a stranger understands]">
+  <meta property="og:image" content="assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
   <!-- Brand kit font link (Typekit or Google Fonts) -->
   <style>
     :root { /* brand kit tokens + chart variables */ }

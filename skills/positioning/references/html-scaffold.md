@@ -7,6 +7,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Positioning System: [Product/Company]</title>
+  <meta property="og:title" content="Positioning System: [Product/Company]">
+  <meta property="og:description" content="[1-2 sentence summary a stranger understands]">
+  <meta property="og:image" content="assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=[fonts]&display=swap" rel="stylesheet">

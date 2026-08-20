@@ -1,6 +1,6 @@
 # Visual Campaign Deck — HTML Template
 
-When the user chooses **Generate visual campaign deck**, ask where they'd like the file saved (suggest `~/Desktop/` as a default). Produce a self-contained HTML file named after the campaign.
+When the user chooses **Generate visual campaign deck**, ask where they'd like the file saved (suggest `~/Desktop/` as a default). Produce a self-contained HTML file named after the campaign. The head carries the social share block (og:title + og:description always, relative og:image when published; canonical block in [../../shared/social-meta.md](../../shared/social-meta.md)).
 
 ## Deck Structure
 
