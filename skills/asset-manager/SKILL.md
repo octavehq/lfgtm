@@ -17,11 +17,12 @@ Every asset has exactly one `privacy` tier — each is strictly more open than t
 | `workspace` *(default)* | Owner + workspace members — a teammate opening the link verifies their work email once, then sees everything their team has shared |
 | `public` | Anyone with the URL |
 
-Three more facts complete the model:
+Four more facts complete the model:
 
 - `status` is a separate axis: `published` (default; discoverable in the workspace gallery) vs `unpublished` (hidden, but still viewable via preview/workspace links). Status never affects the privacy tier.
 - **"Externally shared" is not a tier.** Share links (emails/domains + verification) work on any non-`public` asset; the API reports the derived `externallyShared: true` on an asset that has at least one share link. Creating or revoking shares never changes `privacy`.
 - **Locked-out viewers can knock.** A code-verified visitor who hits an asset they can't open (workspace or share flow) can request access; those requests land in the owner's inbox (see Access Requests workflow).
+- **Only `public` unfurls.** Link-preview cards (Slack/LinkedIn/X) render only for `public` website assets opened via `siteUrl`: crawlers cannot pass the workspace email wall, and share links are crawler-blocked by design. Unfurl fetches never count in visit stats. The service absolutizes a relative `og:image` and injects `twitter:card` at serve time, but it cannot invent missing tags or a missing image file — that's the unfurl check in the publish workflow below (rules in [social-meta.md](../shared/social-meta.md)).
 
 **Link lifetimes:** share links never expire by default (expiry is opt-in per share); a viewer's verified session and a `previewUrl` each last ~30 days. Rule of thumb: hand out a `previewUrl` for a teammate's quick look, a share link for an external "review this deck" — neither will rot mid-conversation. Revoking a share still cuts access immediately.
 
@@ -156,10 +157,11 @@ Script gotcha: metadata values are interpolated into JSON **without escaping** �
    - First — identifier: offer your suggestion first (`<suggestion> (Recommended)`), 1-2 sensible alternates; the user can always type their own via Other.
    - Second — one question: **privacy**.
      - `Workspace (Recommended)` — "Your team can find, open, and reuse it — this is what makes the asset cache work."
-     - `Public` — "Anyone with the URL can view."
+     - `Public` — "Anyone with the URL can view. Link previews (unfurl cards) render only on this tier."
      - `Only me` — "Just you; others need a share link."
      Status is NOT asked — default `published`. Only mention `unpublished` if the user says "draft"/"not ready yet" (set it via `--status unpublished` or later via `asset_update`).
 5. **Draft the description.** 1-2 sentences saying what the asset is and who it's for (e.g. "Interactive use-case explorer for Acme's platform, built for the Q3 ABM campaign"). Sanitize for the script (no `"` or `\`).
+5b. **Unfurl check (public websites only).** If `--type website` and the user chose `public`: grep the entry point for `og:title`, `og:description`, and `og:image`, and check the `og:image` target exists in the source folder. Anything missing → offer once: "Want this to unfurl with a preview card when the link is posted? I'll add share metadata (plus a 1200×630 share image, ~30s)." Yes → add the head block from [social-meta.md](../shared/social-meta.md); render a missing image via the get-brand-components OG chain into `<src>/assets/og.png`. Missing title/description alone → fill them from the page's own `<title>` and lede, no render needed. Non-public tiers → skip silently (cards can't render there anyway). All local grep/edit/render — no MCP calls, so it sits safely before the mint.
 6. **Mint the token** (`asset_generate_access_token`) and resolve the base URL. Do this AFTER steps 1-5 — the step-2 `assets_list` already rotated any earlier token, and no MCP asset calls may follow the mint before the upload runs.
 7. **Upload.**
    - Source is already a `.zip` → `upload-artifact.sh --src <file>.zip ...`
@@ -176,6 +178,7 @@ Script gotcha: metadata values are interpolated into JSON **without escaping** �
 1. assets_list                    ← MCP tool call (Cache Rule)
 2. AskUserQuestion (identifier)   ← offer suggestion + alternates
 3. AskUserQuestion (privacy)      ← workspace (recommended) | public | only_me
+3b. (public websites) unfurl check ← local grep for og tags + optional assets/og.png render; no MCP calls
 4. asset_generate_access_token    ← MCP tool call; capture accessToken from the result
 5. ONE bash command               ← ARTIFACTS_ACCESS_TOKEN='<accessToken>' \
                                       bash "${CLAUDE_PLUGIN_ROOT:-.}"/skills/asset-manager/scripts/zip-and-upload-artifact.sh \
@@ -183,7 +186,7 @@ Script gotcha: metadata values are interpolated into JSON **without escaping** �
 6. Update the registry, report the link
 ```
 
-A publish that creates more than one asset, or runs any script outside the bundled four, is off the rails — stop and restart from this sequence. (The documented recoveries are NOT off the rails: the `zip → upload-artifact.sh` per-file fallback when zipping fails, and a single 401/502 retry, each stay within this one publish.)
+A publish that creates more than one asset, or runs any script outside the bundled four, is off the rails — stop and restart from this sequence. (The documented recoveries are NOT off the rails: the `zip → upload-artifact.sh` per-file fallback when zipping fails, a single 401/502 retry, and the step-3b unfurl check's get-brand-components render scripts — each stays within this one publish.)
 
 ## Workflow: Update an Asset's Files
 
@@ -220,7 +223,7 @@ For identifier, description, entry point, privacy, status, or vanity slug change
   2. `only_me`: everyone but the owner loses access — teammates too (no API read, no preview).
   3. Anyone else needs a **share link** (emails and/or allowed domains, email-verified) — works on any non-public tier.
   Then ask WHO to share with (emails/domains) and whether the link should ever expire (default: never) → Shares workflow. Report the fresh `previewUrl` for teammates alongside the share link.
-- **When flipping to `public`**, mention existing share links keep working but are no longer needed.
+- **When flipping to `public`**, mention existing share links keep working but are no longer needed. For website assets, run the same unfurl check as publish step 5b first: grep for the og tags and the og:image file, and if anything is missing offer to add the share block and `assets/og.png` via a file update before the flip — public is the only tier where cards render.
 
 ## Workflow: Vanity URLs
 
