@@ -28,16 +28,18 @@ Immediately after `<title>` in the `<head>`:
 
 1. **`og:title` and `og:description` go on every HTML deliverable.** They cost nothing and survive a later privacy flip to `public` without a re-edit. This copy renders on the social card, so it is reader-facing: hold it to [editorial-rules.md](editorial-rules.md) even though the mechanical lint cannot see attribute text (its text extraction strips tags). No unfilled placeholders, no internal framing, no em dashes.
 
-2. **`og:image` is always a RELATIVE path** (`assets/og.png`), never anything else:
+2. **`og:image` is always AUTHORED as a RELATIVE path** (`assets/og.png`), never anything else:
    - Never a `data:` URI. Every unfurler ignores it, and the service skips non-http schemes when rewriting.
    - Never an absolute URL. A hardcoded origin bakes the authoring machine's address into the artifact; a baked-in `http://localhost:3015` is exactly the bug that broke a real share card. The service absolutizes the relative path against the real origin at serve time, so relative is both safer and sufficient. It also survives the asset moving to a vanity URL or a different host.
    - Never root-absolute (`/assets/og.png`). Artifacts serve under `/sites/<identifier>-<uuid>/`, so a leading-slash path 404s.
 
-3. **`twitter:card` only alongside `og:image`.** The service injects it if forgotten; writing it is better form.
+3. **Hard rule: the og:image a crawler sees MUST be an absolute URL.** Unfurlers only load a full `https://` image URL from the bytes they fetch; a relative path in the served page means no card. On the artifact service the relative path from rule 2 satisfies this, because the service rewrites it to a full URL at serve time. Any host that serves files verbatim (Vercel, S3, any static server) does no rewriting: after the first deploy returns the URL, set og:image to `<url>/assets/og.png` and deploy again. That edit happens after the review gate, so a re-lint of that hosted copy failing the absolute-URL check is expected.
 
-4. **Omit `og:url` and `rel="canonical"`.** Authoring time cannot know the final URL, the service can only repair a wrong origin (never a wrong path), and unfurlers fall back to the fetched URL when `og:url` is absent. Emitting them is pure downside.
+4. **`twitter:card` only alongside `og:image`.** The service injects it if forgotten; writing it is better form.
 
-5. **Internal-only deliverables** (meeting prep, deal coaching, briefs, internal dashboards) may drop the `og:image` + `twitter:card` pair; keep title and description always. Anything published `public` carries all four; the asset-manager publish flow checks this before uploading a public website.
+5. **Omit `og:url` and `rel="canonical"`.** Authoring time cannot know the final URL, the service can only repair a wrong origin (never a wrong path), and unfurlers fall back to the fetched URL when `og:url` is absent. Emitting them is pure downside.
+
+6. **Internal-only deliverables** (meeting prep, deal coaching, briefs, internal dashboards) may drop the `og:image` + `twitter:card` pair; keep title and description always. Anything published `public` carries all four; the asset-manager publish flow checks this before uploading a public website.
 
 ## Rendering the share image
 
