@@ -347,6 +347,10 @@ def main():
                     help="render a specific theme (needs manifest.render.tokensDark/tokensLight overrides)")
     ap.add_argument("--format", default="doc",
                     help="output canvas: doc (default) | og (1200x630) | social-square (1080) | social-story (1080x1920) | email (600w)")
+    ap.add_argument("--og-desc", dest="og_desc",
+                    help="emit social share metas: og:title (from spec title) + this og:description")
+    ap.add_argument("--og-image", dest="og_image",
+                    help="RELATIVE og:image path (e.g. assets/og.png); also emits twitter:card. Requires --og-desc")
     args = ap.parse_args()
     target = args.kit_dir or args.kit
     if not target:
@@ -412,9 +416,17 @@ def main():
     link = (f'<link rel="preconnect" href="https://fonts.googleapis.com">'
             f'<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
             f'<link href="{html.escape(wf)}" rel="stylesheet">') if wf else ""
+    # social share metas, opt-in: --format og intermediates must never carry their own OG tags
+    og = ""
+    if args.og_desc:
+        og = (f'<meta property="og:title" content="{title}">'
+              f'<meta property="og:description" content="{html.escape(args.og_desc)}">')
+        if args.og_image:
+            og += (f'<meta property="og:image" content="{html.escape(args.og_image)}">'
+                   f'<meta name="twitter:card" content="summary_large_image">')
     doc = (f'<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">'
            f'<meta name="viewport" content="width=device-width,initial-scale=1"><title>{title}</title>'
-           f'{link}<style>{style}</style></head><body><div class="doc">{"".join(parts)}</div></body></html>')
+           f'{og}{link}<style>{style}</style></head><body><div class="doc">{"".join(parts)}</div></body></html>')
     pathlib.Path(args.out).write_text(doc, encoding="utf-8")
     print(args.out, f"({len(doc)} bytes)")
 

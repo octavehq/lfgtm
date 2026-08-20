@@ -484,11 +484,18 @@ python3 <skill-dir>/scripts/render_kit.py --kit <slug|path> --spec <content.json
 - `--kit-dir` renders a kit stored anywhere (kits don't have to live in `~/.octave/brands/`).
 - `--theme` picks the light or dark palette when the kit carries both (`tokensDark`/`tokensLight`).
 
-### Output formats (optional — ask the user)
+### Output formats
 
 The same kit + spec can render to **multiple formats** — the brand kit is format-agnostic, so don't rebuild styling per format. `--format` sets the canvas: `doc` (default page), `og` (1200×630 share image), `social-square` (1080²), `social-story` (1080×1920), `email` (600px width). The *spec* controls content (a short hero/CTA spec makes a clean OG/social image).
 
-**Don't generate format variants by default** — they cost extra renders and the user usually wants just the doc. After producing the main asset, **ask** whether they also want any format variants (e.g. an OG image, a square social tile), and only then render them.
+**The OG share image is automatic at publish; every other variant is ask-first.** When an HTML deliverable is headed somewhere anyone with the link can open it — the asset-manager `public` tier, the microsite deploy, or the user saying at intake they'll publish, post, or share the link — render its share image without asking and place it beside the HTML:
+
+```bash
+python3 <skill-dir>/scripts/render_kit.py --kit <slug> --spec og-spec.json --format og --out og-frame.html
+python3 <skill-dir>/scripts/render.py --file og-frame.html --out <deliverable-dir>/assets/og.png --width 1200 --height 630 --scale 1
+```
+
+The spec is one `hero` block carrying the deliverable's headline and a one-line subhead — write both fresh from the deliverable and hold them to editorial-rules.md; this copy renders on the social card. Delete `og-frame.html` after. Then confirm the deliverable's head references the image relatively (`assets/og.png`) with the block from [social-meta.md](../shared/social-meta.md) — never an absolute URL, never a data URI. Square, story, and email variants stay opt-in: after producing the main asset, ask whether the user wants them, and only then render.
 
 - **`scripts/render_kit.py`** — loads the kit, emits a self-contained HTML doc: `<style>` = `:root{}` from `manifest.render.tokens` + base64 `@font-face` from `manifest.render.fonts` + `assets/kit_base.css`; body = composed blocks; logo/icons inlined.
 - **`assets/kit_base.css`** — brand-AGNOSTIC component stylesheet (every rule references a `--brand-*` token). This is the single source of truth for component CSS — fix a component once here and every asset for every brand inherits it.
