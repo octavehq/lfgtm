@@ -166,6 +166,73 @@ if ! grep -q -i -E -- '<meta[^>]*charset=' "$FILE"; then
   echo ""
 fi
 
+# --- Social share (unfurl) metadata ---
+# A published artifact gets unfurled by Slack/LinkedIn/X crawlers, which build the
+# preview card from Open Graph tags. og:title and og:description cost nothing, so
+# every deliverable carries them. og:image must be a RELATIVE path to a real
+# sibling file (assets/og.png): unfurlers ignore data: URIs, and an absolute URL
+# bakes in the authoring machine's origin; the asset service absolutizes relative
+# paths at serve time. Attribute text is stripped from the reader-facing checks
+# above, so these run on the raw file. Rules + image chain: shared/social-meta.md.
+for TAG in og:title og:description; do
+  TAG_LINE=$(grep -o -i -E -- "<meta[^>]*property=\"$TAG\"[^>]*>" "$FILE" 2>/dev/null | head -1)
+  if [ -z "$TAG_LINE" ]; then
+    echo "FAIL: No $TAG meta tag. Add <meta property=\"$TAG\" content=\"...\"> after"
+    echo "      <title> (canonical block in shared/social-meta.md)."
+    echo ""
+    VIOLATIONS=$((VIOLATIONS + 1))
+  elif echo "$TAG_LINE" | grep -q -i -E -- 'content="(\[[^"]*\]|\{[^"]*\})?"'; then
+    echo "FAIL: $TAG content is empty or an unfilled placeholder."
+    echo "$TAG_LINE"
+    echo ""
+    VIOLATIONS=$((VIOLATIONS + 1))
+  fi
+done
+
+OG_IMG_TAG=$(grep -o -i -E -- '<meta[^>]*property="og:image"[^>]*>' "$FILE" 2>/dev/null | head -1)
+if [ -z "$OG_IMG_TAG" ]; then
+  echo "WARN: No og:image. Fine for an internal doc; anything published public needs one"
+  echo "      for the preview card (relative assets/og.png, see shared/social-meta.md)."
+  echo ""
+else
+  OG_IMG_SRC=$(echo "$OG_IMG_TAG" | sed -E 's/.*content="([^"]*)".*/\1/')
+  case "$OG_IMG_SRC" in
+    data:*)
+      echo "FAIL: og:image is a data: URI. Unfurlers ignore it; point at a real relative"
+      echo "      file (assets/og.png) instead."
+      echo ""
+      VIOLATIONS=$((VIOLATIONS + 1)) ;;
+    http://*|https://*|//*)
+      echo "FAIL: og:image is an absolute URL ($OG_IMG_SRC). That bakes in the authoring"
+      echo "      origin. Use a relative path; the service absolutizes it at serve time."
+      echo ""
+      VIOLATIONS=$((VIOLATIONS + 1)) ;;
+    /*)
+      echo "FAIL: og:image is root-absolute ($OG_IMG_SRC). Artifacts serve under"
+      echo "      /sites/<id>/, so a leading-slash path 404s. Use a relative path."
+      echo ""
+      VIOLATIONS=$((VIOLATIONS + 1)) ;;
+    ""|"<"*|"["*|"{"*)
+      echo "FAIL: og:image content is empty, an unfilled placeholder, or malformed."
+      echo "$OG_IMG_TAG"
+      echo ""
+      VIOLATIONS=$((VIOLATIONS + 1)) ;;
+    *)
+      if [ ! -f "$(dirname "$FILE")/$OG_IMG_SRC" ]; then
+        echo "WARN: og:image points at $OG_IMG_SRC but no such file exists next to the HTML."
+        echo "      Render it before publishing (chain in shared/social-meta.md), or drop"
+        echo "      the og:image line if this deliverable will never be published."
+        echo ""
+      fi ;;
+  esac
+fi
+
+if grep -q -i -E -- 'property="og:url"|rel="canonical"' "$FILE"; then
+  echo "WARN: og:url / rel=canonical present. Omit both: the asset service derives the"
+  echo "      real URL, and an authored one can bake in a wrong origin or path."
+  echo ""
+fi
+
 # --- Self-containment: no external requests ---
 # A hosted artifact runs behind a strict CSP and may be opened offline. Remote
 # fonts, scripts, and images are the most common way a shipped asset degrades.

@@ -188,7 +188,7 @@ These rules are non-negotiable for microsites:
 4. **One CTA, repeated** — the same ask in the hero (subtle) and the closing section (prominent). Do not confuse with multiple different asks.
 5. **Mobile-first** — this WILL be opened from email on a phone. All `clamp()` values must work at 375px width. Test aggressively.
 6. **No sidebar, no navigation bar** — single vertical scroll. Smooth, clean, focused.
-7. **Self-contained** — inline CSS, no external requests beyond Google Fonts. NO tracking pixels, analytics, or third-party scripts.
+7. **Self-contained** — inline CSS, no external requests beyond Google Fonts. NO tracking pixels, analytics, or third-party scripts. Exception: `assets/og.png`, the social share image, ships as a sibling file (unfurlers ignore data-URI og:image); reference it relatively per [social-meta.md](../shared/social-meta.md).
 
 #### Content Density Limits
 
@@ -353,6 +353,7 @@ Size:   [file size]
 
 How to share:
 • Live URL (recommended): bash "${CLAUDE_PLUGIN_ROOT:-.}"/scripts/deploy.sh .octave-microsites/<company>-<date>/  — deploys to Vercel and returns a public link to drop in your outreach
+  (Vercel serves files verbatim, with none of the asset service's serve-time OG rewriting. After the first deploy returns the URL, set og:image to the absolute <url>/assets/og.png and deploy once more; strict unfurlers like LinkedIn and Facebook require an absolute image URL there. This is a post-gate delivery step: the review gate lints the relative form, and a re-lint of the Vercel copy failing on the absolute-URL check is expected.)
 • PDF: bash "${CLAUDE_PLUGIN_ROOT:-.}"/scripts/export-pdf.sh .octave-microsites/<company>-<date>/<company>-microsite.html  — or Cmd+P / Ctrl+P -> Save as PDF
 • Host on any static file server, S3 bucket, or Netlify drop
 • Or send the HTML file directly as an attachment

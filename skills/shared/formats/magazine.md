@@ -10,7 +10,7 @@ These principles supplement the universal visual rules in `presentation-principl
 
 Create a single horizontal-swipe HTML file:
 
-- **Emit a complete standalone document**: `<!DOCTYPE html>`, `<html lang="en">`, `<meta charset="utf-8">`, `<head>`, `<body>`. A magazine is served as-is by the asset service, not injected into a host page, so nothing supplies these for you. Without the doctype the browser renders in quirks mode, where `<table>` does not inherit `color` from its ancestor: a correct dark-spread stylesheet then paints body ink on a dark field and the table silently disappears. Belt and braces, `magazine-base.css` sets `color: inherit` on tables inside spreads.
+- **Emit a complete standalone document**: `<!DOCTYPE html>`, `<html lang="en">`, `<meta charset="utf-8">`, `<head>`, `<body>`, plus the social share block from [social-meta.md](../social-meta.md) (`og:title`, `og:description`; relative `og:image` when published). A magazine is served as-is by the asset service, not injected into a host page, so nothing supplies these for you. Without the doctype the browser renders in quirks mode, where `<table>` does not inherit `color` from its ancestor: a correct dark-spread stylesheet then paints body ink on a dark field and the table silently disappears. Belt and braces, `magazine-base.css` sets `color: inherit` on tables inside spreads.
 - Each spread is `100vw × 100vh`
 - Horizontal scroll snap, no vertical page scrolling
 - Full-bleed, edge-to-edge editorial compositions
@@ -144,7 +144,7 @@ Confirm the intended typefaces actually rendered:
 
 Format-specific audit for swipe magazines. Run alongside the universal presentation checklist. Run the render gate first (invocation above).
 
-- [ ] **Standalone document.** Doctype, `html lang`, charset, head, body all present; no host-page assumptions.
+- [ ] **Standalone document.** Doctype, `html lang`, charset, head, body all present; no host-page assumptions. Share metadata present per [social-meta.md](../social-meta.md); a published magazine's `og.png` sits beside the file (the deliverable becomes a small folder) and `og:image` stays relative.
 - [ ] **Base scaffold present.** The full `magazine-base.css` contents are in the `<style>` block; spreads use `.spread` with an explicit `.is-light` / `.is-dark` (or equivalent declared surface+ink pair).
 - [ ] **No vertical page scroll; every spread fits.** Content fits inside `100vh` minus the nav band at all four gate viewports.
 - [ ] **Chrome legible on every spread.** Nav and folio hold contrast on the lightest and darkest spread; nothing renders under the nav band.

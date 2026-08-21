@@ -44,3 +44,4 @@ node <skill-dir>/../shared/scripts/render-gate.js <document.html> \
 - [ ] **Modals (if present) accessible.** Close on Escape, close on backdrop click, `aria-label` on close button, `body` overflow hidden when open.
 - [ ] **Print flattens.** `@media print` block: tabs become labeled blocks via `data-tab-label`, modals expand inline, dark inverts to light, nav hidden, cards get `break-inside: avoid`.
 - [ ] **Footer complete.** Data window, generation date, confidentiality notice, branding: all present and consistent with header.
+- [ ] **Share metadata.** og:title and og:description present and filled. og:image, when present, is a relative path to a real sibling file (assets/og.png); no og:url or canonical. See [social-meta.md](../social-meta.md).

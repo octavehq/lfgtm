@@ -11,6 +11,10 @@ Self-contained, single HTML file. The only external dependency is Google Fonts (
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Deal Coaching: [Company] · Resonate → Elevate → Compel</title>
+<meta property="og:title" content="Deal Coaching: [Company]">
+<meta property="og:description" content="[1-2 sentence summary a stranger understands]">
+<meta property="og:image" content="assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">

@@ -24,7 +24,7 @@ These principles supplement the universal visual rules in `presentation-principl
 
 8. **Personalization is visible.** If built for a specific account, the personalization should be obvious: their name, their industry context, their challenges. Generic-feeling microsites miss the point of ABM.
 
-9. **Fast and self-contained.** No external JS frameworks, no heavy assets. The page should load instantly. All CSS/JS inline. Images as data URIs or inline SVGs.
+9. **Fast and self-contained.** No external JS frameworks, no heavy assets. The page should load instantly. All CSS/JS inline. Images as data URIs or inline SVGs. One exception: the social share image. `og:image` must reference a real file at a relative path (`assets/og.png`) beside `index.html`, because unfurlers ignore `data:` URIs, so the deliverable ships as a two-file folder when it carries one. See [social-meta.md](../social-meta.md).
 
 ---
 
@@ -45,5 +45,6 @@ node <skill-dir>/../shared/scripts/render-gate.js <microsite.html> \
 - [ ] **Responsive.** Content stacks cleanly at 375px viewport width. No horizontal scroll on mobile. Touch targets >= 44px.
 - [ ] **Social proof present.** At least one form of external validation (quote, logo, stat, case reference).
 - [ ] **Personalization visible.** Company name, industry context, or specific challenges referenced, not generic boilerplate.
-- [ ] **Self-contained.** No external CSS/JS dependencies beyond Google Fonts. All assets inline.
+- [ ] **Self-contained.** No external CSS/JS dependencies beyond Google Fonts. All assets inline (`assets/og.png` is the one permitted sibling file).
+- [ ] **Share metadata complete.** og:title, og:description, a relative og:image (`assets/og.png`) that exists on disk, and twitter:card all present. A microsite exists to be linked, so the image is required here, not optional. See [social-meta.md](../social-meta.md).
 - [ ] **Print works.** Readable when printed, even if simplified. Interactive elements flatten.

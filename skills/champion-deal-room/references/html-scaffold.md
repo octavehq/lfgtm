@@ -1,6 +1,6 @@
 # Champion Deal-Room HTML Scaffold
 
-Implements [../../shared/formats/html-document.md](../../shared/formats/html-document.md) (scroll-based reading flow, sticky nav, card-based containers, print flattening) and [../../shared/presentation-principles.md](../../shared/presentation-principles.md) (universal visual rules) for this skill's specific case: a dense, self-contained working document in the meeting-prep battle-plan style: sticky sidebar nav dots, collapsible `details` sections (open by default, forced open on print), and a real card vocabulary. Styled with the workspace company's brand kit (inline `tokens.css` `:root` + the brand's Google Fonts). No external requests beyond Google Fonts.
+Implements [../../shared/formats/html-document.md](../../shared/formats/html-document.md) (scroll-based reading flow, sticky nav, card-based containers, print flattening) and [../../shared/presentation-principles.md](../../shared/presentation-principles.md) (universal visual rules) for this skill's specific case: a dense, self-contained working document in the meeting-prep battle-plan style: sticky sidebar nav dots, collapsible `details` sections (open by default, forced open on print), and a real card vocabulary. Styled with the workspace company's brand kit (inline `tokens.css` `:root` + the brand's Google Fonts). No external requests beyond Google Fonts. The head carries the social share block (rules in [../../shared/social-meta.md](../../shared/social-meta.md)); `assets/og.png` is the one permitted sibling file.
 
 This is NOT a full-viewport scrolling landing page. It is a max-900px document column with information density. Reproduce this structure and vocabulary.
 
@@ -11,6 +11,10 @@ This is NOT a full-viewport scrolling landing page. It is a max-900px document c
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Deal Room: [Company] — [Workspace Company]</title>
+<meta property="og:title" content="Deal Room: [Company]">
+<meta property="og:description" content="[1-2 sentence summary a stranger understands]">
+<meta property="og:image" content="assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=[fonts]&display=swap" rel="stylesheet">
