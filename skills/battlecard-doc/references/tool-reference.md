@@ -5,7 +5,7 @@
 | Tool | Purpose | Use when... |
 |------|---------|-------------|
 | `list_entities({ entityType })` | Fetch all entities of a type (minimal fields) | You want a quick inventory -- "show me all competitors" |
-| `list_entities({ entityType })` | Fetch entities with full data (paginated) | You need the actual content -- "get full competitor profiles" |
+| `get_entity({ oId })` | Fetch entities with full data (paginated) | You need the actual content -- "get full competitor profiles" |
 | `get_entity({ oId })` | Deep dive on one specific entity | You found a competitor and need the complete picture |
 | `search_knowledge_base({ query })` | Semantic search across library + resources | You have a concept -- "how do we compete on security?" |
 | `list_resources()` / `search_resources({ query })` | Uploaded docs, URLs, Google Drive files | You need uploaded competitive intel docs or analyst reports |

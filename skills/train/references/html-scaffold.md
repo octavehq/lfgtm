@@ -14,7 +14,7 @@ A single self-contained HTML file. Inline all CSS and JS; the only external depe
 
 ```css
 /* progress rail */
-.topbar { position: fixed; top:0; left:0; right:0; height:56px; display:flex; align-items:center; gap:1.25rem; ... }
+.topbar { position: fixed; top:0; left:0; right:0; height:56px; display:flex; align-items:center; gap:1.25rem; z-index:10; background:var(--brand-bg); }
 .progress-dots .dot { width:9px; height:9px; border-radius:50%; background: var(--brand-border); cursor:pointer; }
 .progress-dots .dot.done { background: var(--brand-accent-light); }
 .progress-dots .dot.current { background: var(--brand-primary); transform: scale(1.35); }
@@ -63,7 +63,7 @@ A single self-contained HTML file. Inline all CSS and JS; the only external depe
 
 /* Slide 4 competitor deep-dive */
 .comp-verdict { border-radius: var(--brand-radius-pill); font-size:.62rem; }           /* Direct / Adjacent / Build */
-.cap-table { width:100%; border-collapse:collapse; }                                   /* Capability | them | Octave */
+.cap-table { width:100%; border-collapse:collapse; }                                   /* Capability | alternative | selected offering */
 .cap-table .us { background: color-mix(in srgb, var(--brand-primary) 6%, transparent); }
 .hearsay { display:grid; grid-template-columns:1fr 1fr; gap:.7rem; }                    /* You'll hear | What to say */
 .hs-say { background: var(--brand-positive-weak); }
@@ -85,7 +85,15 @@ A single self-contained HTML file. Inline all CSS and JS; the only external depe
 .score-big { font-family: var(--brand-font-heading); font-size: clamp(3.5rem,9vw,6rem); }
 .review-menu button { border-radius: var(--brand-radius-pill); }
 
-@media print { .persona-panel, .tpanel { display:block !important; } .tabs { display:none; } .cp-explain { display:block !important; } .cp-opt[data-answer="true"] { border-color: var(--brand-positive); } }
+@media print {
+ html,body,.deck{height:auto!important;overflow:visible!important}
+ .slide,.slide.active{display:block!important;position:static!important;height:auto!important;padding-top:0!important;break-after:page}
+ .slide:last-child{break-after:auto}
+ .slide-inner,.slide-body{height:auto!important;overflow:visible!important}
+ .tpanel,.persona-panel,.checkpoint,.cp-explain{display:block!important}
+ .topbar,.slide-nav,.tabs,.review-menu,[data-next-question]{display:none!important}
+}
+:focus-visible{outline:3px solid var(--brand-primary);outline-offset:3px}
 @media (max-width:760px) { .how-steps, .rec-strip, .hearsay, .proof-grid, .seg-grid, .grid-2, .grid-3 { grid-template-columns:1fr; } }
 @media (prefers-reduced-motion: reduce) { * { animation:none !important; transition:none !important; } }
 ```
@@ -95,7 +103,7 @@ A single self-contained HTML file. Inline all CSS and JS; the only external depe
 ```html
 <div class="topbar"><img class="brand" ...><span class="step-label"></span><div class="progress-dots" id="dots"></div></div>
 <div class="deck">
-  <section class="slide gradient active" data-type="cover">...Start button calls go(1)...</section>
+  <section class="slide gradient active" data-type="cover"><button data-start>Start</button></section>
   <section class="slide" data-type="content"><!-- Slide 1: What we sell -->
     <div class="slide-inner">
       <div class="slide-body">
@@ -108,9 +116,9 @@ A single self-contained HTML file. Inline all CSS and JS; the only external depe
           <!-- more checkpoints -->
         </div>
       </div>
-      <div class="slide-nav"><button class="btn" onclick="go(0)">Back</button><div class="spacer"></div>
+      <div class="slide-nav"><button class="btn" data-prev>Back</button><div class="spacer"></div>
         <span class="nav-hint" data-hint>Clear the checkpoints to continue</span>
-        <button class="btn btn-primary" data-next disabled onclick="go(2)">Next</button></div>
+        <button class="btn btn-primary" data-next disabled>Next</button></div>
     </div>
   </section>
   <!-- Slide 2 (committee + segments), Slide 3 (persona .tabset), Slide 4 (competitor .tabset), Slide 5 (proof .tabset) -->
@@ -124,34 +132,16 @@ Slides 3, 4, 5 each hold a `<div class="tabset" data-tabset>` with a `.tabs` row
 
 Inline, no framework. Four responsibilities:
 
-```js
-// 1) Navigation + gating
-const slides = [...document.querySelectorAll('.slide')];
-const contentIdx = slides.map((s,i)=> s.dataset.type==='content'?i:-1).filter(i=>i>=0);
-const slideDone = {};                 // content slide index -> all checkpoints answered
-function canReach(idx){ return idx<=current || contentIdx.filter(i=>i<idx).every(i=>slideDone[i]); }
-function go(idx){ /* swap .active, updateChrome(), scroll body to top, showScore() on done */ }
+Inline [lesson.js](../assets/lesson.js) after the lesson DOM.
 
-// 2) Progress dots: one per content slide, click to reach (guarded by canReach), classes current/done/locked
 
-// 3) Checkpoints: per content slide, on option click -> lock that checkpoint, mark correct/wrong,
-//    reveal .cp-explain, record first-attempt correctness. When EVERY .checkpoint on the slide is
-//    answered -> slideDone[sIdx]=true and enable [data-next]; hint shows "N of M correct".
-
-// 4) Generic tabsets: for each [data-tabset], wire its ':scope > .tabs > .tab' buttons to its
-//    ':scope > .tpanel' children by index (aria-selected + .active). Independent per tabset.
-
-// Completion: score = count of checkpoints with first-attempt correct / total checkpoints.
-// restart(): clear slideDone + checkpoint state, re-disable Next, go(0).
-// keydown: ArrowRight advances only when [data-next] is enabled (or from cover); ArrowLeft goes back.
-```
 
 Use `:scope >` selectors when wiring tabsets so the three independent selectors (personas, competitors, proof) do not cross-fire. Gating is independent of tabsets: a slide with a tab selector still gates on its checkpoints.
 
 ## Notes
 
 - **The gate is the point.** Next must be disabled until all checkpoints on the slide are answered. Must-answer, not must-be-correct, so no dead ends.
-- **Checkpoints run one question at a time.** Only `.checkpoint.current` is shown, with a "Question X of N" counter and a small progress bar. On answer: lock it, reveal the explanation, and reveal a "Next question" button (except on the last) that advances `.current` to the next checkpoint. On answering, smooth-scroll the explanation and Next-question button into view so the reveal never leaves them below the fold (a known funky-scroll fix). The last checkpoint answered unlocks the slide's Next button in the always-visible nav.
+- Show each checkpoint with its explanation immediately below it; wrong answers unlock after the explanation. Every earlier content slide must be answered before jumping ahead. Review links use `data-go="slide-id"`; restart uses `data-restart`.
 - **The revealed explanation stacks vertically**: `.cp-explain.show { display: flex; flex-direction: column; align-items: flex-start; }` so the "Next question" button drops onto its own line **below** the explanation text, left-aligned. Do NOT leave the advance button as an inline element after the text, or it floats to the right and the text wraps under it (a known "wonky" layout bug).
 - **One checkpoint per persona on Slide 3**, so the score reflects knowing every buyer.
 - **Capability tables and hear/say** must trace to the competitor entity descriptions; never invent a row or a checkmark.

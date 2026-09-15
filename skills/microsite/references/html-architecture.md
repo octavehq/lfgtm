@@ -91,7 +91,7 @@
   </section>
 
   <script>
-    // Intersection Observer for scroll-triggered .animate-in elements
+    // Inline the complete assets/reveal.js implementation here.
     // Smooth scroll for anchor links
     // Counter animation for metric numbers (if present)
     // prefers-reduced-motion check
@@ -99,4 +99,12 @@
 
 </body>
 </html>
+```
+
+Inline [reveal.js](../assets/reveal.js). Base `.animate-in` is visible; only `.reveal-pending` hides offscreen content briefly. Counters keep final accessible values.
+
+```css
+.animate-in{opacity:1;transform:none}.reveal-pending{opacity:0;transform:translateY(12px)}
+:focus-visible{outline:3px solid currentColor;outline-offset:4px}html{scroll-padding-top:80px}
+@media(prefers-reduced-motion:reduce){.reveal-pending{opacity:1;transform:none}*{animation:none!important;transition:none!important}}
 ```

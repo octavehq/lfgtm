@@ -332,7 +332,7 @@ Tactical strategy table — the grid that maps target company, buyer, use case, 
 
 ## Section 4: Persona-Based Messaging
 
-Core product message translated per buying committee member. Two zones: "Focus messaging here" (User + Champion) and "Help your champion translate" (Decision Maker, Financial Buyer, Technical Influencer).
+Translate the selected offering’s message for the actual committee. Choose the primary audience from the buyer decision, not a fixed User + Champion rule.
 
 ```html
 <details class="section" open id="section-persona-messaging">
@@ -350,12 +350,12 @@ Core product message translated per buying committee member. Two zones: "Focus m
       <div class="callout" style="border-left-color: var(--success);">
         <p style="font-weight: 700; color: var(--success); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;">Focus messaging here</p>
         <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;">(what the product actually does)</p>
-        <p style="font-size: 0.85rem; margin-top: 0.5rem;">User + Champion are closest to the problem. Lead with product truth.</p>
+        <p style="font-size: 0.85rem; margin-top: 0.5rem;">[Selected primary audience, their operating job, and why this offering matters.]</p>
       </div>
       <div class="callout" style="border-left-color: var(--warning);">
         <p style="font-weight: 700; color: var(--warning); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;">Help your champion translate</p>
         <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;">(for the rest of the buying committee)</p>
-        <p style="font-size: 0.85rem; margin-top: 0.5rem;">Decision Maker, Financial Buyer, and Technical Influencer need translated value.</p>
+        <p style="font-size: 0.85rem; margin-top: 0.5rem;">[Other relevant committee roles, their decision criteria, and the evidence they need.]</p>
       </div>
     </div>
 
@@ -485,6 +485,7 @@ Four-column funnel showing how messaging shifts as buyer awareness increases. Sp
     <!-- 4-Column Funnel Grid -->
     <div class="funnel-grid">
       <!-- Column Headers -->
+      <div class="funnel-header">Message / awareness</div>
       <div class="funnel-header funnel-stage-1">
         <p class="funnel-stage-label">Problem Unaware</p>
       </div>
@@ -500,35 +501,35 @@ Four-column funnel showing how messaging shifts as buyer awareness increases. Sp
 
       <!-- Row: Lead With... -->
       <div class="funnel-row-label">Lead with...</div>
-      <div class="funnel-cell card funnel-stage-1">
+      <div class="funnel-cell card funnel-stage-1" data-stage="Problem Unaware" data-label="Problem Unaware">
         <span class="badge badge-warning">Alternative</span>
         <p style="margin-top: 0.5rem; font-size: 0.85rem;">[Lead with the familiar alternative they're already using — e.g., "Stitching together docs, LLM prompts, Clay, and SEPs"]</p>
       </div>
-      <div class="funnel-cell card funnel-stage-2">
+      <div class="funnel-cell card funnel-stage-2" data-stage="Problem Aware" data-label="Problem Aware">
         <span class="badge badge-error">Problem</span>
         <p style="margin-top: 0.5rem; font-size: 0.85rem;">[Lead with the problem they recognize — e.g., "Personalization is cumbersome and doesn't scale"]</p>
       </div>
-      <div class="funnel-cell card funnel-stage-3">
+      <div class="funnel-cell card funnel-stage-3" data-stage="Solution Aware" data-label="Solution Aware">
         <span class="badge badge-primary">Capability</span>
         <p style="margin-top: 0.5rem; font-size: 0.85rem;">[Lead with the capability they want — e.g., "Create hyper-personalized outbound sequences and turn them into Clay"]</p>
       </div>
-      <div class="funnel-cell card funnel-stage-4">
+      <div class="funnel-cell card funnel-stage-4" data-stage="Product Aware" data-label="Product Aware">
         <span class="badge badge-success">Feature</span>
         <p style="margin-top: 0.5rem; font-size: 0.85rem;">[Lead with the product feature — e.g., "Octave Messaging Library and Sequence Agents"]</p>
       </div>
 
       <!-- Row: Earn Trust By... -->
       <div class="funnel-row-label">Earn trust by...</div>
-      <div class="funnel-cell card funnel-stage-1">
+      <div class="funnel-cell card funnel-stage-1" data-stage="Problem Unaware" data-label="Problem Unaware">
         <p style="font-size: 0.85rem;">[e.g., "Showing you understand their situation"]</p>
       </div>
-      <div class="funnel-cell card funnel-stage-2">
+      <div class="funnel-cell card funnel-stage-2" data-stage="Problem Aware" data-label="Problem Aware">
         <p style="font-size: 0.85rem;">[e.g., "Showing you understand their problem"]</p>
       </div>
-      <div class="funnel-cell card funnel-stage-3">
+      <div class="funnel-cell card funnel-stage-3" data-stage="Solution Aware" data-label="Solution Aware">
         <p style="font-size: 0.85rem;">[e.g., "Showing you understand their desired capability"]</p>
       </div>
-      <div class="funnel-cell card funnel-stage-4">
+      <div class="funnel-cell card funnel-stage-4" data-stage="Product Aware" data-label="Product Aware">
         <p style="font-size: 0.85rem;">[e.g., "Connecting their desired features to an outcome"]</p>
       </div>
 
@@ -659,7 +660,7 @@ Horizontal customer journey showing phases, activities, stakeholders, and touchp
     </div>
   </summary>
   <div class="section-body">
-    <p class="section-subtitle">The full customer journey for each use case — from documentation through prospecting, outreach, and closing — with the tools, stakeholders, and messaging at each phase.</p>
+    <p class="section-subtitle">The customer’s operating workflow for this use case, distinct from the buying journey: phases, participants, dependencies, decisions and offering mechanism.</p>
 
     <!-- Repeat for each use case -->
     <div class="lifecycle-block" style="margin-bottom: 2.5rem;">
@@ -674,10 +675,10 @@ Horizontal customer journey showing phases, activities, stakeholders, and touchp
         <div class="phase">
           <div class="phase-header">
             <span class="phase-number">1</span>
-            <p class="phase-title">[Phase name — e.g., "Document ICP"]</p>
+            <p class="phase-title">[Observed operating phase]</p>
           </div>
           <div class="phase-body">
-            <p class="phase-activity">[What happens — e.g., "Build messaging & positioning library"]</p>
+            <p class="phase-activity">[Actual customer activity and desired output]</p>
             <div class="phase-tools">
               <span class="badge badge-primary" style="font-size: 0.65rem;">[Tool/Feature]</span>
             </div>
@@ -691,7 +692,7 @@ Horizontal customer journey showing phases, activities, stakeholders, and touchp
         <div class="phase">
           <div class="phase-header">
             <span class="phase-number">2</span>
-            <p class="phase-title">[Phase 2 — e.g., "Build prospect lists"]</p>
+            <p class="phase-title">[Next operating phase]</p>
           </div>
           <div class="phase-body">
             <p class="phase-activity">[Activity]</p>
@@ -704,12 +705,7 @@ Horizontal customer journey showing phases, activities, stakeholders, and touchp
           </div>
         </div>
 
-        <!-- Continue for 6-8 phases -->
-        <!-- Phase 3: Enrich & qualify -->
-        <!-- Phase 4: Build campaigns -->
-        <!-- Phase 5: Execute outreach -->
-        <!-- Phase 6: Meet & close -->
-        <!-- Phase 7: Track outcomes -->
+        <!-- Repeat only for this customer’s supported operating phases. -->
 
       </div>
     </div>
@@ -743,7 +739,7 @@ Website implementation guide — what goes on the homepage (primary) vs. what go
       <div>
         <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
           <span class="badge badge-success">Homepage</span>
-          <span class="text-muted" style="font-size: 0.8rem;">This should be the ONLY focus on the homepage</span>
+          <span class="text-muted" style="font-size: 0.8rem;">Select homepage hierarchy for the requested offering and audience scope</span>
         </div>
 
         <div class="homepage-template">

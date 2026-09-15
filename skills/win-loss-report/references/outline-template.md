@@ -1,43 +1,10 @@
-# Outline Template
+# Win/loss outline
 
-```
-REPORT OUTLINE: Win/Loss Report
-================================
+Use one normalized metric model and these four sections:
 
-Period: [Date range]
-Scope: [All deals / Competitor: X / Segment: Y]
-Depth: [Executive Summary / Full Report]
+1. Cohort and outcomes: close-date window, outcome cutoff, wins/losses/no-decision definitions, coverage and summary.
+2. Drivers and counterevidence: buyer explanations, observed associations, source scope and uncertainties.
+3. Comparisons: competitor/segment/persona tabs with unit IDs, counts, rates and overlap notes.
+4. Interventions to test: evidence, competing explanation, next experiment, owner and success measure; source/method appendix.
 
-Data Gathered:
-- Won deals: [N] ($[total])
-- Lost deals: [N] ($[total])
-- Findings analyzed: [N]
-- Competitors identified: [list]
-- Segments covered: [list]
-
----
-
-PLANNED SECTIONS
------------------
-
-1. Header & Report Metadata
-2. Executive Summary (4-5 key takeaways)
-3. Win Rate Overview (headline metric + visual)
-4. Win/Loss by Competitor (horizontal bar chart)
-5. Win/Loss by Segment (horizontal bar chart)
-6. Win/Loss by Persona (breakdown chart)
-7. Win Pattern Analysis (top themes + evidence)
-8. Loss Pattern Analysis (top themes + evidence)
-9. Objection Analysis (frequency + correlation)
-10. Notable Deals (3-5 spotlighted stories)
-11. Recommendations (3-5 actionable items)
-12. Data Sources & Methodology
-
----
-
-Does this look good? I can:
-1. Proceed to style selection and generation
-2. Add/remove sections
-3. Expand a specific area
-4. Adjust the scope or period
-```
+Honor approved scope and infer style from the selected brand. Ask only about unresolved material decisions. A scoped summary may omit inapplicable comparisons.

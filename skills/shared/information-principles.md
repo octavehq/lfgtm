@@ -1,5 +1,8 @@
 # Information Principles: Octave Content
 
+Evidence requirements follow [analytics scope](analytics-contract.md), [source handling](evidence-and-inputs.md) and the intended audience. Use available approved examples, not a fixed quota of named customers or quotes. A descriptive fact can stand without a comparison; state its limits rather than inventing a baseline. Recommendations are required only when the task calls for them.
+
+
 How to structure, organize, and present information for maximum clarity and impact. These principles apply regardless of format (document, deck, one-pager, microsite) and are independent of both visual design and language quality.
 
 Visual design determines how content LOOKS. Language rules determine how it READS. These principles determine how it's ORGANIZED and what it SAYS.

@@ -2,39 +2,29 @@
 
 Standard review loop for all Octave-generated content. Any content-generating skill can invoke this protocol at its review step.
 
-This protocol is a **MANDATORY GATE** for any shippable HTML deliverable. The artifact is NOT opened in the browser, delivered, or summarized until the pipeline has run and produced a scorecard. The principles (editorial, information, presentation, octave-value) are baked into generation; this gate is the verification pass that catches what slipped through. There is no opt-out: skills do not ask permission, and the reviewer pass is not skippable.
+Use [output readiness](output-readiness.md) for the requested audience and purpose. Text, native-generation, saved-agent, and HTML routes share factual and commercial checks. HTML adds actual visual inspection. Clearly labeled drafts and previews may be shown while inputs or checks are pending; do not call an unchecked artifact ready.
 
-## How to Invoke
-
-The gate runs automatically after generation. In interactive mode, say so at intake, before generation starts, so it isn't a surprise:
-
-```
-I'll generate this and run the review gate before handing it back.
-```
-
-The pipeline has two parts: a deterministic **preflight** (Step 1) and then the **reviewer pass** (Step 2 onward), two dedicated reviewer subagents in parallel. Do NOT open the file, present a summary, or tell the user it is ready until Step 5 has printed the combined scorecard.
-
----
+Read [host runtime](host-runtime.md) before choosing tools or delegation. Preserve inherited scope and approvals. Use the same content schema for generation and review.
 
 ## Step 1: Preflight (Always Runs)
 
-Before spawning reviewers, before anything else, run a deterministic sweep of the rendered output. This is not a re-read; it's a literal scan for a fixed set of mechanical defects that generation drifts into constantly. Fix every hit in place. This step is not skippable.
+Before spawning reviewers, before anything else, run a deterministic sweep of the rendered output. This is not a re-read; it's a literal scan for a fixed set of mechanical defects that generation drifts into constantly. Fix hard failures; review style advisories in context. Missing dependencies mean NOT RUN, not PASS.
 
 Check for:
 
-- **Em dashes.** Ban `—` and `&mdash;` from asset copy. Replace with a comma, colon, period, or two sentences. Sweep the actual rendered text, don't rely on memory of what you wrote.
+- **Authored prose.** Review decoded reader-facing text. Apply customer voice and necessary domain language; preserve exact quotes and names. Punctuation/style preferences are advisories, not grounds to corrupt evidence.
 - **Broken or failed images and logos.** No `<img>` that fails to load or embed, no broken-image box. Prefer a brand-kit SVG or a clean wordmark. If a logo can't be sourced cleanly, fall back to text: never ship a broken mark.
-- **Links.** Every external `<a>` carries `target="_blank" rel="noopener noreferrer"`. In-page `#` anchors are exempt.
-- **Scrollbars.** Themed, never the bare default OS scrollbar on a styled surface.
-- **Leaked internals and placeholders.** No tool or function names, version or stream IDs, or unfilled `[…]` brackets anywhere in the rendered output.
+- **Links.** Preserve intended destinations and targets. New-tab links carry `rel="noopener noreferrer"`; same-tab and in-page navigation remain valid.
+- **Scrollbars.** Check usability and brand fit; scrollbar styling is an advisory preference.
+- **Audience and completeness.** Keep private notes and inaccessible internal links out of external artifacts. Allow intentional draft/planning fields; accidental missing required seller inputs prevent final readiness.
 
-Then run the shared lint script. These are deterministic checks (banned words, text density, leaked internals, standalone-document structure, social share metadata, self-containment) that don't need LLM judgment and cost nothing.
+For HTML, run the shared source lint: policy-aware placeholders, resource locations, internal links/IDs and public share metadata, plus authored-wording advisories. It does not measure density, factual truth or rendering. Plain text receives the applicable factual/editorial checks without pretending it is HTML.
 
 ```bash
-bash <skill-dir>/../shared/scripts/lint.sh <path-to-file>
+bash <skill-dir>/../shared/scripts/lint.sh <path-to-file> --policy <policy.json>
 ```
 
-Fix every violation the lint surfaces before proceeding. If a skill ships its own `scripts/lint.sh` with additional checks, run that too.
+Fix hard failures; resolve advisories with the actual audience, terminology and source fidelity in mind. If a skill ships additional source checks, run those where applicable.
 
 ### Step 1b: Render Gate (any output with a fixed-viewport or themed surface)
 
@@ -66,15 +56,9 @@ Two rules make this worth the run:
 
 If playwright is unavailable the script exits 2 and the gate did not run: say so in the scorecard rather than implying the checks passed.
 
-## Step 2: Spawn Reviewers (Parallel)
+## Step 2: Review an immutable version
 
-Use the Task tool to spawn **two reviewers in parallel** (both calls in a single message).
-
-**Edit safety:** The two reviewers edit the same file concurrently. They avoid conflicts by staying in their lanes:
-- The editorial reviewer only edits **reader-facing text content** (headlines, body copy, implications, labels).
-- The presentation reviewer only edits **CSS, HTML structure, attributes, and layout**.
-- Neither rewrites content in the other's domain. If they spot an issue outside their scope, they note it in the scorecard.
-- The cycle mechanism (Step 4) catches any residual conflicts: if one reviewer's fix introduces a violation in the other's domain, the next cycle picks it up.
+Use the host's supported delegation with the packaged reviewer instructions, or run the same checks sequentially when delegation is unavailable. The Claude Task examples below describe roles, not a mandatory portable API. Both reviewers inspect the same immutable version and return findings. One author applies edits and reruns affected checks; reviewers never edit the artifact concurrently.
 
 ### Editorial Reviewer
 
@@ -88,7 +72,7 @@ Task tool:
            1. [plugin-root]/skills/shared/editorial-rules.md (language quality)
            2. [plugin-root]/skills/shared/information-principles.md (information structure)
            [If skill has its own editorial blueprint or regression-checklist: 3. that file]
-           Fix violations inline. Return scorecard."
+           Return findings and a scorecard without editing; the author applies fixes and rechecks."
 ```
 
 If the skill has its own editorial blueprint, pass it as an additional file. The shared rules are universal; the skill-specific rules add context.
@@ -98,7 +82,8 @@ If the skill has its own editorial blueprint, pass it as an additional file. The
 The reviewer subagents own language and visual quality; **content accuracy is the orchestrator's job** (yours), so run this check yourself as part of the gate, before delivery. It is the highest-stakes dimension in the whole pipeline. A confident model fabricates silently, and a fabrication that ships reads exactly like a fact until someone downstream gets burned by it. Treat every claim as guilty until traced to a source.
 
 - **Every metric, quote, customer name, and capability traces to real source material** (the Octave MCP data gathered for this asset, or the brand kit's real assets). Nothing invented, nothing rounded up from a hunch. Flag anything that can't be traced.
-- **Named people and titles must be VERIFIED, not assumed.** Trace every named person to a real result via `resolve_profile_from_email`, `enrich_person`, or `find_person`: don't carry a name forward just because it appeared in a prompt or an earlier draft. A fabricated contact (a hallucinated seller, a guessed buyer, a wrong title) is the single most damaging defect an asset can ship. If a person can't be confirmed, flag them as unverified in the scorecard rather than stating them as fact in the asset.
+- **Named people and titles need attributable evidence.** CRM records and operator-supplied names are valid inputs. Enrichment is useful for missing identities or material conflicts, not mandatory re-verification of every supplied name. Distinguish identity from demonstrated buying role.
+- **Preserve source meaning.** Use [evidence and inputs](evidence-and-inputs.md). Keep uncertainty, scope, counterevidence, quote fidelity, and buyer/seller/strategy attribution through final edits. Recheck load-bearing claims after changes.
 - **News and "recently..." claims carry a date and a source link.** Anything time-sensitive needs to trace back to `deep_web_research` or `scrape_website` output, not to model memory.
 - **Internal entity deep-links are context-dependent, not universally wrong.** A link like `app.octavehq.com/entity/{oId}` is correct in internal or seller-facing assets (briefs, call prep, meeting prep). In customer-facing assets (deck, one-pager, microsite, proposal), that same link is a DEFECT: flag it as internal-tooling leakage and strip it.
 - **No hallucinated proof points, fake logos, paraphrases passed off as verbatim quotes, or capabilities not present in the product data.** If a quote can't be matched to source text verbatim, it's a paraphrase: label it as one or cut it.
@@ -117,12 +102,12 @@ Task tool:
            3. [skill-dir]/references/<skill CSS/scaffold ref>
            4. [skill-dir]/references/<skill section/template ref>
            Render the output and inspect it visually per the Render & Inspect steps below.
-           Fix violations inline. Re-render to verify each fix. Return scorecard."
+           Return findings without editing; the author applies fixes and re-renders the final version."
 ```
 
 **Format mapping:** Use the format file that matches the skill's output type:
-- `html-document.md`: abm, battlecard-doc, champion-deal-room, deal-coach, meeting-prep, positioning, proposal, research (HTML mode), train, win-loss-report
-- `slide-deck.md`: deck, train (deck mode)
+- `html-document.md`: abm, battlecard-doc, champion-deal-room, deal-coach, meeting-prep, positioning, proposal, research (HTML mode), win-loss-report
+- `slide-deck.md`: deck, train
 - `magazine.md`: digest (magazine mode), any skill producing a swipe-magazine leave-behind
 - `one-pager.md`: one-pager
 - `microsite.md`: microsite
@@ -145,15 +130,9 @@ Read the actual pixels, not just the source. This step is invoked from inside a 
 
 Both reviewers return scorecards. Read both.
 
-## Step 4: Loop Decision
+## Step 4: Apply findings and recheck
 
-| Cycle | 0 fixes | 1-2 fixes | 3+ fixes |
-|---|---|---|---|
-| **Cycle 1** | CLEAN → Step 5 | Apply, loop | Apply, loop |
-| **Cycle 2** | CLEAN → Step 5 | Apply, STOP (diminishing returns) | Apply, loop |
-| **Cycle 3 (hard cap)** | CLEAN → Step 5 | Apply, STOP | Apply, STOP |
-
-**Max 3 cycles.** Cycles continue until clean or capped. The threshold at cycle 2 is whether reviewers are still finding multiple issues: if 3+, the file needs another pass. After cycle 3, deliver with any remaining issues noted in the scorecard.
+Bound optional polishing to three cycles. The cap does not clear fabricated claims, wrong-audience content, broken primary actions, or missing required sections. Fix the concrete blocker, collect missing input, or accurately deliver an agreed draft with its limitation. One author applies edits, then reruns affected checks on the final file/version.
 
 ## Step 5: Output Combined Scorecard
 
@@ -163,31 +142,31 @@ Present the combined scorecard to the user. This is proof the pipeline ran.
 REVIEW COMPLETE
 =========================
 Preflight (Mechanical, always runs):
-  Em dashes:      [N fixes / PASS]
-  Images/logos:   [N fixes / PASS]
-  Links:          [N fixes / PASS]
-  Scrollbars:     [N fixes / PASS]
-  Leaked internals: [N fixes / PASS]
+  Em dashes:      [PASS / FAIL / NOT RUN / N/A]
+  Images/logos:   [PASS / FAIL / NOT RUN / N/A]
+  Links:          [PASS / FAIL / NOT RUN / N/A]
+  Scrollbars:     [PASS / FAIL / NOT RUN / N/A]
+  Leaked internals: [PASS / FAIL / NOT RUN / N/A]
 
 Editorial (Language + Information):
-  Mechanical:     [N fixes / PASS]
-  Structural:     [N fixes / PASS]
-  Quality:        [N fixes / PASS]
-  Information:    [N fixes / PASS]
+  Mechanical:     [PASS / FAIL / NOT RUN / N/A]
+  Structural:     [PASS / FAIL / NOT RUN / N/A]
+  Quality:        [PASS / FAIL / NOT RUN / N/A]
+  Information:    [PASS / FAIL / NOT RUN / N/A]
 
 Groundedness (orchestrator's own check):
   Claims/people:  [N fixes / PASS / N unverified, flagged]
 
 Presentation (Visual Design + Render Inspection):
-  Visual Rules:   [N fixes / PASS]
-  Format Rules:   [N fixes / PASS]
-  Design System:  [N fixes / PASS]
-  Structure:      [N fixes / PASS]
-  Rendered Check: [N fixes / PASS]
+  Visual Rules:   [PASS / FAIL / NOT RUN / N/A]
+  Format Rules:   [PASS / FAIL / NOT RUN / N/A]
+  Design System:  [PASS / FAIL / NOT RUN / N/A]
+  Structure:      [PASS / FAIL / NOT RUN / N/A]
+  Rendered Check: [PASS / FAIL / NOT RUN / N/A]
 
 Total fixes: [N]
 Cycles: [1-3]
-Status: [CLEAN / N remaining issues]
+Status: [ready for the requested purpose / draft with stated limitations]
 
 [Fix log from both reviewers]
 ```
@@ -196,14 +175,9 @@ Status: [CLEAN / N remaining issues]
 
 ## Notes for Skill Authors
 
-- **The protocol is the same for every skill.** Don't customize the loop logic. Customize what the reviewers check by writing skill-specific blueprints with Review Checklist sections.
-- **The review is a mandatory gate.** Skills don't ask permission: they announce the review at intake (interactive mode) and run it automatically after generation. There is no opt-out. The artifact is not opened, summarized, or delivered until the combined scorecard (Step 5) has printed.
-- **The preflight is non-negotiable.** Em dashes, broken images, unsafe external links, unthemed scrollbars, and leaked internals are cheap to catch and never worth shipping.
-- **Four review dimensions, two reviewers plus the orchestrator.** The editorial reviewer handles language (editorial-rules.md) and information structure (information-principles.md). The presentation reviewer handles visual design (presentation-principles.md + format file + skill blueprints) and actually renders the output to check it, rather than inferring from source alone. Groundedness & verification (fabrication, unverified people, internal-link leakage) is the orchestrator's own check, run as part of the gate. Language, information, and groundedness don't vary by format. Visual design does.
-- **Groundedness is the highest-stakes dimension.** A hallucinated contact, an invented metric, or a paraphrase dressed up as a verbatim quote does more damage than any layout bug. When in doubt, flag a claim as unverified in the scorecard rather than letting it ship as fact.
-- **Format files are shared across skills.** If your skill produces an HTML document, it uses `formats/html-document.md`. If it produces a deck, it uses `formats/slide-deck.md`. Don't duplicate format rules in skill-specific blueprints.
-- **Skill-specific blueprints add the most specific layer.** They handle CSS component systems, HTML scaffolds, and structural requirements unique to your skill. These sit on top of the universal + format layers.
-- **The lint script is shared.** One implementation lives at `shared/scripts/lint.sh`; its word and phrase lists mirror editorial-rules.md, so update both together. Don't copy it into a skill. A skill only adds its own `scripts/lint.sh` when it has genuinely skill-specific deterministic checks, and that script runs in addition to the shared one.
-- **So is the render gate.** `shared/scripts/render-gate.js` is format-agnostic: point `--panes` and `--chrome` at whatever the skill's output uses. Prefer extending it over writing a one-off checker, because the failure mode of a hand-rolled one is a false pass, not a crash.
-- **Every artifact carries share metadata.** `og:title` and `og:description` are part of every scaffold head; a deliverable published public also needs a relative `assets/og.png` plus `twitter:card`, or the link never unfurls into a card. The canonical block, the relative-path rule, and the image-render chain live in [social-meta.md](social-meta.md); the lint enforces the deterministic parts, but the card copy itself is attribute text the lint cannot read, so reviewers hold it to editorial-rules.md.
-- **Principles are baked into generation.** The review pass catches what slipped through. It's not the only quality gate: it's the verification gate.
+- The shared procedure applies across hosts and formats. Use [output readiness](output-readiness.md); final factual/commercial checks apply even to text and saved-agent output.
+- Reviewers return findings against an immutable file. One author edits and repeats affected checks. Report actual tested viewports, interactions and exported page/slide counts.
+- Missing browser/exporter means NOT RUN. A geometric/contrast pass is not an accessibility certificate.
+- Use the requested customer language and brand. Preserve exact quotes, names and necessary technical terms; generic style preferences are advisory.
+- Social metadata and remote assets follow the declared audience/deployment policy in [social metadata](social-meta.md). Public sharing needs a verified image URL; internal drafts need not generate a public preview.
+- Source notes and private account strategy stay outside external publish bundles. Publishing requires authorized scope and readback of the actual artifact/version/access.

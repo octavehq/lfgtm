@@ -5,7 +5,7 @@
 | Tool | Purpose | Use when... |
 |------|---------|-------------|
 | `list_entities({ entityType })` | Fetch all entities of a type (minimal fields) | You want a quick inventory -- "show me all competitors" |
-| `list_entities({ entityType })` | Fetch entities with full data (paginated) | You need actual content -- "get full persona details" |
+| `get_entity({ oId })` | Fetch entities with full data (paginated) | You need actual content -- "get full persona details" |
 | `get_entity({ oId })` | Deep dive on one specific entity | You found something notable and need the complete picture |
 | `search_knowledge_base({ query })` | Semantic search across library + resources | You have a concept -- "how do we position against price objections?" |
 | `list_resources()` / `search_resources({ query })` | Uploaded docs, URLs, Google Drive files | You need CRM exports, uploaded deal data, or reference docs |

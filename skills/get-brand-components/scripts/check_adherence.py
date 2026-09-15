@@ -88,9 +88,12 @@ def load_kit(slug_or_dir, kit_dir):
     if not (kit_dir or slug_or_dir):
         raise ValueError("provide --kit <slug|path> or --kit-dir <path>")
     d = pathlib.Path(kit_dir or slug_or_dir or "").expanduser()
-    if not kit_dir and not d.exists() and len(d.parts) == 1:
+    if not kit_dir and not d.exists() and not d.is_absolute() and '..' not in d.parts:
         d = pathlib.Path.home() / ".octave" / "brands" / (slug_or_dir or "")
     man_path = d / "manifest.json"
+    if (d / "current.json").is_file():
+        from brand_cache import resolve
+        return resolve(d)
     if not man_path.exists():
         raise ValueError(f"no manifest.json under {d}")
     return d, json.loads(man_path.read_text())

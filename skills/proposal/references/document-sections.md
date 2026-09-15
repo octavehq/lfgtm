@@ -107,7 +107,7 @@ The business case for *this* company. This is the section that survives forwardi
 
 Results from companies like them. Often the most engaging section — when the front half runs prose-heavy, pull this up to directly after the Bottom Line.
 
-- **2-3 results, each: company (or anonymized descriptor), the challenge, the result with a metric.** Industry/size matches prioritized.
+- **Use the strongest applicable approved results, including one qualitative result when that is the evidence available.** Industry/size matches prioritized.
 - Customer quote only if it traces to a real proof point or reference in the library. No invented quotes.
 - Logo row of recognizable customers if the library has them.
 - **Side-by-side proof cards must align their internal bands.** When two result cards sit next to each other, their bands (company header, body, the numeric-metric row, the quote) must line up horizontally across cards, not float at different heights. Use CSS subgrid (parent defines the row tracks, each card spans them) or fixed-height bands. Give the cards a **parallel structure**: the same number of numeric metrics each (two is clean), so the metric row reads as one aligned strip, not two ragged ones.
@@ -132,7 +132,7 @@ De-risks the decision by showing it's achievable, then closes on one action.
 - **No dramatic lead-ins.** "In today's landscape", "At its core", "The opportunity is clear" — delete and start with the content.
 - **Ground every claim.** Company name, real call quotes, real proof points. Every named person, title, metric, and especially every quote must trace to a real tool result. Honest gaps beat plausible inventions. Tag anything unconfirmed with `.unconfirmed`.
 - **Don't pad to look complete.** A tight 4-section proposal for an early-stage deal beats a padded 6-section one. Omit sections with no real content silently.
-- **The proposal is a scaffold, so hand back the spots where the seller's own input beats ours.** This document gets the seller 80% of the way. The last 20% is deal-specific detail only they have, and where our version would genuinely be worthless: pricing, the real rollout timeline and dates, negotiated terms. At each of those spots drop a **literal, prominent placeholder** on the page, not a subtle note. It is a large centered panel (dashed accent border, tinted fill) with a mono "Your input goes here" tag, a display-size cue in parentheses like "( Add your pricing )" or "( Add your rollout timeline )", and one line saying plainly that this is theirs to set because a generated version would be noise. Never fabricate a number or a date to fill the gap, and never bury the ask in small print. The reader should not be able to miss that this is a fill-in.
+- Match the requested purpose: a scaffold can retain defined slots; a completed proposal requires collecting, incorporating and checking missing seller inputs. Future measurement fields may remain in a defined POC worksheet.
 
 ## Validated Formats — Protect These
 

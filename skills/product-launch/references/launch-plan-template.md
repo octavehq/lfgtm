@@ -1,100 +1,23 @@
-# Launch Plan Template
+# Launch plan
 
-```
-LAUNCH PLAN: [Launch Name]
-===========================
+## Release manifest
 
-Type: [Product / Feature / Update / Partnership / Expansion]
-Target Date: [Date]
-Success Metric: [Metric]
+Version/date; launch entity and parent offering; current-to-new delta; availability/beta/GA/planned status; date/timezone; eligible plans/geographies; pricing; prerequisites; migration/rollout; limits; support; approved proof and destination. Every fact retains source, scope, status and dependent assets.
 
----
+## Audience and objective
 
-POSITIONING
------------
-How this fits into the product story:
-[1-2 sentences connecting to existing product narrative]
+One row per relevant segment × persona × motion/lifecycle: eligibility, priority rationale, problem/trigger, changed workflow, differentiated benefit, proof, concern, offer/CTA, channel, owner, readiness dependency and success event. Customer adoption, expansion, acquisition, free-to-paid and partner work may need distinct rows.
 
-Launch Positioning Statement:
-For [target audience] who [need], [launch item] is [category/description]
-that [key benefit]. Unlike [alternative], it [key differentiator].
+## Channel and timing
 
----
+Audience | substantive asset | destination | owner | dependency | ready date | review decision. Derive dates from actual release readiness, notice periods and constraints. Enablement precedes the audience it supports. No fixed two-week calendar or automatic customer story.
 
-AUDIENCE PRIORITIZATION
------------------------
-| Priority | Persona | Why They Care | Key Message |
-|----------|---------|---------------|-------------|
-| 1 | [Persona 1] | [Relevance] | [Message] |
-| 2 | [Persona 2] | [Relevance] | [Message] |
-| 3 | [Persona 3] | [Relevance] | [Message] |
+## Asset manifest
 
----
+Requested asset | file/section | audience row | fact-manifest version | owner | draft/final status | unresolved dependencies. Include complete requested emails, blog, social variants, one-pager, FAQ and competitive talking points; a checklist entry alone is not an asset.
 
-MESSAGING BY PERSONA
----------------------
+## Measurement and follow-through
 
-[Persona 1]: [Title]
-Pain addressed: [Specific pain this launch solves for them]
-Value prop: "[Tailored value statement]"
-Proof point: "[Most relevant evidence]"
-CTA: "[What you want them to do]"
+Separate reach/delivery, qualified demand, adoption and business outcome. Each metric has baseline, denominator, window, source/owner and decision. Missing telemetry can be an instrumentation task. Incorporate corrected facts across every dependent asset and read them back before delivery. Persist only requested exact canonical entities/cells after deduplication and verification.
 
-[Persona 2]: [Title]
-Pain addressed: [Pain]
-Value prop: "[Value]"
-Proof point: "[Evidence]"
-CTA: "[Action]"
-
----
-
-COMPETITIVE POSITIONING
------------------------
-[If competitive context exists:]
-How this changes the competitive landscape:
-• [Impact on competitive position]
-• [New differentiator or widened gap]
-Key talking point: "[What to say about competition]"
-
----
-
-CHANNEL PLAN
-------------
-| Channel | Timing | Audience | Content Type |
-|---------|--------|----------|-------------|
-| Email (customers) | Launch day | Current users | Announcement |
-| Email (prospects) | Launch day+1 | Target personas | Value-focused |
-| Blog | Launch day | Public | Feature story |
-| Social | Launch day | Public | Announcement + thread |
-| Sales enablement | Pre-launch | Sales team | One-pager + talk track |
-| Website | Launch day | Public | Landing page update |
-
----
-
-TIMELINE
---------
-
-PRE-LAUNCH (2 weeks before)
-• [Week -2] Internal briefing: align sales, CS, support
-• [Week -2] Prepare all content assets
-• [Week -1] Sales enablement training
-• [Week -1] Seed content to key customers / beta users
-• [Day -1] Final review and staging
-
-LAUNCH DAY
-• [Morning] Publish blog post and landing page
-• [Morning] Send customer announcement email
-• [Midday] Social media posts
-• [Afternoon] Send prospect email campaign
-• [EOD] Monitor early reactions
-
-POST-LAUNCH (2 weeks after)
-• [Week +1] Follow up with engaged prospects
-• [Week +1] Gather initial feedback and quotes
-• [Week +2] Publish customer story / use case
-• [Week +2] Review metrics and iterate messaging
-
----
-
-Ready to generate the content kit? [Y/n]
-```
+Read [the task method](task-method.md) for the completion loop.

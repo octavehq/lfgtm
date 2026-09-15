@@ -1,0 +1,9 @@
+# get-brand-components: task method
+
+Interactive links use {label, href, target?}; href is required for an actionable CTA. Text-only footer/nav items use an explicit text type. Never render an apparent button as an anchor without a destination. Validate href before generating HTML; allow intended https/http, mailto, tel, safe relative paths and fragment links. Reject script/data/file schemes, control characters and ambiguous destinations. Escape text and attribute values. For target=_blank, add rel=noopener noreferrer. Missing required destinations are authoring errors; ask the operator, retain a draft, and do not call the actionable output ready.
+
+Use canonical normalized hostname plus verified workspace ID for workspace-brand identity; preserve the full hostname/TLD and retain company name only as a display label. Record schemaVersion, canonicalDomain, workspaceOId when applicable, source URLs, capture date, asset checksums and allowed-use/embedding decisions. Existing name/stem slugs are aliases only after manifest identity matches; do not promote a fuzzy name match.
+
+Build/refresh in a unique staging directory. Validate manifest schema, required render tokens, referenced logos/fonts/images, file checksums and path containment before atomic promotion. Keep the previous valid kit if refresh fails. Missing required fonts are explicit validation errors unless a declared fallback has been selected and reviewed. Resolve tool names dynamically from the active Octave connection; do not hardcode a customer/server prefix.
+
+Record which visual traits are observed on the source and which are optional adaptations. A dark hero does not require glow or graphics when the source does not use them. Run the minimum fidelity, content, link, accessibility and responsive checks before declaring a kit/asset ready. Optional polish may follow; unresolved checks produce a labeled draft.

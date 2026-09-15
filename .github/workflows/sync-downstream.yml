@@ -10,7 +10,10 @@ on:
   workflow_dispatch:
 
 jobs:
+  validate:
+    uses: ./.github/workflows/validate.yml
   sync:
+    needs: validate
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false

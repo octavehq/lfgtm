@@ -1,9 +1,10 @@
-# Landscape Overview -- Document Sections
+# Competitive landscape
 
-**1. Header** -- "Competitive Landscape" title + date + competitor count
+1. Scope: offerings, tiers, motions, audience, date.
+2. Alternative categories including DIY/status quo where relevant.
+3. Comparable decision-criteria matrix with dated sources and unknowns.
+4. Each rival: legitimate strengths, our supported advantages, fit/concede conditions, applicable proof and limits.
+5. Observed field patterns with defined cohorts/denominators; no anecdotes presented as win rates.
+6. Prioritized enablement or validation tasks and gaps.
 
-**2. Market Map** -- Table: competitor, focus, threat level (color-coded badge), win rate mini-bar
-
-**3. Per-Competitor Cards** -- Condensed card per competitor: name, positioning, key differentiator, top objection + counter, win rate bar. Grid layout.
-
-**4. Cross-Competitor Patterns** -- Themes across multiple competitors, common objections, universal differentiators
+Use [the task method](task-method.md); no account is needed for this portfolio view.
