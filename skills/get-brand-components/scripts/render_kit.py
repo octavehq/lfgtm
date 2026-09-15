@@ -346,7 +346,8 @@ def main():
     ap.add_argument("--theme", choices=["light", "dark"],
                     help="render a specific theme (needs manifest.render.tokensDark/tokensLight overrides)")
     ap.add_argument("--format", default="doc",
-                    help="output canvas: doc (default) | og (1200x630) | social-square (1080) | social-story (1080x1920) | email (600w)")
+                    help="output canvas: doc (default) | og (1200x630) | social-square (1080) | "
+                         "social-story (1080x1920) | email (600w) | slide (1280x720)")
     ap.add_argument("--og-desc", dest="og_desc",
                     help="emit social share metas: og:title (from spec title) + this og:description")
     ap.add_argument("--og-image", dest="og_image",
@@ -374,7 +375,7 @@ def main():
 
     # output format → canvas size
     FORMATS = {"doc": (None, None), "og": (1200, 630), "social-square": (1080, 1080),
-               "social-story": (1080, 1920), "email": (600, None)}
+               "social-story": (1080, 1920), "email": (600, None), "slide": (1280, 720)}
     fw, fh = FORMATS.get(args.format, (None, None))
     docw = fw or render.get("docWidth", 880)
 

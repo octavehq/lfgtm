@@ -19,7 +19,9 @@ The **target company's logo** (the prospect, account, or competitor) appears onl
 2. **If a kit exists →** use it by default (it's the workspace company's own brand, no need to ask). Style the output with the kit instead of a generic preset:
    - inline the kit's `tokens.css` (`:root` + the embedded `@font-face`) **and** [`../get-brand-components/assets/kit_base.css`](../get-brand-components/assets/kit_base.css) into the output `<style>`;
    - follow the kit's `brand-kit.md` → **Signature moves**, and reuse the kit's real **logo**, `images/`, and `icons.json`;
-   - for doc-shaped output you can compose directly with the renderer at `../get-brand-components/scripts/render_kit.py` (hero / split / logos / pricing / cta / footer blocks, see the `get-brand-components` skill for the token contract).
+   - **respect the kit's visual rules:** read `brand-kit.md` → **Guardrails** (+ `manifest.rules`) and, if present, `corrections.md` — these constrain visual design. The producing skill owns copy, messaging, and sourced proof points; the brand kit supplies styling only;
+   - for doc-shaped output you can compose directly with the renderer at `../get-brand-components/scripts/render_kit.py` (hero / split / logos / pricing / cta / footer blocks, see the `get-brand-components` skill for the token contract);
+   - **before delivering**, run the deterministic adherence lint on the rendered HTML: `python3 ../get-brand-components/scripts/check_adherence.py --file <out.html> --kit <slug>` — it flags off-palette colors, off-kit fonts, and hotlinked assets in seconds. Fix or justify every finding. (Older kits may lack guardrails or `corrections.md` — skip what's absent.)
 3. **If no kit exists →** offer to build one first: *"No brand kit for <Company> yet, want me to capture it (~1 min) so this is on-brand?"* → run `/octave:get-brand-components <domain>`, then proceed.
 4. **If the user declines →** generate with the default style preset (see [style-presets.md](style-presets.md)).
 

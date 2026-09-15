@@ -22,6 +22,27 @@ The editorial rules apply to **titles and headings**, not just body copy. Every 
 
 **Write like a dispatch, not an inside joke.** Frame every finding for a reader who was not on the calls and does not yet share the context. State plainly what happened, to whom, and why it matters before layering in the clever turn. An elliptical, knowing line that assumes shared context ("Buyers stopped asking why and started handing our own framing back to us," "the conversation moved") is a failure even when it is literally true: the reader has to reverse-engineer what it means. A real magazine sets the scene, then delivers the point. Prefer the sentence a smart colleague who missed the week would understand on first read over the one that sounds knowing to someone who was there.
 
+**State every finding at the level of inference its evidence supports.** Distinguish **observed** (a direct count or sourced fact), **compared** (a difference against a named cohort or baseline), **associated** (co-occurrence without causal proof), and **hypothesized** (a plausible explanation, with alternatives acknowledged). These describe increasing inference, not increasing certainty: a hypothesis is not more certain than an observation. Label explanations as hypotheses and never turn associations into causal claims. Causal claims require experimental evidence; almost nothing in a digest qualifies.
+
+**Preserve meaning when summarizing.** Carry forward the source finding's population, period, denominator, attribution, uncertainty, and material counterevidence. Combining reports or shortening copy must not strengthen a claim. Keep buyer evidence, seller behavior, and approved library strategy separately attributed; seller framing is not buyer reaction, and strategy is not observed fact.
+
+**Be precise about gaps and comparisons.** Absence from the available evidence does not establish absence in the world. Scope absence claims to the sources and period checked. Keep coverage (what was available), confidence (support for a conclusion), and outcome probability separate. For rates, name the numerator and denominator; use counts for small or partially covered samples. If a comparison is inconclusive, say the available evidence cannot distinguish the cohorts, rather than claiming they are equivalent. Name material counterexamples and rival explanations. State well-supported observations plainly; a small sample needs its scope explained, not automatic dismissal.
+
+**Titles are plain observations, not verdicts.** A title that draws a hard line ("demand for X is settled," "buyers have moved on from Y") puts the whole digest out on a limb that one more call can saw off. Prefer the simple observation the evidence carries ("buyers are asking who will run X, not whether to govern it"). The title still states the finding; it does not overclaim it. Cut long or cryptic subtitles: if a lede is not doing clear work under a plain title, the title stands alone.
+
+**Do not manufacture a takeaway.** "No material change," "insufficient evidence," and "worth watching" are complete answers. A section earns prominence through materiality, novelty, persistence, and evidence quality, not through phrasing. If the evidence behind a point is weak, cut the point rather than dress the evidence up.
+
+## What a digest is, and is not
+
+A digest is a **period read**: what happened in this reporting window, how it compares to the previous one, and what that suggests. It reads across the included reports and answers each report's question with the evidence that period supplied.
+
+It is not a research program. A digest may summarize explanations already supported by its source reports, preserving their uncertainty. When answering a "why" would require new research ("why does this segment convert worse," "why did win rate fall"), scope a separate investigation with its own population, question types, and coverage check. `/octave:insights`, `/octave:win-loss-report`, or a dedicated deep-dive are the right home for that work.
+
+Two consequences for how a digest is written:
+
+- **Use supported comparisons.** Use the prior-run comparison when the reports provide one and the populations and coverage are comparable; otherwise state the missing baseline. Do not infer a week-by-week evolution from a pooled sample. Within-period chronology requires a source time series with comparable buckets and adequate coverage. "Over the month, buyers raised X" is a finding; "in week one it was Y, by week four it was Z" needs that time-series evidence.
+- **The question list is the spine.** Each included report asks one question. The digest's structure is that list, in the order the reports run, with the reader always able to see which question they are inside.
+
 ## Workflow
 
 ### 1. Discover the available reports
@@ -149,6 +170,16 @@ Present for approval:
 
 Wait for approval before generating visual output.
 
+### 7b. Build each section from a table before writing it
+
+Do not synthesize prose directly from the report summaries. For each included report, in order:
+
+1. **Gather.** Put what the report observed into a structured table: the category (persona, competitor, use case, objection, call purpose), a count or frequency where the report supplies one, material counterexamples or rival explanations, and one or two named examples with verbatim language where the claim is about what people said. Use the workspace library's own entity names for personas, segments, use cases, and competitors; never coin a label ("technical owner," "the platform team") that does not exist in the library. If the report gives frequency only qualitatively ("most common"), carry it as qualitative and say that a count was not available.
+2. **Derive.** Write the one-sentence takeaway the table supports, at the level of inference the evidence supports. If the table does not support a takeaway, the section says so and stays short.
+3. **Decide.** When the evidence supports a specific action, write what a reader would change: a message, a material, a qualification rule, an enablement asset. Mark any item that is a change to the workspace library, so it can be filed as a suggestion rather than left as advice. If no change is warranted, say so briefly or omit the action panel.
+
+Only then compose the spread. The table is its evidence layer, the takeaway is its title, an earned decision can be its closing panel. A section that skips the gather step is the one that ends up as a wall of text with no "so what."
+
 ### 8. Generate and review
 
 1. Load or capture the workspace brand kit **first**, and set the digest in **its** typefaces (read them from the kit's `tokens.css` / manifest), not a generic editorial pairing. Then make sure those brand fonts are actually loaded and, for any hosted or shared digest, self-contained (`@font-face` with base64 `src`, not a remote `@import`/CDN link) so the render never falls back to a system font. Using generic type when a kit exists, or leaving a font unloaded, is a defect. See the font rules in [the shared magazine spec](../shared/formats/magazine.md).
@@ -157,6 +188,17 @@ Wait for approval before generating visual output.
 4. For internal output, include Octave report links as described in [evidence-and-links.md](references/evidence-and-links.md).
 5. Every displayed number must tell the reader what it counts. Put the unit next to the value, state the reporting period and scope nearby, and explain deduplication or overlap when categories are not mutually exclusive. Translate internal evidence mechanics into reader language: use “calls,” “companies,” “deals,” or “buyer quotes,” never an unexplained label such as “receipt set.”
 6. When defensible totals are available, put a compact sample-size line on the title or opening spread (for example: calls, companies, evidence excerpts, and completed reports). Keep the reporting window separately visible so readers can judge coverage before interpreting the story.
+
+   **Every analytical spread, before it is written:**
+
+   - **Anatomy.** Takeaway, then what we heard, then what to do when an action is warranted. The takeaway is the title. "What we heard" is the gathered table or its examples, with an evidence line stating what was observed, over what population, and how complete the coverage is. An optional "What to do" names a specific message, material, or qualification rule to change. Never invent an action to fill the layout; a reader should know the point without reading every sentence.
+   - **Position.** The reader can always see which of the digest's questions they are inside: a section marker on the spread and in the running head ("2 of 6 · Who we are up against").
+   - **Sample context.** Explain the overall sample, period, and shared coverage limitations once on the opening spread. Put section-specific counts, denominators, and limitations beside the claims they qualify; do not imply that every section covers the whole sample. Repeat context only when a spread will be shared independently.
+   - **Reader vocabulary.** No report configuration counts, no internal track names, no entity identifiers. Explain the sample once, plainly ("we read 500 calls; we are not connected to the CRM, so nothing here says what closed"), and move on.
+   - **Contents is the question list.** Name the questions the digest answers, plainly, with a short callout for the questions it wanted to answer and could not, and why. Nothing else on that spread.
+   - **Actions bubble up.** The closing "what to change" is assembled from each section's "what to do," each item tagged with its section. Library changes are listed for filing as suggestions. The closing adds nothing a section did not already earn. If no changes are warranted, say so without manufacturing recommendations.
+   - **The final spread is the next question.** A copyable "chat with this insight" prompt that names the reports by title and period. No identifiers, no source dump.
+
 7. **Run the review gate. This is a mandatory step, not an option.** Do not open the artifact, present a delivery summary, or tell the user it is ready until the gate has run and produced a scorecard. Load the [review protocol](../shared/protocol.md); the wiring below is digest-specific.
 
    **Which gate runs where.** For digest-native HTML this skill renders directly (editorial swipe magazine and executive brief), run the full gate here. For formats handed to another skill (`/octave:deck`, `/octave:microsite`, `/octave:one-pager`), that skill owns its own mandatory gate; do not duplicate it. For Markdown, run the editorial half only, since there is no visual layer. In every case the digest orchestrator stays responsible for groundedness: no claim, quote, number, or attribution ships that the source reports and evidence do not support.
@@ -194,6 +236,21 @@ Wait for approval before generating visual output.
                  clever turn); body copy must frame each finding for a reader
                  who was not on the calls, never dropping cryptic or elliptical
                  lines that assume shared context.
+                 Also enforce: titles are plain observations that do not
+                 overclaim; within-period chronology needs a source time
+                 series with comparable buckets and adequate coverage; every evidence line states what was observed,
+                 over what population, and how complete; claims about cause
+                 must have experimental support; an observed action after a
+                 call is not evidence that the call caused it; persona, segment, use-case and
+                 competitor names are the workspace library's, never coined;
+                 no report configuration counts, track names, or entity
+                 identifiers; evidence must support, qualify, or materially
+                 challenge the claim beside it. Cut irrelevant evidence. Preserve material counterevidence,
+                 source scope and uncertainty; separate buyer evidence, seller
+                 behavior and strategy; require denominators for rates and
+                 distinguish inconclusive comparisons from equivalence.
+                 Actions must be earned; coverage caveats are not repeated
+                 unless the local claim or standalone spread needs them.
               Fix violations inline. Return scorecard."
    ```
 

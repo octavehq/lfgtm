@@ -53,17 +53,22 @@ p{margin:0 0 14px;}
   font-size:12.5px;font-weight:500;line-height:1;}
 .is-dark .topbar .nav{color:var(--brand-on-dark);}
 .topbar .nav a,.topbar .nav span{display:inline-flex;align-items:center;color:inherit;text-decoration:none;}
-.topbar .nav .cta-pill{font-weight:600;padding:8px 15px;border-radius:var(--brand-radius-pill);
+.topbar .nav .cta-pill{font-weight:600;padding:8px 15px;
+  border-radius:var(--brand-btn-sm-radius,var(--brand-radius-pill));
   background:var(--brand-primary);color:var(--brand-primary-ink);line-height:1;}
 
-/* ---- buttons (pill) ---- */
-.btn{display:inline-flex;align-items:center;gap:.5rem;border-radius:var(--brand-radius-pill);
+/* ---- buttons (radius is a brand token — pill brands set btn radius to the pill value) ---- */
+.btn{display:inline-flex;align-items:center;gap:.5rem;
+  border-radius:var(--brand-btn-md-radius,var(--brand-radius-pill));
   font-family:var(--brand-font-body);font-weight:600;font-size:14.5px;padding:13px 24px;
   text-decoration:none;border:0;cursor:pointer;
   transition:transform var(--brand-duration,.18s) var(--brand-ease,cubic-bezier(.2,0,0,1)),
              box-shadow var(--brand-duration,.18s) var(--brand-ease,cubic-bezier(.2,0,0,1)),
              background-color var(--brand-duration,.18s) var(--brand-ease,cubic-bezier(.2,0,0,1));}
 .btn:hover{transform:translateY(-1px);}
+/* focus ring is a brand token — read from the brand's :focus rule at capture */
+.btn:focus-visible,.topbar .nav a:focus-visible{outline:none;
+  box-shadow:var(--brand-focus-ring,0 0 0 3px rgba(96,110,255,.4));}
 .btn-primary:hover{background:var(--brand-primary-hover,var(--brand-primary));}
 .btn-primary{background:var(--brand-primary);color:var(--brand-primary-ink);
   box-shadow:var(--brand-btn-shadow,none);}
@@ -280,7 +285,7 @@ p{margin:0 0 14px;}
 /* checklist */
 .chk{list-style:none;padding:0;margin:0;font-family:var(--brand-font-body);}
 .chk li{display:flex;gap:9px;font-size:13px;margin-bottom:8px;}
-.chk .c{color:var(--brand-pos-ink,#0eb5ae);font-weight:700;flex:0 0 auto;}
+.chk .c{color:var(--brand-pos-ink,var(--brand-positive,var(--brand-primary)));font-weight:700;flex:0 0 auto;}
 
 /* CTA band */
 .cta{margin:40px 56px 0;border-radius:var(--brand-radius-section);padding:40px;text-align:center;}
