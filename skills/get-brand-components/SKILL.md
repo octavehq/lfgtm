@@ -40,10 +40,11 @@ Brand kits are stored under `~/.octave/brands/<slug>/`:
 
 ```
 ~/.octave/brands/<slug>/
-  brand-kit.md        # Human-readable design system spec + usage guide
+  brand-kit.md        # Human-readable design system spec + usage guide (incl. visual guardrails)
   tokens.css          # :root design tokens (the reusable core)
   components.html     # Self-contained component gallery (live previews + snippets)
   manifest.json       # Machine-readable: slug, domain, pages, tokens summary, date
+  corrections.md      # Visual design rules learned from user feedback (optional)
   <slug>-logo.svg     # Real logo, downloaded + inlined (not hotlinked)
   icons.json          # Real page icons lifted verbatim {name: {viewBox, inner}}
   fonts/              # Real webfont files (.woff2/.woff) for base64 @font-face embedding
@@ -62,6 +63,19 @@ Brand kits are stored under `~/.octave/brands/<slug>/`:
 - The result may include a `screenshotUrl` (a signed URL). When present, persist it to `screenshots/` with `curl` so the kit has reference images.
 
 **Fallback when the Octave MCP scrape tool is unavailable:** use `WebFetch` for text/HTML only and tell the user *"No screenshot capture available — the kit is derived from HTML only, so visual fidelity (gradients, spacing, button shape) is lower. Connect the Octave MCP server for screenshot-backed analysis."* Still produce the kit.
+
+### Run the heavy steps as subagents (context discipline)
+
+A full build touches megabytes of raw HTML/CSS that the orchestrating context never needs verbatim — it needs the *derived values*. When the Task/Agent tool is available, fan the bulk work out and keep only compact contracts in the main context; each agent can reach the same MCP tools. When it isn't available (or for a quick single-page capture), run the steps inline as written.
+
+| Delegate | Agent does | Returns to main context |
+|---|---|---|
+| **Page analysts** (Step 2 — one per non-home page, in parallel) | scrape its page (html + screenshot), save the PNG, note component patterns | ~40-line JSON: components observed, palette hits w/ roles, type observations, component geometry, section order |
+| **CSS miner** (Step 2.5) | fetch + grep the stylesheet bundles | token JSON (colors/type/shape/motion per Step 3-4 roles), `@font-face` URLs, button/card rules quoted |
+| **Asset verifier** (Step 2.5) | download logo variants + fonts + icons, run `verify-logos.sh`, Read the rendered images | verdict per variant (reads-the-brand? y/n), provenance URLs, font files saved w/ status |
+| **Fidelity scorer** (Step 7.5) | render output + source, score the rubric multimodally | the scorecard + per-dimension fixes only |
+
+Rules of the fan-out: the homepage scrape stays in the main context (it seeds page selection and is the reference frame); every agent WRITES its artifacts to the kit dir and returns *conclusions, not dumps*; the main agent still owns synthesis (Steps 3–7) and every user interaction. Never fan out on a cache hit, and don't re-verify inline what the asset verifier already pixel-checked — trust its verdict or re-run *it*.
 
 ### ⚠️ The fidelity bar — mirror, don't approximate
 
@@ -101,7 +115,7 @@ Scrape the homepage first (`format: html`, `includeScreenshot: true`). Then choo
 5. **Customers / Case studies** — quotes/testimonials, logo treatment, metric/stat blocks
 6. **About / Company or a solutions page** — secondary section patterns
 
-Skip pages that 404 or duplicate a pattern you already have. Aim for coverage of distinct component types, not page count. Report progress:
+Skip pages that 404 or duplicate a pattern you already have. Aim for coverage of distinct component types, not page count. **Fan the non-home pages out to parallel page analysts** (see *Run the heavy steps as subagents*) so the raw HTML never lands in the main context — each returns compact visual observations plus the page's section order. Report progress:
 
 ```
 Walking <domain>…
@@ -177,9 +191,11 @@ Then extract the **real** values (don't transcribe a vibe):
   - **Run the verifier before caching:** `bash scripts/verify-logos.sh <slug>` renders onLight on white and onDark on dark side by side and flags file/aspect issues. Eyeball both cells; each must read the brand's name.
   - **Record provenance.** Store the source URL of each variant in the manifest (`logo.onLightSource`, `logo.onDarkSource`). If a source path or its container class/id contains `customers|partners|trusted|clients|logos`, or points at a different domain than the brand's, treat the asset as suspect and re-source.
   - **Fallback ladder for onDark:** verified footer/nav white lockup → `favicon` / `og:image` (authoritative brand marks) → **controlled recolor of the VERIFIED onLight** as a last resort. A recolor (`filter:brightness(0) invert(1)`) flattens a colored mark, so avoid it when a real inverse lockup exists — but a recolor of the *correct* logo always beats shipping the *wrong* company's logo. Never fill the onDark slot from the logo wall.
-- **Icons** — extract the page's own `<svg>` icons (match by `<title>`), save to `~/.octave/brands/<slug>/icons.json`, and reuse them verbatim in cards/tiles. Do **not** substitute generic icons.
+- **Icons** — extract the page's own `<svg>` icons (match by `<title>`), save to `~/.octave/brands/<slug>/icons.json`, and reuse them verbatim in cards/tiles. Do **not** substitute generic icons. If the site exposes too few icons to lift, pick ONE line-icon set whose stroke weight matches the brand's (`--brand-icon-stroke`) and **flag the substitution** in `brand-kit.md` (*"icons: <set name> — substitution, swap when the brand's own set is available"*). A flagged single-set substitution is fine; a silent mix of lifted + lookalike icons is not.
 
 #### Step 3: Derive the design system
+
+**Scope: visual design only.** Capture colors, typography, layout, spacing, shapes, imagery, icons, motion, and visual usage rules. Copy, messaging, tone of voice, and proof points come from the producing skill and its sources; they are not captured or stored in the brand kit.
 
 Work primarily from the **real CSS (Step 2.5)** — the screenshots only confirm layout and visual truth. Extract:
 
@@ -248,10 +264,13 @@ The reusable core. A single `:root` block plus a web-font `@import`/comment. Use
   --brand-weight-body: <e.g. 400>;
   --brand-weight-label: <eyebrow/label weight, e.g. 600>;
   --brand-weight-emphasis: <weight of emphasized words; equal to body if emphasis is color-only>;
-  /* emphasis mechanism — how key words stand out (color / weight / size / decoration / none) */
-  --brand-emphasis-ink-on-light: <hex or `inherit` if not color-based>;
-  --brand-emphasis-ink-on-dark: <hex or `inherit`>;
-  --brand-emphasis-decoration: <underline-bar | wash | gradient-text | none>;
+  /* emphasis mechanism — how key words stand out (color / weight / size / decoration / none).
+     NOTE: these short names are what kit_base.css and the render contract consume — do not
+     write long-form variants (emphasis-ink-on-light); they will silently not render. */
+  --brand-emph-ink-light: <hex or `inherit` if not color-based>;
+  --brand-emph-ink-dark: <hex or `inherit`>;
+  --brand-emph-underline: <linear-gradient(...) underline bar | none>;
+  --brand-emph-weight: <weight of emphasized words | inherit if emphasis is color-only>;
 
   /* shape */
   --brand-radius-sm: <px>; --brand-radius: <px>; --brand-radius-pill: 999px;
@@ -280,6 +299,16 @@ The reusable core. A single `:root` block plus a web-font `@import`/comment. Use
   --brand-gray-300: <hex>; --brand-gray-400: <hex>; --brand-gray-500: <hex>;
   --brand-gray-600: <hex>; --brand-gray-700: <hex>; --brand-gray-800: <hex>;
   --brand-gray-900: <hex>; --brand-gray-950: <hex>;
+  /* brand-hue tint ramp — brands ship their primary at several tint stops for
+     soft fills, borders, and washes; collapsing to one hex loses the system */
+  --brand-primary-90: <hex>; --brand-primary-60: <hex>;
+  --brand-primary-30: <hex>; --brand-primary-10: <hex>;
+  /* accent AS TEXT — if the accent fails contrast as text (common for neon/pastel
+     accents), capture the brand's readable stand-in; else repeat the accent */
+  --brand-accent-text: <hex legible at 4.5:1 on --brand-bg>;
+  /* focus ring — for interactive output (microsites); read the brand's :focus rule
+     or derive a 3px ring from the accent at ~45% alpha */
+  --brand-focus-ring: <e.g. 0 0 0 3px rgba(...,.45)>;
   /* semantic states (not just positive/negative) — each with a weak/bg tint */
   --brand-success: <hex>; --brand-success-weak: <hex>;
   --brand-warning: <hex>; --brand-warning-weak: <hex>;
@@ -335,14 +364,21 @@ Machine-readable summary so other skills can discover and load the kit programma
   "domain": "<domain>",
   "generated": "<YYYY-MM-DD>",
   "pages": ["/", "/product", "/pricing", "..."],
-  "fonts": { "heading": "<name>", "body": "<name>", "link": "<webfont url or null>" },
+  "fonts": { "heading": "<name>", "body": "<name>", "link": "<webfont url or null>",
+             "status": { "heading": "embedded|webfont|fallback", "body": "..." } },
   "tokens": { "primary": "<hex>", "accent": "<hex>", "bg": "<hex>", "ink": "<hex>", "band": "<value>" },
   "hasDarkBand": true,
   "buttonStyle": "pill-with-arrow",
+  "sectionOrder": ["hero", "logos", "features", "quote", "stats", "cta", "footer"],
+  "rules": ["<hard guardrail 1 — see Step 7 Guardrails>", "<hard guardrail 2>"],
   "files": { "tokens": "tokens.css", "components": "components.html", "spec": "brand-kit.md" },
   "render": { "...": "the machine token contract the renderer consumes — see 'Generating collateral from a kit'" }
 }
 ```
+
+- **`fonts.status`** flags substitutions honestly: `embedded` (real files base64'd), `webfont` (real face via `<link>`), `fallback` (closest free face — name it). A consumer can then decide whether a fallback face is acceptable for a given asset.
+- **`sectionOrder`** is the homepage's actual section grammar (what follows what). Consuming skills mirror it when composing multi-section assets — the *order* of a brand's page is as recognizable as its palette.
+- **`rules`** carries the kit's 2–3 hard guardrails in machine-readable form (mirrors `brand-kit.md` → Guardrails).
 
 **Always include the `render` block** (the renderer's contract): `hasDarkBand`, `docWidth`, `heroVisual`, `webfonts`, `fonts[]`, `logo{onDark,onLight,lockup}`, and the full `--brand-*` `tokens` map. Without it the kit is viewable but not renderable into collateral. See *Generating collateral from a kit* for the field list.
 
@@ -369,18 +405,37 @@ Human-readable spec + usage guide. Sections:
 <radius, shadow, spacing rhythm, button anatomy>
 
 ## Components
-<one line per component on what's distinctive about the brand's version>
+<one line per component on what's distinctive about the brand's version. Where a component has a
+non-obvious usage rule, say it here in one clause — e.g. "accent button: at most one per view">
+
+## Page anatomy
+<the homepage's section order (matches manifest.sectionOrder) + one line on rhythm —
+e.g. "dark hero → logo strip → 3 alternating feature splits → quote → CTA band">
 
 ## Signature moves
 <2–4 things that make output unmistakably this brand — e.g. "highlight one key word per heading in --brand-accent", "dark hero + dark footer bands", "icon tiles in a tinted rounded square">
+
+## Guardrails (rules to never break)
+<distill the 2–3 visual design rules a generator is MOST likely to violate for this brand — the accent-vs-flood
+rule, a headline-face-only rule, a "this brand never uses gradients/underlines/glows" rule.
+State each as a prohibition with the correct alternative. Mirror them into manifest.rules.
+If `corrections.md` exists, its entries are guardrails too — read both.>
 
 ## Using this kit in other skills
 <the consumption guide — see the section below>
 ```
 
+**`corrections.md` — the learned-constraints file.** When a user corrects the visual design of branded output ("stop using glow circles", "never put the logo on the accent color"), append the rule there (one bullet: the prohibition + the correct alternative + date) instead of only fixing the one asset. Every consumer reads it alongside the guardrails, so a correction sticks across future runs instead of being re-discovered per asset. Keep it to visual design rules learned *in use*; observed-at-capture rules belong in Guardrails.
+
 #### Step 7.5: Fidelity gate — score the output against the source (the "indistinguishable" bar)
 
 Don't ship blind. Render the output and **score it against a source screenshot on a fixed rubric** — this turns "looks close-ish" into a measurable gate. Applies to BOTH the kit's `components.html` AND any collateral generated from the kit (two-pagers, case studies, etc.).
+
+**0. Adherence lint (deterministic — run it first, it's free).** Before spending a render + multimodal scoring pass, run the mechanical check:
+```bash
+python3 <skill-dir>/scripts/check_adherence.py --file <output.html> --kit <slug|path>
+```
+It flags colors outside the kit palette (with a near-match tolerance), font stacks that don't lead with a kit family, named CSS colors, and hotlinked assets. Fix (or explicitly justify — e.g. a target company's logo colors in content) every finding *before* Step 1; a visually-scored output that fails adherence is drift with good lighting.
 
 **1. Render.** Use the bundled helper (don't rewrite a screenshot script each time):
 ```bash
@@ -477,8 +532,8 @@ Zip a cached kit so it can be shared / handed to a designer. Self-contained (fon
 **The primary way to turn a kit into an on-brand asset is the bundled renderer — do NOT hand-write per-asset CSS.** One engine composes any asset from any kit; the same content spec rendered through a different kit comes out fully on-brand for that brand (validated across multiple brands spanning dark, gradient, and light visual systems).
 
 ```bash
-python3 <skill-dir>/scripts/render_kit.py --kit <slug|path> --spec <content.json> --out <out.html> \
-        [--kit-dir <path>] [--theme light|dark] [--format doc|og|social-square|social-story|email]
+python3 <skill-dir>/scripts/render_kit.py --kit <slug|path> --spec <asset-spec.json> --out <out.html> \
+        [--kit-dir <path>] [--theme light|dark] [--format doc|og|social-square|social-story|email|slide]
 ```
 
 - `--kit-dir` renders a kit stored anywhere (kits don't have to live in `~/.octave/brands/`).
@@ -486,7 +541,7 @@ python3 <skill-dir>/scripts/render_kit.py --kit <slug|path> --spec <content.json
 
 ### Output formats
 
-The same kit + spec can render to **multiple formats** — the brand kit is format-agnostic, so don't rebuild styling per format. `--format` sets the canvas: `doc` (default page), `og` (1200×630 share image), `social-square` (1080²), `social-story` (1080×1920), `email` (600px width). The *spec* controls content (a short hero/CTA spec makes a clean OG/social image).
+The same kit + spec can render to **multiple formats** — the brand kit is format-agnostic, so don't rebuild styling per format. `--format` sets the canvas: `doc` (default page), `og` (1200×630 share image), `social-square` (1080²), `social-story` (1080×1920), `email` (600px width), `slide` (1280×720 single-slide canvas — one hero-or-stats-sized spec per slide; for full decks use the deck skill). The *spec* controls content (a short hero/CTA spec makes a clean OG/social image).
 
 **The OG share image is automatic at publish; every other variant is ask-first.** When an HTML deliverable is headed somewhere anyone with the link can open it — the asset-manager `public` tier, the microsite deploy, or the user saying at intake they'll publish, post, or share the link — render its share image without asking and place it beside the HTML:
 
@@ -506,6 +561,8 @@ The spec is one `hero` block carrying the deliverable's headline and a one-line 
   - Any content block can take `surface: "dark"` to render as a full-bleed dark band (e.g. a logo wall with white logos).
   - Emphasis: wrap a word in `**double asterisks**`. `hero.featured.logoKit` pulls *another* kit's logo (customer logo in a vendor case study).
 - **Real imagery** — store the brand's actual product screenshots / customer logos in the kit's **`images/`** dir (downloaded during the walk) and reference them by relative path; the renderer inlines them as data-URIs (self-contained). Don't fake imagery with gradient placeholders when the real assets exist on the site — extract logo walls and a hero/product shot. (Apply the same logo-verification care: confirm a "customer logo" is real, not a stray asset.) Optional `--brand-texture` token layers a subtle pattern (dot/grid) onto dark bands.
+- **Visual constraints** — respect `manifest.rules` and `corrections.md` when styling the asset.
+- **After rendering** — run `scripts/check_adherence.py` on the output, then the fidelity gate (Step 7.5) if the asset is shippable.
 
 ### Imagery is earned, not defaulted
 

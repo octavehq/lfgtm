@@ -13,6 +13,7 @@ This is a digest-native format. Do not invoke `/octave:deck` or reuse its slide 
 **The magazine format spec is shared:** follow [`shared/formats/magazine.md`](../../shared/formats/magazine.md) in full — structure, art direction contract, detailed mode, motion, and the responsive review gate — and paste [`shared/formats/magazine-base.css`](../../shared/formats/magazine-base.css) verbatim into the `<style>` block. Digest-specific rules that stay here:
 
 - Evidence must pass the worthiness gate in [evidence-and-links.md](evidence-and-links.md) before it earns a place in a spread.
+- Every analytical spread follows the takeaway / what we heard / optional, evidence-backed what to do anatomy in SKILL.md step 8, with the section position visible on the spread and in the running head, and overall sample context on the opening spread and claim-specific denominators and limitations where needed.
 - `detailed` content density maps to the spec's "Detailed magazine mode."
 - For internal magazines, offer the [source appendix](#source-appendix) after the recommendations and before the closing.
 

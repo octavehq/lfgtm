@@ -23,7 +23,7 @@ If `get_report_section_evidence` is unavailable, search `list_findings` using th
 
 Evidence is optional, even when it is available. Include an item only when it:
 
-- Directly supports the spread's main claim
+- Supports, qualifies, or provides a material counterexample to the spread's main claim
 - Adds specificity, tension, language, or context that the report summary does not already provide
 - Is understandable without reconstructing the full conversation
 - Has enough source context to avoid a misleading interpretation
@@ -33,7 +33,7 @@ Prefer one strong receipt over several weak snippets. Cut generic labels, fragme
 
 For each candidate, ask:
 
-1. What claim does this prove?
+1. What claim does this support, qualify, or challenge?
 2. What does the reader learn from it that they did not already know?
 3. Would removing it weaken the argument?
 
