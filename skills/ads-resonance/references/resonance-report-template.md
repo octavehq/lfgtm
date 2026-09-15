@@ -6,24 +6,7 @@ This is the visual analog of what `html-deck-template.md` does for campaign plan
 
 ## When to generate
 
-Offer as a follow-up action after the resonance loop completes, alongside the existing options in Step 5. A natural prompt:
-
-```
-AskUserQuestion({
-  questions: [{
-    question: "How would you like to receive the resonance loop output?",
-    header: "Output format",
-    options: [
-      { label: "Keep as chat markdown", description: "Tables and text in this conversation — best for quick review and follow-up questions" },
-      { label: "Generate HTML report", description: "A self-contained HTML file you can open in your browser, print, share, or archive" },
-      { label: "Both", description: "Keep the chat markdown for iteration AND generate the HTML report" }
-    ],
-    multiSelect: false
-  }]
-})
-```
-
-If the user picks "HTML report" or "Both", generate the file per the template below.
+Honor the requested format; Markdown is a valid result. Infer the output from context and ask only when an unresolved format choice matters. Reuse the selected brand and audience.
 
 ## File output
 
@@ -35,21 +18,21 @@ Save to `~/Desktop/resonance-report-<workspace-slug>-<YYYY-MM-DD>.html`. Tell th
 
 2. **Sticky nav** — anchor links to: Summary, Resonance Map, Library Updates, Sales Brief, Next Campaign, Prediction Outcomes, New Predictions.
 
-3. **Summary cards** — 4-6 large cards showing the headline metrics for the window: total impressions, total clicks, CTR, conversions, spend, CPA (or "N/A — not enough conversions"). Color-code each card based on the confidence the spend tier supports.
+3. **Summary cards** — 4-6 large cards showing the headline metrics for the window: total impressions, total clicks, CTR, conversions, spend, CPA (or "N/A — not enough conversions"). Show per-unit eligibility, uncertainty and coverage; account spend does not establish confidence.
 
 4. **Resonance Map section** — the table from Step 6B, with ad groups (or ads, in ad mode) ranked by the primary metric. Use a heatmap for CTR and CPC columns. Highlight the biggest CPC gap finding in a callout box above the table.
 
-5. **Library Update Recommendations section** — each recommendation as a card with: entity type, field, current value, recommended value, evidence, confidence tier. Include an "Apply" button placeholder (the HTML is static — the button exists to show users what actions are available, but clicking it just copies the recommendation text to clipboard).
+5. **Library Update Recommendations section** — each recommendation as a card with: entity type, field, current value, recommended value, evidence, confidence tier. Use a working “Copy recommendation” control if useful; never imply that the static report applies a mutation.
 
-6. **Sales Intelligence Brief section** — two subsections: "Winning messages" and "Messages that didn't land." Each message in a card with the supporting metric and suggested sales use.
+6. **Sales Intelligence Brief section** — two subsections: “Observed channel response” and “Unresolved explanations.” Each message in a card with the supporting metric and suggested sales use.
 
-7. **Next Campaign Recommendations section** — three subsections (Double Down, Test Next, Retire). Each recommendation as a bullet with its evidence.
+7. **Next Campaign Recommendations section** — supported subsections (Investigate, Test Next, Continue or Retire with evidence). Each recommendation as a bullet with its evidence.
 
 8. **Previous Prediction Outcomes section** — the track record panel from Step 6F.2. Each resolved prediction as a card with: claim, status (color-coded), evaluated-against data, notes. Tentative predictions get a clear visual indicator (diagonal stripes or a "TENTATIVE" banner).
 
-9. **New Predictions section** — the 3-6 new prediction cards generated in Step 6F.3. Each as a card with: claim, type, confidence, evaluation window, confirm/refute conditions, next evaluation date.
+9. **New Predictions section** — the supported falsifiable prediction cards, with no required minimum. Each as a card with: claim, type, confidence, evaluation window, confirm/refute conditions, next evaluation date.
 
-10. **Calibration panel** — the self-tuning summary: total predictions, hit rate by type, lessons learned. A small line chart showing hit rate trajectory over time if 3+ prior runs exist.
+10. **Calibration panel** — the descriptive summary: final comparable predictions, strict hit rate, evaluability and limitations; confidence adjustment disabled. A small line chart showing hit rate trajectory over time if 3+ prior runs exist.
 
 ## Visual design
 
@@ -60,8 +43,8 @@ Save to `~/Desktop/resonance-report-<workspace-slug>-<YYYY-MM-DD>.html`. Tell th
   - Primary accent: `#0F52BA` (confident blue)
   - CONFIRMED: `#16A34A` (green)
   - REFUTED: `#DC2626` (red)
-  - INCONCLUSIVE_FAVORABLE: `#84CC16` (lime — "leaning good")
-  - INCONCLUSIVE_UNFAVORABLE: `#F59E0B` (amber — "leaning bad")
+  - INCONCLUSIVE with direction=favorable: `#84CC16` (lime — "leaning good")
+  - INCONCLUSIVE with direction=unfavorable: `#F59E0B` (amber — "leaning bad")
   - PENDING: `#6B7280` (gray)
   - TENTATIVE indicator: `#8B5CF6` (purple) with a subtle diagonal stripe pattern
 - **Heatmap for metric tables**: green for strong, yellow for average, red for weak, using relative ranking within the table

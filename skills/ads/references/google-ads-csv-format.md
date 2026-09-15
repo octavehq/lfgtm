@@ -203,3 +203,9 @@ Before writing CSV files, verify:
 - UTF-8 (with or without BOM)
 - Line endings: CRLF or LF both accepted
 - File extension: `.csv`
+
+## Validation
+
+Use [creative.py](../scripts/creative.py) for RSA field/count validation and a quoted UTF-8 CSV round trip. Bind a verified child account and retain paused defaults. Final URLs, media/assets, currency and import version need verification. Double-width characters count as two; dynamic customizer syntax needs separate platform validation. A local CSV pass does not certify a successful platform import.
+
+Baseline: [Google RSA creation](https://developers.google.com/google-ads/api/docs/responsive-search-ads/create-responsive-search-ads), [RSA limits](https://support.google.com/google-ads/answer/7684791?hl=en).

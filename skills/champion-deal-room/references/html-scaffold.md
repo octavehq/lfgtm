@@ -144,7 +144,7 @@ This is NOT a full-viewport scrolling landing page. It is a max-900px document c
     <!-- the one-line value frame + what it replaces/offsets -->
     <p class="eyebrow">The value case</p>
     <table class="case-table"><!-- cost of status quo; real numbers or labeled estimates only --></table>
-    <div class="case-stats"><!-- big number + label cards; reference outcomes labeled "your expected direction", ≤3 --></div>
+    <div class="case-stats"><!-- big number + label cards; applicable reference outcomes labeled as other customers’ results, not this account’s projection, ≤3 --></div>
   </details>
 
   <!-- Job 3: DATA-GATED. The champion is the READER, never a card here. Map everyone else. -->

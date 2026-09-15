@@ -42,25 +42,25 @@ Workspace-company chrome; the target account's logo appears here as the account.
 ### 3. What's likely driving them / what to explore (job: why they'd buy)
 Not a signals dump. What pains probably drive this account and what to dig into.
 - 3-4 items, one line each: the likely pain or pressure → why it points to us.
-- **Buying triggers:** if the library has real buying-trigger entities that match, use them and mark them as known (`Known` tag). Otherwise frame items as hypotheses (`Likely` / `To explore` tag) grounded in the persona×segment cell — and do light research to support them where you can.
+- **Buying triggers:** show the library definition separately from dated account occurrence. Known requires account evidence or attributed operator confirmation; otherwise use Trigger to validate and a confirming question.
 - Be honest about what's unknown. A short "worth confirming" note is fine; do not manufacture certainty.
 
 ### 4. Buying committee (job: who to engage) — GROUNDEDNESS-CRITICAL
 - For each relevant **persona type** (from the library), call `find_person` and surface **1-2 strong-match real people** — strong match only, real only.
 - **Stakeholder cards** (`grid-2`, meeting-prep pattern): avatar initials, name, title, `role-badge` (champion / budget-owner / evaluator / gatekeeper), one-line disposition (who they are, why they matter), real LinkedIn link if returned. `.unconfirmed` tag on anyone not tool-confirmed.
 - **Coverage-gap line:** which buying roles are still unfilled. Identification is fine here; the "what to do about it" lives in the engagement plan.
-- Cap: ≤5 people total. This is a coverage snapshot; the dedicated people-finder tool goes deeper.
+- Default primary view: up to five people; full mode honors the requested scope with additional supported people in an appendix or an honest shortfall.
 
 ### 5. How to position per persona (job: what to say so it lands) — the Octave-native centerpiece
 
-**Select the personas per account — do not default to a fixed triad.** Pick the ≤3 personas most relevant to THIS account's mapped committee and segment, chosen from the library's actual personas (`list_entities({ entityType: "persona" })`), not a standing eng/CISO/GRC set. Match them to the committee you found in section 4 and to the segment: e.g. swap in **Privacy / Data Protection Officer** for a regulated healthcare or finance account, **Procurement / Vendor Risk Reviewer** for a late-stage or enterprise-procurement motion, **VP of IT / Head of IT** for a lean mid-market buyer. If the account genuinely is a classic security-org committee, eng/CISO/GRC is a fine choice — but it must be a *choice* driven by this account, and it should visibly differ when the account differs.
+**Select the personas per account — do not default to a fixed triad.** Pick the personas relevant to the requested scope most relevant to THIS account's mapped committee and segment, chosen from the library's actual personas (`list_entities({ entityType: "persona" })`), not a standing eng/CISO/GRC set. Match them to the committee you found in section 4 and to the segment: e.g. swap in **Privacy / Data Protection Officer** for a regulated healthcare or finance account, **Procurement / Vendor Risk Reviewer** for a late-stage or enterprise-procurement motion, **VP of IT / Head of IT** for a lean mid-market buyer. If the account genuinely is a classic security-org committee, eng/CISO/GRC is a fine choice — but it must be a *choice* driven by this account, and it should visibly differ when the account differs.
 
 Interactive **persona selector**: tabs/toggle across the selected personas; selecting one shows its panel. Per persona panel, pulled from the Motion ICP persona×segment cell (`find_motion_icp`):
 - **Their main concerns** — 2-3 bullets, what this persona actually cares about.
 - **Their status quo** — one line on how they handle this today (the thing we displace).
 - **Lead with** — the angle + the one value prop to open on.
 - **Proof that fits** — one reference/proof point matched to this persona.
-Cap: ≤3 persona panels, the four fields above, tight lines. Competitive counter folds into "Lead with" where a competitor is in play. This section is why Octave beats a generic template — the messaging is grounded in the cell, not invented.
+Default primary view: three persona panels; add others to cover requested scope, the four fields above, tight lines. Competitive counter folds into "Lead with" where a competitor is in play. This section is why Octave beats a generic template — the messaging is grounded in the cell, not invented.
 
 ### 6. Engagement plan (job: what to do next) — quick and tight
 - **Entry point:** one featured card — who to reach first, why them, the hook.
@@ -86,8 +86,8 @@ Sources in human-analyst language (company & stakeholder research, ICP/persona q
 - [ ] Section 2 owns the fit judgment; stat strip present; verdict leads
 - [ ] Section 3 frames pains/triggers as known (from library) vs. likely/to-explore — honest about unknowns, not a signals dump
 - [ ] **Section 4: every person, title, and LinkedIn URL traces to a real `find_person`/`enrich_person` result; zero synthesized people or slugs; `.unconfirmed` on anything unconfirmed; coverage-gap line present**
-- [ ] Section 4 has 1-2 strong-match people per relevant persona, ≤5 total
-- [ ] Section 5 persona selector works; each panel = concerns + status quo + lead-with + proof, from the motion cell; ≤3 personas
+- [ ] Section 4 has 1-2 strong-match people per relevant persona, requested count or explicit shortfall
+- [ ] Section 5 persona selector works; each panel = concerns + status quo + lead-with + proof, from the motion cell; personas relevant to the requested scope
 - [ ] Section 6 is tight (≤6 steps), has entry point + 1-2 real sample emails, folds in real CRM history, ignores dummy pipeline
 - [ ] Section 7 is a two-column risk → mitigation grid, ≤4 pairs
 - [ ] Personas are consistent across sections 4/5/6

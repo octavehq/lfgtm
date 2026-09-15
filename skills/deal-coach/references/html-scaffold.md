@@ -198,9 +198,9 @@ details.path .p-body { padding: 0 1.15rem 1.15rem; display: flex; flex-direction
 .q .opt.correct { border-color: var(--brand-positive); background: var(--brand-positive-weak); }
 .q .opt.wrong { border-color: var(--brand-negative); background: var(--brand-negative-weak); }
 .q .opt:disabled { cursor: default; }
-.q .explain { font-size: 0.85rem; color: var(--brand-faint); margin-top: 0.4rem; display: none; }
-.q .explain.show { display: block; }
-.q .explain em { color: var(--emph); }
+.q .q-answer { font-size: 0.85rem; color: var(--brand-faint); margin-top: 0.4rem;  }
+.q .q-answer.show { display: block; }
+.q .q-answer em { color: var(--emph); }
 .rubric { display: flex; flex-direction: column; gap: 0.5rem; }
 .rubric-row { display: grid; grid-template-columns: 150px 1fr; gap: 1rem; padding: 0.7rem 0; border-bottom: 1px solid var(--brand-border); align-items: baseline; }
 .rubric-row:last-child { border-bottom: 0; }
@@ -296,14 +296,16 @@ footer .src { max-width: 60ch; }
   document.querySelectorAll('.q').forEach(function (q) {
     var answer = parseInt(q.getAttribute('data-answer'), 10);
     var opts = Array.prototype.slice.call(q.querySelectorAll('.opt'));
-    var explain = q.querySelector('.explain');
+    var explain = q.querySelector('.q-answer');
     opts.forEach(function (opt, i) {
       opt.addEventListener('click', function () {
         opts.forEach(function (o, j) { o.disabled = true; if (j === answer) o.classList.add('correct'); else if (j === i) o.classList.add('wrong'); });
-        explain.classList.add('show');
+        if (explain) explain.open = true;
       });
     });
   });
-  window.addEventListener('beforeprint', function () { document.querySelectorAll('details.path').forEach(function (d) { d.open = true; }); });
+  window.addEventListener('beforeprint', function () { document.querySelectorAll('details.path, details.q-answer').forEach(function (d) { d.open = true; }); });
 </script>
 ```
+
+Print CSS must expose `.q-answer > *` and print every path. Native answer details remain available without JavaScript.

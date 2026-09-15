@@ -1,105 +1,11 @@
-# Objections Output
+# Objection analysis
 
-```
-OBJECTION INSIGHTS: Last 30 Days
-================================
+Use [the task method](task-method.md) and one scoped normalized dataset.
 
-Total Objections: 23 across 18 conversations
+1. Scope: question, period, population/unit, filters, eligible/read/missing counts, pagination and deduplication.
+2. Concern table: objection → unique eligible events/deals/accounts → denominator and rate → buyer side/persona → source/date → limitations. A multi-label event can appear in several rows; disclose overlap.
+3. Response table: attempted seller response → observed buyer reaction → explicit resolution evidence → later outcome (when actually linked). Attempt rate is not resolution or effectiveness.
+4. Existing guidance: full relevant offering/cell/entity field matched → applicable instruction → real gap or unreviewed field. A failed/slim read means unknown coverage.
+5. Recommendations when requested: specific grounded change/test, affected motion/audience/channel, owner and success measure, alternative explanations and missing inputs. Incorporate operator replies.
 
----
-
-OBJECTION BREAKDOWN
--------------------
-
-1. PRICING CONCERNS (8 instances - 35%)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 35%
-
-   Examples:
-   • "Your pricing is 2x what we're paying now" - Acme Corp, Jan 15
-   • "Hard to justify the cost to leadership" - TechCorp, Jan 18
-   • "Competitor X is offering a lower rate" - DataFlow, Jan 22
-
-   Personas: CFO (4), VP Operations (3), Procurement (1)
-
-   How We Responded:
-   ✓ 3x mentioned ROI/payback period
-   ✓ 2x offered pilot/proof of value
-   ✗ 3x no documented response
-
-   Motion ICP Guidance Available: Partial
-   → Missing: TCO comparison, hidden cost analysis (in Benefits and impacts / Strategic narrative)
-
-2. IMPLEMENTATION CONCERNS (6 instances - 26%)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━ 26%
-
-   Examples:
-   • "We don't have bandwidth for a long implementation" - BigCo, Jan 12
-   • "Last software rollout took 6 months" - Enterprise Inc, Jan 19
-
-   Personas: CTO (3), VP Engineering (2), IT Director (1)
-
-   How We Responded:
-   ✓ 4x mentioned typical timeline
-   ✓ 2x referenced quick-start option
-
-   Motion ICP Guidance Available: Yes ✓
-
-3. STAKEHOLDER/TIMING (5 instances - 22%)
-   ━━━━━━━━━━━━━━━━━━━━━ 22%
-
-   Examples:
-   • "Need to loop in our CTO" - CloudBase, Jan 14
-   • "Budget cycle starts in Q2" - Acme, Jan 20
-
-   Personas: VP Sales (2), Director (2), Manager (1)
-
-   This is a buying process objection, not product objection.
-   → Suggestion: Multi-threading strategy needed
-
-4. FEATURE GAPS (4 instances - 17%)
-   ━━━━━━━━━━━━━━━━━ 17%
-
-   Specific features mentioned:
-   • "Do you support SSO?" (2x)
-   • "Need on-prem option" (1x)
-   • "Looking for [specific integration]" (1x)
-
----
-
-OBJECTION HANDLING EFFECTIVENESS
---------------------------------
-
-| Objection | Times Handled Well | Times Missed | Success Rate |
-|-----------|-------------------|--------------|--------------|
-| Pricing | 5 | 3 | 62% |
-| Implementation | 4 | 2 | 67% |
-| Stakeholder | 2 | 3 | 40% |
-| Features | 1 | 3 | 25% |
-
----
-
-RECOMMENDATIONS
----------------
-
-1. HIGH PRIORITY: Improve pricing objection handling
-   - Current Motion ICP response rate: 62%
-   - Add: TCO comparison framework to Motion ICP Benefits and impacts
-   - Add: "Hidden costs of status quo" talking points to Pains and consequences
-
-2. MEDIUM PRIORITY: Stakeholder objection strategy
-   - Low success rate (40%)
-   - Add: Multi-threading guide to relevant Motion ICP Methodology sections
-   - Add: Executive sponsor identification questions
-
-3. TRACK: Feature requests
-   - SSO requested 2x - is this on roadmap?
-   - On-prem still coming up - competitive disadvantage?
-
----
-
-Want me to:
-1. Draft objection handling language for Motion ICP narratives and Objection entities
-2. Show specific conversations with these objections
-3. Compare to last month's objections
-4. Update library with recommendations
-```
+Compare periods only with the same filters/unit and a valid baseline. Do not label pilot offers, ROI mentions, or missing recorded responses “handled well” or “failed” without buyer evidence. A feature question does not establish a capability gap; read current offering truth first. Requested writes use supported exact entity/Motion tools and verified readback.

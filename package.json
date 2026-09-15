@@ -1,0 +1,7 @@
+{
+  "name": "octave-plugin-runtime",
+  "private": true,
+  "dependencies": {
+    "playwright": "1.58.0"
+  }
+}

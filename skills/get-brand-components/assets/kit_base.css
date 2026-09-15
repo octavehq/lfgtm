@@ -334,3 +334,11 @@ p{margin:0 0 14px;}
     -webkit-print-color-adjust:exact;print-color-adjust:exact;}
   .pb{page-break-before:always;}
 }
+/* Every document block also works in the mobile reading layout. */
+@media (max-width:720px){
+  .split,.split.rev,.pricing{grid-template-columns:minmax(0,1fr)!important;}
+  .split.rev .split-copy{order:0}.split.rev .split-media{order:1}
+  .split-copy,.split-media,.plan{min-width:0;overflow-wrap:anywhere}
+  .split img,.pricing img{max-width:100%;height:auto}
+  .cta,.footer{margin-left:0;margin-right:0;padding-left:20px;padding-right:20px}
+}

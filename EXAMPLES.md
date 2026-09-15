@@ -367,26 +367,20 @@ The output is a single scrollable HTML document with sticky navigation, collapsi
 ### Create a Battlecard
 
 ```
-# Full battlecard
-/octave:battlecard-doc battlecard --competitor "Acme"
+# Reusable competitor battlecard
+/octave:battlecard-doc --competitor "Acme"
 
-# Interactive HTML battlecard document (expandable sections, color-coded comparisons)
-/octave:battlecard-doc battlecard --competitor "Acme" --format doc
+# Interactive HTML comparison
+/octave:battlecard-doc --competitor "Acme" --format html
 
-# Displacement campaign
-/octave:battlecard-doc displacement --competitor "Acme"
+# Buyer objections and diagnostic questions
+/octave:battlecard-doc --competitor "Acme" Focus on buyer objections and decision criteria
 
-# Trap questions
-/octave:battlecard-doc traps --competitor "Acme"
-
-# Objection counters
-/octave:battlecard-doc objections --competitor "Acme"
-
-# Side-by-side comparison
-/octave:battlecard-doc compare --competitor "Acme"
+# Text comparison
+/octave:battlecard-doc --competitor "Acme" --format text
 
 # Full competitive landscape
-/octave:battlecard-doc landscape
+/octave:battlecard-doc --competitor all
 ```
 
 Example battlecard output:
@@ -1004,7 +998,7 @@ Multi-step workflows chain research, qualification, and generation into reusable
 
 ### Competitive Intelligence
 
-- Use `/octave:battlecard-doc landscape` quarterly for a full competitive review
+- Use `/octave:battlecard-doc --competitor all` quarterly for a full competitive review
 - Set up `/octave:insights` alerts for competitor mentions
 - Update battlecards after every competitive deal (win or lose)
 

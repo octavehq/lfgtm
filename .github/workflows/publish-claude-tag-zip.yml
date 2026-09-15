@@ -18,14 +18,24 @@ permissions:
   contents: write
 
 jobs:
+  validate:
+    uses: ./.github/workflows/validate.yml
   publish:
+    needs: validate
     runs-on: ubuntu-latest
     steps:
       - name: Check out lfgtm
         uses: actions/checkout@v4
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install package validator dependency
+        run: python3 -m pip install PyYAML==6.0.3
+
       - name: Build octave-plugin.zip (.claude-plugin/ at archive root)
-        run: zip -qr /tmp/octave-plugin.zip . -x ".git/*" ".github/*" ".claude/*" "build/*"
+        run: python3 scripts/build-release.py /tmp/octave-plugin.zip
 
       - name: Publish to the rolling claude-tag-plugin release
         env:

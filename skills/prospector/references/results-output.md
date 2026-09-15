@@ -1,60 +1,7 @@
-# Results Output
+# Prospect results
 
-```
-Prospect Results: [Criteria Summary]
-====================================
+Company-only rows: returned account identity/domain; offering/motion; fit reasoning; actual qualification status and available subscores; hard disqualifiers; unknowns; source/date; next validation/action.
 
-Found 10 companies matching your ICP:
+Company-plus-contact adds discovered/enriched person ID/profile, name/title, identity source, and role evidence. Verified identity is distinct from a confirmed buying role. Discover these people before output.
 
----
-
-1. TechCorp (techcorp.com)
-   ========================
-   Fit Score: 92/100 - EXCELLENT FIT
-
-   Company Profile:
-   - Industry: B2B SaaS
-   - Employees: 450
-   - Stage: Series C
-   - Location: San Francisco, CA
-   - Description: "Developer tools for cloud infrastructure..."
-
-   Why They Fit:
-   ✓ Matches segment: "Scaling SaaS Companies"
-   ✓ Right size for your product (100-500 sweet spot)
-   ✓ Growth signals: 50% headcount growth YoY
-   ✓ Tech stack alignment: Uses [relevant technologies]
-
-   Potential Concerns:
-   ⚠ May have existing solution (competitor X mentioned on site)
-
-   Key Contacts to Target:
-   - Sarah Chen, CTO (Primary decision maker)
-   - Mike Johnson, VP Engineering (Technical evaluator)
-   - Lisa Park, Head of DevOps (User buyer)
-
-   Recommended Playbook: "Enterprise DevOps Sale"
-   Recommended Approach: Lead with scalability story
-
----
-
-2. DataFlow Inc (dataflow.io)
-   ==========================
-   Fit Score: 85/100 - GOOD FIT
-
-   [Similar format...]
-
----
-
-[Continue for all results]
-
----
-
-Summary
-=======
-- Excellent Fit (90+): 3 companies
-- Good Fit (70-89): 5 companies
-- Moderate Fit (50-69): 2 companies
-
-Top Recommendation: TechCorp - strong signals, right stage, clear pain point
-```
+Return unique eligible requested N or a shortfall with searched/returned/qualified counts and applied/unresolved exclusions. Create an actual UTF-8 CSV using a standard CSV writer and round-trip parse it. If files are unavailable, label the result CSV text; do not claim a file exists.

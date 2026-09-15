@@ -26,3 +26,7 @@ If you strip the Octave data and the output still reads the same, it's not groun
 | "VP Engineering personas in mid-market respond to 'single pane of glass' framing 3x more than 'unified platform.'" | "Position your product as a unified solution that simplifies operations." |
 | "No proof points match Acme's industry (construction). Closest reference is BuildTech (manufacturing), which shares similar compliance requirements." | "Your solution helps companies in the construction industry improve compliance." |
 
+
+## Assemble context for the task
+
+Use [GTM context](gtm-context.md) to select and hydrate related strategy, field evidence, and account context. Keep each layer separately attributed; a recent anecdote does not silently rewrite approved capability or strategy.

@@ -1,0 +1,9 @@
+# Digest state
+
+Use [digest_state.py](../scripts/digest_state.py) and [workspace_state.py](../../shared/scripts/workspace_state.py). Write a validated schemaVersion 1 spec atomically at `.octave/digests/<workspaceOId>/<digestId>/spec.json`; required fields are defined by `REQUIRED` and `validate_spec` in the helper. Display names are editable labels, never identity. Distribution records approved audience/privacy/recipients and `publish` when hosting is authorized.
+
+Begin with a JSON array of identified completed reports (`id`, `status: completed`). `begin --workspace ID --digest ID --input reports.json` returns drafting/runId, already_verified, or no_new_material. Only drafting runs produce a new artifact. The exclusive lock persists across assistant/tool turns and interrupted runs. Never delete an old lock just because time elapsed: inspect its recorded run and reconcile any remote write first.
+
+Update `runs/<runId>.json` atomically with source cutoff, hydration coverage, content checksum, output paths, publication artifact/version and unresolved inputs as work progresses. A timeout records indeterminate state. After actual content/render/access verification, `complete --workspace ID --digest ID --run ID --input verification.json` writes the consumed checkpoint and releases the lock. Verification includes verified=true, contentChecksum and outputPaths; published runs also need artifactId, artifactVersion and accessVerified=true. These are recorded observations, not substitutes for performing the checks.
+
+On already_verified, recheck the recorded artifact/version if presenting a live link; do not publish another copy. Same-named digests across workspaces never share state. Changed distribution/spec invalidates an in-progress run. Store no credentials or expiring preview URLs.

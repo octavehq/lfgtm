@@ -79,7 +79,7 @@ Per-persona positioning as an **interactive tabbed selector**, pulled live from 
 
 **Each persona panel, four parts:** Their world (`operatingLandscape`), What they care about (`painsAndConsequences`), Lead with this (Resonate `Value Propositions`), and a Talk track strip showing Resonate to Elevate to Compel, each stage with its objective and 1 to 2 `Talking Points` from the cell. Caps: their world <=3 lines, pains <=3, lead-with <=3, talk track = 3 stages x <=2 points.
 
-**Every featured persona gets a fully populated panel.** If a persona has cells in several segments, use the primary segment (ready version, richest narrative) and note the segment context. If a persona genuinely has no ready ICP version, build its panel from the persona entity (their world + pains only), tag it `.unconfirmed`, and do not fabricate a talk track.
+**Every featured persona gets a fully populated panel.** If a persona has cells in several segments, use the segments relevant to the rep’s remit; richest narrative is only a documented-content fallback and note the segment context. If a persona genuinely has no ready ICP version, build its panel from the persona entity (their world + pains only), tag it `.unconfirmed`, and do not fabricate a talk track.
 
 **Checkpoints: one per persona.** This slide tests that the rep knows *every* buyer, not just one. Each question checks that persona's core pain or how to sell to them, answerable from that persona's panel. So a 6-persona primer has 6 checkpoints here.
 
@@ -100,7 +100,7 @@ Below the tabs, a **watchlist line** naming lesser competitors and, critically, 
 
 ### 5. Proof
 
-Proof organized as a **tabbed set of lenses**, so a rep can grab the right proof for the room. Tabs: **By objection** (e.g. build vs buy), **By buyer** (e.g. technical or skeptical), **By segment** (e.g. security), **By outcome** (the metrics we can promise). Pull from `list_entities` proof_point + reference, with `get_entity` for the ones featured.
+Proof organized as a **tabbed set of lenses**, so a rep can grab the right proof for the room. Tabs: **By objection** (e.g. build vs buy), **By buyer** (e.g. technical or skeptical), **By segment** (e.g. security), **By outcome** (the outcomes customers achieved, with scope and limitations). Pull from `list_entities` proof_point + reference, with `get_entity` for the ones featured.
 
 - Each lens shows 2 to 4 proof cards (claim, customer if named, and the result or why-it-matters), or, for the outcome lens, a metric strip (e.g. "6 months to 3 weeks"). A proof card may appear under more than one lens (Descope is both build-vs-buy and technical-buyer); that reuse is the point.
 - Side-by-side proof cards align their bands via subgrid.

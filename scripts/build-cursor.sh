@@ -107,10 +107,12 @@ Use any name starting with `octave-`. Skills detect the Octave server from the a
 ## What's included
 
 - **Skills** (`/octave:research`, `/octave:library`, `/octave:generate`, `/octave:battlecard-doc`, …) — the full upstream skill set, invoked the same way as in Claude Code.
-- **Agents** (`octave-assistant`, `pmm-strategist`, `sdr-coach`, `revenue-strategist`, `asset-manager`) — Octave's specialist GTM personas.
+- **Agents** (`octave-assistant`, `pmm-strategist`, `sdr-coach`, `revenue-strategist`, `asset-manager`, `octave-editorial-reviewer`, `octave-presentation-reviewer`) — Octave's specialist GTM personas.
 
 See the [upstream README](https://github.com/octavehq/lfgtm#skills) for full descriptions.
 EOF
+
+python3 "$SRC_ROOT/scripts/package_resources.py" --source "$SRC_ROOT" --output "$OUT"
 
 # 7. Summary
 echo

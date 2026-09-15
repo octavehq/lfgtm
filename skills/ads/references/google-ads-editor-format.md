@@ -67,7 +67,7 @@ The Editor determines what kind of entity each row represents based on which col
 | 93 | Headline 2 | Headline text | Max 30 chars |
 | 95 | Headline 3 | Headline text | Max 30 chars |
 | 97 | Headline 4 | Headline text | Max 30 chars |
-| 99 | Headline 5 | Headline text | **Minimum 5 headlines required** |
+| 99 | Headline 5 | Headline text | Optional; minimum is 3 headlines |
 | 121 | Description 1 | Description text | Max 90 chars |
 | 123 | Description 2 | Description text | **Minimum 2 descriptions** |
 | 129 | Path 1 | Display path | Max 15 chars |
@@ -142,7 +142,13 @@ headers = ['Campaign','Labels','Campaign Type','Networks','Budget','Budget type'
 4. **No Row Type or Action columns** — entity type is inferred
 5. **EU political ads** = `Doesn't have EU political ads` (not `No`)
 6. **Languages** = `en` (not `English`)
-7. **RSA ads have at least 5 headlines and 2 descriptions**
+7. **RSA ads have 3–15 headlines and 2–4 descriptions**
 8. **Campaign name matches exactly** across campaign, ad group, ad, and keyword rows
 9. **Rows are in dependency order**: campaigns → ad groups → ads → keywords
 10. **Campaign Status is `Paused`** for all rows (nothing runs until explicitly enabled)
+
+## Validation
+
+Use [creative.py](../scripts/creative.py) for RSA field/count validation and a quoted UTF-8 CSV round trip. Bind a verified child account and retain paused defaults. Final URLs, media/assets, currency and import version need verification. Double-width characters count as two; dynamic customizer syntax needs separate platform validation. A local CSV pass does not certify a successful platform import.
+
+Baseline: [Google RSA creation](https://developers.google.com/google-ads/api/docs/responsive-search-ads/create-responsive-search-ads), [RSA limits](https://support.google.com/google-ads/answer/7684791?hl=en).

@@ -2,9 +2,9 @@
 
 Shared reference for every skill that renders styled HTML output. Covers (1) whose brand an asset should wear by default, (2) how to find and apply a cached brand kit, and (3) how to extract brand styling from a website when no kit exists.
 
-## 1. Whose brand: the workspace company, always
+## 1. Whose brand: selected sender/workspace by default
 
-The document's design system (fonts, colors, header, footer, chrome) always wears the **workspace company's brand**: the Octave customer whose instance is running the skill. Resolve it with `get_workspace_company`, derive its `<slug>`, and run the kit lookup below. This holds for every asset type, whether it stays internal (battlecard, meeting-prep, brief, wins-losses, positioning) or goes out to a prospect (one-pager, proposal, microsite, deck). A company brands its own output, the same way it puts its own letterhead on a document it sends. Use the workspace company's kit by default, without asking.
+The document's design system (fonts, colors, header, footer, chrome) always wears the **workspace company's brand**: the Octave customer whose instance is running the skill. Resolve it with `get_workspace_company`, verify its workspace ID and canonical hostname, and run the kit lookup below. This holds for every asset type, whether it stays internal (battlecard, meeting-prep, brief, wins-losses, positioning) or goes out to a prospect (one-pager, proposal, microsite, deck). A company brands its own output, the same way it puts its own letterhead on a document it sends. Use the workspace company's kit by default, without asking.
 
 The **target company's logo** (the prospect, account, or competitor) appears only in content, a masthead accent, a "prepared for" line, or a deal-context card, to personalize the asset. It never controls the design system. Fetch it with `get_external_brand_logo` / `get_external_brand_assets` and place it in content, not the chrome.
 
@@ -15,21 +15,21 @@ The **target company's logo** (the prospect, account, or competitor) appears onl
 
 ## 2. Brand kit lookup (cache first)
 
-1. Resolve the chosen company to a `<slug>` and check for a cached brand kit at `~/.octave/brands/<slug>/manifest.json`.
+1. Resolve the selected brand to `~/.octave/brands/<workspaceOId>/<canonicalDomain>/current.json` using [brand_cache.py](../get-brand-components/scripts/brand_cache.py). Preserve the full hostname/TLD. Verify manifest identity; legacy name slugs are aliases only after an exact domain/workspace match. Reuse an inherited brand choice without another extraction or intake.
 2. **If a kit exists →** use it by default (it's the workspace company's own brand, no need to ask). Style the output with the kit instead of a generic preset:
    - inline the kit's `tokens.css` (`:root` + the embedded `@font-face`) **and** [`../get-brand-components/assets/kit_base.css`](../get-brand-components/assets/kit_base.css) into the output `<style>`;
    - follow the kit's `brand-kit.md` → **Signature moves**, and reuse the kit's real **logo**, `images/`, and `icons.json`;
    - **respect the kit's visual rules:** read `brand-kit.md` → **Guardrails** (+ `manifest.rules`) and, if present, `corrections.md` — these constrain visual design. The producing skill owns copy, messaging, and sourced proof points; the brand kit supplies styling only;
    - for doc-shaped output you can compose directly with the renderer at `../get-brand-components/scripts/render_kit.py` (hero / split / logos / pricing / cta / footer blocks, see the `get-brand-components` skill for the token contract);
-   - **before delivering**, run the deterministic adherence lint on the rendered HTML: `python3 ../get-brand-components/scripts/check_adherence.py --file <out.html> --kit <slug>` — it flags off-palette colors, off-kit fonts, and hotlinked assets in seconds. Fix or justify every finding. (Older kits may lack guardrails or `corrections.md` — skip what's absent.)
+   - **before delivering**, run the deterministic adherence lint on the rendered HTML: `python3 ../get-brand-components/scripts/check_adherence.py --file <out.html> --kit-dir <resolved-capture-path>` — it flags off-palette colors, off-kit fonts, and hotlinked assets in seconds. Fix or justify every finding. (Older kits may lack guardrails or `corrections.md` — skip what's absent.)
 3. **If no kit exists →** offer to build one first: *"No brand kit for <Company> yet, want me to capture it (~1 min) so this is on-brand?"* → run `/octave:get-brand-components <domain>`, then proceed.
 4. **If the user declines →** generate with the default style preset (see [style-presets.md](style-presets.md)).
 
-> The brand kit is the strongest styling signal: when one is available, prefer it over generic `--style` presets. See the `get-brand-components` skill for the kit format, token contract, and renderer.
+> An explicit style/brand override wins; otherwise reuse the selected brand kit. See the `get-brand-components` skill for the kit format, token contract, and renderer.
 
 ### Logo integrity: verify the pixels before you ship
 
-A cached kit can carry a **stray or mislabeled logo** (a real case: a cached Octave kit's `*-logo-white.png` was actually a WorkSpan logo scraped from a "trusted by" wall). This is nearly invisible in normal review, because a white/onDark logo does not show on a light preview and the manifest metadata can claim the right company while the file is wrong. So, before delivering any HTML that uses a kit logo:
+A cached kit can carry a **stray or mislabeled logo** (for example, a customer logo scraped from a "trusted by" wall). This is nearly invisible in normal review, because a white/onDark logo does not show on a light preview and the manifest metadata can claim the right company while the file is wrong. So, before delivering any HTML that uses a kit logo:
 
 - **Render both variants on their intended surfaces and confirm each reads the workspace company's name.** Read the `onLight` file (it sits on a light surface) and the `onDark` file (put it on a dark swatch), or run `../get-brand-components/scripts/verify-logos.sh <slug>`. Do not trust `lockup.wordmark`; inspect the image.
 - **The `onDark` variant is the usual culprit** and the one you cannot see on a white page. Always check it on a dark background specifically.
@@ -49,7 +49,7 @@ get_external_brand_logo({ domain: "<domain>" })   # if you only need the single 
 This is one call for the visual identity and the right default. **Sanity-check the result: the scraper reads the DOM and can misattribute a homepage logo wall.**
 - If `brandName` doesn't match the target company, ignore it (it likely grabbed a customer name).
 - A strip of many logos with varied aspect ratios is usually a **"trusted by" customer wall**, not the brand's own logo. Don't use those as the asset's logo. Prefer the `favicon` / `apple-touch-icon` entries or the nav wordmark.
-- The `colors` are usually reliable; still confirm with the user.
+- The `colors` are usually reliable; verify against the source.
 
 **Tier 2: `scrape_website`, components & typography (the "looks like their site" leap)**
 ```

@@ -25,7 +25,7 @@ Each ad set gets its own section containing:
 
   Each card shows headlines as pills with character counts, descriptions with counts, and a link/reference back to its source card.
 - **Permutation Preview** — a toggleable section (collapsed by default, "Show all ad permutations" button) that renders every possible headline × description combination for the ad set as simulated ad previews. Implementation:
-  - For **Google Search RSAs**: Generate all valid combinations of 2-3 headlines + 1-2 descriptions from the full set across all variants in this ad set. Render each combo as a mock SERP snippet (blue headline links, green display URL, gray description text). Show character counts per line. Group by which headlines are paired — this lets the user see how Google might combine headlines from *different* variants in rotation.
+  - For **Google Search RSAs**: use at most 12 representative previews per actual RSA, with exact membership and pins. Use [creative.py](../scripts/creative.py); never mix arbitrary assets across ads. Bounded on-demand navigation may show more. Label these examples, not a claim of actual serving.
   - For **Meta/LinkedIn**: Simpler — show each variant's primary text + headline as a mock feed card (image placeholder, intro text, headline, CTA button).
   - Add a **filter bar** at the top of the permutation grid: filter by variant type (pain, outcome, competitive, etc.) to see only combos that include a headline from that variant.
   - Add a **count badge** on the toggle button showing total permutations (e.g., "Show all 84 ad permutations").

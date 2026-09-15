@@ -84,7 +84,7 @@ See [**docs/org-instructions/**](docs/org-instructions/) for short and long reco
 | Skill | Description |
 |-------|-------------|
 | `/octave:product-launch` | Product and feature launch planning with full content kit |
-| `/octave:battlecard-doc` | Interactive HTML competitive battlecard — single competitor or full landscape, with trap questions and objection counters grounded in real conversation evidence |
+| `/octave:battlecard-doc` | Interactive HTML competitive battlecard — single competitor or full landscape, with fair comparisons and objection preparation grounded in available evidence |
 | `/octave:ads` | Build platform-ready ad campaigns with audience targeting, creative variants, and negative keywords |
 | `/octave:ads-resonance` | Analyze ad performance (MCP, BigQuery Data Transfer, direct API, or manual paste), score falsifiable prediction cards against real data, and feed learnings back into the library |
 
@@ -192,11 +192,11 @@ Product and feature launch planning with content kit:
 ```
 
 ### /octave:battlecard-doc
-Interactive HTML competitive battlecard grounded in real conversation evidence:
+HTML or text competitive battlecards grounded in available evidence:
 - Single-competitor deep dives with expandable sections and color-coded comparisons
 - Full competitive landscape documents across every tracked competitor
-- Trap questions to expose competitor weaknesses
-- Objection counters ("they say X, we say Y") backed by verbatim call quotes, not paraphrases
+- Diagnostic questions tied to the buyer’s decision criteria
+- Objection preparation with attributed evidence and legitimate competitor advantages
 - Displacement outreach offered as a follow-up
 
 ```
@@ -659,3 +659,7 @@ The workspace's own company profile (singleton).
 ## License
 
 MIT - See [LICENSE](LICENSE)
+
+## Validation
+
+See [validation and release readiness](docs/validation.md) for local checks, the behavioral evaluation matrix, and integration checks still required before claiming production verification.
