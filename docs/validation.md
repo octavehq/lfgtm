@@ -85,7 +85,7 @@ commercials, POC or usage data where it matters.
 | digest | One-off / no new reports | Concurrent or uncertain runs reconcile; changed recipients cannot inherit old distribution approval |
 | brand kit | Light/dark visual kit / missing font | Wrong-domain, unsafe SVG and interrupted refresh cannot replace a valid cache |
 | asset-manager | Create/update/download / null preview | Public bundle excludes notes; interrupted download preserves old file; readback detects wrong target |
-| library | List/create/update / missing page | Scoped Motion edit preserves protected cells; no-op/partial write is not called complete |
+| library | List/create/update / missing page | Scoped Motion edit preserves protected cells; no-op/partial write is not called complete; approved copy written with `verbatim: true` reads back character-for-character and an ambiguous field mapping is asked, not guessed |
 | audit | Structural and semantic review / failed read | Separate commercial offerings survive shared-buyer heuristics; no archive before verified migration |
 | qual-doctor | Diagnostic plus holdout / no score trace | Absence does not become exclusion; shared agents are checked and raw answers retained |
 
