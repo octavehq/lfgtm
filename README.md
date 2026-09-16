@@ -471,8 +471,9 @@ Octave-hosted skill folders (Anthropic Agent Skills structure: root `SKILL.md` +
 - `delete_skill` - Delete a skill and its stored folder
 
 ### Library Write
-- `create_entity` - Create new entity (AI-generated) - excludes legacy playbooks
-- `update_entity` - Update entity (AI-refined) - excludes legacy playbooks
+- `create_entity` - Create new entity - excludes legacy playbooks. Default: AI-generated from `instructions`. Verbatim: pass `verbatim: true` + `fields` and each value is stored exactly as written, no model involved — for approved copy the user does not want reworded
+- `update_entity` - Update entity - excludes legacy playbooks. Rename deterministically with `name` / `internalName`, refine content with AI via `instructions`, or set specific fields to exact values with `verbatim: true` + `fields` (unnamed fields keep their value; a list you send replaces the stored list)
+- `get_entity_schema` - Writable fields of an entity type (key, type, required, where it is stored, accepted nested keys) plus the workspace's additional properties — call before a verbatim write to map the user's copy onto the right keys. Verbatim writes accept `fields.additionalProperties` as a `{ key: value }` map of those properties; an unknown key, nested key, or property fails the call with the allowed set listed, before anything is written
 - `delete_entity` - Delete any entity type (soft delete)
 - `link_entities_to_offering` - Link or unlink library entities (personas, segments, competitors, proof points, references, etc.) to a specific offering. Drives which entities appear in each Motion's matrix.
 
