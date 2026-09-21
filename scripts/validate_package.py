@@ -41,6 +41,12 @@ def validate(root):
         version=json.loads(plugin.read_text())['version']
         for item in json.loads(marketplace.read_text())['plugins']:
             if item['name']=='octave' and item.get('version')!=version:errors.append('plugin/marketplace version mismatch')
+    catalog=root/'catalog.json'
+    if catalog.is_file():
+        cataloged=json.loads(catalog.read_text())['skills']
+        for path in skills:
+            name=path.parent.name
+            if name not in cataloged:errors.append(f'skill missing from catalog.json: {name}')
     return errors
 
 
