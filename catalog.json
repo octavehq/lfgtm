@@ -1,0 +1,527 @@
+{
+  "schemaVersion": 1,
+  "skills": {
+    "abm": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "ads": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "ads-resonance": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "asset-manager": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "audit": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "battlecard-doc": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "call-analyzer": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "champion-deal-room": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "deal-coach": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "deck": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "digest": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "generate": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "get-brand-components": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "icp-refine": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "insights": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "library": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "meeting-prep": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "microsite": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "one-pager": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "pipeline": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "positioning": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "product-launch": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "proposal": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "prospector": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "qual-doctor": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "research": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "signals": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "train": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "win-loss-report": {
+      "version": "1.0.0",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-18",
+          "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    }
+  }
+}
