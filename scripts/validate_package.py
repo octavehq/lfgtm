@@ -11,7 +11,7 @@ import yaml
 def validate(root):
     root=Path(root).resolve();errors=[]
     skills=list((root/'skills').glob('*/SKILL.md'))
-    if len(skills)!=29:errors.append(f'expected 29 skills, found {len(skills)}')
+    if len(skills)!=30:errors.append(f'expected 30 skills, found {len(skills)}')
     if len(list((root/'agents').glob('*.md')))!=7:errors.append('expected seven agent resources')
     for name in ('scripts/export-pdf.sh','scripts/deploy.sh','scripts/extract-pptx.py','LICENSE','skills/shared/host-runtime.md'):
         if not (root/name).is_file():errors.append('missing runtime resource: '+name)
