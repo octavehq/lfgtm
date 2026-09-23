@@ -1,6 +1,6 @@
 ---
 name: digest
-description: Turn one or more Octave GTM Explorer / Beats reports into a branded, shareable digest with selectable insight scope, evidence depth, and output format. Use when the user asks for a report digest, weekly or monthly insight recap, executive intelligence brief, magazine-style insight story, report deck, or a recurring published summary of Octave insights.
+description: Create a branded GTM digest from completed Octave reports or an explicitly requested investigation of customer evidence, with selectable scope, evidence depth, and output format. Use when the user asks for a report digest, weekly or monthly insight recap, executive intelligence brief, magazine-style insight story, report deck, or a recurring published summary of Octave insights.
 ---
 
 # /octave:digest - GTM Insight Digest
@@ -9,7 +9,7 @@ description: Turn one or more Octave GTM Explorer / Beats reports into a branded
 
 Read [the task method](references/task-method.md) before selecting context, claims, or output. It is the execution method for this skill. Supporting templates supply structure and styling; populate them from the task method and current evidence, not their illustrative figures or assertions.
 
-Use completed reports and preserve evidence depth, source scope and uncertainty. Actions and timelines are task-dependent. Authorized recurring runs reuse saved scope; broadened distribution pauses dependent publication. Use workspace-bound durable state, lock and consumed-report checkpoint after verified output. Render-only handoffs select the actual format gate.
+Support completed-report recaps and new investigations of customer evidence. Preserve evidence depth, source scope and uncertainty; completed reports are not a prerequisite for an investigation. Actions and timelines are task-dependent. Authorized recurring runs reuse saved scope; broadened distribution pauses dependent publication. Use workspace-bound durable state, lock and consumed-report checkpoint after verified output. Render-only handoffs select the actual format gate.
 
 Use [GTM context](../shared/gtm-context.md) for strategic tasks and [evidence and inputs](../shared/evidence-and-inputs.md) for material claims and missing facts. A narrow list/get or a render-only handoff does not require unrelated research. Read [host runtime](../shared/host-runtime.md) for available tools, portable resource paths, routing, and review fallback.
 
@@ -20,6 +20,11 @@ Resolve current tool schemas before execution; use returned IDs and pagination. 
 Use /octave:digest with the requested task, target, and output.
 
 ## References by task
+
+- [Research tools](references/research-tools.md): choose quantitative, graph, knowledge, evidence, and report tools.
+- [Investigation method](references/investigation-method.md): new questions, comparisons, coverage, and business definitions.
+- [Evidence packet](references/evidence-packet.md): claim provenance and comparison bookkeeping.
+- [Editorial guidance](references/editorial-guidance.md): clear findings, selective numbers, and review for readers without prior context.
 
 - [state usage](references/state-usage.md)
 

@@ -1,0 +1,73 @@
+# Research tools: choose, measure, explain, verify
+
+Use this guide to select tools for the question, not as a checklist requiring every call. Tool names below are logical names; the host may add a server prefix. Inspect the connected server's schemas, entitlements, and returned definitions before use. A tool in source control may not be deployed; a callable tool may still have limitations. Do not invent a parameter, grouping dimension, or repair status.
+
+## Capability check
+
+For an investigation, record the workspace, checked time, available tool/schema versions or build identity where exposed, requested window, source cutoff, and relevant known limitations in the evidence packet. Distinguish available, available with limitations, and unavailable capabilities. Do not turn a branch name into proof of a deployed fix. If version or coverage cannot be established, record it as unknown and qualify only claims it affects.
+
+## Quantitative primitives
+
+Choose by the shape of the question: **how much / how broad → count; which categories lead → rank; how two categories intersect → cross-tab; how a population changes over time → time series; how defined populations differ on an outcome → cohort comparison.** A ranking by associated won deals is not a win-rate ranking; use `winRateSampleAdjusted` for event-range win-rate rankings, or the performance tools for their precomputed periods. A cross-tab describes intersections, not a statistical test of differences.
+
+| Need | Tool | How to use the result |
+|---|---|---|
+| Activity and reach | `count_events` | Total events, channel counts, distinct companies, external people, and deals; optional preceding equal-length period. Establish the filtered population before interpreting rankings. |
+| Rank themes | `top_event_entities` | Rank one supported dimension by `events`, `uniqueCompanies`, `uniqueDeals`, `wonDeals`, `lostDeals`, `knownWonValue`, or `winRateSampleAdjusted`. The last orders by the lower bound of the win-rate interval to avoid tiny samples leading; inspect returned counts and intervals, not just rank. Includes associated outcome metrics. Choose company/deal reach when repeated calls from one account would dominate an activity ranking. |
+| Cross two dimensions | `get_event_cross_tab` | Compare two categories with metrics for each combination and deduplicated totals. One event can belong to several groups, so adding cells may double-count it. Read `relationshipGrain`: `same_event` is co-occurrence, while `same_finding` ties the speaker to the matching finding. Use `populations` for deduplicated totals. Older servers may advertise `get_event_breakdown`; use only the callable schema, not both names as separate analyses. |
+| Trends | `get_event_time_series` | Daily, weekly, or monthly event counts and company/deal reach; optional preceding period. One filtered population per series: request separate series for several themes. Read `storedEvents` and each bucket's `outsideStoredEvents`: these flag observed bounds, not complete ingestion coverage. Zero-filled buckets are not proof of complete observation. Never sum distinct companies/deals across buckets to obtain period reach. |
+| Precomputed performance | `get_top_performing_entities`, `get_entity_performance`, `get_tag_group_performance` | Use for their documented outcome/performance questions. Read the returned window, eligible population, and rate definition rather than treating these as interchangeable with event-range analytics. |
+| Cohort differences and membership | `compare_cohorts`, `list_cohort_deals` | Compare `win_rate`, `advanced_within_days`, `faster_than_stage_median`, or `next_conversation_positive` as the question warrants. Inspect link scope, timing eligibility, exclusions, uncertainty, and drill-down. Retain valid observed counts/direction independently of inferential verdicts. If unavailable or known incorrect for the needed question, use supported descriptive measures and evidence; do not claim to have run a comparison. |
+| Pipeline inventory and progression | `list_pipeline_overview`, `list_deal_health`, `get_pipeline_metrics` | Inspect actual selectors, pagination, inventory scope, and timing definitions. Verify inclusion of deals without events before treating a result as an independent business denominator. Aggregate event-linked tools cannot discover opportunities excluded from their event universe. |
+
+For the event engine, the baseline grouping dimensions are use case, segment, persona, core feature, competitor, alternative, buying trigger, objection, proof point, reference, tag group, company, person, speaker side, and deal stage at event. Development also supports `offering` (directly matched products, services, and solutions) and `offering_of_core_feature` (matched capabilities rolled up to parent offerings). These are distinct relationships, not proof of the product sold or owned. Confirm dimensions in the connected schema before using them. Product-specific filtered runs can overlap and cannot be summed as exclusive categories.
+
+The event date window selects events. Associated won/lost metrics describe linked deals' current outcomes unless a tool explicitly specifies another clock; they are not automatically deals closed during that window. Preserve outcome as-of and data windows. An event-linked won amount is not automatically revenue. Read amount eligibility, currency, missing-value and negative-value handling before choosing its reader-facing name.
+
+### Cohort comparison and drill-down
+
+Use the same window, shared filters, cohort definitions, outcome, and link scope for `compare_cohorts` and `list_cohort_deals`. Omit `linkScope` to use the workspace rule; `linkScopeSource` identifies whether it came from the request, workspace, or product default (`outcome_attribution`). Do not silently choose a stricter rule as the main result. Read `acrossLinkScopes` for sensitivity and `stratifyBy` comparisons when a plausible mix difference matters. Report material reversals in plain language.
+
+Read `observed` separately from `verdict`, `uncertainty`, and `claimLevel`: counts and direction can be useful when broader inference is inconclusive. Keep `comparisonsDeclared` current across all comparisons explored, and recompute adjusted results if the final count changes. Read the returned formula, population, eligibility, clock, margin, and currency; tool defaults are not business-endorsed definitions.
+
+Drill down with side `A`, `B`, or `overlap`, optionally `dealOutcome` (won/lost/open) or `result` (success/failure/not_observable). Paginate with the returned cursor and reconcile `totals`; these are the comparison's members, not a new search. Use returned `opportunityOId` values with `filters.opportunityIds` for event/finding follow-up, retaining the window and cohort selectors. Check pre-outcome eligibility before treating any retrieved conversation as exposure evidence.
+
+## Graph, authored knowledge, and customer evidence
+
+These are complementary corpora, not interchangeable searches.
+
+| Need | Tool | Boundary and next step |
+|---|---|---|
+| Relationships and graph-grounded questions | `ask_octave` | Questions about linked entities, references, personas, accounts, and relationship-based rankings. Supply known seed IDs when useful. Inspect `provenance` and rationale: authored links differ from calculated/inferred relations. Concept-based matches depend on workspace capability. Graph counts do not automatically match an explicit analytics cohort. |
+| Authored GTM content | `search_knowledge_base` | Vector retrieval and reranking over library content, motion ICP content, and optional documents/websites. Returns excerpts, not population counts. Does **not** cover CRM records, call transcripts, emails, or logged activity. Retrieve full entities/resources or motion ICP cells when excerpts are insufficient. |
+| Event and finding discovery | `list_events`, `list_findings` | Find observed events and extracted statements with supported population/entity/date/speaker filters. Use the same selectors as the aggregate being illustrated, paginate as needed, and preserve source IDs. A bounded preview cannot establish total frequency. |
+| Verbatim call language | `search_call_transcripts` | Search relevant moments with supported company, event, speaker, and attribution filters. Distinguish a call ABOUT an entity from words spoken BY a persona. Check whether literal filters apply to the moment or the whole call. A search match does not establish broad prevalence. |
+| Evidence for a library entity | `get_entity_evidence` | Verbatim moments with source context; inspect `linkFiltered` to distinguish explicit linkage from semantic fallback. A semantically relevant quote may be useful without proving it belongs to an analytics cell. |
+| Full source content | `get_event_detail`, `get_entity`, `get_resource`, `find_motion_icp` | Hydrate consequential excerpts, speaker context, event content, or structured library/motion data. Follow continuation when returned findings are paginated. Use full transcripts selectively. |
+
+`ask_octave` may return ambiguity (`followUpNeeded` and candidates), refusal with guidance, a genuine data gap, or reconciliation/capability limitations. Resolve ambiguity from context or ask the user when needed; do not guess a seed. A data gap is not fixed by repeating the same question in different words. Use KB retrieval if authored prose can answer the remaining need, not to replace absent observed evidence with strategy copy. Use one focused graph question per call; compose the digest in the host rather than asking the graph tool to write it.
+
+KB retrieval can find why the company positions a product a certain way. It cannot prove that explanation drove a customer outcome. Combine authored context with correctly attributed buyer evidence and measured patterns, retaining the distinction in the claim packet.
+
+## Report provenance, CRM, coverage, and outside context
+
+| Need | Tools | Boundary |
+|---|---|---|
+| Completed reports and exact evidence | `list_gtm_reports`, `get_latest_gtm_report`, `list_report_runs`, `get_report_run`, `get_report_section_evidence` | `list_gtm_reports` names the groups and each group's `configs[]`; `get_latest_gtm_report` is the newest completed window only; `list_report_runs` is the history: bare for the Weekly Beats group across every config, `groupOId` or `configOId` to narrow, newest window first with every status. Paginate with `limit`/`offset` and `hasNext`, and select succeeded runs in the requested window. `customerScope` selects one view per call: omitted/ALL is unscoped; NEW_CUSTOMERS and EXISTING_CUSTOMERS are separate views. Pin the intended run, view, and window. Section-linked evidence reproduces provenance; a new topic search does not. A run's evidence preview is not its entire population. |
+| Library definitions and taxonomy | `list_entities`, `get_entity`, `list_tag_groups`, `list_tag_group_assignments` | Resolve verified names, hierarchy, and custom rollups. Tag membership can overlap. Keep directly mentioned product, parent of a mentioned capability, sold product, and historically owned product separate. |
+| One deal and its evidence | `get_deal_deep_dive`, `get_deal_strategy_evidence` | Inspect deal-level context and supporting evidence; read timing and inference labels before carrying conclusions into a population comparison. |
+| Live-provider CRM lookup | `find_crm_records`, `find_crm_activities` | Targeted lookup in the connected CRM, then associated notes/tasks/calls/emails. This is different from enumerating the synced pipeline; targeted identity lookup is not a complete inventory extractor. |
+| Processing readiness | `get_library_backfill_status`, applicable custom-extractor status tools | Read processed counts, windows, and state. Not processed is not absent. Event first/last timestamps establish observed bounds, not continuous ingestion coverage. Backfill completion does not prove all source records were ingested. |
+| External research | `find_external_context`, `deep_web_research`, `scrape_website` | Use when outside company/person/market context serves the question. Attribute separately; external context cannot establish internal customer frequency or deal outcomes. |
+
+For full report retrieval, pass exactly one of `reportRunOId` (single result in `data`) or `reportRunOIds` (1–20 IDs, results in `runs` in requested order, missing IDs in `notFound`). Deduplicate selected IDs and split larger selections into batches. Check every returned status and missing ID rather than assuming batch success means a complete digest. `includeEvidence: { perSectionLimit: 3 }` adds previews (supported range 1–10); use `get_report_section_evidence` for full paginated section evidence. Do not mix customer-scope views as disjoint populations or substitute the latest window for historical runs.
+
+## How tools fit together
+
+**Recap:** list the period's runs with `list_report_runs` and select the completed ones → load summaries/sections and previews with `get_report_run` (batched by `reportRunOIds` where the schema offers it) → retrieve exact section evidence for important claims → verify relevant source context → assemble one narrative. Do not make new causal or quantitative claims from representative snippets.
+
+**Investigation:** establish question/population/coverage → count activity and reach → rank useful themes → cross relevant dimensions → inspect comparable trends → retrieve findings and transcript evidence from the measured population → add graph relationships and authored context → check counterexamples → synthesize. Discovery via graph or KB may also precede measurement to form a hypothesis. Adapt the sequence to the question rather than executing every tool.
+
+**Outcome question:** define the business opportunity universe independently of recordings → inspect coverage by group/outcome → use supported cohort comparison with declared linkage and pre-outcome eligibility → drill into included/excluded records → inspect reasonable alternative scopes → report counts, direction, and limitations. Current-status association and pre-outcome exposure are different questions.
+
+**Missing capability:** first look for a supported composition or existing shared service. Coverage profiling, normalized prevalence/stratification, sensitivity analysis, and time-to-outcome distributions may require additional APIs; they are needs to check, not guaranteed tool names. Never silently substitute search-hit counts, the first page of deals, or only recorded wins for the requested denominator. Continue unaffected descriptive and qualitative work and raise a material unresolved definition or data need.
