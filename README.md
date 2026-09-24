@@ -140,6 +140,7 @@ See [**docs/org-instructions/**](docs/org-instructions/) for short and long reco
 | Skill | Description |
 |-------|-------------|
 | `/octave:asset-manager` | Publish and manage hosted assets — upload, privacy tiers (only_me/workspace/public), share links, asset registry; checks for existing assets before creating so work isn't duplicated |
+| `/octave:public-changelog` | Create or append your public product changelog from approved entries — refuses any change to a line already live, so Octave's release-notes ingestion reads only what is new |
 
 ## Agents
 
@@ -411,6 +412,17 @@ Internal deal room a rep hands a champion so they can run the buying-committee s
 /octave:champion-deal-room acme.com
 /octave:champion-deal-room acme.com --champion jane@acme.com
 ```
+
+### /octave:public-changelog
+
+Publish entries to your workspace's permanent public changelog. Paste what a staging page copied, or describe the items in plain words; the skill checks them, shows the exact lines being added, and publishes on your go.
+
+```
+/octave:public-changelog                  # Asks for the entries to publish
+/octave:public-changelog <pasted JSON>    # Entries copied from a changelog staging page
+```
+
+The page is rendered by `skills/public-changelog/scripts/changelog.py` from a `changelog.json` stored beside it, never hand-edited: Octave re-reads it and treats every unseen line as a new capability, so a publish is refused unless every live line survives unchanged.
 
 ### /octave:asset-manager
 Publish and manage hosted assets on the Octave assets service:
