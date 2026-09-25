@@ -182,7 +182,7 @@
       ]
     },
     "digest": {
-      "version": "1.1.0",
+      "version": "1.1.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -191,6 +191,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.1",
+          "date": "2026-09-25",
+          "notes": "Pipeline inventory and single-deal research rows use list_deals and get_deal.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-09-23",
