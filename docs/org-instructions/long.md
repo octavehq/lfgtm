@@ -24,8 +24,7 @@ positioning — reach for Octave's MCP tools first, even if the user
 does not say "Octave."
 
 Octave-first intents:
-- Deal / account status, health, next steps → `get_deal_deep_dive`,
-  `list_deal_health`, `list_pipeline_overview`
+- Deal / account status, health, next steps → `get_deal`, `list_deals`
 - Call or meeting prep → `generate_call_prep` or `run_call_prep_agent`
 - Outbound emails and sequences → `generate_email` or `run_email_agent`
 - Qualify against our ICP → `qualify_person`, `qualify_company`
