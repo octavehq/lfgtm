@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "skills": {
     "abm": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -11,6 +11,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-09-28",
+          "notes": "Fix links to shared guidance from its reference files, which pointed one folder too shallow and kept the skill from being packaged. Also includes the guidance Deal Pulse requires to build from it.",
+          "review": false
+        },
         {
           "version": "1.0.0",
           "date": "2026-09-18",
@@ -20,7 +26,7 @@
       ]
     },
     "ads": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -29,6 +35,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-09-28",
+          "notes": "Packaged releases now include the shared guidance this skill already points to (information and presentation principles).",
+          "review": false
+        },
         {
           "version": "1.0.0",
           "date": "2026-09-18",
@@ -38,7 +50,7 @@
       ]
     },
     "ads-resonance": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -47,6 +59,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-09-28",
+          "notes": "Packaged releases now include the shared guidance this skill already points to (information and presentation principles).",
+          "review": false
+        },
         {
           "version": "1.0.0",
           "date": "2026-09-18",
@@ -56,7 +74,7 @@
       ]
     },
     "asset-manager": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -65,6 +83,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-09-28",
+          "notes": "Packaged releases now include the shared guidance this skill already points to (information and presentation principles).",
+          "review": false
+        },
         {
           "version": "1.0.0",
           "date": "2026-09-18",
@@ -74,7 +98,7 @@
       ]
     },
     "audit": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -83,6 +107,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-09-28",
+          "notes": "Packaged releases now include the shared guidance this skill already points to (information and presentation principles).",
+          "review": false
+        },
         {
           "version": "1.0.0",
           "date": "2026-09-18",
@@ -92,7 +122,7 @@
       ]
     },
     "battlecard-doc": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -101,6 +131,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-09-28",
+          "notes": "Packaged releases now include the shared guidance this skill already points to (information and presentation principles).",
+          "review": false
+        },
         {
           "version": "1.0.0",
           "date": "2026-09-18",
@@ -110,7 +146,7 @@
       ]
     },
     "call-analyzer": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -119,6 +155,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-09-28",
+          "notes": "Packaged releases now include the shared guidance this skill already points to (information and presentation principles).",
+          "review": false
+        },
         {
           "version": "1.0.0",
           "date": "2026-09-18",
@@ -128,7 +170,7 @@
       ]
     },
     "champion-deal-room": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -137,6 +179,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-09-28",
+          "notes": "Packaged releases now include the shared guidance this skill already points to (information and presentation principles).",
+          "review": false
+        },
         {
           "version": "1.0.0",
           "date": "2026-09-18",
@@ -146,7 +194,7 @@
       ]
     },
     "deal-coach": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -155,6 +203,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-09-28",
+          "notes": "Packaged releases now include the shared guidance this skill already points to (information and presentation principles).",
+          "review": false
+        },
         {
           "version": "1.0.0",
           "date": "2026-09-18",
@@ -164,7 +218,7 @@
       ]
     },
     "deck": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -173,6 +227,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-09-28",
+          "notes": "Packaged releases now include the shared guidance this skill already points to (information and presentation principles). Also includes the guidance Deal Pulse requires to build from it.",
+          "review": false
+        },
         {
           "version": "1.0.0",
           "date": "2026-09-18",
@@ -182,7 +242,7 @@
       ]
     },
     "digest": {
-      "version": "1.1.1",
+      "version": "1.1.2",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -192,9 +252,15 @@
       "requiredTools": [],
       "changelog": [
         {
-          "version": "1.1.1",
-          "date": "2026-09-25",
+          "version": "1.1.2",
+          "date": "2026-09-29",
           "notes": "Pipeline inventory and single-deal research rows use list_deals and get_deal.",
+          "review": false
+        },
+        {
+          "version": "1.1.1",
+          "date": "2026-09-28",
+          "notes": "Packaged releases now include the shared guidance this skill already points to (information and presentation principles). Also includes the guidance Deal Pulse requires to build from it.",
           "review": false
         },
         {
@@ -212,7 +278,7 @@
       ]
     },
     "generate": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -221,6 +287,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-09-28",
+          "notes": "Packaged releases now include the shared guidance this skill already points to (information and presentation principles). Also includes the guidance Deal Pulse requires to build from it.",
+          "review": false
+        },
         {
           "version": "1.0.0",
           "date": "2026-09-18",
@@ -230,7 +302,7 @@
       ]
     },
     "get-brand-components": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -239,6 +311,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-09-28",
+          "notes": "Packaged releases now include the shared guidance this skill already points to (information and presentation principles).",
+          "review": false
+        },
         {
           "version": "1.0.0",
           "date": "2026-09-18",
@@ -248,7 +326,7 @@
       ]
     },
     "icp-refine": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -257,6 +335,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-09-28",
+          "notes": "Packaged releases now include the shared guidance this skill already points to (information and presentation principles).",
+          "review": false
+        },
         {
           "version": "1.0.0",
           "date": "2026-09-18",
@@ -266,7 +350,7 @@
       ]
     },
     "insights": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -275,6 +359,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-09-28",
+          "notes": "Packaged releases now include the shared guidance this skill already points to (information and presentation principles).",
+          "review": false
+        },
         {
           "version": "1.0.0",
           "date": "2026-09-18",
@@ -284,7 +374,7 @@
       ]
     },
     "library": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -293,6 +383,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-09-28",
+          "notes": "Packaged releases now include the shared guidance this skill already points to (information and presentation principles).",
+          "review": false
+        },
         {
           "version": "1.0.0",
           "date": "2026-09-18",
@@ -302,7 +398,7 @@
       ]
     },
     "meeting-prep": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -311,6 +407,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-09-28",
+          "notes": "Packaged releases now include the shared guidance this skill already points to (information and presentation principles).",
+          "review": false
+        },
         {
           "version": "1.0.0",
           "date": "2026-09-18",
@@ -320,7 +422,7 @@
       ]
     },
     "microsite": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -329,6 +431,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-09-28",
+          "notes": "Packaged releases now include the shared guidance this skill already points to (information and presentation principles).",
+          "review": false
+        },
         {
           "version": "1.0.0",
           "date": "2026-09-18",
@@ -338,7 +446,7 @@
       ]
     },
     "one-pager": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -347,6 +455,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-09-28",
+          "notes": "Packaged releases now include the shared guidance this skill already points to (information and presentation principles). Also includes the guidance Deal Pulse requires to build from it.",
+          "review": false
+        },
         {
           "version": "1.0.0",
           "date": "2026-09-18",
@@ -356,7 +470,7 @@
       ]
     },
     "pipeline": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -365,6 +479,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-09-28",
+          "notes": "Packaged releases now include the shared guidance this skill already points to (information and presentation principles). Also includes the guidance Deal Pulse requires to build from it.",
+          "review": false
+        },
         {
           "version": "1.0.0",
           "date": "2026-09-18",
@@ -374,7 +494,7 @@
       ]
     },
     "positioning": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -383,6 +503,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-09-28",
+          "notes": "Packaged releases now include the shared guidance this skill already points to (information and presentation principles).",
+          "review": false
+        },
         {
           "version": "1.0.0",
           "date": "2026-09-18",
@@ -392,7 +518,7 @@
       ]
     },
     "product-launch": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -401,6 +527,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-09-28",
+          "notes": "Packaged releases now include the shared guidance this skill already points to (information and presentation principles).",
+          "review": false
+        },
         {
           "version": "1.0.0",
           "date": "2026-09-18",
@@ -410,7 +542,7 @@
       ]
     },
     "proposal": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -420,6 +552,12 @@
       "requiredTools": [],
       "changelog": [
         {
+          "version": "1.0.1",
+          "date": "2026-09-28",
+          "notes": "Fix links to shared guidance from its reference files, which pointed one folder too shallow and kept the skill from being packaged.",
+          "review": false
+        },
+        {
           "version": "1.0.0",
           "date": "2026-09-18",
           "notes": "Initial catalogued release",
@@ -428,7 +566,7 @@
       ]
     },
     "prospector": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -437,6 +575,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-09-28",
+          "notes": "Packaged releases now include the shared guidance this skill already points to (information and presentation principles).",
+          "review": false
+        },
         {
           "version": "1.0.0",
           "date": "2026-09-18",
@@ -464,7 +608,7 @@
       ]
     },
     "qual-doctor": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -473,6 +617,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-09-28",
+          "notes": "Packaged releases now include the shared guidance this skill already points to (information and presentation principles).",
+          "review": false
+        },
         {
           "version": "1.0.0",
           "date": "2026-09-18",
@@ -482,7 +632,7 @@
       ]
     },
     "research": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -491,6 +641,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-09-28",
+          "notes": "Packaged releases now include the shared guidance this skill already points to (information and presentation principles).",
+          "review": false
+        },
         {
           "version": "1.0.0",
           "date": "2026-09-18",
@@ -500,7 +656,7 @@
       ]
     },
     "signals": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -509,6 +665,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-09-28",
+          "notes": "Packaged releases now include the shared guidance this skill already points to (information and presentation principles).",
+          "review": false
+        },
         {
           "version": "1.0.0",
           "date": "2026-09-18",
@@ -518,7 +680,7 @@
       ]
     },
     "train": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -528,6 +690,12 @@
       "requiredTools": [],
       "changelog": [
         {
+          "version": "1.0.1",
+          "date": "2026-09-28",
+          "notes": "Fix links to shared guidance from its reference files, which pointed one folder too shallow and kept the skill from being packaged.",
+          "review": false
+        },
+        {
           "version": "1.0.0",
           "date": "2026-09-18",
           "notes": "Initial catalogued release",
@@ -536,7 +704,7 @@
       ]
     },
     "win-loss-report": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -545,6 +713,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-09-28",
+          "notes": "Packaged releases now include the shared guidance this skill already points to (information and presentation principles).",
+          "review": false
+        },
         {
           "version": "1.0.0",
           "date": "2026-09-18",

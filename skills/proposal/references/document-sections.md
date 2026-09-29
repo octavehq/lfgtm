@@ -1,6 +1,6 @@
 # Proposal — Document Structure
 
-Structure and content spec for the proposal HTML document. Visual/CSS rules come from the shared layers (`../shared/presentation-principles.md`, `../shared/formats/html-document.md`) plus the workspace company's brand kit. This file defines what sections exist, in what order, and what earns space in each.
+Structure and content spec for the proposal HTML document. Visual/CSS rules come from the shared layers (`../../shared/presentation-principles.md`, `../../shared/formats/html-document.md`) plus the workspace company's brand kit. This file defines what sections exist, in what order, and what earns space in each.
 
 ## What this document is (and isn't)
 

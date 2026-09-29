@@ -1,6 +1,6 @@
 # Account Plan — Document Structure
 
-Structure and content spec for the account plan HTML document. Visual/CSS rules come from the shared layers (`../shared/presentation-principles.md`, `../shared/formats/html-document.md`) plus the workspace company's brand kit. The locked CSS, section skeleton, and card vocabulary live in `html-scaffold.md` (reproduce it) — a family with meeting-prep: sidebar nav dots, one card type per section, `role-badge`s, `talk-track` cards, a two-column `risk-grid`, the persona selector, and the `.unconfirmed` tag.
+Structure and content spec for the account plan HTML document. Visual/CSS rules come from the shared layers (`../../shared/presentation-principles.md`, `../../shared/formats/html-document.md`) plus the workspace company's brand kit. The locked CSS, section skeleton, and card vocabulary live in `html-scaffold.md` (reproduce it) — a family with meeting-prep: sidebar nav dots, one card type per section, `role-badge`s, `talk-track` cards, a two-column `risk-grid`, the persona selector, and the `.unconfirmed` tag.
 
 ## What this document is
 

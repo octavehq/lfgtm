@@ -2,7 +2,7 @@
 
 Structure and content spec for the primer. The primer is **not a scrollable document**: it is a **gated, interactive slide lesson**. A new rep moves through it one topic at a time, and each topic ends with checkpoint questions they must answer before the Next button unlocks. This forces engagement, which is the point of onboarding. Once completed, a review menu lets them jump back to any topic, so it doubles as a reference.
 
-Visual/CSS rules come from the shared layers (`../shared/presentation-principles.md`, `../shared/formats/slide-deck.md`) plus the workspace company's brand kit. This file defines what slides exist, in what order, what earns space in each, the interaction model, and the review checklist. The HTML/CSS/JS scaffold is in [html-scaffold.md](html-scaffold.md).
+Visual/CSS rules come from the shared layers (`../../shared/presentation-principles.md`, `../../shared/formats/slide-deck.md`) plus the workspace company's brand kit. This file defines what slides exist, in what order, what earns space in each, the interaction model, and the review checklist. The HTML/CSS/JS scaffold is in [html-scaffold.md](html-scaffold.md).
 
 ## What this is (and isn't)
 
