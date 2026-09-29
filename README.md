@@ -68,7 +68,7 @@ If your team also has HubSpot, Salesforce, Gong, Granola, or Clay connected to C
 
 See [**docs/org-instructions/**](docs/org-instructions/) for short and long recommended instructions, admin setup, and test prompts.
 
-**Quick test (wait up to 1 hour for propagation first):** in a new Claude conversation, ask *"What's the status of my deal with [company] and what should I be doing next?"* — without mentioning Octave. If Claude reaches for `get_deal_deep_dive` or `/octave:pipeline`, the instructions are working.
+**Quick test (wait up to 1 hour for propagation first):** in a new Claude conversation, ask *"What's the status of my deal with [company] and what should I be doing next?"* — without mentioning Octave. If Claude reaches for `get_deal` or `/octave:pipeline`, the instructions are working.
 
 ## Skills
 
@@ -565,10 +565,9 @@ The workspace's own company profile (singleton).
 - `get_crm_entity_schema` - Introspect valid fields/properties on a CRM entity (discover field names before requesting them)
 
 ### Pipeline Analytics
-- `list_pipeline_overview` - Deals grouped by stage with counts, total value, and per-deal detail
-- `list_deal_health` - Assess open deals for stalled stages, expired close dates, single-threading, regressions
-- `get_deal_deep_dive` - Full deal context: stage history, close-date changes, activity, benchmarks, competitive intel
-- `get_pipeline_metrics` - Stage velocity, cycle time, win/loss conversion rates, deal counts
+- `list_deals` - Paged synced-deal inventory: filter by open/stage/account/owner/pipeline/motion, sort by close date, amount or created date; `stalledOnly` for the at-risk portfolio (most severe first), `includeRisk` / `includePulse` per row
+- `get_deal` - One deal by Octave oId or CRM id (Salesforce 15- and 18-character both work): core row plus opt-in `activity`, `stakeholders`, `risk`, `pulse`, `history` sections, each with a state saying why it is empty
+- `get_pipeline_metrics` - Stage velocity, cycle time, win/loss conversion rates, and open deals per stage with summed value
 
 ### Agents
 - `list_agents` - List saved agents
