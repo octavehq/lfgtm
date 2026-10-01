@@ -37,6 +37,8 @@ Resolve current tool schemas before execution; use returned IDs and pagination. 
 
 - [asset review](references/asset-review.md)
 
+- [fidelity gate](references/fidelity-gate.md)
+
 Read only the reference for the selected mode, then the format/layout references when rendering. Do not repeat intake or change approved claims when routing to a renderer.
 
 ## Delivery and changes
@@ -58,5 +60,9 @@ Resolve these paths from the installed skill directory. Inline template JS/CSS i
 - [verify-logos.sh](scripts/verify-logos.sh)
 - [verify_logos.py](scripts/verify_logos.py)
 - [kit_base.css](assets/kit_base.css)
+- [prefetch.py](scripts/prefetch.py)
+- [render_gallery.py](scripts/render_gallery.py)
+- [gallery_spec.json](assets/gallery_spec.json)
+- [onepager_spec.json](assets/onepager_spec.json)
 
 - [brand_cache.py](scripts/brand_cache.py)

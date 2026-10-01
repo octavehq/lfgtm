@@ -1,0 +1,15 @@
+{
+  "title": "Brand component gallery",
+  "blocks": [
+    {"type": "hero", "eyebrow": "Component gallery", "title": "One system, every **surface**", "lead": "Every block below is rendered from the kit's tokens by the shared renderer. No hand-written CSS.", "cta": {"label": "Primary action", "href": "https://example.com/"}, "nav": {"links": [{"label": "Product", "href": "https://example.com/"}, {"label": "Pricing", "href": "https://example.com/"}], "cta": {"label": "Get started", "href": "https://example.com/"}}},
+    {"type": "stats", "items": [{"n": "48", "u": "%", "l": "Stat block"}, {"n": "3.2", "u": "x", "l": "Second stat"}, {"n": "12", "u": "min", "l": "Third stat"}]},
+    {"type": "section", "kicker": "Section header", "heading": "Heading with one **emphasized** word", "paras": ["Body copy at the brand's real size and line-height. A second sentence shows paragraph rhythm and the muted secondary color."]},
+    {"type": "features", "items": [{"title": "Card one", "text": "Short supporting copy."}, {"title": "Card two", "text": "Short supporting copy."}, {"title": "Card three", "text": "Short supporting copy."}]},
+    {"type": "comparison", "badHead": "Before", "goodHead": "After", "rows": [["Manual", "Automatic"], ["Slow", "Fast"], ["Inconsistent", "On brand"]]},
+    {"type": "quote", "text": "A testimonial block in the brand's quote treatment.", "name": "Customer Name", "role": "Title, Company"},
+    {"type": "checklist", "items": ["Buttons and badges", "Cards and tiles", "Stats and tables", "Quote and CTA bands"]},
+    {"type": "pricing", "plans": [{"name": "Starter", "price": "$0", "period": "/mo", "blurb": "For trying it out", "features": ["One", "Two"], "cta": {"label": "Start", "href": "https://example.com/"}}, {"name": "Team", "price": "$49", "period": "/mo", "blurb": "For teams", "features": ["One", "Two", "Three"], "featured": true, "badge": "Popular", "cta": {"label": "Choose", "href": "https://example.com/"}}]},
+    {"type": "cta", "heading": "CTA band in the brand's **treatment**", "sub": "Closing call to action.", "cta": {"label": "Get started", "href": "https://example.com/"}},
+    {"type": "footer", "links": [{"label": "Privacy", "href": "https://example.com/"}, {"label": "Terms", "href": "https://example.com/"}]}
+  ]
+}
