@@ -105,7 +105,8 @@ p{margin:0 0 14px;}
   border-top:1px solid var(--brand-border);}
 .is-dark.hero .cust{border-top-color:rgba(255,255,255,.10);}
 .hero .cust .lab{font-family:var(--brand-font-body);font-size:11px;letter-spacing:.06em;
-  text-transform:uppercase;color:var(--brand-faint,rgba(255,255,255,.68));}
+  text-transform:uppercase;color:var(--brand-muted);}
+.is-dark.hero .cust .lab{color:var(--brand-faint,rgba(255,255,255,.68));}
 .hero .cust img{display:block;height:30px;width:auto;}
 
 /* hero visual: floating chips (dark/product brands) */
@@ -267,7 +268,7 @@ p{margin:0 0 14px;}
 /* logo wall */
 .logos{text-align:center;}
 .logos-label{font-family:var(--brand-font-body);font-size:12px;letter-spacing:.06em;text-transform:uppercase;
-  color:var(--brand-faint,rgba(255,255,255,.68));margin-bottom:18px;}
+  color:var(--brand-muted);margin-bottom:18px;}
 .logos-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:30px 44px;}
 .logos-row .logo-item img{display:block;height:26px;width:auto;opacity:.9;}
 .logos.mono .logo-item img{filter:grayscale(1);opacity:.75;}
@@ -305,8 +306,11 @@ p{margin:0 0 14px;}
 .is-dark.cta h2{color:#fff;}
 .cta p{font-family:var(--brand-font-body);font-size:14px;margin:0 auto 20px;max-width:54ch;color:var(--brand-muted);}
 .is-dark.cta p{color:var(--brand-on-dark);}
-.cust-line{font-family:var(--brand-font-body);text-align:center;font-size:12.5px;color:var(--brand-faint,rgba(255,255,255,.68));margin-top:18px;line-height:1.9;}
-.cust-line b{color:var(--brand-on-dark);font-weight:500;}
+/* the "trusted by" line sits on whichever surface the CTA has: muted/ink on light, faint/on-dark on dark */
+.cust-line{font-family:var(--brand-font-body);text-align:center;font-size:12.5px;color:var(--brand-muted);margin-top:18px;line-height:1.9;}
+.cust-line b{color:var(--brand-ink);font-weight:500;}
+.is-dark .cust-line{color:var(--brand-faint,rgba(255,255,255,.68));}
+.is-dark .cust-line b{color:var(--brand-on-dark);}
 
 /* footer — surface chosen by renderer (dark for dark-band brands so the logo is visible) */
 .footer{display:flex;align-items:center;justify-content:space-between;}
