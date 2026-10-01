@@ -30,7 +30,18 @@ View the rendered PNG next to a source screenshot and grade each dimension 0 to 
 
 Report a compact scorecard and an overall /40. For every dimension below 4 give a specific fix. Pass: at least 34/40 and no dimension below 3. A wrong or missing logo (dimension 8 at 0) fails regardless of total. Dimension 8 cannot score above 0 on metadata alone: both logo variants must have been rendered on their intended surfaces.
 
-Judge spread between fresh sessions is 0 to 2 points; when comparing pipeline changes use the mean of three judgements per kit.
+Fresh sessions do not score identically; when comparing pipeline changes use the mean of three judgements per kit.
+
+### Second judge: the one-pager
+
+The gallery shows the system; consumers receive collateral. Render the fixed one-pager through the kit and score it on the same rubric, as a second independent judgement:
+
+```bash
+python3 <skill-dir>/scripts/render_kit.py --kit-dir <kit-dir> --spec <skill-dir>/assets/onepager_spec.json --out /tmp/onepager.html
+python3 <skill-dir>/scripts/render.py --file /tmp/onepager.html --out /tmp/onepager.png
+```
+
+Report both scorecards. The gate passes on the gallery score; the one-pager score is what the kit's consumers will see, so a gap of more than a few points between the two is itself a finding (usually spacing, depth or edges in the composition rather than the tokens).
 
 ## 3. Then
 
