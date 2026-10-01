@@ -276,11 +276,12 @@ def _cmp_diptych(bad, good, rows):  # D1 — luminous diptych (variant)
 
 def r_comparison(b, ctx):
     """Default B1 gradient-band table; B2 soft table when the kit has no dark band;
-    D1 diptych when the block opts in with variant:"diptych" (falls back to B2 on light brands)."""
+    D1 diptych when the block opts in with variant:"diptych" (falls back to B2 on light brands).
+    A block-level `surface` ("dark"|"light") overrides the kit default, like every other surface block."""
     bad = html.escape(b.get("badHead", "Without"))
     good = html.escape(b.get("goodHead", "With"))
     rows = b["rows"]
-    dark = ctx["darkband"]
+    dark = b.get("surface", "dark" if ctx["darkband"] else "light") == "dark"
     if not dark:
         return _cmp_soft(bad, good, rows)
     if b.get("variant") == "diptych":

@@ -9,9 +9,13 @@ read the palette and faces at a glance.
 
   render_gallery.py <kit-dir> [--skill-scripts <path to get-brand-components/scripts>]
 """
-import argparse, html, json, pathlib, subprocess, sys
+import argparse, base64, html, json, pathlib, re, subprocess, sys
 
 HERE = pathlib.Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+from bs4 import BeautifulSoup, Comment, Doctype, Declaration, ProcessingInstruction  # noqa: E402
+from kit_validation import asset_path, safe_url  # noqa: E402
+
 SPEC = HERE.parent / "assets" / "gallery_spec.json"
 
 
@@ -53,23 +57,71 @@ def composed_spec(man, tmp_path):
     return tmp_path
 
 
+HERO_ELEMENTS = {"section", "div", "span", "p", "h1", "h2", "h3", "h4", "a", "img", "ul", "ol", "li",
+                 "strong", "em", "b", "i", "br", "small"}
+HERO_ATTRS = {"class", "id", "style", "alt", "width", "height", "src", "href", "role", "aria-label", "aria-hidden"}
+IMG_MIME = {".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp"}
+UNSAFE_STYLE = re.compile(r"[<>{}\\]|/\*|@import|url\s*\(|expression\s*\(|behavior\s*:|-moz-binding|javascript:", re.I)
+
+
+def safe_style(value):
+    """A style ATTRIBUTE (several declarations, so `;` is fine) with no way to load or run anything."""
+    if UNSAFE_STYLE.search(value):
+        raise ValueError("unsafe style attribute")
+    return value
+
+
+def sanitize_hero(frag, kit):
+    """Parse hero.html and return the one <section> it may contain, or raise ValueError.
+
+    Allowlist, not blacklist: only plain layout/text elements and a fixed attribute set survive. Anything
+    else (scripts, styles, inline SVG, iframes, event handlers, srcset, ...) refuses the whole fragment.
+    `style` values go through safe_style (no url(), @import, expression(), braces); `href` through
+    safe_url (http(s), mailto, tel or a fragment); every `src` must resolve inside the kit via asset_path
+    and is inlined as a data URI so the gallery stays self-contained."""
+    soup = BeautifulSoup(frag, "html.parser")
+    for node in soup.find_all(string=lambda s: isinstance(s, (Doctype, Declaration, ProcessingInstruction))):
+        raise ValueError(f"unsupported markup: {type(node).__name__}")
+    for c in soup.find_all(string=lambda s: isinstance(s, Comment)):
+        c.extract()
+    roots = [n for n in soup.contents if not (isinstance(n, str) and not n.strip())]
+    if len(roots) != 1 or getattr(roots[0], "name", None) != "section":
+        raise ValueError("hero.html must contain exactly one <section>")
+    for el in roots[0].find_all(True) + [roots[0]]:
+        if el.name not in HERO_ELEMENTS:
+            raise ValueError(f"unsupported element <{el.name}>")
+        for key in list(el.attrs):
+            if key not in HERO_ATTRS:
+                raise ValueError(f"unsupported attribute {key} on <{el.name}>")
+            val = el.attrs[key]
+            if isinstance(val, list):
+                val = " ".join(val); el.attrs[key] = val
+            if key == "style":
+                safe_style(val)
+            elif key == "href":
+                safe_url(val)
+            elif key == "src":
+                p = asset_path(kit, val)
+                mime = IMG_MIME.get(p.suffix.lower())
+                if not mime:
+                    raise ValueError(f"unsupported image type: {val}")
+                el.attrs[key] = f"data:{mime};base64,{base64.b64encode(p.read_bytes()).decode()}"
+    return str(roots[0])
+
+
 def swap_bespoke_hero(doc, kit):
-    """If the capture wrote an optional hero.html (a self-contained section in the site's own section
-    grammar, styled only with --brand-* tokens), it replaces the mechanical hero block. Kit-relative
-    <img src> paths are inlined as data URIs so the gallery stays self-contained; remote URLs are refused."""
-    import base64, re
+    """If the capture wrote an optional hero.html (one self-contained <section> in the site's own section
+    grammar, styled only with --brand-* tokens), it replaces the mechanical hero block. The fragment is
+    sanitized by sanitize_hero; any refusal keeps the mechanical hero and says why."""
     hero = kit / "hero.html"
+    if hero.is_symlink():
+        print("hero.html refused: symlink"); return doc
     if not hero.is_file():
         return doc
-    frag = hero.read_text()
-    if re.search(r"(?:src|href)\s*=\s*['\"]?(?:https?:)?//", frag) or "@import" in frag or "<script" in frag.lower():
-        print("hero.html refused: external resource or script"); return doc
-    def inline(m):
-        p = (kit / m.group(2)).resolve()
-        if not p.is_file() or kit.resolve() not in p.parents: return m.group(0)
-        mime = {"svg": "image/svg+xml", "png": "image/png", "jpg": "image/jpeg", "jpeg": "image/jpeg", "webp": "image/webp"}.get(p.suffix.lstrip(".").lower(), "application/octet-stream")
-        return f'src={m.group(1)}data:{mime};base64,{base64.b64encode(p.read_bytes()).decode()}{m.group(1)}'
-    frag = re.sub(r'src=(["\'])([^"\']+)\1', inline, frag)
+    try:
+        frag = sanitize_hero(hero.read_text(), kit)
+    except ValueError as e:
+        print(f"hero.html refused: {e}"); return doc
     m = re.search(r'<div class="hero[^"]*".*?(?=<div class="(?:stats|wrap|band|cta|footer)[\s"])', doc, re.S)
     if not m:
         print("mechanical hero not found; hero.html ignored"); return doc
@@ -82,7 +134,8 @@ def composition_css(man):
     css = []
     if g.get("headingAlign") == "center":
         css.append(".hero .copy,.section,.cta,.quote{text-align:center}.hero .copy{margin:0 auto;max-width:760px}"
-                   ".hero .actions,.section h2,.section p{margin-left:auto;margin-right:auto}.section p{max-width:640px}.feat{justify-content:center}")
+                   ".hero h1,.hero .lead,.hero .actions,.section h2,.section p{margin-left:auto;margin-right:auto}"  # h1/lead carry max-widths, so center the boxes too
+                   ".section p{max-width:640px}.feat{justify-content:center}")
     card = g.get("cardStyle")
     if card == "hairline":
         css.append(".fcard,.plan,.cmp-soft,.about{box-shadow:none;border:1px solid var(--brand-border)}")

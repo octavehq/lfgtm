@@ -9,14 +9,22 @@ screenshots, and (when Playwright is available) read COMPUTED styles off the
 rendered page — body/heading/button anatomy, section rhythm, and the
 emphasized-word device inside headings, which is what CSS grepping misses.
 
-  prefetch.py --domain acme.com --out <evidence-dir> [--firecrawl <tsx-runner>] [--no-playwright] [--max-pages 5]
+  prefetch.py --domain acme.com --out <evidence-dir> [--firecrawl "<runner cmd>"] [--no-playwright] [--max-pages 5]
 
-Fetch tiers: Firecrawl (via the tsx runner; anti-bot, raw HTML + screenshot)
+Fetch tiers: an external page runner (anti-bot fetch, raw HTML + screenshot)
 → Playwright rendered DOM + screenshot → plain HTTP (no screenshot).
+
+Runner contract (--firecrawl): any command that is invoked as
+  <runner> <out-dir> <url>...
+and writes <out-dir>/firecrawl.json, a list of rows
+  {"url", "ok": bool, "status": int, "finalUrl", "htmlFile", "screenshotFile"?, "links"?: [str]}
+where htmlFile / screenshotFile are paths relative to <out-dir>. Set PREFETCH_RUNNER_CWD
+to run the command from another directory.
+
 Output: <evidence-dir>/evidence.json + pages/ fonts/ logos/ screenshots/ css/.
 Needs: python3, bs4; optional playwright (computed styles + fallback shots), Pillow (crops).
 """
-import argparse, base64, collections, hashlib, json, os, pathlib, re, shutil, subprocess, sys, time, urllib.request, urllib.parse
+import argparse, collections, hashlib, json, os, pathlib, re, shutil, subprocess, sys, time, urllib.request, urllib.parse
 from bs4 import BeautifulSoup
 
 UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36"
@@ -30,21 +38,37 @@ PAGE_PREFS = [  # (role, keywords in path) in the skill's priority order
 LOGO_HINT = re.compile(r"logo|brand|wordmark|lockup", re.I)
 WALL_HINT = re.compile(r"customers?|partners?|trusted|clients?|logos|logo-wall|marquee|carousel|press", re.I)
 HEX = re.compile(r"#(?:[0-9a-fA-F]{3}){1,2}\b")
-RGB = re.compile(r"rgba?\([^)]*\)")
+LATIN_RANGE = re.compile(r"U\+0{0,2}(?:0|00|000)-0{0,2}(?:FF|0FF|00FF)\b", re.I)  # a unicode-range that covers basic latin
+MAX_FONT_BYTES = 600_000
+MAX_LOGO_BYTES = 2_000_000
 
 
-def http_get(url, binary=False, timeout=25):
+def http_fetch(url, timeout=25, max_bytes=None):
+    """GET url. Returns (body: bytes, final_url, status). http(s) only; raises on error status."""
+    scheme = urllib.parse.urlparse(url).scheme.lower()
+    if scheme not in ("http", "https"):
+        raise ValueError(f"unsupported URL scheme: {scheme or 'none'}")
     headers = {"User-Agent": UA, "Accept": "*/*", "Accept-Language": "en-US,en;q=0.9"}
     try:
         import requests  # carries its own CA bundle; macOS python's urllib often has none
+    except ImportError:
+        requests = None
+    if requests is not None:
         r = requests.get(url, headers=headers, timeout=timeout)
         r.raise_for_status()
-        return r.content if binary else r.text
-    except ImportError:
+        body, final_url, status = r.content, r.url, r.status_code
+    else:
         req = urllib.request.Request(url, headers=headers)
         with urllib.request.urlopen(req, timeout=timeout) as r:
-            data = r.read()
-            return data if binary else data.decode("utf-8", errors="replace")
+            body, final_url, status = r.read(), r.geturl(), r.status
+    if max_bytes is not None and len(body) > max_bytes:
+        raise ValueError(f"too large: {len(body)} bytes")
+    return body, final_url, status
+
+
+def http_get(url, binary=False, timeout=25, max_bytes=None):
+    body, _, _ = http_fetch(url, timeout=timeout, max_bytes=max_bytes)
+    return body if binary else body.decode("utf-8", errors="replace")
 
 
 def slug_of(url):
@@ -59,7 +83,7 @@ def same_site(url, host):
 
 
 class Fetcher:
-    """Three tiers. Firecrawl runner = a tsx script taking <out-dir> <url>... and writing firecrawl.json."""
+    """Three tiers. The runner is any command taking <out-dir> <url>... and writing firecrawl.json (see module doc)."""
 
     def __init__(self, out, firecrawl_runner, use_playwright, log):
         self.out, self.runner, self.log = out, firecrawl_runner, log
@@ -85,16 +109,18 @@ class Fetcher:
         cmd = self.runner.split() + [str(fdir)] + urls
         t0 = time.time()
         try:
-            r = subprocess.run(cmd, capture_output=True, text=True, timeout=240, cwd=os.environ.get("FIRECRAWL_CWD"))
+            r = subprocess.run(cmd, capture_output=True, text=True, timeout=240, cwd=os.environ.get("PREFETCH_RUNNER_CWD"))
         except Exception as e:
-            self.log(f"firecrawl runner failed: {e}"); return {}
-        self.log(f"firecrawl: {len(urls)} urls in {time.time()-t0:.1f}s rc={r.returncode}")
+            self.log(f"page runner failed: {e}"); return {}
+        self.log(f"page runner: {len(urls)} urls in {time.time()-t0:.1f}s rc={r.returncode}")
         if r.returncode != 0:
             self.log((r.stderr or r.stdout)[-600:]); return {}
         res = {}
         try:
             for row in json.loads((fdir / "firecrawl.json").read_text()):
                 if not row.get("ok") or not row.get("htmlFile"): continue
+                if isinstance(row.get("status"), int) and row["status"] >= 400:
+                    self.log(f"page runner: {row['url']} returned {row['status']}, skipped"); continue
                 res[row["url"]] = {"html": (fdir / row["htmlFile"]).read_text(errors="replace"),
                                    "screenshot": str(fdir / row["screenshotFile"]) if row.get("screenshotFile") else None,
                                    "links": row.get("links") or [], "status": row.get("status"),
@@ -107,7 +133,10 @@ class Fetcher:
         if not self.pw: return None
         pg = self.pw.new_page()
         try:
-            pg.goto(url, wait_until="domcontentloaded", timeout=45000)
+            resp = pg.goto(url, wait_until="domcontentloaded", timeout=45000)
+            status = resp.status if resp is not None else 200  # None: same-document navigation
+            if status >= 400:
+                self.log(f"playwright fetch {url}: HTTP {status}, skipped"); return None
             try: pg.wait_for_load_state("networkidle", timeout=15000)
             except Exception: pass
             pg.wait_for_timeout(1500)
@@ -116,7 +145,7 @@ class Fetcher:
                 pg.screenshot(path=str(shot_path), full_page=True); shot = str(shot_path)
             except Exception: shot = None
             links = pg.evaluate("() => Array.from(document.querySelectorAll('a[href]')).map(a => a.href).slice(0, 600)")
-            return {"html": html, "screenshot": shot, "links": links, "status": 200, "final_url": pg.url, "via": "playwright"}
+            return {"html": html, "screenshot": shot, "links": links, "status": status, "final_url": pg.url, "via": "playwright"}
         except Exception as e:
             self.log(f"playwright fetch failed {url}: {str(e)[:120]}"); return None
         finally:
@@ -124,8 +153,9 @@ class Fetcher:
 
     def http(self, url):
         try:
-            html = http_get(url)
-            return {"html": html, "screenshot": None, "links": [], "status": 200, "final_url": url, "via": "http"}
+            body, final_url, status = http_fetch(url)
+            html = body.decode("utf-8", errors="replace")
+            return {"html": html, "screenshot": None, "links": [], "status": status, "final_url": final_url, "via": "http"}
         except Exception as e:
             self.log(f"http fetch failed {url}: {str(e)[:120]}"); return None
 
@@ -140,8 +170,7 @@ class Fetcher:
 
 def pick_pages(home_links, base):
     host = urllib.parse.urlparse(base).netloc
-    chosen, seen_roles = [], set()
-    cands = []
+    chosen, cands = [], []
     for l in home_links:
         try:
             u = urllib.parse.urljoin(base, l.split("#")[0])
@@ -159,9 +188,15 @@ def pick_pages(home_links, base):
                 score = depth if role == "article" else -depth
                 if best is None or score > best[0]:
                     best = (score, u)
-        if best and best[1] not in [c for c in chosen]:
-            chosen.append(best[1]); seen_roles.add(role)
+        if best and best[1] not in chosen:
+            chosen.append(best[1])
     return chosen
+
+
+def absolutize_css_urls(css, base_url):
+    """Rewrite relative url(...) references in a stylesheet against the URL it was served from."""
+    return re.sub(r"url\(\s*(['\"]?)(?!data:|https?://|//)([^'\")]+)\1\s*\)",
+                  lambda m: "url(" + urllib.parse.urljoin(base_url, m.group(2)) + ")", css)
 
 
 def css_of_page(html, page_url, out_css, log, budget=6):
@@ -173,21 +208,20 @@ def css_of_page(html, page_url, out_css, log, budget=6):
         href = link.get("href")
         if href and ("stylesheet" in rel or (rel == "preload" and link.get("as") == "style")):
             urls.append(urllib.parse.urljoin(page_url, href))
-    inline = "\n".join(s.get_text() for s in soup.find_all("style"))
-    inline = re.sub(r"url\(\s*(['\"]?)(?!data:|https?://|//)([^'\")]+)\1\s*\)",
-                    lambda m: "url(" + urllib.parse.urljoin(page_url, m.group(2)) + ")", inline)
+    inline = absolutize_css_urls("\n".join(s.get_text() for s in soup.find_all("style")), page_url)
     text, sheets = inline, []
     for u in urls[:budget]:
         try:
             css = http_get(u)
         except Exception as e:
             log(f"css fetch failed {u[:80]}: {str(e)[:80]}"); continue
+        # absolutize url(...) against the SHEET url, so relative font/image paths survive concatenation;
+        # each @import is resolved against ITS OWN url before being appended, not the parent sheet's
+        css = absolutize_css_urls(css, u)
         for imp in re.findall(r"@import\s+(?:url\()?['\"]?([^'\")\s;]+)", css)[:4]:
-            try: css += "\n" + http_get(urllib.parse.urljoin(u, imp))
-            except Exception: pass
-        # absolutize url(...) against the SHEET url, so relative font/image paths survive concatenation
-        css = re.sub(r"url\(\s*(['\"]?)(?!data:|https?://|//)([^'\")]+)\1\s*\)",
-                     lambda m: "url(" + urllib.parse.urljoin(u, m.group(2)) + ")", css)
+            imp_url = urllib.parse.urljoin(u, imp)
+            try: css += "\n" + absolutize_css_urls(http_get(imp_url), imp_url)
+            except Exception as e: log(f"css import failed {imp_url[:80]}: {str(e)[:80]}")
         name = hashlib.sha1(u.encode()).hexdigest()[:10] + ".css"
         (out_css / name).write_text(css)
         sheets.append({"url": u, "bytes": len(css), "file": f"css/{name}"})
@@ -212,17 +246,25 @@ def mine_css(css, base_url, out_fonts, log):
         fam = re.search(r"font-family\s*:\s*['\"]?([^;'\"]+)", block)
         wt = re.search(r"font-weight\s*:\s*([^;]+)", block)
         st = re.search(r"font-style\s*:\s*([^;]+)", block)
+        ur = re.search(r"unicode-range\s*:\s*([^;]+)", block, re.I)
         srcs = re.findall(r"url\(\s*['\"]?([^'\")]+)['\"]?\s*\)(?:\s*format\(['\"]?(\w+)['\"]?\))?", block)
         if not fam or not srcs: continue
         src = next((s for s in srcs if "woff2" in s[0] or s[1] == "woff2"), srcs[0])
         faces.append({"family": fam.group(1).strip(), "displayFamily": display_family(fam.group(1)), "weight": (wt.group(1).strip() if wt else "400"),
-                      "style": (st.group(1).strip() if st else "normal"), "src": src[0], "format": src[1] or src[0].rsplit(".", 1)[-1][:5]})
-    # dedupe by (family, weight, style)
-    seen, uniq = set(), []
+                      "style": (st.group(1).strip() if st else "normal"), "src": src[0], "format": src[1] or src[0].rsplit(".", 1)[-1][:5],
+                      "unicodeRange": re.sub(r"\s+", "", ur.group(1)).upper() if ur else None})
+    # dedupe by (family, weight, style, unicode-range), then keep ONE face per (family, weight, style):
+    # the subset that covers basic latin (hosted font CSS lists latin last), else a face with no range
+    seen, by_face = set(), collections.OrderedDict()
     for f in faces:
-        k = (f["family"].lower(), f["weight"], f["style"])
-        if k in seen or f["src"].startswith("data:"): continue
-        seen.add(k); uniq.append(f)
+        if f["src"].startswith("data:"): continue
+        k = (f["family"].lower(), f["weight"], f["style"], f["unicodeRange"])
+        if k in seen: continue
+        seen.add(k); by_face.setdefault(k[:3], []).append(f)
+    def latin_first(f):
+        r = f["unicodeRange"]
+        return (0 if (r and LATIN_RANGE.search(r)) else 1 if r is None else 2)
+    uniq = [sorted(group, key=latin_first)[0] for group in by_face.values()]
     # rank faces by how much the CSS actually uses the family (so a brand's display
     # face wins over a bundled Inter), prefer upright text weights, download the top 10
     usage = collections.Counter()
@@ -246,13 +288,17 @@ def mine_css(css, base_url, out_fonts, log):
             best = min(upright, key=lambda f: abs(wt_num(f["weight"]) - target))
             if best not in picked: picked.append(best)
         to_get += picked[:3]
+    used_names = set()
     for f in to_get:
         u = urllib.parse.urljoin(base_url, f["src"])
         try:
-            data = http_get(u, binary=True)
-            if len(data) > 600_000: raise ValueError("too large")
+            data = http_get(u, binary=True, max_bytes=MAX_FONT_BYTES)
             ext = f["format"] if f["format"] in ("woff2", "woff", "ttf", "otf") else "woff2"
-            name = re.sub(r"[^a-z0-9]+", "-", f"{f['displayFamily']}-{f['weight']}-{f['style']}".lower()).strip("-") + "." + ext
+            stem = re.sub(r"[^a-z0-9]+", "-", f"{f['displayFamily']}-{f['weight']}-{f['style']}".lower()).strip("-")
+            name = f"{stem}.{ext}"
+            if name in used_names:  # same face from a second source (e.g. a non-latin subset survived): keep both apart
+                name = f"{stem}-{hashlib.sha1(u.encode()).hexdigest()[:6]}.{ext}"
+            used_names.add(name)
             (out_fonts / name).write_bytes(data)
             f["file"] = f"fonts/{name}"; f["bytes"] = len(data)
         except Exception as e:
@@ -309,6 +355,35 @@ def mine_css(css, base_url, out_fonts, log):
     return ev
 
 
+SVG_TAG = re.compile(r"<(/?)svg\b[^>]*>", re.I)
+VIEWBOX = re.compile(r"""\bviewBox\s*=\s*(['"])([^'"]*)\1""", re.I)
+
+
+def raw_svg(html, el):
+    """The exact <svg>…</svg> source text for a parsed element.
+
+    html.parser lowercases tag and attribute names (viewBox -> viewbox, linearGradient -> lineargradient),
+    which makes str(el) an invalid standalone SVG. Locate the element in the raw markup by its parse
+    position instead and return the original text, matching nested <svg> with a depth counter."""
+    if el.sourceline is None or el.sourcepos is None:
+        return None
+    lines = html.split("\n")
+    start = sum(len(l) + 1 for l in lines[: el.sourceline - 1]) + el.sourcepos
+    if html[start:start + 4].lower() != "<svg":
+        return None
+    depth = 0
+    for m in SVG_TAG.finditer(html, start):
+        depth += -1 if m.group(1) else 1
+        if depth == 0:
+            return html[start:m.end()]
+    return None
+
+
+def svg_viewbox(raw):
+    m = VIEWBOX.search(raw[: raw.find(">") + 1] if raw else "")
+    return m.group(2).strip() if m else ""
+
+
 def lift_logos(html, page_url, out_logos, log):
     soup = BeautifulSoup(html, "html.parser")
     cands = []
@@ -336,7 +411,7 @@ def lift_logos(html, page_url, out_logos, log):
                 cands.append({"region": region, "kind": "img", "src": u, "alt": el.get("alt"), "class": " ".join(el.get("class") or [])[:80],
                               "width": el.get("width"), "height": el.get("height"), "suspectWall": in_wall})
             else:
-                raw = str(el)
+                raw = raw_svg(html, el) or str(el)
                 if len(raw) < 200 or len(raw) > 60000: continue
                 # an inline SVG is a logo candidate only inside the home link or when its own attributes say so
                 if region != "home-link" and not LOGO_HINT.search(" ".join(el.get("class") or []) + " " + (el.get("aria-label") or "") + " " + (el.title.get_text() if el.title else "")):
@@ -346,12 +421,12 @@ def lift_logos(html, page_url, out_logos, log):
                 seen.add(h)
                 cands.append({"region": region, "kind": "svg-inline", "hash": h, "class": " ".join(el.get("class") or [])[:80],
                               "ariaLabel": el.get("aria-label"), "title": (el.title.get_text() if el.title else None),
-                              "viewBox": el.get("viewBox"), "bytes": len(raw), "suspectWall": in_wall, "_raw": raw})
+                              "viewBox": svg_viewbox(raw) or None, "bytes": len(raw), "suspectWall": in_wall, "_raw": raw})
     out = []
     for i, c in enumerate(cands[:16]):
         try:
             if c["kind"] == "img":
-                data = http_get(c["src"], binary=True)
+                data = http_get(c["src"], binary=True, max_bytes=MAX_LOGO_BYTES)
                 ext = c["src"].split("?")[0].rsplit(".", 1)[-1].lower()
                 ext = ext if ext in ("svg", "png", "jpg", "jpeg", "webp") else "bin"
                 name = f"logo-{i}-{c['region']}.{ext}"
@@ -377,8 +452,9 @@ def lift_icons(html):
     soup = BeautifulSoup(html, "html.parser")
     icons, seen = [], set()
     for el in soup.find_all("svg"):
-        vb = el.get("viewBox") or ""
-        raw = str(el)
+        raw = raw_svg(html, el)
+        if raw is None: continue  # position unknown (markup too malformed to slice): skip rather than emit lowercased SVG
+        vb = svg_viewbox(raw)
         if not vb or len(raw) > 6000 or len(raw) < 80: continue
         try:
             w, h = [float(x) for x in vb.split()[2:4]]
@@ -512,8 +588,16 @@ def computed_styles(fetcher, url, log, extras_dir=None, is_home=False, dark_capa
         pg.goto(url, wait_until="load", timeout=45000)
         pg.wait_for_timeout(1200)
         dismiss_consent(pg)
-        # scroll through once so lazy sections mount, then back to the top
-        pg.evaluate("() => new Promise(r => { let y=0; const t=setInterval(()=>{ window.scrollBy(0,900); y+=900; if (y>document.body.scrollHeight) {clearInterval(t); window.scrollTo(0,0); r();} }, 90); })")
+        # scroll through once so lazy sections mount, then back to the top. Bounded by step count AND
+        # elapsed time: an infinite-scroll page grows scrollHeight faster than we scroll, and page.evaluate
+        # has no deadline of its own, so an unbounded loop would hang the run.
+        pg.evaluate("""() => new Promise(r => {
+          let y = 0, steps = 0; const t0 = Date.now();
+          const t = setInterval(() => {
+            window.scrollBy(0, 900); y += 900; steps += 1;
+            if (y > document.body.scrollHeight || steps >= 40 || Date.now() - t0 > 6000) { clearInterval(t); window.scrollTo(0, 0); r(); }
+          }, 90);
+        })""")
         pg.wait_for_timeout(800)
         out = pg.evaluate(COMPUTED_JS)
         # hover state of the two most common button groups on the homepage (fill / ink / transform / shadow after :hover)
@@ -528,6 +612,8 @@ def computed_styles(fetcher, url, log, extras_dir=None, is_home=False, dark_capa
                 out["buttons"][i]["hover"] = None
         if is_home and extras_dir is not None:
             try:
+                # hover probing scrolled buttons into view; the animated-hero frames must start at the top
+                pg.evaluate("() => window.scrollTo(0, 0)"); pg.wait_for_timeout(300)
                 pg.screenshot(path=str(extras_dir / "home-t0.png"), full_page=False)
                 pg.wait_for_timeout(4000)
                 pg.screenshot(path=str(extras_dir / "home-t1.png"), full_page=False)
@@ -537,22 +623,22 @@ def computed_styles(fetcher, url, log, extras_dir=None, is_home=False, dark_capa
                 out["emphasisLater"] = [e for e in later.get("emphasis", []) if e not in out.get("emphasis", [])][:8]
             except Exception as e:
                 log(f"animated shots failed: {str(e)[:80]}")
-            try:
-                if not dark_capable: raise StopIteration("no dark-scheme rules in the CSS")
-                light_bg = out.get("body", {}).get("backgroundColor")
-                pg.emulate_media(color_scheme="dark")
-                pg.reload(wait_until="load", timeout=45000); pg.wait_for_timeout(1200); dismiss_consent(pg)
-                dark = pg.evaluate(COMPUTED_JS)
-                if dark.get("body", {}).get("backgroundColor") != light_bg:
-                    pg.screenshot(path=str(extras_dir / "home-dark-top.png"), full_page=False)
-                    out["darkMode"] = {"body": dark.get("body"), "h1": dark.get("h1"), "p": dark.get("p"), "nav": dark.get("nav"),
-                                       "footer": dark.get("footer"), "buttons": dark.get("buttons"), "shot": "screenshots/home-dark-top.png"}
-                else:
-                    out["darkMode"] = None
-            except StopIteration:
+            if not dark_capable:  # no dark-scheme rules in the CSS: nothing to probe
                 out["darkMode"] = None
-            except Exception as e:
-                log(f"dark-mode pass failed: {str(e)[:80]}")
+            else:
+                try:
+                    light_bg = out.get("body", {}).get("backgroundColor")
+                    pg.emulate_media(color_scheme="dark")
+                    pg.reload(wait_until="load", timeout=45000); pg.wait_for_timeout(1200); dismiss_consent(pg)
+                    dark = pg.evaluate(COMPUTED_JS)
+                    if dark.get("body", {}).get("backgroundColor") != light_bg:
+                        pg.screenshot(path=str(extras_dir / "home-dark-top.png"), full_page=False)
+                        out["darkMode"] = {"body": dark.get("body"), "h1": dark.get("h1"), "p": dark.get("p"), "nav": dark.get("nav"),
+                                           "footer": dark.get("footer"), "buttons": dark.get("buttons"), "shot": "screenshots/home-dark-top.png"}
+                    else:
+                        out["darkMode"] = None
+                except Exception as e:
+                    log(f"dark-mode pass failed: {str(e)[:80]}")
         return out
     except Exception as e:
         log(f"computed styles failed {url}: {str(e)[:100]}"); return None
@@ -563,9 +649,10 @@ def computed_styles(fetcher, url, log, extras_dir=None, is_home=False, dark_capa
 def dominant(im, k=6):
     """Top-k quantized colors of an image region as (hex, share)."""
     small = im.convert("RGB").resize((160, max(1, int(160 * im.size[1] / max(1, im.size[0])))))
+    quant = small.point(lambda v: v // 16 * 16 + 8)  # 16 levels per channel
     counts = collections.Counter()
-    for r, g, b in small.getdata():
-        counts[(r // 16 * 16 + 8, g // 16 * 16 + 8, b // 16 * 16 + 8)] += 1
+    for n, rgb in quant.getcolors(maxcolors=quant.width * quant.height) or []:
+        counts[rgb] += n
     total = sum(counts.values()) or 1
     return [("#%02x%02x%02x" % c, round(n / total, 3)) for c, n in counts.most_common(k)]
 
@@ -600,7 +687,9 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--domain", required=True)
     ap.add_argument("--out", required=True, type=pathlib.Path)
-    ap.add_argument("--firecrawl", help="runner command, e.g. 'node_modules/.bin/tsx --env-file=.env docs/local/brand-kit-bakeoff/firecrawl_fetch.ts' (run with cwd=FIRECRAWL_CWD)")
+    ap.add_argument("--firecrawl", metavar="RUNNER", help="page runner: a command invoked as '<runner> <out-dir> <url>...' that writes "
+                    "<out-dir>/firecrawl.json plus the HTML and screenshot files it references (contract in the module doc). "
+                    "Runs from PREFETCH_RUNNER_CWD when set.")
     ap.add_argument("--no-playwright", action="store_true")
     ap.add_argument("--max-pages", type=int, default=5)
     args = ap.parse_args()
@@ -667,7 +756,7 @@ def main():
         comp = {}
         # computed styles: the homepage plus the article page (body type) or, failing that, the next page
         article = next((u for u, _ in pages[1:] if re.search(r"blog|resources|learn|guides|insights|articles|news", u)), None)
-        comp_pages = [pages[0]] + [(u, pp) for u, pp in pages[1:] if u == article][:1] or pages[:2]
+        comp_pages = [pages[0]] + [(u, pp) for u, pp in pages[1:] if u == article][:1]
         if len(comp_pages) < 2 and len(pages) > 1: comp_pages = pages[:2]
         dark_capable = bool(re.search(r"prefers-color-scheme\s*:\s*dark|data-theme|\.dark\b|color-scheme", css_text))
         for u, p in comp_pages:
