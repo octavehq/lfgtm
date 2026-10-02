@@ -45,7 +45,8 @@ SURFACE_BLOCKS = ("hero", "stats", "quote", "cta", "footer", "comparison", "logo
 
 
 def composed_spec(man, tmp_path):
-    """Apply the kit's optional `render.gallery` composition (which bands are dark or light) to the fixed spec."""
+    """Apply the kit's optional `render.gallery` composition to the fixed spec: which bands are dark or
+    light, whether the brand uses eyebrows/kickers at all, and whether to show the secondary button."""
     spec = json.loads(SPEC.read_text())
     g = (man.get("render") or {}).get("gallery") or {}
     surfaces = g.get("surfaces") or {}
@@ -53,6 +54,10 @@ def composed_spec(man, tmp_path):
         s = surfaces.get(block["type"])
         if block["type"] in SURFACE_BLOCKS and s in ("dark", "light"):
             block["surface"] = s
+        if g.get("eyebrow") is False:  # brands without small-caps labels above headings
+            block.pop("eyebrow", None); block.pop("kicker", None)
+        if block["type"] == "hero" and g.get("secondaryCta") and block.get("cta"):
+            block["secondaryCta"] = {"label": "Secondary action", "href": block["cta"]["href"]}
     tmp_path.write_text(json.dumps(spec))
     return tmp_path
 

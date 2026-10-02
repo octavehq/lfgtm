@@ -9,7 +9,8 @@ declarative JSON spec of blocks. One renderer, every brand — no per-asset CSS.
 
 Kit dir: ~/.octave/brands/<slug>/ with manifest.json containing a `render` block:
   render: {
-    hasDarkBand: bool, docWidth: px, heroVisual: "chips"|"masonry"|"none",
+    hasDarkBand: bool, docWidth: px, heroVisual: "chips"|"masonry"|"image"|"none",
+    heroImage: kit-relative file shown behind the hero copy when heroVisual is "image",
     tokens: { "--brand-*": "value", ... },          # the token contract
     fonts:  [ {family,weight,style?,file,format} ],  # embedded base64 @font-face
     logo:   { onDark: file|null, onLight: file|null, lockup: {...}|null }
@@ -35,7 +36,7 @@ def load_kit(slug_or_dir, expected_domain=None, workspace=None):
     d = pathlib.Path(slug_or_dir).expanduser()
     if not (d.is_absolute() or d.exists()):
         d = BRANDS / slug_or_dir
-    d, man = resolve(d, expected_domain, workspace)
+    d, man = resolve(d, expected_domain, workspace, allow_draft=True)  # the renderer is capture tooling: drafts render
     if "render" not in man:
         sys.exit(f"ERROR: {d}/manifest.json has no `render` block. Add the token contract first.")
     return d, validate_manifest(d, man)
@@ -47,15 +48,19 @@ def b64_file(path, mime):
     return f"data:{mime};base64," + base64.b64encode(pathlib.Path(path).read_bytes()).decode()
 
 
+FONT_MIME = {"woff2": "font/woff2", "woff": "font/woff", "ttf": "font/ttf", "truetype": "font/ttf", "otf": "font/otf", "opentype": "font/otf"}
+FONT_FORMAT = {"woff2": "woff2", "woff": "woff", "ttf": "truetype", "truetype": "truetype", "otf": "opentype", "opentype": "opentype"}
+
+
 def font_faces(kitdir, fonts):
     out = []
-    fmt_mime = {"woff2": "font/woff2", "woff": "font/woff", "ttf": "font/ttf"}
     for f in fonts or []:
         p = asset_path(kitdir, f["file"])
-        fmt = f.get("format") or p.suffix.lstrip(".")
-        uri = b64_file(p, fmt_mime.get(fmt, "font/woff2"))
+        fmt = (f.get("format") or p.suffix.lstrip(".")).lower()
+        uri = b64_file(p, FONT_MIME.get(fmt, "font/woff2"))
         style = f.get("style", "normal")
-        out.append(f"@font-face{{font-family:'{f['family']}';src:url({uri}) format('{fmt}');"
+        # CSS format() takes the format name (truetype/opentype), never the file extension
+        out.append(f"@font-face{{font-family:'{f['family']}';src:url({uri}) format('{FONT_FORMAT.get(fmt, 'woff2')}');"
                    f"font-weight:{f['weight']};font-style:{style};font-display:swap;}}")
     return "\n".join(out)
 
@@ -176,6 +181,8 @@ def r_hero(b, ctx):
         nav = f'<div class="nav">{items}</div>'
     top = f'<div class="topbar"><div class="brand">{brand}</div>{nav}</div>'
     cta = render_link(b["cta"], "btn btn-primary", arrow=True) if b.get("cta") else ""
+    if b.get("secondaryCta"):  # the brand's resting secondary button next to the primary
+        cta += render_link(b["secondaryCta"], "btn btn-secondary")
     eyebrow = f'<div class="eyebrow">{html.escape(b["eyebrow"])}</div>' if b.get("eyebrow") else ""
     copy = (f'<div class="copy">{eyebrow}<h1>{emph(b["title"])}</h1>'
             f'<p class="lead">{para(b["lead"])}</p>'
@@ -203,8 +210,13 @@ def r_hero(b, ctx):
         cells = "".join(f'<div class="m" style="height:{h}px;background:{bg}"></div>'
                         for h, bg in b.get("masonry", []))
         visual = f'<div class="masonry">{cells}</div>'
+    # photo / video-poster hero: the kit image sits behind the copy (inlined, so no url() is needed)
+    backdrop = ""
+    if vis == "image" and render.get("heroImage"):
+        backdrop = inline_img(kd, render["heroImage"], 'class="hero-bg"') + '<div class="hero-scrim"></div>'
+        cls += " has-image"
     inner = f'<div class="lede">{copy}<div class="visual">{visual}</div></div>' if visual else copy
-    return f'<div class="{cls}">{top}{inner}{cust}</div>'
+    return f'<div class="{cls}">{backdrop}{top}{inner}{cust}</div>'
 
 
 def r_stats(b, ctx):
