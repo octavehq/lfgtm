@@ -45,5 +45,5 @@ Report both scorecards. The gate passes on the gallery score; the one-pager scor
 
 ## 3. Then
 
-- Interactive runs: present the scorecard and ask how to proceed (auto-fix loop up to 3 iterations, pick specific fixes, or ship as-is). Honor a standing preference for the session.
+- Interactive runs: present the scorecard and ask how to proceed (auto-fix loop up to 3 iterations, pick specific fixes, or ship as-is). Honor a standing preference for the session. A promoted kit stays `draft` until the gate passes: then run `python3 <skill-dir>/scripts/brand_cache.py mark-ready <brand-cache>/<workspace>/<domain> --score <total>/40` so consumers can resolve it.
 - Headless runs: one repair pass with the scorecard as input, then re-render and re-judge, and ship whichever of the two kits judged better. The repair is not monotonic (it regresses some kits), so the keep-better guard is mandatory.

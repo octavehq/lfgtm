@@ -6,8 +6,15 @@ downstream rendering; a name match alone is not identity.
 
 - **Default:** reuse a validated matching capture. Build only when absent or
   when refresh is requested. Read [capture workflow](capture-workflow.md).
-- **Refresh:** capture in a unique staging directory, verify assets and visual
-  fidelity, then promote atomically. Failed validation retains the current kit.
+- **Refresh:** capture in a unique staging directory, run
+  `brand_cache.py checksums <staging>` (writes `assetChecksums`; re-run after any
+  edit), then `brand_cache.py promote <staging> --domain … --workspace …`, which
+  validates and points `current.json` at the capture with status `draft`. Run the
+  fidelity gate on the promoted kit and, on a pass, `brand_cache.py mark-ready
+  <cache-root> --score N/40`. Consumers (`render_kit.py` from other skills, the
+  asset-store fallback) resolve `ready` kits only; the capture tooling opens
+  drafts. `brand_cache.py status <cache-root>` prints the pointer. Failed
+  validation retains the current kit.
 - **List:** show current captures in the verified workspace with company/domain,
   capture date and readiness. Do not scan other workspace contents to fill gaps.
 - **Show:** resolve the exact selected capture and open its components or visual

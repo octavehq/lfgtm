@@ -1,8 +1,10 @@
 """Deterministic checks for the evidence-pack + mechanical-gallery pipeline (no network, no LLM)."""
+import argparse
 import importlib.util
 import json
 import os
 import pathlib
+import re
 import subprocess
 import sys
 import tempfile
@@ -30,15 +32,17 @@ REQUIRED_TOKENS = {
 }
 LOGO = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 30" width="120" height="30"><rect x="0" y="0" width="120" height="30" fill="#0055ff"/></svg>'
 NOOP_LOG = lambda msg: None  # noqa: E731
+PNG_1x1 = bytes.fromhex("89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000d4944415478da63f8ffff3f0300050001ff2a7a3a0000000049454e44ae426082")
 
 
-def make_kit(root, extra_tokens=None, gallery_block=None, dark_band=True):
+def make_kit(root, extra_tokens=None, gallery_block=None, dark_band=True, render_extra=None):
     root.mkdir(parents=True, exist_ok=True)
     tokens = dict(REQUIRED_TOKENS, **(extra_tokens or {}))
     render = {"hasDarkBand": dark_band, "docWidth": 880, "heroVisual": "none", "fonts": [],
               "logo": {"onLight": "logo.svg", "onDark": "logo.svg", "lockup": None}, "tokens": tokens}
     if gallery_block:
         render["gallery"] = gallery_block
+    render.update(render_extra or {})
     (root / "manifest.json").write_text(json.dumps({"slug": "acme", "company": "Acme", "domain": "acme.com", "render": render}))
     (root / "tokens.css").write_text(":root{" + "".join(f"{k}:{v};" for k, v in tokens.items()) + "}")
     (root / "brand-kit.md").write_text("# Brand Kit: Acme\n")
@@ -95,11 +99,40 @@ class CssMining(unittest.TestCase):
         prefetch.http_get = lambda url, **kw: sheets[url]
         html = '<html><head><link rel="stylesheet" href="/css/main.css"><style>.y{background:url(y.png)}</style></head><body></body></html>'
         with tempfile.TemporaryDirectory() as d:
-            text, meta = prefetch.css_of_page(html, "https://a.example/", pathlib.Path(d), NOOP_LOG)
+            text, meta, recovered = prefetch.css_of_page(html, "https://a.example/", pathlib.Path(d), NOOP_LOG)
         self.assertIn("url(https://a.example/vendor/fonts/inter.woff2)", text)  # against the import, not the parent sheet
         self.assertIn("url(https://a.example/css/img/bg.png)", text)
         self.assertIn("url(https://a.example/y.png)", text)
         self.assertEqual([s["url"] for s in meta], ["https://a.example/css/main.css"])
+        self.assertFalse(recovered)
+
+    def test_css_of_page_recovers_a_missing_head(self):
+        prefetch.http_get = lambda url, **kw: ".brand{color:#123456}"
+        body_only = '<!DOCTYPE html><html><body><header>no head here</header></body></html>'
+        head = '<head><link rel="stylesheet" href="/site.css"><style>.inline{color:red}</style></head>'
+        calls = []
+        def fake_head(url, log):
+            calls.append(url); return head
+        with tempfile.TemporaryDirectory() as d:
+            text, meta, recovered = prefetch.css_of_page(body_only, "https://a.example/", pathlib.Path(d), NOOP_LOG, fetch_head=fake_head)
+        self.assertEqual(calls, ["https://a.example/"])
+        self.assertTrue(recovered)
+        self.assertIn(".brand{color:#123456}", text)
+        self.assertIn(".inline{color:red}", text)
+        self.assertTrue(meta[0]["headRecovered"])
+        # a failed recovery leaves the run alive with whatever the body carried
+        with tempfile.TemporaryDirectory() as d:
+            text, meta, recovered = prefetch.css_of_page(body_only, "https://a.example/", pathlib.Path(d), NOOP_LOG, fetch_head=lambda u, l: None)
+        self.assertFalse(recovered)
+        self.assertEqual(meta, [])
+
+    def test_recover_head_slices_only_the_head(self):
+        doc = b'<!DOCTYPE html><html><head><title>T</title><link rel="stylesheet" href="/a.css"></head><body>x</body></html>'
+        head = prefetch.recover_head("https://a.example/", NOOP_LOG, fetch=lambda url, **kw: (doc, url, 200))
+        self.assertTrue(head.startswith("<head>") and head.endswith("</head>"))
+        self.assertNotIn("<body>", head)
+        def boom(url, **kw): raise ValueError("blocked")
+        self.assertIsNone(prefetch.recover_head("https://a.example/", NOOP_LOG, fetch=boom))
 
     def test_mine_css_keeps_the_latin_subset_and_unique_filenames(self):
         css = """
@@ -177,6 +210,53 @@ class SvgLifting(unittest.TestCase):
         self.assertIn('viewBox="0 0 120 30"', raw)
         kit_validation.svg_root(raw)
 
+    def test_lift_icons_collects_img_svg_icons_too(self):
+        icon_file = ('<?xml version="1.0"?><!-- c --><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 58 58" fill="none">'
+                     '<path d="M29 10v38m-14-14 14 14 14-14" stroke="#fff" stroke-width="3"/><circle cx="29" cy="29" r="27" stroke="#fff"/></svg>')
+        html = (f'<html><body><main>{ICON}<img alt="arrow-down" width="58" height="58" src="/icons/arrow-down.svg">'
+                '<img alt="arrow-down" width="58" height="58" src="/icons/arrow-down.svg">'
+                '<img alt="hero" width="1200" height="800" src="/hero.svg"><img alt="photo" src="/p.png"></main></body></html>')
+        fetched = []
+        def fake_get(url, binary=False, timeout=25, max_bytes=None):
+            fetched.append(url); self.assertEqual(max_bytes, prefetch.MAX_ICON_BYTES); return icon_file
+        prefetch.http_get = fake_get
+        icons = prefetch.lift_icons(html, "https://www.acme.com/", NOOP_LOG)
+        self.assertEqual([(i["name"], i["source"]) for i in icons], [("Spark", "inline"), ("arrow-down", "img")])
+        self.assertEqual(icons[1]["viewBox"], "0 0 58 58")
+        self.assertEqual(fetched, ["https://www.acme.com/icons/arrow-down.svg"])  # deduped, the 1200px artwork skipped
+        kit_validation.svg_root(f'<svg viewBox="{icons[1]["viewBox"]}">{icons[1]["inner"]}</svg>')
+
+    def test_lift_images_saves_poster_hero_image_and_og(self):
+        html = ('<html><head><meta property="og:image" content="/og.png"></head><body><main>'
+                '<section><video poster="/media/poster.jpg" src="/media/loop.mp4"></video><img src="/hero.png" width="1600" alt="hero"></section>'
+                '<section><img src="/small.png" width="40"></section></main></body></html>')
+        def fake_get(url, binary=False, timeout=25, max_bytes=None):
+            self.assertEqual(max_bytes, prefetch.MAX_IMAGE_BYTES)
+            return b"\xff\xd8\xff" + b"\0" * 20 if url.endswith(".jpg") else PNG_1x1
+        prefetch.http_get = fake_get
+        with tempfile.TemporaryDirectory() as d:
+            out = prefetch.lift_images(html, "https://www.acme.com/", pathlib.Path(d), NOOP_LOG)
+            files = sorted(os.listdir(d))
+        self.assertEqual([(o["kind"], o["file"]) for o in out],
+                         [("poster", "images/poster-0.jpg"), ("video", None), ("hero-img", "images/hero-img-2.png"), ("og", "images/og-3.png")])
+        self.assertEqual(out[1]["src"], "https://www.acme.com/media/loop.mp4")
+        self.assertEqual(files, ["hero-img-2.png", "og-3.png", "poster-0.jpg"])
+
+    def test_logo_ink_luminance_suggests_the_surface(self):
+        white = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><path fill="#fff" d="M0 0h10v10z"/><path fill="white" d="M0 0h5"/></svg>'
+        dark = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><path fill="#111" d="M0 0h10v10z"/><path fill="rgb(20, 20, 20)" d="M0 0h5"/></svg>'
+        self.assertEqual(prefetch.suggested_surface(*prefetch.svg_ink_stats(white)), "dark")
+        self.assertEqual(prefetch.suggested_surface(*prefetch.svg_ink_stats(dark)), "light")
+        self.assertIsNone(prefetch.svg_ink_luminance('<svg><path fill="currentColor" d="M0 0"/><path fill="url(#g)" d="M1 1"/></svg>'))
+        orange = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><path fill="#f19143" d="M0 0h10v10z"/><path fill="#F6BF8D" d="M0 0h5"/></svg>'
+        self.assertIsNone(prefetch.suggested_surface(*prefetch.svg_ink_stats(orange)))  # saturated marks read on either surface
+        from PIL import Image
+        import io
+        im = Image.new("RGBA", (8, 8), (0, 0, 0, 0)); im.paste((250, 250, 250, 255), (0, 0, 4, 8))
+        buf = io.BytesIO(); im.save(buf, "PNG")
+        self.assertEqual(prefetch.suggested_surface(prefetch.raster_ink_luminance(buf.getvalue())), "dark")
+        self.assertIsNone(prefetch.raster_ink_luminance(b"not an image"))
+
     def test_lift_logos_caps_image_downloads(self):
         html = '<html><body><header><img src="/img/logo.png" class="logo" alt="Acme logo"></header></body></html>'
         def fake_get(url, binary=False, timeout=25, max_bytes=None):
@@ -190,34 +270,234 @@ class SvgLifting(unittest.TestCase):
         self.assertIn("too large", out[0]["error"])
 
 
-class FetchTiers(unittest.TestCase):
-    def test_http_tier_keeps_final_url_and_status(self):
-        saved = prefetch.http_fetch
-        prefetch.http_fetch = lambda url, **kw: (b"<html></html>", "https://www.acme.com/home", 200)
-        try:
-            f = prefetch.Fetcher(pathlib.Path("."), None, False, NOOP_LOG)
-            r = f.http("https://acme.com/")
-        finally:
-            prefetch.http_fetch = saved
-        self.assertEqual(r["final_url"], "https://www.acme.com/home")
-        self.assertEqual(r["status"], 200)
+HOME_HTML = ('<!DOCTYPE html><html><head><title>Acme</title><link rel="stylesheet" href="/site.css"></head><body>'
+             '<header><a href="/"><img src="/logo.svg" alt="Acme logo"></a><nav><a href="/product">Product</a><a href="/pricing">Pricing</a>'
+             '<a href="/blog/2026/launch">Blog</a><a href="/legal/privacy">Privacy</a></nav></header>'
+             '<main><h1>Hello</h1><h2>Section</h2></main><footer><a href="/about">About</a></footer></body></html>')
+PRICING_HTML = '<!DOCTYPE html><html><head><title>Pricing</title></head><body><h1>Plans</h1></body></html>'
 
-    def test_runner_rows_with_error_status_are_skipped(self):
+
+def scrape_result(url, **extra):
+    r = {"found": True, "finalUrl": url, "title": "Acme", "statusCode": 200, "content": "# Acme\n",
+         "contentUrl": f"https://store.example/{prefetch.slug_of(url)}.html", "screenshotUrl": f"https://shots.example/{prefetch.slug_of(url)}.png",
+         "links": ["https://www.acme.com/product", "https://www.acme.com/pricing", "https://www.acme.com/blog/2026/launch", "mailto:x@acme.com"]}
+    r.update(extra)
+    return r
+
+
+def fake_store(url, **kw):
+    if url.endswith(".html"):
+        return (HOME_HTML if "home" in url else PRICING_HTML).encode(), url, 200
+    if url.endswith(".png"):
+        return PNG_1x1, url, 200
+    raise ValueError(f"unexpected download {url}")
+
+
+class Ingest(unittest.TestCase):
+    def test_ingest_downloads_html_and_screenshot_and_writes_a_row(self):
         with tempfile.TemporaryDirectory() as d:
-            out = pathlib.Path(d)
-            (out / "firecrawl").mkdir()
-            (out / "firecrawl" / "ok.html").write_text("<html></html>")
-            (out / "firecrawl" / "bad.html").write_text("<html>not found</html>")
-            (out / "firecrawl" / "firecrawl.json").write_text(json.dumps([
-                {"url": "https://acme.com/", "ok": True, "status": 200, "finalUrl": "https://www.acme.com/", "htmlFile": "ok.html"},
-                {"url": "https://acme.com/gone", "ok": True, "status": 404, "finalUrl": "https://acme.com/gone", "htmlFile": "bad.html"},
-            ]))
+            pages = pathlib.Path(d) / "pages"
+            row = prefetch.ingest_result(scrape_result("https://www.acme.com/"), pages, NOOP_LOG, fetch=fake_store)
+            self.assertEqual((row["ok"], row["status"], row["htmlFile"], row["screenshotFile"]), (True, 200, "home.html", "home.png"))
+            self.assertEqual((pages / "home.html").read_text(), HOME_HTML)
+            self.assertEqual((pages / "home.png").read_bytes(), PNG_1x1)
+            self.assertEqual(len(row["links"]), 4)
+            # re-ingesting the same page replaces its row instead of duplicating it
+            prefetch.ingest_result(scrape_result("https://www.acme.com/", title="Acme again"), pages, NOOP_LOG, fetch=fake_store)
+            rows = prefetch.read_index(pages)
+            self.assertEqual([r["title"] for r in rows], ["Acme again"])
+
+    def test_ingest_records_failures_and_refuses_bad_inputs(self):
+        with tempfile.TemporaryDirectory() as d:
+            pages = pathlib.Path(d) / "pages"
+            with self.assertRaises(ValueError):
+                prefetch.ingest_result({"found": False, "url": "https://www.acme.com/gone", "statusCode": 404, "error": "not found"}, pages, NOOP_LOG, fetch=fake_store)
+            with self.assertRaises(ValueError):
+                prefetch.ingest_result(scrape_result("https://www.acme.com/err", statusCode=500), pages, NOOP_LOG, fetch=fake_store)
+            with self.assertRaises(ValueError):  # non-http contentUrl never reaches the filesystem
+                prefetch.ingest_result(scrape_result("https://www.acme.com/", contentUrl="file:///etc/hosts"), pages, NOOP_LOG, fetch=prefetch.http_fetch)
+            with self.assertRaises(ValueError):  # markdown content without a contentUrl is not a page
+                prefetch.ingest_result(scrape_result("https://www.acme.com/md", contentUrl=None), pages, NOOP_LOG, fetch=fake_store)
+            rows = {r["finalUrl"]: r for r in prefetch.read_index(pages)}
+            self.assertFalse(rows["https://www.acme.com/gone"]["ok"])
+            self.assertEqual(rows["https://www.acme.com/err"]["status"], 500)
+            self.assertEqual(sorted(os.listdir(pages)), ["firecrawl.json"])
+
+    def test_ingest_accepts_inline_html_content_without_contenturl(self):
+        with tempfile.TemporaryDirectory() as d:
+            pages = pathlib.Path(d) / "pages"
+            row = prefetch.ingest_result(scrape_result("https://www.acme.com/", contentUrl=None, screenshotUrl=None, content=HOME_HTML), pages, NOOP_LOG, fetch=fake_store)
+            self.assertEqual(row["htmlFile"], "home.html")
+            self.assertIsNone(row["screenshotFile"])
+
+    def test_ingest_cli_reads_stdin_and_exits_2_on_failure(self):
+        with tempfile.TemporaryDirectory() as d:
+            pages = pathlib.Path(d) / "pages"
+            ok = subprocess.run([sys.executable, str(SKILL / "scripts/prefetch.py"), "ingest", "--pages-dir", str(pages), "-"],
+                                input=json.dumps(scrape_result("https://www.acme.com/", contentUrl=None, screenshotUrl=None, content=HOME_HTML)),
+                                capture_output=True, text=True)
+            self.assertEqual(ok.returncode, 0, ok.stderr)
+            self.assertEqual(json.loads(ok.stdout)["htmlFile"], "home.html")
+            bad = subprocess.run([sys.executable, str(SKILL / "scripts/prefetch.py"), "ingest", "--pages-dir", str(pages), "-"],
+                                 input=json.dumps({"found": False, "url": "https://www.acme.com/x", "error": "blocked"}), capture_output=True, text=True)
+            self.assertEqual(bad.returncode, 2)
+            self.assertIn("blocked", bad.stderr)
+
+
+def seed_pages(pages, with_screenshot=True, with_pricing=True):
+    pages.mkdir(parents=True, exist_ok=True)
+    (pages / "home.html").write_text(HOME_HTML)
+    rows = [{"url": "https://acme.com/", "ok": True, "status": 200, "finalUrl": "https://www.acme.com/", "title": "Acme", "htmlFile": "home.html",
+             "screenshotFile": None, "links": []}]
+    if with_screenshot:
+        (pages / "home.png").write_bytes(PNG_1x1); rows[0]["screenshotFile"] = "home.png"
+    if with_pricing:
+        (pages / "pricing.html").write_text(PRICING_HTML)
+        rows.append({"url": "https://www.acme.com/pricing", "ok": True, "status": 200, "finalUrl": "https://www.acme.com/pricing", "title": "Pricing",
+                     "htmlFile": "pricing.html", "screenshotFile": None, "links": []})
+    rows.append({"url": "https://www.acme.com/gone", "ok": True, "status": 404, "finalUrl": "https://www.acme.com/gone", "htmlFile": "home.html", "links": []})
+    rows.append({"url": "https://www.acme.com/blocked", "ok": False, "status": None, "finalUrl": "https://www.acme.com/blocked", "htmlFile": None, "links": []})
+    prefetch.write_index(pages, rows)
+    return pages
+
+
+class PagesDir(unittest.TestCase):
+    def test_load_pages_skips_failed_rows_and_puts_the_homepage_first(self):
+        with tempfile.TemporaryDirectory() as d:
+            pages = seed_pages(pathlib.Path(d) / "pages")
+            # the index lists pricing after home; shuffle to prove ordering is by path depth, not file order
+            rows = prefetch.read_index(pages); rows.reverse(); prefetch.write_index(pages, rows)
             logs = []
-            f = prefetch.Fetcher(out, "true", False, logs.append)  # `true` exits 0 without touching the pre-written json
-            got = f.firecrawl(["https://acme.com/", "https://acme.com/gone"])
-        self.assertEqual(list(got), ["https://acme.com/"])
-        self.assertEqual(got["https://acme.com/"]["final_url"], "https://www.acme.com/")
-        self.assertTrue(any("404" in l for l in logs))
+            loaded = prefetch.homepage_first(prefetch.load_pages(pages, logs.append))
+        self.assertEqual([u for u, _ in loaded], ["https://www.acme.com/", "https://www.acme.com/pricing"])
+        self.assertTrue(loaded[0][1]["screenshot"].endswith("home.png"))
+        self.assertTrue(any("404" in l for l in logs) and any("not fetched" in l for l in logs))
+
+    def test_pick_pages_cli_uses_links_or_anchors_and_skips_fetched_pages(self):
+        with tempfile.TemporaryDirectory() as d:
+            pages = seed_pages(pathlib.Path(d) / "pages")  # home row has no links: falls back to <a href> in the HTML
+            r = subprocess.run([sys.executable, str(SKILL / "scripts/prefetch.py"), "pick-pages", "--pages-dir", str(pages)], capture_output=True, text=True)
+            self.assertEqual(r.returncode, 0, r.stderr)
+            self.assertEqual(r.stdout.split(), ["https://www.acme.com/product", "https://www.acme.com/blog/2026/launch", "https://www.acme.com/about"])  # pricing already fetched, privacy filtered
+            rows = prefetch.read_index(pages)
+            rows[0]["links"] = ["https://www.acme.com/customers/acme-story", "https://www.acme.com/about"]
+            prefetch.write_index(pages, rows)
+            r = subprocess.run([sys.executable, str(SKILL / "scripts/prefetch.py"), "pick-pages", "--pages-dir", str(pages), "--max-pages", "1"], capture_output=True, text=True)
+            self.assertEqual(r.stdout.split(), ["https://www.acme.com/customers/acme-story"])
+
+    def test_pick_pages_cli_says_so_on_a_single_page_site(self):
+        with tempfile.TemporaryDirectory() as d:
+            pages = seed_pages(pathlib.Path(d) / "pages", with_pricing=False)
+            (pages / "home.html").write_text('<html><head></head><body><a href="/">Home</a><a href="mailto:x@acme.com">Mail</a></body></html>')
+            r = subprocess.run([sys.executable, str(SKILL / "scripts/prefetch.py"), "pick-pages", "--pages-dir", str(pages)], capture_output=True, text=True)
+            self.assertEqual((r.returncode, r.stdout), (0, ""))
+            self.assertIn("single-page site", r.stderr)
+
+    def test_fetch_asset_cli_downloads_with_caps_and_scheme_check(self):
+        with tempfile.TemporaryDirectory() as d:
+            r = subprocess.run([sys.executable, str(SKILL / "scripts/prefetch.py"), "fetch-asset", "--out", d, "file:///etc/hosts"], capture_output=True, text=True)
+            self.assertEqual(r.returncode, 1)
+            self.assertIn("unsupported URL scheme", r.stderr)
+            self.assertEqual(os.listdir(d), [])
+
+    def test_pick_pages_cli_fails_without_a_homepage(self):
+        with tempfile.TemporaryDirectory() as d:
+            r = subprocess.run([sys.executable, str(SKILL / "scripts/prefetch.py"), "pick-pages", "--pages-dir", d], capture_output=True, text=True)
+            self.assertNotEqual(r.returncode, 0)
+            self.assertIn("ingest the homepage first", r.stderr)
+
+
+class MineEndToEnd(unittest.TestCase):
+    def setUp(self):
+        self._http_get = prefetch.http_get
+
+    def tearDown(self):
+        prefetch.http_get = self._http_get
+
+    def test_mine_builds_evidence_from_the_pages_dir_without_a_browser(self):
+        def fake_get(url, binary=False, timeout=25, max_bytes=None):
+            if url.endswith("/site.css"):
+                return "@font-face{font-family:'Acme Sans';font-weight:500;src:url(/f/acme-500.woff2) format('woff2')} h1{font-family:'Acme Sans'} .btn{border-radius:8px;padding:12px 20px;background:#0055ff}"
+            if url.endswith(".woff2"):
+                return b"\0" * 64
+            if url.endswith("/logo.svg"):
+                return LOGO.encode()
+            raise AssertionError(f"unexpected fetch {url}")
+        prefetch.http_get = fake_get
+        with tempfile.TemporaryDirectory() as d:
+            pages = seed_pages(pathlib.Path(d) / "pages")
+            out = pathlib.Path(d) / "evidence"
+            prefetch.cmd_mine(argparse.Namespace(pages_dir=pages, out=out, no_playwright=True, domain=None))
+            ev = json.loads((out / "evidence.json").read_text())
+            self.assertEqual(ev["domain"], "acme.com")
+            self.assertEqual([p["slug"] for p in ev["pages"]], ["home", "pricing"])
+            self.assertEqual(ev["pages"][0]["via"], "pages-dir")
+            self.assertTrue(ev["pages"][0]["screenshot"].startswith("screenshots/home"))
+            self.assertIsNone(ev["pages"][1]["screenshot"])
+            self.assertEqual([s["url"] for s in ev["stylesheets"]], ["https://www.acme.com/site.css"])
+            self.assertEqual(ev["fontFaces"][0]["displayFamily"], "Acme Sans")
+            self.assertEqual(ev["fontFaces"][0]["file"], "fonts/acme-sans-500-normal.woff2")
+            self.assertEqual(ev["logoCandidates"][0]["file"], "logos/logo-0-header.svg")
+            self.assertEqual(len(ev["buttonRules"]), 1)
+            self.assertEqual(ev["capabilities"], {"source": "pages-dir", "playwright": False, "screenshots": 1, "headRecovered": [], "cssSignal": "ok"})
+            self.assertEqual(ev["computed"], {})
+            self.assertTrue((out / "pages" / "pricing.html").is_file())
+            logo = ev["logoCandidates"][0]
+            self.assertEqual((logo["inkMethod"], logo["suggestedSurface"]), ("declared", None))  # a saturated #0055ff mark reads on either surface
+            self.assertAlmostEqual(logo["inkSaturation"], 1.0)
+            self.assertEqual([h["kind"] for h in ev["heroImages"]], [])  # fixture has no poster, hero image or og:image
+
+    def test_mine_downloads_the_weights_computed_styles_use_and_names_otf_files(self):
+        otf = b"OTTO" + b"\0" * 60
+        def fake_get(url, binary=False, timeout=25, max_bytes=None):
+            if url.endswith("/site.css"):
+                return ("@font-face{font-family:'Acme Sans';font-weight:300;src:url(/f/AcmeLight.otf) format('opentype')}"
+                        "@font-face{font-family:'Acme Sans';font-weight:400;src:url(/f/AcmeRegular.otf) format('opentype')}"
+                        "@font-face{font-family:'Acme Sans';font-weight:700;src:url(/f/AcmeBold.otf) format('opentype')}"
+                        "h1,body{font-family:'Acme Sans'}")
+            if url.endswith(".otf"):
+                return otf
+            if url.endswith("/logo.svg"):
+                return LOGO.encode()
+            raise AssertionError(f"unexpected fetch {url}")
+        prefetch.http_get = fake_get
+        with tempfile.TemporaryDirectory() as d:
+            out = pathlib.Path(d) / "fonts"; out.mkdir()
+            ev = prefetch.mine_css(fake_get("x/site.css"), "https://www.acme.com/", out, NOOP_LOG)
+            got = sorted(os.listdir(out))
+            self.assertEqual(got, ["acme-sans-400-normal.otf", "acme-sans-700-normal.otf"])  # defaults: nearest to 400/500/700
+            self.assertEqual({f["format"] for f in ev["fontFaces"]}, {"opentype"})
+            # the rendered h1 uses 300: that face is fetched in the second pass
+            comp = {"home": {"h1": {"fontFamily": "\"Acme Sans\", sans-serif", "fontWeight": "300"}, "body": {"fontFamily": "Acme Sans", "fontWeight": "400"}}}
+            wanted = prefetch.computed_weights(comp)
+            self.assertEqual(wanted, {("acme sans", 300), ("acme sans", 400)})
+            extra = prefetch.faces_for_weights(ev["fontFaces"], wanted)
+            self.assertEqual([f["weight"] for f in extra], ["300"])
+            prefetch.download_faces(extra, "https://www.acme.com/", out, NOOP_LOG)
+            self.assertIn("acme-sans-300-normal.otf", os.listdir(out))
+
+    def test_font_ext_prefers_declared_format_then_url_then_magic_bytes(self):
+        self.assertEqual(prefetch.font_ext("opentype", "https://x/a.woff2"), "otf")
+        self.assertEqual(prefetch.font_ext("truetype", "https://x/a"), "ttf")
+        self.assertEqual(prefetch.font_ext(None, "https://x/a.woff"), "woff")
+        self.assertEqual(prefetch.font_ext("", "https://x/font?id=1", b"wOF2...."), "woff2")
+        self.assertEqual(prefetch.font_ext("", "https://x/font?id=1", b"OTTO...."), "otf")
+        self.assertEqual(prefetch.font_ext("", "https://x/font?id=1", b"\0\1\0\0...."), "ttf")
+
+    def test_button_rules_skip_framework_resets(self):
+        css = ("button,input,optgroup,select,textarea{font:inherit;margin:0;padding:0;border:0 solid}"
+               "::file-selector-button{margin-inline-end:4px;padding:0;background:none}"
+               ".btn-primary{background:#0055ff;border-radius:8px;padding:12px 20px}")
+        with tempfile.TemporaryDirectory() as d:
+            ev = prefetch.mine_css(css, "https://www.acme.com/", pathlib.Path(d), NOOP_LOG)
+        self.assertEqual([b["selector"] for b in ev["buttonRules"]], [".btn-primary"])
+
+    def test_mine_exits_without_usable_pages(self):
+        with tempfile.TemporaryDirectory() as d:
+            r = subprocess.run([sys.executable, str(SKILL / "scripts/prefetch.py"), "mine", "--pages-dir", d, "--out", str(pathlib.Path(d) / "ev"), "--no-playwright"],
+                               capture_output=True, text=True)
+            self.assertEqual(r.returncode, 2)
+            self.assertIn("no usable pages", json.loads((pathlib.Path(d) / "ev" / "evidence.json").read_text())["error"])
 
 
 DOC = '<html><body><div class="sheet"><div class="hero is-dark">old</div><div class="stats">s</div></div></body></html>'
@@ -302,6 +582,38 @@ class GalleryComposition(unittest.TestCase):
             self.assertIn("data-composition", html)
             self.assertIn('class="hero is-dark"', html)
 
+    def test_gallery_knobs_drop_eyebrows_and_add_the_secondary_button(self):
+        with tempfile.TemporaryDirectory() as d:
+            kit = make_kit(pathlib.Path(d) / "kit", gallery_block={"eyebrow": False, "secondaryCta": True})
+            r = subprocess.run([sys.executable, str(SKILL / "scripts/render_gallery.py"), str(kit)], capture_output=True, text=True)
+            self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+            html = (kit / "components.html").read_text()
+        self.assertNotIn('class="eyebrow"', html)
+        self.assertNotIn('class="k"', html)
+        self.assertIn('class="btn btn-secondary"', html)
+
+    def test_image_hero_inlines_the_kit_image_behind_the_copy(self):
+        with tempfile.TemporaryDirectory() as d:
+            kit = make_kit(pathlib.Path(d) / "kit", render_extra={"heroVisual": "image", "heroImage": "images/hero.png"})
+            (kit / "images").mkdir(); (kit / "images" / "hero.png").write_bytes(PNG_1x1)
+            r = subprocess.run([sys.executable, str(SKILL / "scripts/render_gallery.py"), str(kit)], capture_output=True, text=True)
+            self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+            html = (kit / "components.html").read_text()
+        self.assertIn('<div class="hero is-dark has-image"><img src="data:image/png;base64,', html)
+        self.assertIn('<div class="hero-scrim"></div>', html)
+        # a heroImage that escapes the kit is refused by validation
+        with tempfile.TemporaryDirectory() as d:
+            kit = make_kit(pathlib.Path(d) / "kit", render_extra={"heroVisual": "image", "heroImage": "../outside.png"})
+            r = subprocess.run([sys.executable, str(SKILL / "scripts/render_gallery.py"), str(kit)], capture_output=True, text=True)
+            self.assertNotEqual(r.returncode, 0)
+
+    def test_kit_base_css_has_no_off_palette_literal(self):
+        css = (SKILL / "assets" / "kit_base.css").read_text()
+        self.assertNotIn("96,110,255", css)
+        for m in re.finditer(r"rgba?\((\d+),\s*(\d+),\s*(\d+)", css):
+            r, g, b = (int(x) for x in m.groups())
+            self.assertLessEqual(max(r, g, b) - min(r, g, b), 20, f"non-neutral literal in kit_base.css: {m.group(0)}")
+
     def test_comparison_block_honors_its_surface_knob(self):
         with tempfile.TemporaryDirectory() as d:
             light = make_kit(pathlib.Path(d) / "light", dark_band=False)
@@ -334,6 +646,33 @@ class RendererBands(unittest.TestCase):
             got = self._computed(kit / "components.html", [(".hero", "backgroundColor"), (".section p", "color")])
         self.assertEqual(got[".hero"], "rgb(16, 32, 48)")  # --brand-band, not transparent
         self.assertEqual(got[".section p"], "rgb(17, 17, 17)")  # body copy falls back to --brand-ink
+
+    def test_square_brand_and_outline_button_tokens_render(self):
+        tokens = {"--brand-radius": "0", "--brand-btn-bg": "transparent", "--brand-btn-ink": "#111111", "--brand-btn-border": "#111111",
+                  "--brand-btn-weight": "500", "--brand-weight-h1": "300"}
+        with tempfile.TemporaryDirectory() as d:
+            kit = make_kit(pathlib.Path(d) / "kit", extra_tokens=tokens)
+            subprocess.run([sys.executable, str(SKILL / "scripts/render_gallery.py"), str(kit)], check=True, capture_output=True)
+            got = self._computed(kit / "components.html", [(".fcard", "borderRadius"), (".cmp-band", "borderRadius"), (".quote", "borderRadius"),
+                                                            (".plan-badge", "borderRadius"), (".section .k", "color"),
+                                                            (".hero h1", "fontWeight"), (".section h2", "fontWeight")])
+        self.assertEqual((got[".fcard"], got[".cmp-band"], got[".quote"]), ("0px", "0px", "0px"))
+        self.assertEqual(got[".plan-badge"], "999px")  # the badge keeps its own pill fallback
+        self.assertEqual(got[".section .k"], "rgb(0, 85, 255)")  # kickers still use --brand-primary, not the button tokens
+        self.assertEqual(got[".hero h1"], "300")
+        self.assertEqual(got[".section h2"], "600")
+
+    def test_outline_button_border_and_weight(self):
+        tokens = {"--brand-btn-bg": "transparent", "--brand-btn-ink": "#111111", "--brand-btn-border": "#111111", "--brand-btn-weight": "500"}
+        with tempfile.TemporaryDirectory() as d:
+            kit = make_kit(pathlib.Path(d) / "kit", extra_tokens=tokens)
+            subprocess.run([sys.executable, str(SKILL / "scripts/render_gallery.py"), str(kit)], check=True, capture_output=True)
+            from playwright.sync_api import sync_playwright
+            with sync_playwright() as p:
+                b = p.chromium.launch(); pg = b.new_page(); pg.goto((kit / "components.html").resolve().as_uri())
+                got = pg.evaluate("() => { const s = getComputedStyle(document.querySelector('.btn-primary')); return [s.backgroundColor, s.color, s.borderTopColor, s.borderTopStyle, s.fontWeight]; }")
+                b.close()
+        self.assertEqual(got, ["rgba(0, 0, 0, 0)", "rgb(17, 17, 17)", "rgb(17, 17, 17)", "solid", "500"])
 
     def test_secondary_labels_are_legible_on_light_surfaces(self):
         spec = {"title": "t", "blocks": [
