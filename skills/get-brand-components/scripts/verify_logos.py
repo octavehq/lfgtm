@@ -41,13 +41,15 @@ def dimensions(path):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument('kit', type=Path)
-    ap.add_argument('--out', type=Path)
+    ap.add_argument('kit', type=Path, help='kit directory, or a cache root (<base>/<workspace>/<domain>) holding current.json')
+    ap.add_argument('--out', type=Path, help='swatch path: .html writes the page; .png also renders it (needs Playwright)')
     args = ap.parse_args()
     root = args.kit.expanduser()
     if not root.is_dir():
-        root = Path.home() / '.octave/brands' / args.kit
-    root, man = resolve(root)
+        raise ValueError(f'{args.kit} is not a directory; pass the kit directory or its cache root')
+    if args.out and args.out.suffix.lower() not in ('.html', '.png'):
+        raise ValueError('--out must end in .html or .png')
+    root, man = resolve(root, allow_draft=True)
     render = validate_manifest(root, man)
     logo = render.get('logo') or {}
     ratios = []
@@ -60,7 +62,8 @@ def main():
     if len(ratios) == 2 and abs(ratios[0]-ratios[1])/max(ratios) > .15:
         raise ValueError('logo aspect ratios differ by more than 15%; inspect variants')
     company = html.escape(man.get('company', man.get('canonicalDomain', 'Brand')))
-    swatch = args.out or root / '.logo-verify.html'
+    out = args.out or root / '.logo-verify.html'
+    swatch = out.with_suffix('.html')
     swatch.parent.mkdir(parents=True, exist_ok=True)
     swatch.write_text(f'''<!DOCTYPE html><html lang="en"><meta charset="utf-8"><title>Logo check: {company}</title>
       <style>body{{font:16px sans-serif}}section{{padding:40px;min-height:120px}}.dark{{background:#111;color:white}}img{{max-width:100%;max-height:90px}}</style>
@@ -68,6 +71,16 @@ def main():
       <section class="dark">{logo_img(root, render, True, 60)}</section>
       <p>Mechanical checks passed. Visually verify identity, legibility, and source fidelity on both surfaces.</p></html>''')
     print(swatch)
+    if out.suffix.lower() == '.png':
+        import importlib.util, subprocess
+        if not importlib.util.find_spec('playwright'):
+            raise RuntimeError(f'rendering {out.name} needs Playwright (python3 -m pip install playwright && python3 -m playwright install chromium); the swatch is at {swatch}')
+        render_py = Path(__file__).resolve().parent / 'render.py'
+        r = subprocess.run([sys.executable, str(render_py), '--file', str(swatch), '--out', str(out), '--width', '800', '--height', '420'],
+                           capture_output=True, text=True)
+        if r.returncode != 0:
+            raise RuntimeError('render failed: ' + (r.stderr or r.stdout)[-400:])
+        print(out)
 
 
 if __name__ == '__main__':
