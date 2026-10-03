@@ -25,7 +25,7 @@ that writes the same files works too.
 Output of `mine`: <evidence-dir>/evidence.json + pages/ fonts/ logos/ images/ icons.json screenshots/ css/.
 Needs: python3, bs4; optional playwright (computed styles + fallback shots), Pillow (crops).
 """
-import argparse, collections, hashlib, json, os, pathlib, re, shutil, sys, time, urllib.request, urllib.parse
+import argparse, collections, hashlib, ipaddress, json, os, pathlib, re, shutil, socket, subprocess, sys, tempfile, time, urllib.request, urllib.parse
 from bs4 import BeautifulSoup
 
 UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36"
@@ -38,9 +38,13 @@ PAGE_PREFS = [  # (role, keywords in path) in the skill's priority order
 ]
 LOGO_HINT = re.compile(r"logo|brand|wordmark|lockup", re.I)
 WALL_HINT = re.compile(r"customers?|partners?|trusted|clients?|logos|logo-wall|marquee|carousel|press", re.I)
+WALL_MIN_LOGOS = 4  # a header or footer strip holding this many distinct marks is a logo wall, whatever its class says
+# embedded widgets (chat, meetings, consent) ship their own stylesheets and custom properties; none of it is the brand
+THIRD_PARTY_RE = re.compile(r"hubspot|hsappstatic|hs-scripts|hsforms|hs-analytics|intercom|drift\.com|driftt|cookiebot|onetrust|googletagmanager|typeform|zendesk|zdassets|crisp\.chat|hotjar|usercentrics", re.I)
+THIRD_PARTY_PROP = re.compile(r"--(hs|hsfc|trellis|cky|onetrust|intercom)-", re.I)
 HEX = re.compile(r"#(?:[0-9a-fA-F]{3}){1,2}\b")
 LATIN_RANGE = re.compile(r"U\+0{0,2}(?:0|00|000)-0{0,2}(?:FF|0FF|00FF)\b", re.I)  # a unicode-range that covers basic latin
-MAX_FONT_BYTES = 600_000
+MAX_FONT_BYTES = 2_000_000  # variable fonts run past 800 KB
 MAX_LOGO_BYTES = 2_000_000
 MAX_ICON_BYTES = 200_000
 MAX_IMAGE_BYTES = 5_000_000
@@ -54,25 +58,80 @@ RESET_SELECTOR = re.compile(r"input|select|textarea|optgroup|::file-selector-but
 STYLED_BUTTON = re.compile(r"background(?:-color)?\s*:\s*(?!transparent|none|inherit|0)|border-radius\s*:\s*(?!0(?:px)?\s*[;}])|padding\s*:\s*(?!0(?:px)?\s*[;}])|border\s*:\s*\d", re.I)
 
 
-def http_fetch(url, timeout=25, max_bytes=None):
-    """GET url. Returns (body: bytes, final_url, status). http(s) only; raises on error status."""
+MAX_VIDEO_BYTES = 12_000_000  # enough of a web mp4 (moov first) to decode its opening frames
+MAX_REDIRECTS = 5
+
+
+def public_host(url):
+    """The host of a fetch target, after checking it resolves only to public addresses.
+
+    Scraped markup names every host the miner fetches from, so each fetch and each redirect goes through
+    this: loopback, private, link-local, multicast and reserved ranges, and local-only names, are refused."""
+    host = urllib.parse.urlparse(url).hostname
+    if not host:
+        raise ValueError("fetch target has no host")
+    low = host.lower().rstrip(".")
+    if low == "localhost" or low.endswith((".localhost", ".local", ".internal", ".lan", ".home.arpa")):
+        raise ValueError(f"non-public host: {host}")
+    try:
+        infos = socket.getaddrinfo(low, None)
+    except socket.gaierror as e:
+        raise ValueError(f"unresolvable host: {host}") from e
+    for info in infos:
+        ip = ipaddress.ip_address(info[4][0])
+        if not ip.is_global:
+            raise ValueError(f"non-public address for {host}: {ip}")
+    return host
+
+
+def _checked_url(url):
     scheme = urllib.parse.urlparse(url).scheme.lower()
     if scheme not in ("http", "https"):
         raise ValueError(f"unsupported URL scheme: {scheme or 'none'}")
+    public_host(url)
+    return url
+
+
+class _GuardedRedirects(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        _checked_url(urllib.parse.urljoin(req.full_url, newurl))
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+def http_fetch(url, timeout=25, max_bytes=None, prefix=False):
+    """GET url. Returns (body: bytes, final_url, status). http(s) to public hosts only, redirects re-checked;
+    raises on error status. `prefix=True` reads at most max_bytes and stops instead of refusing a larger body."""
+    url = _checked_url(url)
     headers = {"User-Agent": UA, "Accept": "*/*", "Accept-Language": "en-US,en;q=0.9"}
     try:
         import requests  # carries its own CA bundle; macOS python's urllib often has none
     except ImportError:
         requests = None
     if requests is not None:
-        r = requests.get(url, headers=headers, timeout=timeout)
-        r.raise_for_status()
-        body, final_url, status = r.content, r.url, r.status_code
+        for _ in range(MAX_REDIRECTS + 1):
+            r = requests.get(url, headers=headers, timeout=timeout, allow_redirects=False, stream=prefix)
+            if r.is_redirect or r.is_permanent_redirect:
+                url = _checked_url(urllib.parse.urljoin(url, r.headers.get("Location", "")))
+                r.close(); continue
+            r.raise_for_status()
+            if prefix and max_bytes is not None:
+                chunks, size = [], 0
+                for chunk in r.iter_content(65536):
+                    chunks.append(chunk); size += len(chunk)
+                    if size >= max_bytes: break
+                r.close(); body = b"".join(chunks)[:max_bytes]
+            else:
+                body = r.content
+            final_url, status = r.url, r.status_code
+            break
+        else:
+            raise ValueError("too many redirects")
     else:
         req = urllib.request.Request(url, headers=headers)
-        with urllib.request.urlopen(req, timeout=timeout) as r:
-            body, final_url, status = r.read(), r.geturl(), r.status
-    if max_bytes is not None and len(body) > max_bytes:
+        with urllib.request.build_opener(_GuardedRedirects).open(req, timeout=timeout) as r:
+            body = r.read(max_bytes) if (prefix and max_bytes is not None) else r.read()
+            final_url, status = r.geturl(), r.status
+    if not prefix and max_bytes is not None and len(body) > max_bytes:
         raise ValueError(f"too large: {len(body)} bytes")
     return body, final_url, status
 
@@ -93,12 +152,19 @@ def same_site(url, host):
     return h == core or h == "www." + core or h.endswith("." + core)
 
 
+def norm_text(s):
+    """Alt, aria-label and title text with line breaks and runs of spaces collapsed."""
+    return " ".join((s or "").split())
+
+
 class Browser:
     """Optional Playwright session for the enrichment pass (computed styles, hover, dark theme, missing shots)."""
 
     def __init__(self, enabled, log):
         self.log = log
         self.pw = None
+        self.disabled = not enabled  # --no-playwright was passed: a choice, not a missing dependency
+        self.error = None
         if enabled:
             try:
                 from playwright.sync_api import sync_playwright
@@ -106,7 +172,9 @@ class Browser:
                 self._b = self._p.chromium.launch()
                 self.pw = self._b.new_context(viewport={"width": 1280, "height": 900}, user_agent=UA)
             except Exception as e:
-                self.log(f"playwright unavailable: {e}")
+                msg = str(e).strip()
+                self.error = (msg.splitlines()[0] if msg else type(e).__name__)[:160]
+                self.log(f"playwright unavailable: {self.error}")
 
     def close(self):
         if self.pw:
@@ -253,7 +321,13 @@ def css_of_page(html, page_url, out_css, log, budget=6, fetch_head=recover_head)
             urls.append(urllib.parse.urljoin(page_url, href))
     inline = absolutize_css_urls("\n".join(s.get_text() for s in soup.find_all("style")), page_url)
     text, sheets = inline, []
-    for u in urls[:budget]:
+    kept = []
+    for u in urls:
+        if THIRD_PARTY_RE.search(urllib.parse.urlparse(u).netloc):
+            log(f"css skipped (third-party widget) {u[:80]}")
+        else:
+            kept.append(u)
+    for u in kept[:budget]:
         try:
             css = http_get(u)
         except Exception as e:
@@ -423,7 +497,7 @@ def mine_css(css, base_url, out_fonts, log):
         is_dark = bool(re.search(r"dark|theme=\"?dark|\.dark|night", sel, re.I))
         for k, v in re.findall(r"(--[\w-]+)\s*:\s*([^;]+);", m.group(2)):
             v = v.strip()
-            if len(v) > 160: continue
+            if len(v) > 160 or THIRD_PARTY_PROP.match(k): continue
             (dark if is_dark else props).setdefault(k, v)
         if len(props) > 500: break
     ev["customProperties"] = dict(list(props.items())[:400])
@@ -587,6 +661,7 @@ def lift_logos(html, page_url, out_logos, log):
     for a in home_links[:6]:
         regions.append(("home-link", a))
     seen = set()
+    home_hrefs = {"", "/", page_url.rstrip("/")}
     for region, node in regions:
         if node is None: continue
         wall = bool(WALL_HINT.search(" ".join(node.get("class") or []) + " " + (node.get("id") or "")))
@@ -596,27 +671,33 @@ def lift_logos(html, page_url, out_logos, log):
             if el.name == "img":
                 src = el.get("src") or el.get("data-src") or ""
                 if not src or src.startswith("data:image/gif"): continue
-                alt = el.get("alt") or ""
+                alt = norm_text(el.get("alt"))  # alt text may wrap across lines in the markup
                 hinted = bool(LOGO_HINT.search(src + " " + alt + " " + " ".join(el.get("class") or [])))
                 if not hinted and region not in ("home-link",): continue
                 if re.search(r"facebook|twitter|linkedin|instagram|youtube|tiktok|github|x \(formerly", alt + " " + src, re.I): continue
                 u = urllib.parse.urljoin(page_url, src)
                 if u in seen: continue
                 seen.add(u)
-                cands.append({"region": region, "kind": "img", "src": u, "alt": el.get("alt"), "class": " ".join(el.get("class") or [])[:80],
-                              "width": el.get("width"), "height": el.get("height"), "suspectWall": in_wall})
+                in_home = any(p.name == "a" and (p.get("href") or "").rstrip("/") in home_hrefs for p in el.parents)
+                cands.append({"region": region, "kind": "img", "src": u, "alt": alt or None, "class": " ".join(el.get("class") or [])[:80],
+                              "width": el.get("width"), "height": el.get("height"), "suspectWall": in_wall, "homeLink": in_home})
             else:
                 raw = raw_svg(html, el) or str(el)
                 if len(raw) < 200 or len(raw) > 60000: continue
                 # an inline SVG is a logo candidate only inside the home link or when its own attributes say so
-                if region != "home-link" and not LOGO_HINT.search(" ".join(el.get("class") or []) + " " + (el.get("aria-label") or "") + " " + (el.title.get_text() if el.title else "")):
+                if region != "home-link" and not LOGO_HINT.search(" ".join(el.get("class") or []) + " " + norm_text(el.get("aria-label")) + " " + norm_text(el.title.get_text() if el.title else "")):
                     continue
                 h = hashlib.sha1(raw.encode()).hexdigest()[:10]
                 if h in seen: continue
                 seen.add(h)
                 cands.append({"region": region, "kind": "svg-inline", "hash": h, "class": " ".join(el.get("class") or [])[:80],
-                              "ariaLabel": el.get("aria-label"), "title": (el.title.get_text() if el.title else None),
+                              "ariaLabel": norm_text(el.get("aria-label")) or None, "title": norm_text(el.title.get_text() if el.title else "") or None,
                               "viewBox": svg_viewbox(raw) or None, "bytes": len(raw), "suspectWall": in_wall, "_raw": raw})
+    # many distinct marks outside the home link in one region: a customer wall, even without a telling class name
+    marks = collections.Counter(c["region"] for c in cands if c["kind"] == "img" and not c.get("homeLink"))
+    for c in cands:
+        if c["kind"] == "img" and not c.get("homeLink") and marks[c["region"]] >= WALL_MIN_LOGOS:
+            c["suspectWall"] = True
     out = []
     for i, c in enumerate(cands[:16]):
         try:
@@ -692,7 +773,7 @@ def lift_icons(html, page_url=None, log=None):
             except Exception as e:
                 log(f"icon fetch failed {src[:80]}: {str(e)[:60]}"); continue
             if not raw: continue
-            name = img.get("alt") or urllib.parse.urlparse(src).path.rsplit("/", 1)[-1].rsplit(".", 1)[0]
+            name = norm_text(img.get("alt")) or urllib.parse.urlparse(src).path.rsplit("/", 1)[-1].rsplit(".", 1)[0]
             entry = icon_entry(raw, name, seen)
             if entry:
                 icons.append({**entry, "source": "img", "src": src})
@@ -700,15 +781,57 @@ def lift_icons(html, page_url=None, log=None):
     return icons
 
 
-def lift_images(html, page_url, out_images, log):
-    """Hero imagery the tokens cannot express: the <video> poster (and the video URL for the record), the
-    largest image in the opening section, and og:image. Saved under images/ for manifest.render.heroImage."""
+def ffmpeg_bin():
+    """ffmpeg on PATH, else the build Playwright keeps in its browser cache."""
+    found = shutil.which("ffmpeg")
+    if found: return found
+    roots = [pathlib.Path(os.environ["PLAYWRIGHT_BROWSERS_PATH"])] if os.environ.get("PLAYWRIGHT_BROWSERS_PATH") else []
+    roots += [pathlib.Path.home() / "Library/Caches/ms-playwright", pathlib.Path.home() / ".cache/ms-playwright"]
+    if os.environ.get("LOCALAPPDATA"): roots.append(pathlib.Path(os.environ["LOCALAPPDATA"]) / "ms-playwright")
+    for root in roots:
+        hits = sorted(p for p in root.glob("ffmpeg-*/ffmpeg*") if p.is_file()) if root.exists() else []
+        if hits: return str(hits[-1])
+    return None
+
+
+def video_frame(url, out_path, log, at="1", timeout=20):
+    """One frame of a hero video as a JPEG. The opening MAX_VIDEO_BYTES are downloaded through the guarded
+    fetcher (public hosts only, redirects re-checked), then ffmpeg decodes the local file with every network
+    protocol disabled, so a scraped video URL can never point ffmpeg at a private service or a playlist."""
+    exe = ffmpeg_bin()
+    if not exe:
+        log("hero video: no ffmpeg, frame grab skipped"); return False
+    try:
+        data, _, _ = http_fetch(url, timeout=timeout, max_bytes=MAX_VIDEO_BYTES, prefix=True)
+    except Exception as e:
+        log(f"hero video fetch refused or failed: {str(e)[:100]}"); return False
+    with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as tmp:
+        tmp.write(data); src = tmp.name
+    try:
+        r = subprocess.run([exe, "-y", "-loglevel", "error", "-protocol_whitelist", "file", "-ss", at, "-i", src,
+                            "-frames:v", "1", "-q:v", "3", str(out_path)], capture_output=True, text=True, timeout=timeout)
+        ok = r.returncode == 0 and out_path.exists() and out_path.stat().st_size > 0
+        if not ok: log(f"hero video frame failed: {(r.stderr or '').strip()[-100:]}")
+        return ok
+    except (subprocess.TimeoutExpired, OSError) as e:
+        log(f"hero video frame failed: {str(e)[:80]}"); return False
+    finally:
+        pathlib.Path(src).unlink(missing_ok=True)
+
+
+def lift_images(html, page_url, out_images, log, grab=None):
+    """Hero imagery the tokens cannot express: the <video> poster (and the video URL for the record), a frame
+    grabbed from a poster-less video, the largest image in the opening section, and og:image. Saved under
+    images/ for manifest.render.heroImage."""
     soup = BeautifulSoup(html, "html.parser")
     cands = []
     for v in soup.find_all("video")[:2]:
         if v.get("poster"): cands.append({"kind": "poster", "src": urllib.parse.urljoin(page_url, v["poster"])})
         vsrc = v.get("src") or next((s.get("src") for s in v.find_all("source") if s.get("src")), None)
-        if vsrc: cands.append({"kind": "video", "src": urllib.parse.urljoin(page_url, vsrc), "file": None})
+        if vsrc:
+            cands.append({"kind": "video", "src": urllib.parse.urljoin(page_url, vsrc), "file": None})
+            if not v.get("poster"):  # no poster: grab a frame so a video hero still has an image
+                cands.append({"kind": "video-frame", "src": urllib.parse.urljoin(page_url, vsrc)})
     main = soup.find("main") or soup.body or soup
     opening = [c for c in main.find_all(["section", "header", "div"], recursive=False)][:2]
     imgs = [im for sec in opening for im in sec.find_all("img", src=True)]
@@ -722,10 +845,19 @@ def lift_images(html, page_url, out_images, log):
     og = soup.find("meta", property="og:image")
     if og and og.get("content"): cands.append({"kind": "og", "src": urllib.parse.urljoin(page_url, og["content"])})
     out, seen = [], set()
+    grab = grab or video_frame
     for c in cands:
-        if c["src"] in seen: continue
-        seen.add(c["src"])
+        key = (c["kind"] == "video-frame", c["src"])  # the video URL is recorded once and framed once
+        if key in seen: continue
+        seen.add(key)
         if c["kind"] == "video" or len([o for o in out if o.get("file")]) >= 4:
+            out.append(c); continue
+        if c["kind"] == "video-frame":
+            name = f"video-frame-{len(out)}.jpg"
+            if grab(c["src"], out_images / name, log):
+                c["file"] = f"images/{name}"; c["bytes"] = (out_images / name).stat().st_size
+            else:
+                c["file"] = None
             out.append(c); continue
         try:
             data = http_get(c["src"], binary=True, max_bytes=MAX_IMAGE_BYTES)
@@ -876,6 +1008,11 @@ def computed_styles(browser, url, log, extras_dir=None, is_home=False, dark_capa
           }, 90);
         })""")
         pg.wait_for_timeout(800)
+        if is_home and extras_dir is not None:
+            try:  # lazy sections have mounted now: this shot, not the tool's, is cut into the judge strips
+                pg.screenshot(path=str(extras_dir / "home-scrolled.png"), full_page=True)
+            except Exception as e:
+                log(f"scrolled homepage shot failed: {str(e)[:80]}")
         out = pg.evaluate(COMPUTED_JS)
         # hover state of the two most common button groups on the homepage (fill / ink / transform / shadow after :hover)
         for i in range(min(2, len(out.get("buttons") or [])) if is_home else 0):
@@ -943,11 +1080,14 @@ def crops(shot, out_dir, slug):
         top.thumbnail((1280, 1600))
         p = out_dir / f"{slug}-top.png"; top.save(p)
         # the homepage is viewed in full: 1600px strips the Read tool can actually resolve
-        strips = []
+        strips, bottom = [], None
         if slug == "home":
             for i, y in enumerate(range(0, min(h, 9600), 1600)):
                 s = im.crop((0, y, w, min(h, y + 1600))); s.thumbnail((1280, 1600))
                 sp = out_dir / f"home-strip{i+1}.png"; s.save(sp); strips.append(str(sp))
+            if h > 1600:  # the last 1600px as its own strip, so CTA and footer are judged whatever the page length
+                b = im.crop((0, h - 1600, w, h)); b.thumbnail((1280, 1600))
+                bp = out_dir / "home-bottom.png"; b.save(bp); bottom = str(bp)
         # pixel truth for surfaces CSS hides (canvas/video/image heroes, animated bands)
         palette = {"hero": dominant(im.crop((0, 90, w, min(h, 900)))), "page": dominant(im, 8)}
         bands = []
@@ -955,7 +1095,7 @@ def crops(shot, out_dir, slug):
         for y in range(0, min(h, 9000), step):
             bands.append({"y": y, "colors": dominant(im.crop((0, y, w, min(h, y + step))), 2)})
         palette["bands"] = bands
-        return {"full": str(shot), "top": str(p), "size": [w, h], "palette": palette, "strips": strips}
+        return {"full": str(shot), "top": str(p), "size": [w, h], "palette": palette, "strips": strips, "bottom": bottom}
     except Exception:
         return {"full": str(shot), "top": None}
 
@@ -964,10 +1104,11 @@ def shot_fields(shot, out):
     """Screenshot columns of a page row from a crops() result (paths relative to the evidence dir)."""
     rel = lambda s: s.replace(str(out) + "/", "")
     if not shot:
-        return {"screenshot": None, "screenshotTop": None, "screenshotSize": None, "screenshotPalette": None, "screenshotStrips": []}
+        return {"screenshot": None, "screenshotTop": None, "screenshotSize": None, "screenshotPalette": None, "screenshotStrips": [], "screenshotBottom": None}
     return {"screenshot": rel(shot["full"]), "screenshotTop": rel(shot["top"]) if shot.get("top") else None,
             "screenshotSize": shot.get("size"), "screenshotPalette": shot.get("palette"),
-            "screenshotStrips": [rel(s) for s in (shot.get("strips") or [])]}
+            "screenshotStrips": [rel(s) for s in (shot.get("strips") or [])],
+            "screenshotBottom": rel(shot["bottom"]) if shot.get("bottom") else None}
 
 
 def cmd_ingest(args):
@@ -1083,9 +1224,13 @@ def cmd_mine(args):
             missing = None if p.get("screenshot") else out / "screenshots" / f"{slug}.png"
             c = computed_styles(browser, u, log, extras_dir=out / "screenshots", is_home=(u == base), dark_capable=dark_capable, missing_shot=missing)
             if c: comp[slug] = c
+            row = next(r for r in page_rows if r["slug"] == slug)
             if missing is not None and missing.is_file():  # the browser filled in a screenshot the pages dir lacked
-                row = next(r for r in page_rows if r["slug"] == slug)
                 row.update(shot_fields(crops(missing, out / "screenshots", slug), out))
+            scrolled = out / "screenshots" / "home-scrolled.png"
+            if u == base and scrolled.is_file():  # strips come from the scrolled shot so the footer is never a blank strip
+                row["screenshotTool"] = row.get("screenshot")
+                row.update(shot_fields(crops(scrolled, out / "screenshots", slug), out))
         ev["computed"] = comp
         # SVG logos: replace the declared-fill estimate with the rendered one when a browser is available
         for c in logos:
@@ -1103,6 +1248,7 @@ def cmd_mine(args):
         mark("computed")
         ev["timings"] = timings
         ev["capabilities"] = {"source": "pages-dir", "playwright": bool(browser.pw),
+                              "playwrightDisabled": browser.disabled, "playwrightError": browser.error,
                               "screenshots": sum(1 for r in page_rows if r["screenshot"]), "headRecovered": head_recovered,
                               # utility-class sites (Tailwind) leave little in the stylesheet; the capture then leans on `computed`
                               "cssSignal": "low" if not (ev["buttonRules"] or ev["sectionPadding"] or ev["transitions"]) else "ok"}

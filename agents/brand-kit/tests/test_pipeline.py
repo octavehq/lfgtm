@@ -439,7 +439,7 @@ class MineEndToEnd(unittest.TestCase):
             self.assertEqual(ev["fontFaces"][0]["file"], "fonts/acme-sans-500-normal.woff2")
             self.assertEqual(ev["logoCandidates"][0]["file"], "logos/logo-0-header.svg")
             self.assertEqual(len(ev["buttonRules"]), 1)
-            self.assertEqual(ev["capabilities"], {"source": "pages-dir", "playwright": False, "screenshots": 1, "headRecovered": [], "cssSignal": "ok"})
+            self.assertEqual(ev["capabilities"], {"source": "pages-dir", "playwright": False, "playwrightDisabled": True, "playwrightError": None, "screenshots": 1, "headRecovered": [], "cssSignal": "ok"})
             self.assertEqual(ev["computed"], {})
             self.assertTrue((out / "pages" / "pricing.html").is_file())
             logo = ev["logoCandidates"][0]
@@ -688,6 +688,101 @@ class RendererBands(unittest.TestCase):
             got = self._computed(out, [(".logos-label", "color"), (".cust-line", "color")])
         self.assertEqual(got[".logos-label"], "rgb(85, 85, 85)")  # --brand-muted, not a white tint
         self.assertEqual(got[".cust-line"], "rgb(85, 85, 85)")
+
+class MinerSecondPass(unittest.TestCase):
+    """Fixes from the octavehq.com run: widget noise, wrapped alt text, logo walls by count, video frames, Playwright diagnostics."""
+
+    def setUp(self):
+        self._http_get = prefetch.http_get
+
+    def tearDown(self):
+        prefetch.http_get = self._http_get
+
+    def test_css_of_page_skips_third_party_widget_sheets(self):
+        fetched = []
+        def fake_get(url, **kw):
+            fetched.append(url); return ".brand{color:#123456}"
+        prefetch.http_get = fake_get
+        html = ('<html><head><link rel="stylesheet" href="/css/site.css">'
+                '<link rel="stylesheet" href="https://static.hsappstatic.net/MeetingsPublic/static-1.6/main.css"></head><body></body></html>')
+        with tempfile.TemporaryDirectory() as d:
+            text, meta, _ = prefetch.css_of_page(html, "https://a.example/", pathlib.Path(d), NOOP_LOG)
+        self.assertEqual(fetched, ["https://a.example/css/site.css"])
+        self.assertEqual([s["url"] for s in meta], ["https://a.example/css/site.css"])
+
+    def test_widget_custom_properties_are_not_brand(self):
+        for name in ("--hs-color-primary", "--hsfc-input-bg", "--trellis-space-1", "--cky-btn"):
+            self.assertTrue(prefetch.THIRD_PARTY_PROP.match(name), name)
+        for name in ("--base-color-brand--violet", "--hsl-x", "--color-primary"):
+            self.assertFalse(prefetch.THIRD_PARTY_PROP.match(name), name)
+
+    def test_lift_logos_normalizes_alt_text_and_flags_logo_walls_by_count(self):
+        wall = "".join(f'<img alt="Customer {i} logo" src="/customers/c{i}.png">' for i in range(4))
+        html = ('<html><body><header class="site-nav"><a href="/"><img alt="Acme\n      logo" src="/acme.png"></a>'
+                f'<div class="strip">{wall}</div></header></body></html>')
+        prefetch.http_get = lambda url, binary=False, timeout=25, max_bytes=None: PNG_1x1
+        with tempfile.TemporaryDirectory() as d:
+            out, _ = prefetch.lift_logos(html, "https://www.acme.com/", pathlib.Path(d), NOOP_LOG)
+        by_src = {c["src"]: c for c in out}
+        brand = by_src["https://www.acme.com/acme.png"]
+        self.assertEqual(brand["alt"], "Acme logo")  # the line break in the markup is gone, so LOGO_HINT matched
+        self.assertTrue(brand["homeLink"]); self.assertFalse(brand["suspectWall"])
+        self.assertTrue(all(by_src[f"https://www.acme.com/customers/c{i}.png"]["suspectWall"] for i in range(4)))
+
+    def test_lift_images_grabs_a_frame_when_the_video_has_no_poster(self):
+        html = ('<html><body><main><section><video autoplay muted><source src="/media/orb.mp4" type="video/mp4"></video>'
+                '</section></main></body></html>')
+        grabbed = []
+        def fake_grab(url, out_path, log):
+            grabbed.append(url); out_path.write_bytes(b"\xff\xd8\xff" + b"\0" * 10); return True
+        with tempfile.TemporaryDirectory() as d:
+            out = prefetch.lift_images(html, "https://www.acme.com/", pathlib.Path(d), NOOP_LOG, grab=fake_grab)
+        self.assertEqual(grabbed, ["https://www.acme.com/media/orb.mp4"])
+        self.assertEqual([(o["kind"], o["file"]) for o in out], [("video", None), ("video-frame", "images/video-frame-1.jpg")])
+
+    def test_video_frame_refuses_non_http_sources(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.assertFalse(prefetch.video_frame("file:///etc/hosts", pathlib.Path(d) / "f.jpg", NOOP_LOG))
+
+    def test_browser_records_why_playwright_is_off(self):
+        b = prefetch.Browser(False, NOOP_LOG)
+        self.assertTrue(b.disabled); self.assertIsNone(b.error); self.assertIsNone(b.pw)
+
+
+@unittest.skipUnless(importlib.util.find_spec("playwright"), "playwright not installed")
+class FetchGuardAndStrips(unittest.TestCase):
+    """Fetches stay on public hosts; the homepage gets a dedicated bottom strip."""
+
+    def test_public_host_refuses_local_private_and_link_local_targets(self):
+        for url in ("http://localhost/x", "http://127.0.0.1:3015/x", "http://10.0.0.5/f.mp4", "http://192.168.1.9/", "http://169.254.169.254/latest",
+                    "http://[::1]/", "http://printer.local/", "http://db.internal/"):
+            with self.assertRaises(ValueError, msg=url):
+                prefetch.public_host(url)
+        self.assertEqual(prefetch.public_host("https://8.8.8.8/logo.svg"), "8.8.8.8")
+
+    def test_http_fetch_refuses_before_any_request(self):
+        with self.assertRaises(ValueError):
+            prefetch.http_fetch("http://127.0.0.1:3015/assets")
+        with self.assertRaises(ValueError):
+            prefetch.http_fetch("file:///etc/hosts")
+
+    def test_video_frame_refuses_a_private_source_without_running_ffmpeg(self):
+        logs = []
+        with tempfile.TemporaryDirectory() as d:
+            ok = prefetch.video_frame("http://10.1.2.3/hero.mp4", pathlib.Path(d) / "f.jpg", logs.append)
+        self.assertFalse(ok)
+        self.assertTrue(any("refused" in m for m in logs), logs)
+
+    def test_crops_cut_a_bottom_strip_for_tall_homepages(self):
+        from PIL import Image
+        with tempfile.TemporaryDirectory() as d:
+            d = pathlib.Path(d); shot = d / "home.png"
+            Image.new("RGB", (1200, 12000), (20, 30, 40)).save(shot)
+            got = prefetch.crops(shot, d, "home")
+            fields = prefetch.shot_fields(got, d)
+        self.assertEqual(len(got["strips"]), 6)  # the first 9600px as before
+        self.assertTrue(got["bottom"].endswith("home-bottom.png"))
+        self.assertEqual(fields["screenshotBottom"], "home-bottom.png")
 
 
 if __name__ == "__main__":
