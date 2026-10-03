@@ -155,6 +155,11 @@ Specialized agent personas for sustained, multi-turn work sessions.
 | `asset-manager` | Publish and manage hosted assets: upload, privacy tiers, share links, persistent registry; cache-aware — reuses existing assets instead of duplicating them |
 | `octave-editorial-reviewer` | Language + information quality reviewer spawned by the review gate after a skill generates a deliverable — audits reader-facing text against the editorial rules and information principles, fixes violations inline (not invoked directly) |
 | `octave-presentation-reviewer` | Visual + structural reviewer spawned by the review gate — renders the generated HTML and inspects the pixels, audits against the presentation principles, format rules, and skill blueprints, fixes CSS/layout violations inline (not invoked directly) |
+| `brand-crawler` | Phase 1 of the brand-kit capture: cache and asset-store check, site fetch through `scrape_website`, evidence pack (dispatched by `/octave:get-brand-components`, not directly) |
+| `brand-design-analyst` | Phase 2: reads the evidence pack and returns fonts, palette, emphasis, buttons, shape and layout as findings with evidence (read-only) |
+| `brand-logo-verifier` | Phase 2: picks and pixel-verifies the logo per surface, decides hero imagery and icons (read-only) |
+| `brand-kit-author` | Phase 3: the single writer; builds the kit from the findings, renders, lints, checksums and promotes it as a draft; applies judge fixes on repair |
+| `brand-kit-judge` | Phase 4: fresh-context judge scoring a rendered gallery or one-pager against the source on the fidelity rubric (three per round) |
 
 ## Skill Details
 

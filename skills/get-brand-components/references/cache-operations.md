@@ -1,19 +1,21 @@
 # Cache operations
 
-Use [brand_cache.py](../scripts/brand_cache.py) for canonical hostname/workspace
+Use [brand_cache.py](../../../agents/brand-kit/scripts/brand_cache.py) for canonical hostname/workspace
 identity, validation, resolution and promotion. Carry the selected brand through
 downstream rendering; a name match alone is not identity.
 
 - **Default:** reuse a validated matching capture. Build only when absent or
   when refresh is requested. Read [capture workflow](capture-workflow.md).
-- **Refresh:** capture in a unique staging directory, run
-  `brand_cache.py checksums <staging>` (writes `assetChecksums`; re-run after any
-  edit), then `brand_cache.py promote <staging> --domain … --workspace …`, which
-  validates and points `current.json` at the capture with status `draft`. Run the
-  fidelity gate on the promoted kit and, on a pass, `brand_cache.py mark-ready
-  <cache-root> --score N/40`. Consumers (`render_kit.py` from other skills, the
-  asset-store fallback) resolve `ready` kits only; the capture tooling opens
-  drafts. `brand_cache.py status <cache-root>` prints the pointer. Failed
+- **Refresh:** capture in a unique staging directory and run the fidelity gate
+  there. On a pass, `brand_cache.py promote <staging> --domain … --workspace …
+  --write-checksums` validates and points `current.json` at the capture, then
+  `brand_cache.py mark-ready <cache-root> --score N/40` (fractional means are
+  valid). The pointer changes only on a pass, so a refresh never takes a working
+  kit away while it is judged and a failed refresh keeps the prior capture. A
+  cache with no kit may receive the best failed candidate as `draft`, which the
+  next run resumes with fresh evidence. Consumers (`render_kit.py` from other
+  skills, the asset-store fallback) resolve `ready` kits only; the capture
+  tooling opens drafts. `brand_cache.py status <cache-root>` prints the pointer. Failed
   validation retains the current kit.
 - **List:** show current captures in the verified workspace with company/domain,
   capture date and readiness. Do not scan other workspace contents to fill gaps.

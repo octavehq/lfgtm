@@ -65,7 +65,7 @@ cp -R "$SRC_ROOT"/skills/. "$OUT/skills/"
 
 # 4. agents/ — Cursor supports agents natively, copy verbatim
 echo "→ agents/"
-cp "$SRC_ROOT"/agents/*.md "$OUT/agents/"
+cp -R "$SRC_ROOT"/agents/. "$OUT/agents/"
 
 # 5. LICENSE
 cp "$SRC_ROOT/LICENSE" "$OUT/LICENSE"
@@ -107,7 +107,7 @@ Use any name starting with `octave-`. Skills detect the Octave server from the a
 ## What's included
 
 - **Skills** (`/octave:research`, `/octave:library`, `/octave:generate`, `/octave:battlecard-doc`, …) — the full upstream skill set, invoked the same way as in Claude Code.
-- **Agents** (`octave-assistant`, `pmm-strategist`, `sdr-coach`, `revenue-strategist`, `asset-manager`, `octave-editorial-reviewer`, `octave-presentation-reviewer`) — Octave's specialist GTM personas.
+- **Agents** (`octave-assistant`, `pmm-strategist`, `sdr-coach`, `revenue-strategist`, `asset-manager`, `octave-editorial-reviewer`, `octave-presentation-reviewer`) — Octave's specialist GTM personas, plus the `brand-kit/` capture agents (`brand-crawler`, `brand-design-analyst`, `brand-logo-verifier`, `brand-kit-author`, `brand-kit-judge`) that `/octave:get-brand-components` dispatches.
 
 See the [upstream README](https://github.com/octavehq/lfgtm#skills) for full descriptions.
 EOF
