@@ -883,6 +883,61 @@ class RendererSecondPass(unittest.TestCase):
 
 
 @unittest.skipUnless(importlib.util.find_spec("playwright"), "playwright not installed")
+class ThirdPassRegressions(unittest.TestCase):
+    """What the second octavehq.com run found live: light closing surfaces on a dark kit, surfaces in the
+    one-pager, kicker chips, stale checksums after a gallery rebuild, gradient contrast."""
+
+    def _render_both(self, kit):
+        subprocess.run([sys.executable, str(SKILL / "scripts/render_gallery.py"), str(kit)], check=True, capture_output=True)
+        one = kit.parent / "onepager.html"
+        subprocess.run([sys.executable, str(SKILL / "scripts/render_kit.py"), "--kit-dir", str(kit), "--spec", str(SKILL / "assets/onepager_spec.json"), "--out", str(one)],
+                       check=True, capture_output=True)
+        return (kit / "components.html").read_text(), one.read_text(), one
+
+    def test_dark_kit_closing_on_light_cta_and_white_footer(self):
+        gallery = {"surfaces": {"cta": "light", "footer": "light"}, "eyebrowStyle": "chip"}
+        tokens = {"--brand-glow": "radial-gradient(ellipse at 50% -20%, rgba(140,90,255,.75), transparent 60%)"}
+        with tempfile.TemporaryDirectory() as d:
+            kit = make_kit(pathlib.Path(d) / "kit", extra_tokens=tokens, gallery_block=gallery)
+            gal, one, one_path = self._render_both(kit)
+            for doc, name in ((gal, "gallery"), (one, "one-pager")):
+                self.assertIn('class="cta"', doc, name); self.assertNotIn('class="cta is-dark"', doc, name)  # the surface reaches both
+                self.assertIn('class="footer light"', doc, name)
+            self.assertIn('class="k chip"', gal)  # kickers share the hero eyebrow's chip style
+            gate = subprocess.run([sys.executable, str(SKILL / "scripts/gate_check.py"), str(kit / "components.html")], capture_output=True, text=True)
+            self.assertEqual(gate.returncode, 0, gate.stdout)  # light CTA copy and footer links stay legible
+            gate1 = subprocess.run([sys.executable, str(SKILL / "scripts/gate_check.py"), str(one_path)], capture_output=True, text=True)
+            self.assertNotIn("FAIL contrast .cta", gate1.stdout)
+
+    def test_gallery_rebuild_refreshes_checksums(self):
+        sys.path.insert(0, str(SKILL / "scripts"))
+        import brand_cache
+        with tempfile.TemporaryDirectory() as d:
+            kit = make_kit(pathlib.Path(d) / "kit")
+            brand_cache.write_checksums(kit)
+            before = json.loads((kit / "manifest.json").read_text())["assetChecksums"]
+            man = json.loads((kit / "manifest.json").read_text()); man["render"]["gallery"] = {"arrow": True}
+            (kit / "manifest.json").write_text(json.dumps(man))
+            (kit / "tokens.css").write_text((kit / "tokens.css").read_text() + "\n/* repaired */\n")  # a catalogued asset edited before the render
+            subprocess.run([sys.executable, str(SKILL / "scripts/render_gallery.py"), str(kit)], check=True, capture_output=True)
+            after = json.loads((kit / "manifest.json").read_text())["assetChecksums"]
+            self.assertIn("components.html", after)
+            self.assertNotEqual(before["tokens.css"], after["tokens.css"])  # re-catalogued before the renderer validated it
+            self.assertNotEqual(before.get("components.html"), after["components.html"])  # the rebuilt gallery is catalogued
+            self.assertEqual(brand_cache.write_checksums(kit), after)  # and nothing else is stale
+
+    def test_gradient_fill_is_measured_against_its_own_stops(self):
+        html = ('<html><body style="background:#fff"><div class="cta" style="background:linear-gradient(90deg, rgb(168,136,248), rgb(200,184,248));padding:20px">'
+                '<h2 style="color:#fff;font-size:28px">Closing band</h2></div></body></html>')
+        with tempfile.TemporaryDirectory() as d:
+            page = pathlib.Path(d) / "t.html"; page.write_text(html); rep = pathlib.Path(d) / "g.json"
+            subprocess.run([sys.executable, str(SKILL / "scripts/gate_check.py"), str(page), "--json", str(rep)], capture_output=True, text=True)
+            cta = next(c for c in json.loads(rep.read_text())["checks"] if c["name"] == "contrast .cta h2")
+        self.assertGreater(cta["value"], 1.5)  # white on lavender, not white on the white page behind the gradient
+        self.assertLess(cta["value"], 3)  # and honestly below the bar: the lightest stop decides
+        self.assertIn("colour stops", cta["note"])
+
+
 class FetchGuardAndStrips(unittest.TestCase):
     """Fetches stay on public hosts; the homepage gets a dedicated bottom strip."""
 
