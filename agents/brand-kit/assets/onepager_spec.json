@@ -1,0 +1,13 @@
+{
+  "title": "One-pager",
+  "blocks": [
+    {"type": "hero", "eyebrow": "Prepared for Northwind", "title": "Cut onboarding time from **weeks to days**", "lead": "A short overview of how the platform fits your team, what it replaces, and what changes in the first quarter.", "cta": {"label": "Book a working session", "href": "https://example.com/"}},
+    {"type": "section", "kicker": "The problem", "heading": "Three tools, two spreadsheets, one **source of truth** missing", "paras": ["Your team reconciles data by hand every Monday. That costs a day a week and still leaves gaps that surface in customer calls.", "The fix is not another dashboard. It is one place where the record is kept current automatically."]},
+    {"type": "features", "items": [{"title": "Automatic capture", "text": "Every interaction is recorded without anyone typing it in."}, {"title": "One record", "text": "Sales, success and marketing read the same page."}, {"title": "Answers, not exports", "text": "Ask a question and get a cited answer in seconds."}]},
+    {"type": "stats", "items": [{"n": "38", "u": "%", "l": "less time on admin"}, {"n": "2.1", "u": "x", "l": "faster ramp for new reps"}, {"n": "11", "u": "days", "l": "to first value"}]},
+    {"type": "quote", "text": "We stopped arguing about whose numbers were right in the first month.", "name": "Dana Whitfield", "role": "VP Revenue Operations, Halcyon"},
+    {"type": "checklist", "items": ["Works with your existing CRM and calendar", "No rep behaviour change required", "Security review pack available on request"]},
+    {"type": "cta", "heading": "See it on **your** data", "sub": "A 30-minute session with your own accounts loaded.", "cta": {"label": "Book a working session", "href": "https://example.com/"}},
+    {"type": "footer", "links": [{"label": "Privacy", "href": "https://example.com/"}, {"label": "Security", "href": "https://example.com/"}]}
+  ]
+}

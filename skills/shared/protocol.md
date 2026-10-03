@@ -120,7 +120,7 @@ Read the actual pixels, not just the source. This step is invoked from inside a 
 
 - **Documents** (one-pager, microsite, brief, proposal, battlecard-doc, etc.): render to PNG with
   ```bash
-  ../get-brand-components/scripts/render.py --file <out.html> --out <png>
+  ../../agents/brand-kit/scripts/render.py --file <out.html> --out <png>
   ```
   then inspect the image for overflow, alignment, scaling artifacts, and logo integrity.
 - **Decks:** measure each slide's content height before screenshotting: set the slide to `position: static; height: auto` and read `.inner scrollHeight`. Anything over 1080 is clipped and needs a fix (shrink content, split the slide, or tighten spacing). Drive headless capture with a virtual-time budget (e.g., Chrome `--virtual-time-budget=2500`) so reveal animations don't get caught half-faded mid-transition.
