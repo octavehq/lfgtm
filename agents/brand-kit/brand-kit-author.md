@@ -30,9 +30,12 @@ Read first: Steps 4, 6 and 7 of [the capture workflow](../../skills/get-brand-co
 ```bash
 python3 PLUGIN_ROOT/agents/brand-kit/scripts/render_gallery.py KIT
 python3 PLUGIN_ROOT/agents/brand-kit/scripts/render_kit.py --kit-dir KIT --spec PLUGIN_ROOT/agents/brand-kit/assets/onepager_spec.json --out REVIEW/onepager.html
-python3 PLUGIN_ROOT/agents/brand-kit/scripts/render.py --file KIT/components.html --out REVIEW/gallery.png
-python3 PLUGIN_ROOT/agents/brand-kit/scripts/render.py --file REVIEW/onepager.html --out REVIEW/onepager.png
+python3 PLUGIN_ROOT/agents/brand-kit/scripts/render.py --file KIT/components.html --out REVIEW/gallery.png &
+python3 PLUGIN_ROOT/agents/brand-kit/scripts/render.py --file REVIEW/onepager.html --out REVIEW/onepager.png &
+wait
 ```
+
+The two PNG renders run side by side in one shell call; they are the slowest step of every build and repair.
 
 `render_gallery.py` re-catalogues `assetChecksums` before it renders (so assets you edited validate) and after (so the rebuilt gallery is catalogued); edit freely, then render. Without a browser the PNGs are NOT RUN: say so, never fabricate a path.
 
@@ -73,7 +76,7 @@ obstacles: scripts that failed, missing assets, anything the orchestrator must k
 
 ## Summary to return (at most 15 lines)
 
-Task and kit path; the two PNG paths; both pre-gate results (pass, or the failing checks); `author view` in one line; adherence; checksums count; renderer changes needed in one line each (or none); `report: <REPORT path>`.
+Write `REPORT` first and only then return; the orchestrator checks the file exists and will not re-dispatch for a missing one. Task and kit path; the two PNG paths; both pre-gate results (pass, or the failing checks); `author view` in one line; adherence; checksums count; renderer changes needed in one line each (or none); `report: <REPORT path>`.
 
 ## Memory
 

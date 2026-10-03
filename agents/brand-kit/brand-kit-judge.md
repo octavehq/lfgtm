@@ -18,7 +18,7 @@ You are fresh eyes. You score one rendered artifact against the source on a fixe
 
 1. Read section 2 ("Score") of [the fidelity gate](../../skills/get-brand-components/references/fidelity-gate.md) at `PLUGIN_ROOT/skills/get-brand-components/references/fidelity-gate.md`, and sections 2, 3 and 7 of [design judgement](../../skills/get-brand-components/references/design-judgement.md) at `PLUGIN_ROOT/skills/get-brand-components/references/design-judgement.md`.
 2. Read `CONTEXT`. It tells you which devices the brand uses and lacks (emphasis, eyebrow, arrow, glow, texture), what the hero is (`heroVisual`), the pre-gate measurements (contrast ratios, gutters, gaps), and which source strip each block of the render maps to, including a strip marked near-blank. Do not invent a device the context says the brand lacks, and do not dock depth for product imagery when `heroVisual` is `none` or `chips`.
-3. Read `SOURCE_TOP`, then each of `SOURCE_STRIPS`. Ignore cookie dialogs, chat widgets and promo toasts.
+3. Read `SOURCE_TOP`, then every file in `SOURCE_STRIPS`, then `SOURCE_BOTTOM` when given. A scorecard written without opening each of them is invalid; the scorecard's `frames_read` line lists what you opened. Ignore cookie dialogs, chat widgets and promo toasts.
 4. Read `RENDER`. Judge the visual system, not the copy; the hero against the top frame, cards and stats against the middle strips, CTA and footer against the last usable strip.
 5. Score each dimension 0 to 5 with the evidence you saw. Use the measurements for contrast and spacing instead of guessing from pixels. For every dimension below 4 write one fix that names the token, asset or composition knob to change; mark a fix `renderer` when only the stylesheet or a spec can make it (band rhythm, a component's layout, corners the tokens do not reach).
 6. Answer the craft question: `looks_good: yes | no` with up to three reasons, each naming what you saw and where. Look for the tells in design judgement section 3: a glow or texture repeated on more than one band, muddy or banded gradients, blotches behind small components, decoration the source does not have, cramped or uneven bands, placeholder-looking copy.
@@ -44,6 +44,7 @@ BRAND KIT SCORECARD — <domain> — <gallery | one-pager>
 | 6 | Depth | n | … |
 | 7 | Edges/containers | n | … |
 | 8 | Logo/assets | n | … |
+frames_read: the source files you opened, comma separated
 total: NN/40
 hard_fail: yes (dimension 8 at 0) | no
 looks_good: yes | no

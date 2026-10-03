@@ -42,7 +42,7 @@ BRAND DESIGN FINDINGS — <domain>
 4. Buttons: per size height, padding, font-size, radius, fill|outline|ghost, border, weight, hover, arrow yes|no; primary vs secondary; resting state on dark bands
 5. Shape and depth: radius by role (button, card, tile, chip, badge, section), shadows, card fill (opaque | translucent "glass" with a lit top edge), the glows, gradients or textures the site actually uses and on which surface, or "flat"
 6. Layout: container widths, section padding, section-header pattern (eyebrow yes|no and its style: plain | chip, alignment), card style, nav style, stats treatment (full-width strip | inset card), homepage section order
-7. Devices: one line per entry of the generic-defaults list in design-judgement.md: yes|no, source
+7. Devices: one line per entry of the generic-defaults list in design-judgement.md: yes|no, source; plus the color the site uses for positive marks and ticks (the author sets `--brand-pos-ink` from it) and the color of a highlighted pricing plan's border when the site has one (`--brand-plan-featured-border`)
 8. Proposed tokens and render.gallery knobs (eyebrow, eyebrowStyle, emphasis, arrow, statsStyle, cardStyle, surfaces, secondaryCta) that differ from renderer defaults, one line each with the evidence
 9. Confidence and gaps: what could not be measured and why
 10. Obstacles: environment quirks, files that failed to parse, anything the author should know
