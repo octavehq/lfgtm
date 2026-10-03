@@ -87,12 +87,32 @@ def decide(cards, gates, rnd):
     return out
 
 
+def merge_feedback(path, fixes):
+    """Append renderer fixes to the maintainers' feedback file, one line each, deduplicated case-insensitively
+    across judges and rounds. Returns the lines added."""
+    path = pathlib.Path(path)
+    norm = lambda s: re.sub(r"\s+", " ", s.strip().lower())
+    existing = path.read_text().splitlines() if path.is_file() else []
+    seen = {norm(ln) for ln in existing if ln.strip()}
+    added = []
+    for f in fixes:
+        key = norm(f)
+        if key and key not in seen:
+            seen.add(key); added.append(f.strip())
+    if added:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("a") as fh:
+            fh.write("\n".join(added) + "\n")
+    return added
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--round", type=int, required=True)
     ap.add_argument("--scorecards", nargs="+", required=True)
     ap.add_argument("--gates", nargs="*", default=[])
     ap.add_argument("--json", type=pathlib.Path)
+    ap.add_argument("--feedback", type=pathlib.Path, help="renderer-feedback file for the plugin maintainers; the round's `renderer` fixes are merged in, deduplicated")
     a = ap.parse_args()
     cards = []
     for f in a.scorecards:
@@ -102,6 +122,8 @@ def main():
             c = None
         if c: c["file"] = f; cards.append(c)
     out = decide(cards, [read_gate(g) for g in a.gates], a.round)
+    if a.feedback and out.get("rendererFixes"):
+        out["feedbackAdded"] = merge_feedback(a.feedback, out["rendererFixes"])
     text = json.dumps(out, indent=1)
     if a.json: a.json.write_text(text)
     print(text)

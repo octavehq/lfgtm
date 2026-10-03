@@ -66,5 +66,15 @@ class GateDecide(unittest.TestCase):
             self.assertEqual(r.returncode, 3)  # tiebreak
 
 
+    def test_feedback_file_collects_renderer_fixes_once(self):
+        with tempfile.TemporaryDirectory() as d:
+            fb = pathlib.Path(d) / "reports" / "renderer-feedback.md"
+            added = gate_decide.merge_feedback(fb, ["Spacing: renderer: stats band ignores the gutter (kit_base.css)", "Depth: renderer: footer corners (kit_base.css)"])
+            again = gate_decide.merge_feedback(fb, ["spacing: RENDERER: stats band ignores the gutter (kit_base.css)", "Edges: renderer: pricing card radius"])
+            lines = fb.read_text().strip().splitlines()
+        self.assertEqual(len(added), 2); self.assertEqual(again, ["Edges: renderer: pricing card radius"])
+        self.assertEqual(len(lines), 3)
+
+
 if __name__ == "__main__":
     unittest.main()
