@@ -180,10 +180,11 @@ def r_hero(b, ctx):
             items += render_link(b["nav"]["cta"], "cta-pill")
         nav = f'<div class="nav">{items}</div>'
     top = f'<div class="topbar"><div class="brand">{brand}</div>{nav}</div>'
-    cta = render_link(b["cta"], "btn btn-primary", arrow=True) if b.get("cta") else ""
+    cta = render_link(b["cta"], "btn btn-primary", arrow=ctx.get("arrow", False)) if b.get("cta") else ""
     if b.get("secondaryCta"):  # the brand's resting secondary button next to the primary
         cta += render_link(b["secondaryCta"], "btn btn-secondary")
-    eyebrow = f'<div class="eyebrow">{html.escape(b["eyebrow"])}</div>' if b.get("eyebrow") else ""
+    ecls = "eyebrow chip" if (ctx.get("gallery") or {}).get("eyebrowStyle") == "chip" else "eyebrow"
+    eyebrow = f'<div class="{ecls}">{html.escape(b["eyebrow"])}</div>' if b.get("eyebrow") else ""
     copy = (f'<div class="copy">{eyebrow}<h1>{emph(b["title"])}</h1>'
             f'<p class="lead">{para(b["lead"])}</p>'
             f'<div class="actions">{cta}</div></div>') if b.get("lead") else \
@@ -222,10 +223,13 @@ def r_hero(b, ctx):
 def r_stats(b, ctx):
     on_light = b.get("surface", "dark" if ctx["darkband"] else "light") == "light"
     wave = b.get("divider") == "wave"
+    def unit(u):  # a word unit ("days", "min") is set apart from the number; symbols (%, x, +) stay tight
+        return f'<span class="u{" w" if len(u) > 1 and u[0].isalpha() else ""}">{html.escape(u)}</span>'
     cells = "".join(f'<div class="stat"><div class="n">{html.escape(s["n"])}'
-                    f'<span class="u">{html.escape(s.get("u",""))}</span></div>'
+                    f'{unit(s.get("u",""))}</div>'
                     f'<div class="l">{html.escape(s["l"])}</div></div>' for s in b["items"])
-    cls = "stats" + (" on-light" if on_light else "") + (" has-wave" if wave else "")
+    inset = (ctx.get("gallery") or {}).get("statsStyle") == "inset" and not on_light
+    cls = "stats" + (" on-light" if on_light else "") + (" inset" if inset else "") + (" has-wave" if wave else "")
     return f'<div class="{cls}">{cells}{WAVE if wave else ""}</div>'
 
 
@@ -243,8 +247,13 @@ def r_quote(b, ctx):
             f'<p>{para(b["text"])}</p>{who}</div>')
 
 
+def kicker_cls(ctx):
+    """Section and split kickers share the hero eyebrow's style, so eyebrowStyle "chip" reaches every label."""
+    return "k chip" if (ctx.get("gallery") or {}).get("eyebrowStyle") == "chip" else "k"
+
+
 def r_section(b, ctx):
-    k = f'<div class="k">{html.escape(b["kicker"])}</div>' if b.get("kicker") else ""
+    k = f'<div class="{kicker_cls(ctx)}">{html.escape(b["kicker"])}</div>' if b.get("kicker") else ""
     h = f'<h2>{emph(b["heading"])}</h2>' if b.get("heading") else ""
     ps = "".join(f'<p>{para(p)}</p>' for p in b.get("paras", []))
     return f'<div class="section">{k}{h}{ps}</div>'
@@ -261,7 +270,7 @@ def r_features(b, ctx):
 
 def _cmp_band(bad, good, rows):  # B1 — gradient-band header table (dark-band brands)
     head = (f'<div class="head"><div class="c bad">{bad}</div>'
-            f'<div class="c good"><span class="gdot"></span>{good}</div></div>')
+            f'<div class="c good">{good}</div></div>')
     body = ""
     for i, r in enumerate(rows):
         last = " last" if i == len(rows) - 1 else ""
@@ -309,7 +318,7 @@ def r_checklist(b, ctx):
 def r_cta(b, ctx):
     dark = b.get("surface", "dark" if ctx["darkband"] else "light") == "dark"
     cls = "cta is-dark" if dark else "cta"
-    cta = render_link(b["cta"], "btn btn-primary", arrow=True) if b.get("cta") else ""
+    cta = render_link(b["cta"], "btn btn-primary", arrow=ctx.get("arrow", False)) if b.get("cta") else ""
     sub = f'<p>{para(b["sub"])}</p>' if b.get("sub") else ""
     cust = f'<div class="cust-line">{html.escape(b["custLine"])}</div>' if b.get("custLine") else ""
     return f'<div class="{cls}"><h2>{emph(b["heading"])}</h2>{sub}{cta}{cust}</div>'
@@ -326,12 +335,12 @@ def r_footer(b, ctx):
 def r_split(b, ctx):
     rev = b.get("imageSide", "right") == "left"
     img = inline_img(ctx["kitdir"], b["image"], 'class="shot"') if b.get("image") else ""
-    k = f'<div class="k">{html.escape(b["kicker"])}</div>' if b.get("kicker") else ""
+    k = f'<div class="{kicker_cls(ctx)}">{html.escape(b["kicker"])}</div>' if b.get("kicker") else ""
     h = f'<h2>{emph(b["heading"])}</h2>' if b.get("heading") else ""
     ps = "".join(f'<p>{para(p)}</p>' for p in b.get("paras", []))
     bullets = ('<ul class="chk">' + "".join(f'<li><span class="c">&#10003;</span>{para(x)}</li>'
                for x in b["bullets"]) + '</ul>') if b.get("bullets") else ""
-    cta = render_link(b["cta"], "btn btn-primary", arrow=True) if b.get("cta") else ""
+    cta = render_link(b["cta"], "btn btn-primary", arrow=ctx.get("arrow", False)) if b.get("cta") else ""
     copy = f'<div class="split-copy">{k}{h}{ps}{bullets}{cta}</div>'
     media = f'<div class="split-media">{img}</div>'
     return f'<div class="split{" rev" if rev else ""}">{(media + copy) if rev else (copy + media)}</div>'
@@ -397,8 +406,13 @@ def main():
     icons = {}
     if (kitdir / "icons.json").exists():
         icons = json.loads(asset_path(kitdir, "icons.json").read_text())
+        if isinstance(icons, list):  # the evidence pack writes [{name, viewBox, inner}]
+            icons = {i["name"]: i for i in icons if isinstance(i, dict) and i.get("name")}
+    gallery = render.get("gallery") or {}
     ctx = {"kitdir": kitdir, "render": render, "icons": icons, "slug": args.kit,
-           "darkband": render.get("hasDarkBand", True)}
+           "darkband": render.get("hasDarkBand", True), "gallery": gallery,
+           # the trailing arrow on buttons is a device the brand either uses or does not; off unless the kit says so
+           "arrow": bool(gallery.get("arrow", render.get("buttonArrow", False)))}
 
     # resolve theme: base tokens + optional light/dark override map
     tok = dict(render.get("tokens", {}))
@@ -435,15 +449,30 @@ def main():
         if buf:
             parts.append('<div class="wrap">' + "".join(buf) + "</div>")
             buf.clear()
+    # render.surfaces: the brand's own surface per block type (a lavender closing CTA, a white footer), applied to
+    # every asset; a block's explicit "surface" wins, and a kit without the map keeps the darkband default
+    kit_surfaces = render.get("surfaces") or (render.get("gallery") or {}).get("surfaces") or {}  # render.surfaces, else the gallery knob
+    # render.eyebrow / heroEyebrow: a brand without small-caps labels drops them from every asset, not only the gallery
+    no_labels = render.get("eyebrow", gallery.get("eyebrow")) is False
+    no_hero_label = render.get("heroEyebrow", gallery.get("heroEyebrow")) is False
     for blk in spec["blocks"]:
         t = blk["type"]
+        if kit_surfaces.get(t) in ("dark", "light"):
+            blk.setdefault("surface", kit_surfaces[t])
+        if no_labels:
+            blk.pop("eyebrow", None); blk.pop("kicker", None)
+        elif t == "hero" and no_hero_label:
+            blk.pop("eyebrow", None)
         if t not in RENDERERS:
             raise ValueError(f"blocks[{len(parts) + len(buf)}]: unknown block type {t}")
         rendered = RENDERERS[t](blk, ctx)
         if t in WRAP_BLOCKS and blk.get("surface") == "dark":
             # break a content block out of the light .wrap into a full-bleed dark band
             flush()
-            parts.append(f'<div class="band is-dark">{rendered}</div>')
+            # on a dark sheet the band is the same surface as the .wrap around it, so its own padding would
+            # stack on the wrap's and open a dead gap; "flush" lets the wrap padding carry the rhythm
+            band_cls = "band is-dark flush" if theme == "dark" else "band is-dark"
+            parts.append(f'<div class="{band_cls}">{rendered}</div>')
         elif t in WRAP_BLOCKS:
             buf.append(rendered)
         else:

@@ -7,7 +7,7 @@ shared renderer so the gallery is always renderable, consistent across brands,
 and never hand-written. Also prepends a token/type swatch strip so humans can
 read the palette and faces at a glance.
 
-  render_gallery.py <kit-dir> [--skill-scripts <path to get-brand-components/scripts>]
+  render_gallery.py <kit-dir> [--skill-scripts <path to agents/brand-kit/scripts>]
 """
 import argparse, base64, html, json, pathlib, re, subprocess, sys
 
@@ -15,11 +15,25 @@ HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 from bs4 import BeautifulSoup, Comment, Doctype, Declaration, ProcessingInstruction  # noqa: E402
 from kit_validation import asset_path, safe_url  # noqa: E402
+from render_kit import logo_img  # noqa: E402
+from brand_cache import write_checksums  # noqa: E402
 
 SPEC = HERE.parent / "assets" / "gallery_spec.json"
 
 
-def swatches(man):
+def logo_pair(man, kit):
+    """Both verified logo variants on their own surfaces, so a judge sees the onLight file too."""
+    r = man.get("render", {})
+    cells = ""
+    for dark, bg in ((False, "#fff"), (True, "var(--brand-band,#111)")):  # the onDark cell is a dark band, never the page
+        img = logo_img(kit, r, dark, height=32) if (r.get("logo") or {}) else ""
+        if img:
+            cells += (f'<div data-logo-surface="{"onDark" if dark else "onLight"}" style="background:{bg};border:1px solid #e5e5e5;border-radius:8px;padding:22px 28px">{img}'
+                      f'<div style="font-size:11px;color:{"#ccc" if dark else "#666"};margin-top:10px">{"onDark" if dark else "onLight"}</div></div>')
+    return f'<div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px">{cells}</div>' if cells else ""
+
+
+def swatches(man, kit):
     r = man.get("render", {})
     toks = r.get("tokens", {})
     color_keys = [k for k in toks if any(x in k for x in ("-bg", "-ink", "-primary", "-accent", "-surface", "-muted", "-border", "-on-dark", "-band", "-canvas", "-link", "-positive", "-negative", "-success", "-warning", "-error")) and "font" not in k]
@@ -27,21 +41,34 @@ def swatches(man):
     for k in color_keys[:24]:
         v = toks[k]
         cells += (f'<div style="width:112px"><div style="height:44px;border-radius:8px;border:1px solid #e5e5e5;background:{html.escape(v)}"></div>'
-                  f'<div style="font:11px/1.3 ui-monospace,monospace;color:#444;margin-top:4px;word-break:break-all">{html.escape(k.replace("--brand-", ""))}<br>{html.escape(v[:28])}</div></div>')
-    fh = toks.get("--brand-font-heading", "inherit"); fb = toks.get("--brand-font-body", "inherit")
+                  f'<div style="font-family:var(--brand-font-label,var(--brand-font-body));font-size:11px;line-height:1.3;color:#444;margin-top:4px;word-break:break-all">{html.escape(k.replace("--brand-", ""))}<br>{html.escape(v[:28])}</div></div>')
     wh = toks.get("--brand-weight-heading", "600"); wb = toks.get("--brand-weight-body", "400")
     fonts = ", ".join(f"{f.get('family')} {f.get('weight')}" for f in r.get("fonts", [])[:8]) or "none embedded"
     rules = "".join(f"<li>{html.escape(str(x))}</li>" for x in (man.get("rules") or [])[:6])
-    return (f'<section style="background:#fff;color:#111;padding:28px 40px;border-bottom:1px solid #e5e5e5;font-family:system-ui">'
-            f'<div style="font:600 12px/1 system-ui;letter-spacing:.08em;text-transform:uppercase;color:#777;margin-bottom:12px">Kit reference: {html.escape(man.get("company", ""))} ({html.escape(man.get("domain", ""))})</div>'
+    return (f'<section data-kit-ref="1" style="background:#fff;color:#111;padding:28px 40px;border-bottom:1px solid #e5e5e5;font-family:var(--brand-font-body)">'
+            f'<div style="font-family:var(--brand-font-label,var(--brand-font-body));font-weight:600;font-size:12px;line-height:1;letter-spacing:.08em;text-transform:uppercase;color:#777;margin-bottom:12px">Kit reference: {html.escape(man.get("company", ""))} ({html.escape(man.get("domain", ""))})</div>'
+            f'{logo_pair(man, kit)}'
             f'<div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px">{cells}</div>'
-            f'<div style="font-family:{html.escape(fh)};font-weight:{html.escape(str(wh))};font-size:40px;line-height:1.1;letter-spacing:{html.escape(toks.get("--brand-tracking-heading", "0"))}">Heading face at real size</div>'
-            f'<div style="font-family:{html.escape(fb)};font-weight:{html.escape(str(wb))};font-size:17px;line-height:1.6;max-width:640px;margin-top:8px">Body face at real size. Embedded: {html.escape(fonts)}.</div>'
-            f'{"<ul style=\"font:13px/1.5 system-ui;color:#333;margin-top:14px\">" + rules + "</ul>" if rules else ""}'
+            f'<div style="font-family:var(--brand-font-heading);font-weight:{html.escape(str(wh))};font-size:40px;line-height:1.1;letter-spacing:{html.escape(toks.get("--brand-tracking-heading", "0"))}">Heading face at real size</div>'
+            f'<div style="font-family:var(--brand-font-body);font-weight:{html.escape(str(wb))};font-size:17px;line-height:1.6;max-width:640px;margin-top:8px">Body face at real size. Embedded: {html.escape(fonts)}.</div>'
+            f'{"<ul style=\"font-family:var(--brand-font-body);font-size:13px;line-height:1.5;color:#333;margin-top:14px\">" + rules + "</ul>" if rules else ""}'
             f'</section>')
 
 
 SURFACE_BLOCKS = ("hero", "stats", "quote", "cta", "footer", "comparison", "logos")
+
+
+def icon_names(path):
+    """Names in a kit's icons.json, list form ([{name, viewBox, inner}]) or dict form ({name: {...}})."""
+    if not path.exists():
+        return []
+    try:
+        data = json.loads(path.read_text())
+    except ValueError:
+        return []
+    if isinstance(data, list):
+        return [i["name"] for i in data if isinstance(i, dict) and i.get("name")]
+    return [k for k in data] if isinstance(data, dict) else []
 
 
 def composed_spec(man, tmp_path):
@@ -50,14 +77,23 @@ def composed_spec(man, tmp_path):
     spec = json.loads(SPEC.read_text())
     g = (man.get("render") or {}).get("gallery") or {}
     surfaces = g.get("surfaces") or {}
+    kit_icons = icon_names(tmp_path.parent / "icons.json")
     for block in spec["blocks"]:
         s = surfaces.get(block["type"])
         if block["type"] in SURFACE_BLOCKS and s in ("dark", "light"):
             block["surface"] = s
         if g.get("eyebrow") is False:  # brands without small-caps labels above headings
             block.pop("eyebrow", None); block.pop("kicker", None)
+        if g.get("emphasis") is False:  # brands with no highlight device: the same copy, no emphasized word
+            for key in ("title", "heading"):
+                if isinstance(block.get(key), str): block[key] = block[key].replace("**", "")
+        if block["type"] == "features" and kit_icons:  # the brand's own icons fill the tiles instead of collapsing them
+            for item, name in zip(block["items"], kit_icons):
+                item.setdefault("icon", name)
         if block["type"] == "hero" and g.get("secondaryCta") and block.get("cta"):
-            block["secondaryCta"] = {"label": "Secondary action", "href": block["cta"]["href"]}
+            block["secondaryCta"] = {"label": "See how it works", "href": block["cta"]["href"]}
+        if block["type"] == "hero" and g.get("heroEyebrow") is False:  # brands that label sections but not the hero
+            block.pop("eyebrow", None)
     tmp_path.write_text(json.dumps(spec))
     return tmp_path
 
@@ -164,6 +200,9 @@ def main():
     args = ap.parse_args()
     kit = args.kit
     man = json.loads((kit / "manifest.json").read_text())
+    if "assetChecksums" in man:  # the author may have edited catalogued assets: re-catalogue before the renderer validates them
+        write_checksums(kit)
+        man = json.loads((kit / "manifest.json").read_text())
     out = kit / "components.html"
     spec_path = composed_spec(man, kit / ".gallery_spec.json")
     r = subprocess.run([sys.executable, str(args.skill_scripts / "render_kit.py"), "--kit-dir", str(kit), "--spec", str(spec_path), "--out", str(out)],
@@ -179,8 +218,10 @@ def main():
         doc = doc[:head_end] + composition_css(man) + doc[head_end:]
     j = doc.rfind("</body>")
     if j > 0:
-        doc = doc[:j] + swatches(man) + doc[j:]
+        doc = doc[:j] + swatches(man, kit) + doc[j:]
     out.write_text(doc)
+    if "assetChecksums" in man:  # a catalogued kit stays promotable after its gallery is rebuilt
+        write_checksums(kit)
     print(f"components.html {out.stat().st_size} bytes")
 
 

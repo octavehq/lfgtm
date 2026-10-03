@@ -689,6 +689,61 @@ class RendererBands(unittest.TestCase):
         self.assertEqual(got[".logos-label"], "rgb(85, 85, 85)")  # --brand-muted, not a white tint
         self.assertEqual(got[".cust-line"], "rgb(85, 85, 85)")
 
+    def test_gallery_spacing_units_icons_and_both_logos(self):
+        with tempfile.TemporaryDirectory() as d:
+            kit = make_kit(pathlib.Path(d) / "kit")
+            man = json.loads((kit / "manifest.json").read_text())
+            man["render"]["gallery"] = {"secondaryCta": True}
+            (kit / "manifest.json").write_text(json.dumps(man))
+            subprocess.run([sys.executable, str(SKILL / "scripts/render_gallery.py"), str(kit)], check=True, capture_output=True)
+            doc = (kit / "components.html").read_text()
+            self.assertIn('class="u w">min<', doc)  # word unit set apart, "%" stays tight
+            self.assertIn('class="u">%<', doc)
+            self.assertIn("onLight", doc); self.assertIn("onDark", doc)  # both logo variants in the reference strip
+            self.assertNotIn("system-ui", doc)
+            from playwright.sync_api import sync_playwright
+            with sync_playwright() as p:
+                b = p.chromium.launch(); pg = b.new_page(viewport={"width": 1100, "height": 900})
+                pg.goto((kit / "components.html").resolve().as_uri())
+                got = pg.evaluate("""() => {
+                    const r = s => document.querySelector(s).getBoundingClientRect();
+                    const n = document.querySelector('.stats .stat .n'), rg = document.createRange(); rg.selectNodeContents(n);
+                    return [r('.hero .btn-secondary').left - r('.hero .btn-primary').right,
+                            rg.getBoundingClientRect().left - r('.stats').left,
+                            r('.hero h1').left - r('.hero').left]; }""")
+                b.close()
+        self.assertGreaterEqual(got[0], 10)  # hero buttons never touch
+        self.assertAlmostEqual(got[1], got[2], delta=2)  # stat copy sits on the page gutter
+
+    def test_icons_json_list_form_resolves_by_name(self):
+        with tempfile.TemporaryDirectory() as d:
+            kit = make_kit(pathlib.Path(d) / "kit")
+            (kit / "icons.json").write_text(json.dumps([{"name": "spark", "viewBox": "0 0 24 24", "inner": '<path d="M1 1h2"/>'}]))
+            (kit / "spec.json").write_text(json.dumps({"title": "t", "blocks": [
+                {"type": "features", "items": [{"title": "A", "text": "b", "icon": "spark"}]}]}))
+            out = kit / "out.html"
+            subprocess.run([sys.executable, str(SKILL / "scripts/render_kit.py"), "--kit-dir", str(kit), "--spec", str(kit / "spec.json"), "--out", str(out)],
+                           check=True, capture_output=True)
+            self.assertIn('<path d="M1 1h2"/>', out.read_text())
+
+    def test_comparison_headers_align_with_their_columns(self):
+        with tempfile.TemporaryDirectory() as d:
+            kit = make_kit(pathlib.Path(d) / "kit")
+            subprocess.run([sys.executable, str(SKILL / "scripts/render_gallery.py"), str(kit)], check=True, capture_output=True)
+            self.assertNotIn("gdot", (kit / "components.html").read_text())  # no invented glow dot in the header
+            from playwright.sync_api import sync_playwright
+            with sync_playwright() as p:
+                b = p.chromium.launch(); pg = b.new_page(); pg.goto((kit / "components.html").resolve().as_uri())
+                got = pg.evaluate("""() => {
+                    const q = s => document.querySelector(s);
+                    const text = el => { const r = document.createRange(); r.selectNodeContents(el); return r.getBoundingClientRect().left; };
+                    return [text(q('.cmp-band .head .bad')) - q('.cmp-band .r .bad .m').getBoundingClientRect().left,
+                            text(q('.cmp-band .head .good')) - q('.cmp-band .r .good .m').getBoundingClientRect().left]; }""")
+                b.close()
+        for delta in got:
+            self.assertLess(abs(delta), 1.0)  # each header label starts over its column's icon
+
+
 class MinerSecondPass(unittest.TestCase):
     """Fixes from the octavehq.com run: widget noise, wrapped alt text, logo walls by count, video frames, Playwright diagnostics."""
 
@@ -747,6 +802,84 @@ class MinerSecondPass(unittest.TestCase):
     def test_browser_records_why_playwright_is_off(self):
         b = prefetch.Browser(False, NOOP_LOG)
         self.assertTrue(b.disabled); self.assertIsNone(b.error); self.assertIsNone(b.pw)
+
+
+@unittest.skipUnless(importlib.util.find_spec("playwright"), "playwright not installed")
+class RendererSecondPass(unittest.TestCase):
+    """Depth hygiene, the new knobs and the product-page copy."""
+
+    def _gallery(self, d, tokens=None, gallery=None, icons=None):
+        kit = make_kit(pathlib.Path(d) / "kit", extra_tokens=tokens, gallery_block=gallery)
+        if icons is not None:
+            (kit / "icons.json").write_text(json.dumps(icons))
+        subprocess.run([sys.executable, str(SKILL / "scripts/render_gallery.py"), str(kit)], check=True, capture_output=True)
+        return kit
+
+    def _eval(self, kit, js):
+        from playwright.sync_api import sync_playwright
+        with sync_playwright() as p:
+            b = p.chromium.launch(); pg = b.new_page(viewport={"width": 1100, "height": 900})
+            pg.goto((kit / "components.html").resolve().as_uri())
+            got = pg.evaluate(js); b.close()
+        return got
+
+    def test_glow_and_texture_paint_the_hero_only(self):
+        tokens = {"--brand-glow": "radial-gradient(circle at 50% 0%, rgba(120,80,255,.6), transparent 60%)",
+                  "--brand-texture": "radial-gradient(rgba(255,255,255,.07) 1px, transparent 1.4px) 0 0/22px 22px"}
+        with tempfile.TemporaryDirectory() as d:
+            kit = self._gallery(d, tokens)
+            got = self._eval(kit, """() => Object.fromEntries(['.hero', '.cta', '.footer', '.quote', '.cmp-band .head'].map(s => {
+                const el = document.querySelector(s); const cs = getComputedStyle(el);
+                return [s, [/gradient|url\\(/.test(cs.backgroundImage), getComputedStyle(el, '::before').content]]; }))""")
+        self.assertTrue(got[".hero"][0])
+        for sel in (".cta", ".footer", ".quote", ".cmp-band .head"):
+            self.assertFalse(got[sel][0], sel)  # solid band, no repeated glow
+        self.assertIn(got[".cmp-band .head"][1], ("none", "normal"))  # the header's glow layers are gone
+
+    def test_stat_tokens_chip_eyebrow_inset_stats_and_no_default_arrow(self):
+        tokens = {"--brand-stat-weight": "300", "--brand-stat-ink": "#ff0000"}
+        gallery = {"eyebrowStyle": "chip", "statsStyle": "inset"}
+        with tempfile.TemporaryDirectory() as d:
+            kit = self._gallery(d, tokens, gallery)
+            doc = (kit / "components.html").read_text()
+            got = self._eval(kit, """() => { const n = getComputedStyle(document.querySelector('.stat .n'));
+                const e = getComputedStyle(document.querySelector('.hero .eyebrow')); const s = getComputedStyle(document.querySelector('.stats'));
+                return [n.fontWeight, n.color, e.borderTopStyle, e.borderTopLeftRadius, s.marginLeft]; }""")
+        self.assertEqual(got[:2], ["300", "rgb(255, 0, 0)"])
+        self.assertEqual(got[2], "solid"); self.assertEqual(got[3], "999px"); self.assertEqual(got[4], "56px")
+        self.assertNotIn('class="arw"', doc)  # the arrow is a device the kit must ask for
+
+    def test_arrow_knob_adds_the_trailing_arrow(self):
+        with tempfile.TemporaryDirectory() as d:
+            kit = self._gallery(d, gallery={"arrow": True})
+            self.assertIn('class="arw"', (kit / "components.html").read_text())
+
+    def test_two_plans_fill_the_row_and_features_take_kit_icons(self):
+        icons = [{"name": n, "viewBox": "0 0 24 24", "inner": f'<path d="M{i} 1h2"/>'} for i, n in enumerate(("spark", "bolt", "ring"))]
+        with tempfile.TemporaryDirectory() as d:
+            kit = self._gallery(d, icons=icons)
+            doc = (kit / "components.html").read_text()
+            got = self._eval(kit, """() => { const r = s => document.querySelector(s).getBoundingClientRect();
+                return [r('.plan').width / r('.pricing').width, Array.from(document.querySelectorAll('.fcard .tile')).filter(t => !t.innerHTML.trim()).length]; }""")
+        self.assertGreater(got[0], 0.45)  # two plans share the full width instead of leaving a third column empty
+        self.assertEqual(got[1], 0)  # every tile shows one of the kit's own icons
+        for path in ('<path d="M0 1h2"/>', '<path d="M1 1h2"/>', '<path d="M2 1h2"/>'):
+            self.assertIn(path, doc)
+
+    def test_gallery_copy_reads_as_a_product_page(self):
+        with tempfile.TemporaryDirectory() as d:
+            kit = self._gallery(d)
+            doc = (kit / "components.html").read_text()
+        for meta in ("Heading with one", "Card one", "CTA band in the brand", "Primary action", "Stat block"):
+            self.assertNotIn(meta, doc)
+        self.assertIn("Book a demo", doc)
+
+    def test_emphasis_off_keeps_the_copy_without_the_marked_word(self):
+        with tempfile.TemporaryDirectory() as d:
+            on = (self._gallery(d, gallery={"emphasis": True}) / "components.html").read_text()
+            off = (self._gallery(d + "/off", gallery={"emphasis": False}) / "components.html").read_text()
+        self.assertIn("one record", on); self.assertIn("one record", off)
+        self.assertGreater(on.count('class="hl'), off.count('class="hl'))
 
 
 @unittest.skipUnless(importlib.util.find_spec("playwright"), "playwright not installed")
