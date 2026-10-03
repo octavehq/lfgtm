@@ -162,5 +162,28 @@ class Scores(unittest.TestCase):
                 cache.validate_score(s)
 
 
+class StalePointer(unittest.TestCase):
+    """A pointer whose capture folder was deleted is an empty cache, never a kit."""
+
+    def _stale_root(self, d):
+        root = pathlib.Path(d) / "wa_1" / "acme.com"; (root / "versions").mkdir(parents=True)
+        (root / "current.json").write_text(json.dumps({"capture": "versions/" + "0" * 32, "status": "draft", "promotedAt": "2026-10-02T00:00:00Z"}))
+        return root
+
+    def test_status_reports_missing_and_names_the_stale_capture(self):
+        with tempfile.TemporaryDirectory() as d:
+            got = cache.status(self._stale_root(d))
+        self.assertEqual(got["status"], "missing"); self.assertIsNone(got["capture"]); self.assertEqual(got["stale"], "versions/" + "0" * 32)
+
+    def test_resolve_and_mark_ready_refuse_a_stale_pointer(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = self._stale_root(d)
+            with self.assertRaises(ValueError) as e:
+                cache.resolve(root, allow_draft=True)
+            self.assertIn("stale capture pointer", str(e.exception))
+            with self.assertRaises(ValueError):
+                cache.mark_ready(root, "35/40")
+
+
 if __name__ == "__main__":
     unittest.main()

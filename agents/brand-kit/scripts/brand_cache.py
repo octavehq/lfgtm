@@ -66,12 +66,20 @@ def write_pointer(root,pointer):
     finally:Path(ptr).unlink(missing_ok=True)
 
 
+def capture_dir(root,pointer):
+    """The capture folder a pointer names, or None when it was deleted (a stale pointer is an empty cache)."""
+    d=Path(root)/pointer['capture']
+    return d if (d/'manifest.json').is_file() else None
+
+
 def resolve(root,domain=None,workspace=None,allow_draft=False):
     root=Path(root)
     pointer=read_pointer(root)
     if pointer:
         if pointer['status']=='draft' and not allow_draft:
             raise ValueError('brand kit is a draft: run the fidelity gate, then `brand_cache.py mark-ready <cache-root>`')
+        if capture_dir(root,pointer) is None:
+            raise ValueError(f"stale capture pointer: {pointer['capture']} is missing; re-run the capture")
         root=root/pointer['capture']
     manifest=json.loads(asset_path(root,'manifest.json').read_text())
     validate_manifest(root,manifest,canonical_domain(domain) if domain else None,workspace)
@@ -141,6 +149,7 @@ def mark_ready(root,score=None):
     root=Path(root)
     pointer=read_pointer(root)
     if not pointer:raise ValueError(f'no current.json under {root}')
+    if capture_dir(root,pointer) is None:raise ValueError(f"stale capture pointer: {pointer['capture']} is missing; nothing to mark ready")
     pointer.update({'status':'ready','readyAt':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())})
     if score:
         pointer['fidelityScore']=validate_score(score)
@@ -153,6 +162,8 @@ def status(root):
     pointer=read_pointer(root)
     if not pointer:
         return {'root':str(root),'status':'ready' if (root/'manifest.json').is_file() else 'missing','capture':None}
+    if capture_dir(root,pointer) is None:  # the folder went away: treat the cache as empty, say what the pointer named
+        return {'root':str(root),'status':'missing','capture':None,'stale':pointer['capture']}
     return {'root':str(root),'status':pointer['status'],'capture':pointer['capture'],
             'promotedAt':pointer.get('promotedAt'),'readyAt':pointer.get('readyAt'),'fidelityScore':pointer.get('fidelityScore')}
 
