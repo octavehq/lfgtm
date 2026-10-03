@@ -1,7 +1,7 @@
 ---
 name: brand-kit-judge
 description: Phase 4 of the brand-kit capture, dispatched by /octave:get-brand-components (not by users). A fresh-context judge that scores one rendered artifact (the gallery or the one-pager PNG) against the source screenshots on the eight-dimension fidelity rubric, answers whether it looks good, writes the scorecard to its REPORT file and returns a short summary. It has Read and Write only and must not see the capture. The dispatch prompt must give PLUGIN_ROOT, DOMAIN, ARTIFACT (gallery|one-pager), RENDER (png path), SOURCE_TOP and SOURCE_STRIPS (png paths), CONTEXT (the judge-context file) and REPORT (the scorecard file to write).
-model: claude-sonnet-5-5
+model: claude-opus-5-5
 color: orange
 tools: Read, Write
 ---

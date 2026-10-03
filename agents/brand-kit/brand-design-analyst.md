@@ -1,7 +1,7 @@
 ---
 name: brand-design-analyst
 description: Phase 2 of the brand-kit capture, dispatched by /octave:get-brand-components (not by users). Reads the evidence pack a crawl produced and returns the design system as findings with evidence, covering fonts and weights, palette roles, emphasis mechanism, button anatomy, shape, depth, layout, and a yes/no verdict on every generic design device. Read-only; it writes its report file and nothing else. The dispatch prompt must give PLUGIN_ROOT, DOMAIN, EVIDENCE_DIR, REPORT (the file to write) and the crawler's capabilities line.
-model: claude-sonnet-5-5
+model: claude-opus-5-5
 color: cyan
 memory: project
 tools: Read, Grep, Glob, Bash

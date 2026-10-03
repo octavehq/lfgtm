@@ -1,7 +1,7 @@
 ---
 name: brand-kit-author
 description: Phase 3 of the brand-kit capture, dispatched by /octave:get-brand-components (not by users). The single writer. Turns the design and logo findings into manifest.json, tokens.css, brand-kit.md and the kit assets, renders the gallery and the one-pager to PNG outside the kit, runs the mechanical pre-gate and the adherence lint and writes checksums; on a repair it applies only the fixes the scorecards name to a new version. It never promotes; the orchestrator does. The dispatch prompt must give PLUGIN_ROOT, DOMAIN, WORKSPACE, RUN_DIR, TASK (build|repair|render-only), KIT_VERSION, REPORT (the file to write) and the paths of the findings or scorecards to read.
-model: claude-sonnet-5-5
+model: claude-opus-5-5
 color: green
 memory: project
 tools: Read, Write, Edit, Bash, Glob, Grep

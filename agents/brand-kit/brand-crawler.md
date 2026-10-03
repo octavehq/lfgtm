@@ -1,7 +1,7 @@
 ---
 name: brand-crawler
 description: Phase 1 of the brand-kit capture, dispatched by /octave:get-brand-components (not by users). TASK=home resolves the canonical domain and cache root, checks the brand cache and the asset store, scrapes and ingests the homepage with the Octave scrape_website tool and picks the pages worth fetching. TASK=pages scrapes and ingests a given list of URLs; the skill runs up to three of these in parallel. The dispatch prompt must give PLUGIN_ROOT, TASK and RUN_DIR, plus for the home task TARGET (the domain or URL as typed), REFRESH (yes|no), BRAND_CACHE, WORKSPACE (id or unknown) and ASSET_DECISION (use|rebuild) on a re-dispatch, and for the pages task DOMAIN and PAGES (URLs, one per line).
-model: claude-sonnet-5-5
+model: claude-opus-5-5
 color: yellow
 memory: project
 disallowedTools: Edit, Write, NotebookEdit, WebFetch, WebSearch

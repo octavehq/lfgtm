@@ -1,7 +1,7 @@
 ---
 name: brand-logo-verifier
 description: Phase 2 of the brand-kit capture, dispatched by /octave:get-brand-components (not by users). Picks the logo variant for each surface from the evidence pack, pixel-verifies both by rendering them, decides the lockup, the hero imagery and the icon set. Writes only its report and EVIDENCE_DIR/logo-verify/. The dispatch prompt must give PLUGIN_ROOT, DOMAIN, EVIDENCE_DIR, REPORT (the file to write) and the crawler's capabilities line.
-model: claude-sonnet-5-5
+model: claude-opus-5-5
 color: purple
 memory: project
 tools: Read, Grep, Glob, Bash
