@@ -1,4 +1,4 @@
-"""Run with: python3 -m unittest discover -s skills/get-brand-components/tests"""
+"""Run with: python3 -m unittest discover -s agents/brand-kit/tests"""
 import json
 from pathlib import Path
 import subprocess

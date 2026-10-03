@@ -10,6 +10,8 @@ Use the user's explicit task and inherited choices to select one primary skill. 
 
 Reviewer instructions ship at `<plugin-root>/agents/octave-editorial-reviewer.md` and `<plugin-root>/agents/octave-presentation-reviewer.md`. Claude's named Task syntax is one host adapter, not a universal API. Use supported delegation with these files as instructions when available. Otherwise perform the same checks sequentially. Both reviewers inspect the same immutable artifact version and return findings; one author applies edits and reruns affected checks.
 
+The brand-kit capture ships its own delegation set at `<plugin-root>/agents/brand-kit/` (crawler, design analyst, logo verifier, kit author, judge) with the capture scripts and `kit_base.css` beside them; `/octave:get-brand-components` dispatches them in four phases. Without delegation, one session runs the five files as instructions in that order.
+
 No browser means visual review is not run. No exporter means no completed export. A labeled working draft or agreed text alternative may still complete the requested task; never fabricate a scorecard or tool success. Use bounded retries and resume verified progress after an interrupted call.
 ## Runtime dependencies
 

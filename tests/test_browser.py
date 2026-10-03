@@ -97,13 +97,13 @@ class BrowserChecks(unittest.TestCase):
                 {'type':'logos','items':[{'text':'Example'}]}, {'type':'pricing','plans':[{'name':'Example plan','cta':cta}]},
                 {'type':'cta','heading':'Continue','cta':cta},{'type':'footer','links':[cta]}]
         spec=self.root/'spec.json';spec.write_text(json.dumps({'title':'Fixture','blocks':blocks}));out=self.root/'output.html'
-        subprocess.run([sys.executable,str(ROOT/'skills/get-brand-components/scripts/render_kit.py'),'--kit-dir',str(kit),'--spec',str(spec),'--out',str(out)],check=True,capture_output=True)
+        subprocess.run([sys.executable,str(ROOT/'agents/brand-kit/scripts/render_kit.py'),'--kit-dir',str(kit),'--spec',str(spec),'--out',str(out)],check=True,capture_output=True)
         for width in (375,768,1440):
             self.page.set_viewport_size({'width':width,'height':900});self.page.goto(out.as_uri())
             self.assertLessEqual(self.page.evaluate('document.documentElement.scrollWidth'),width+1)
             self.assertEqual(self.page.locator('a:not([href])').count(),0)
         shot=self.root/'nested/og.png'
-        subprocess.run([sys.executable,str(ROOT/'skills/get-brand-components/scripts/render.py'),'--file',str(out),'--out',str(shot),'--width','1200','--height','630','--scale','1','--no-full-page','--wait','0'],check=True,capture_output=True)
+        subprocess.run([sys.executable,str(ROOT/'agents/brand-kit/scripts/render.py'),'--file',str(out),'--out',str(shot),'--width','1200','--height','630','--scale','1','--no-full-page','--wait','0'],check=True,capture_output=True)
         from PIL import Image
         with Image.open(shot) as im:self.assertEqual(im.size,(1200,630))
 

@@ -15,16 +15,16 @@ from unittest.mock import patch
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT/'skills/get-brand-components/scripts'))
+sys.path.insert(0, str(ROOT/'agents/brand-kit/scripts'))
 sys.path.insert(0, str(ROOT/'skills/shared/scripts'))
 def module(name, path):
     spec=importlib.util.spec_from_file_location(name,ROOT/path)
     m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m);return m
 io=module('artifact_io','skills/asset-manager/scripts/artifact_io.py')
 lint=module('html_lint','skills/shared/scripts/html_lint.py')
-brand=module('brand','skills/get-brand-components/scripts/render_kit.py')
-cache=module('cache','skills/get-brand-components/scripts/brand_cache.py')
-logos=module('logos','skills/get-brand-components/scripts/verify_logos.py')
+brand=module('brand','agents/brand-kit/scripts/render_kit.py')
+cache=module('cache','agents/brand-kit/scripts/brand_cache.py')
+logos=module('logos','agents/brand-kit/scripts/verify_logos.py')
 state=module('state','skills/shared/scripts/workspace_state.py')
 digest=module('digest','skills/digest/scripts/digest_state.py')
 pred=module('pred','skills/ads-resonance/scripts/predictions.py')
@@ -161,6 +161,10 @@ print('201' if method=='POST' else '200',end='')
         (staging/'tokens.css').write_text('changed without checksum')
         with self.assertRaises(ValueError):cache.promote(staging,self.root/'cache','example.com','workspace-a')
         self.assertEqual((target/'current.json').read_text(),before)
+        # a fresh promotion is a draft until the fidelity gate marks it ready: consumers refuse it, capture tooling opens it
+        with self.assertRaises(ValueError):cache.resolve(target,'example.com','workspace-a')
+        self.assertEqual(cache.resolve(target,'example.com','workspace-a',allow_draft=True)[1]['canonicalDomain'],'example.com')
+        cache.mark_ready(target,'36/40')
         self.assertEqual(cache.resolve(target,'example.com','workspace-a')[1]['canonicalDomain'],'example.com')
 
     def test_lint_preserves_quotes_and_draft_inputs(self):

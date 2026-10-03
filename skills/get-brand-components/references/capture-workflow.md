@@ -1,40 +1,54 @@
 # Capture workflow and kit contract
 
-Use the [task method](task-method.md) for validation and source fidelity. Build in a unique staging directory. Canonical cache identity is verified workspace ID plus full normalized hostname/TLD; legacy names are aliases only after manifest identity matches. After mechanical and visual checks, use [brand_cache.py](../scripts/brand_cache.py) to promote the capture through an atomic pointer. A failed refresh preserves the prior capture. Consumers resolve `current.json` before reading manifest/assets. Source URLs, capture time, checksums and allowed-use decisions are required for promotion.
+Use the [task method](task-method.md) for validation and source fidelity. Build in a unique staging directory. Canonical cache identity is verified workspace ID plus full normalized hostname/TLD; legacy names are aliases only after manifest identity matches. After mechanical and visual checks, use [brand_cache.py](../../../agents/brand-kit/scripts/brand_cache.py) to promote the capture through an atomic pointer. A failed refresh preserves the prior capture. Consumers resolve `current.json` before reading manifest/assets. Source URLs, capture time, checksums and allowed-use decisions are required for promotion.
 
 Read this reference for capture; it retains the visual extraction and token/component contract. No voice, messaging or proof library belongs in a kit.
+
+## Who runs which step
+
+The skill dispatches the agents in `<plugin-root>/agents/brand-kit/`; a host without delegation runs the same steps in one session, in this order.
+
+| Step | Agent |
+|---|---|
+| 1 and 2 | `brand-crawler` |
+| 2.5 (fonts, palette, emphasis, components, composition) and 3 | `brand-design-analyst` |
+| 2.5 (logo, hero imagery, icons) | `brand-logo-verifier` |
+| 4, 5, 6, 7 and the checksums | `brand-kit-author`; the skill promotes and marks ready |
+| [fidelity gate](fidelity-gate.md) | `brand-kit-judge`, two or three per round; the skill decides the pass and the repair loop |
+
+The analyst, the author and the judge also read [design judgement](design-judgement.md): the source brand is the brief, and a device the site does not use is never added.
 ## Capture the visual system
 
 #### Step 1: Resolve the target and plan the crawl
 
-1. Normalize the input to a base URL (`https://www.<domain>` if only a bare domain is given; keep an explicit URL as the seed).
-2. Derive the `<slug>` from the registrable domain.
-3. **Cache check (do this first).** If a kit already exists at `<staging-kit>/` (has `manifest.json`), **reuse it by default**: print a one-line summary from `manifest.json`, `open` the gallery, and **stop — do not re-walk or spend scrape credits.** Only proceed to Step 2 when the user passed `refresh` (or explicitly asked to rebuild/re-scrape), or the kit is missing/partial/stale. Mention they can pass `refresh` to rebuild.
-4. **Asset-store fallback (on local miss only).** No local kit? Before spending scrape credits, check whether this kit was already published as a hosted asset — **by you or a workspace teammate** (workspace-shared assets appear in the list with their `owner`). If the Octave MCP asset tools aren't available, skip this silently and continue to Step 2.
+1. Identity comes from one place: `python3 <plugin-root>/agents/brand-kit/scripts/brand_cache.py canonical <domain-or-url> --workspace <id>` prints the canonical domain (lowercase, no `www.`) and the cache root. The seed URL keeps the host as the site serves it (`https://www.<domain>/` is fine); the cache and the manifest never carry `www.`.
+2. Derive the `<slug>` from the canonical domain.
+3. **Cache check (do this first).** The cache lives at `<brand-cache>/<workspace>/<domain>/` (default `~/.octave/brands/`) behind a `current.json` pointer; run `python3 <plugin-root>/agents/brand-kit/scripts/brand_cache.py status <brand-cache>/<workspace>/<domain>` to read it. Status `ready` means a kit that passed the fidelity gate: **reuse it by default**, print a one-line summary from its `manifest.json`, `open` the gallery, and **stop — do not re-walk or spend scrape credits.** Status `draft` means a kit that never passed the gate: the capture proceeds to Step 2 for fresh source frames and findings, and the author re-renders the draft as the first candidate instead of building from scratch. Only proceed to Step 2 when the pointer is `missing`, the user passed `refresh` (or explicitly asked to rebuild/re-scrape), or the kit is partial/stale. Mention they can pass `refresh` to rebuild.
+4. **Asset-store fallback (on local miss only).** No local kit? Before spending scrape credits, check whether this kit was already published as a hosted asset — **by you or a workspace teammate** (workspace-shared assets appear in the list with their `owner`). If the Octave MCP asset tools aren't available, skip this silently and continue to Step 2. If the tool exists but the call itself fails (connection refused, timeout, auth error), say so in one line ("asset-store check failed: <error>; continuing without it") and continue to Step 2; do not retry in a loop and do not treat the failure as "no match".
    - Run the `assets_list` MCP tool — an **actual tool call**, never a bash/python simulation, and never "assume" its result. If the `assets_list` result is not in your transcript, this check did not happen and you may not proceed to Step 2. Look for identifier `<slug>-brand-kit` — exact first, then fuzzy (identifier or description containing the slug/company name plus "brand").
    - **Match found** → tell the user: *"A brand kit for <domain> is already published (owner: <me | teammate name>): <link>"* and ask (AskUserQuestion): **Use it (Recommended)** — download it as the local cache — or **Rebuild fresh** — walk the site anyway.
      - *Use it*: follow the asset-manager download workflow in [`../../asset-manager/SKILL.md`](../../asset-manager/SKILL.md) — mint the token, then `download-artifact.sh --uuid <uuid> --out "${TMPDIR:-/tmp}"` (files land in `${TMPDIR:-/tmp}/<identifier>/`, where `<identifier>` is the matched asset's actual identifier — for a fuzzy match it may not be exactly `<slug>-brand-kit`). **Only if the download exits 0 and `${TMPDIR:-/tmp}/<identifier>/manifest.json` exists**, promote it: `mkdir -p ~/.octave/brands && rm -rf <brand-cache>/<slug> && mv "${TMPDIR:-/tmp}/<identifier>" <brand-cache>/<slug>` (the `mkdir -p` is required on a fresh machine — `mv` will not create the parent). If the download failed or `manifest.json` is missing, leave `<brand-cache>/` untouched and continue to Step 2. Then treat it exactly like a local cache hit: summarize, open the gallery, **stop** — no scrape credits spent. Update the asset-manager registry per its rules.
-     - *Rebuild fresh*: continue to Step 2, but remember the asset's uuid and owner — the hosting step (see *Delivery and changes* in SKILL.md and the asset-manager skill) will offer to **update** the hosted kit if it is yours; a teammate-owned kit can't be modified, so you'd publish your own copy instead.
+     - *Rebuild fresh*: continue to Step 2, but remember the asset's uuid and owner — the closing question (SKILL.md, *Hosting via `/octave:asset-manager`*) then **updates** the hosted kit if it is yours; a teammate-owned kit can't be modified, so you'd publish your own copy instead.
    - **No match** → continue to Step 2 without extra chatter.
 
-#### Step 1.5: Build the evidence pack first (preferred for every surface)
+#### Step 2: Fetch the pages and build the evidence pack
 
-`scripts/prefetch.py --domain <domain> --out evidence/ [--firecrawl "<runner cmd>"] [--no-playwright]` does Steps 2 and 2.5 deterministically: it walks the homepage plus up to five high-signal pages (an external page runner when you supply one, else Playwright, else plain HTTP; the runner is any command invoked as `<runner> <out-dir> <url>...` that writes `<out-dir>/firecrawl.json` plus the HTML and screenshot files it references, see the script's module doc for the row shape), keeps header, nav and footer, screenshots every page (full page plus 1600 px strips of the homepage, a second homepage frame 4 s later for animated devices, and a dark-theme frame when the CSS declares one), mines the stylesheet bundles for `@font-face` files (resolved against each sheet's URL, hashed next/font family names decoded), custom properties, colors by property, gradients, radii, shadows, container widths, button rules and section padding, lifts logo candidates from nav, header, footer and the home link with provenance and a `suspectWall` flag, dedupes inline icons, samples the hero's dominant pixel colors and a color band every 300 px, and reads computed styles off the rendered page: body, h1/h2/h3/p, nav, footer, the real button groups with hover state, the section list, and every styled word inside large display text (color, chip, gradient text, weight, face, underline, inline icon). The result is `evidence/evidence.json` plus `pages/`, `css/`, `fonts/`, `logos/`, `icons.json`, `screenshots/`.
+Pages come from the Octave `scrape_website` tool in full-document mode; `agents/brand-kit/scripts/prefetch.py` turns them into the evidence pack. Nothing in this step reads page HTML into the conversation: the tool returns a small JSON with hosted URLs, `ingest` downloads them to disk, and `mine` does the extraction.
 
-With an evidence pack, the capture session reads `evidence.json`, views the homepage strips and the pricing and article page tops, verifies two logo files by eye, and writes `manifest.json`, `tokens.css` and `brand-kit.md` (Steps 3, 4, 6, 7). It does not re-walk the site and does not write `components.html`: `scripts/render_gallery.py <kit-dir>` composes the gallery from `manifest.render` through the shared renderer (always renderable, honors the optional `render.gallery` composition block: per-block `surfaces`, `headingAlign`, `cardStyle`, `navStyle`, `sectionFrame`, and an optional bespoke `hero.html`). Then run the [fidelity gate](fidelity-gate.md).
+1. **Fetch the homepage:** `scrape_website({ url: "https://<domain>/", includeScreenshot: true, fullDocument: true })`. The result carries `finalUrl`, `statusCode`, `title`, `links`, `contentUrl` (the full HTML document, hosted) and `screenshotUrl`; the inline `content` is markdown you do not need.
+2. **Save it in the same turn** (the `contentUrl` is a signed link that expires after about an hour), passing the tool's JSON result verbatim:
+   ```bash
+   python3 <plugin-root>/agents/brand-kit/scripts/prefetch.py ingest --pages-dir evidence/firecrawl - <<'EOF'
+   <the JSON result exactly as the tool returned it>
+   EOF
+   ```
+   It downloads the HTML and the screenshot, writes `<slug>.html`, `<slug>.png` and a row in `evidence/firecrawl/firecrawl.json`, and prints the row. Every download the miner makes (pages, stylesheets, fonts, logos, icons, images, video prefixes) goes to public hosts only; loopback, private and link-local addresses are refused, redirects included. A `found: false` result or an error status is recorded as a failed row and reported; carry on with the other pages.
+3. **Ask which pages to fetch next:** `python3 <plugin-root>/agents/brand-kit/scripts/prefetch.py pick-pages --pages-dir evidence/firecrawl` prints up to five same-site URLs, one per line, chosen from the homepage's links in the order a design system is most fully expressed: product / platform / features (cards, grids, icon tiles, stats), pricing (plan cards, badges, comparison rows), a blog / learn / docs article (body type scale, inline links, callouts; a deep slug is preferred over the index), customers / case studies (quotes, logo treatment, stat blocks), about / company (secondary section patterns). Login, legal, careers and file links are skipped.
+4. **Fetch every printed URL the same way.** The skill deals them to up to three crawler agents that run in parallel; each page lands as its own row file under `evidence/firecrawl/rows/`, so parallel ingests never lose a row, and `firecrawl.json` is rebuilt from them as a view (hand-written rows there still count). Pages that fail stay failed; the capture continues with the rest. Pages that fail are recorded and skipped by `mine`; do not substitute others by hand. When `pick-pages` prints nothing (a single-page site), continue with the homepage alone: body type then comes from `computed.<home>.p` and `computed.<home>.body`, and the fidelity gate judges the homepage only.
+   Assets the site itself declares (a font weight the stylesheet lists, an icon file, a video poster) are fetched with `python3 <plugin-root>/agents/brand-kit/scripts/prefetch.py fetch-asset --out <dir> <url>...` (same scheme check and size caps as the miner). That is the only extra download the capture makes; there is no page walk with curl.
+5. **Build the evidence pack:** `python3 <plugin-root>/agents/brand-kit/scripts/prefetch.py mine --pages-dir evidence/firecrawl --out evidence/`. It mines the stylesheet bundles for `@font-face` files (resolved against each sheet's URL, hashed next/font family names decoded, one latin face per weight), custom properties, colors by property, gradients, radii, shadows, container widths, button rules and section padding; lifts logo candidates from header, nav, footer and the home link with provenance and a `suspectWall` flag; dedupes inline icons; crops each screenshot (full page, a top frame, 1600 px strips of the homepage plus a dedicated bottom strip so the footer is always judgeable) and samples the hero's dominant pixel colors plus a color band every 300 px. When Playwright and Chromium are installed it also reads computed styles off the rendered homepage and article page: body, h1/h2/h3/p, nav, footer, the real button groups with hover state, the section list, every styled word inside large display text (color, chip, gradient text, weight, face, underline, inline icon), a second homepage frame 4 s later for animated devices, a dark-theme frame when the CSS declares one, and a screenshot for any page the tool returned without one. Without a browser that pass is skipped, `capabilities.playwright` is `false` and `capabilities.playwrightError` says why; `playwrightDisabled: true` means the `--no-playwright` flag was passed, which a capture never does (it exists for tests). Stylesheets served by embedded widgets (chat, meetings, consent) are skipped and their custom properties dropped, so `customProperties` is the brand's own set. If a page arrived without `<head>` the miner recovers it with one plain GET and lists the page in `capabilities.headRecovered`. The result is `evidence/evidence.json` plus `pages/`, `css/`, `fonts/`, `logos/`, `icons.json`, `screenshots/`.
 
-#### Step 2: Walk the key pages (manual fallback when the evidence pack cannot run)
-
-Scrape the homepage first (`format: html`, `includeScreenshot: true`). Then choose up to **5 more** high-signal pages — these are where a brand's design system is most fully expressed. Discover them from the homepage's nav/footer links and prefer, in order:
-
-1. **Homepage** (`/`) — hero pattern, primary CTA, nav, color story (always)
-2. **Product / Platform / Features** — cards, feature grids, icon tiles, stats
-3. **Pricing** — tables, plan cards, badges, toggles, comparison rows
-4. **A blog / "learn" / docs article** — long-form typography, body type scale, inline links, callouts
-5. **Customers / Case studies** — quotes/testimonials, logo treatment, metric/stat blocks
-6. **About / Company or a solutions page** — secondary section patterns
-
-Skip pages that 404 or duplicate a pattern you already have. Aim for coverage of distinct component types, not page count. Prefer the evidence pack (`scripts/prefetch.py`, below) so raw HTML never lands in the main context; without it, fan the non-home pages out to parallel page analysts when the host supports delegation, each returning compact visual observations plus the page's section order. Report progress:
+Report progress as the pages land:
 
 ```
 Walking <domain>…
@@ -46,39 +60,22 @@ Walking <domain>…
 Captured 5 pages. Deriving the design system…
 ```
 
-For each scraped page, if `screenshotUrl` is present, save it:
+With the evidence pack, the capture session reads `evidence.json`, views the homepage strips and the pricing and article page tops, verifies two logo files by eye, and writes `manifest.json`, `tokens.css` and `brand-kit.md` (Steps 3, 4, 6, 7). It does not re-walk the site and does not write `components.html`: `agents/brand-kit/scripts/render_gallery.py <kit-dir>` composes the gallery from `manifest.render` through the shared renderer (always renderable, honors the optional `render.gallery` composition block: per-block `surfaces`, `headingAlign`, `cardStyle`, `navStyle`, `sectionFrame`, and an optional bespoke `hero.html`). Then run the [fidelity gate](fidelity-gate.md).
 
-```bash
-mkdir -p <staging-kit>/screenshots
-curl -s "<screenshotUrl>" -o <staging-kit>/screenshots/<page-slug>.png
-```
+**Without the tool (manual fallback).** When `scrape_website` is not available on the host, produce the same pages dir with the host browser: for the homepage and the pages you would have picked, save the rendered document (`document.documentElement.outerHTML`) as `evidence/firecrawl/<slug>.html` and a full-page screenshot as `<slug>.png`, write the `firecrawl.json` rows by hand (`url`, `ok`, `status`, `finalUrl`, `title`, `htmlFile`, `screenshotFile`, `links`), then run `mine`. Do not walk the site with curl and do not use web archives. With neither the tool nor a browser, stop and say the capture cannot run.
 
-#### Step 2.5: Pull the real CSS & assets (the fidelity step — do not skip)
+#### Step 2.5: Read the evidence (the fidelity step — do not skip)
 
-The scrape gives you rendered HTML + a picture; the **exact values live in the stylesheet bundle**. Fetch and mine it directly. Use a browser User-Agent so you get the real markup.
+The **exact values live in the stylesheet bundles and the rendered page**, and the miner has already pulled them. Work from `evidence/evidence.json` and the files next to it; do not transcribe a vibe from the screenshots alone, and do not walk the site again (missing declared assets go through `fetch-asset`, Step 2).
 
-```bash
-UA="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36"
-curl -s -A "$UA" https://www.<domain>/ -o /tmp/<slug>_home.html
-# Next.js sites: CSS at /_next/static/css/*.css . Other stacks: grep the <link rel=stylesheet> hrefs.
-for f in $(grep -oE '/_next/static/css/[^"]+\.css' /tmp/<slug>_home.html | sort -u); do
-  curl -s -A "$UA" "https://www.<domain>$f" >> /tmp/<slug>_all.css; echo >> /tmp/<slug>_all.css
-done
-```
+**Utility-class sites (Tailwind and friends).** When `capabilities.cssSignal` is `low`, the stylesheet is mostly resets and utilities and says little about the brand: `buttonRules`, `sectionPadding` and `transitions` come back empty or near-empty. The truth is then in `computed.<slug>` (real button anatomy, heading and body weights, section rhythm, emphasis) and in the screenshot strips; read those first and treat the CSS keys below as secondary.
 
-Then extract the **real** values (don't transcribe a vibe):
-
-- **Fonts** — `grep -oE 'font-family:[^;}]+'` and the `@font-face`/`--font-*` vars. Capture the true family **and weight** for headings vs body (many brands use a **medium-weight** display face for headings — defaulting to bold-700/800 would be wrong). **Then EMBED the real webfont** so output renders pixel-exact instead of in a fallback (a wrong heading face is the #1 "AI slop" tell):
-  - Pull each `@font-face` `src:url(...)` for the heading family from the CSS (`grep -oE "@font-face\{[^}]*}" all.css | grep -i <family>`), `curl` the `.woff2`/`.woff` into `<staging-kit>/fonts/`, then **base64-embed it** as an `@font-face` with a `data:` URL in `tokens.css` / the output `<style>`. Example:
-    ```bash
-    curl -s -A "$UA" "https://www.<domain>/_next/static/media/<hash>.woff" -o <staging-kit>/fonts/<family>-<wght>.woff
-    B64=$(base64 -i <staging-kit>/fonts/<family>-<wght>.woff)   # embed as: @font-face{font-family:'<Family>';src:url(data:font/woff;base64,$B64) format('woff');font-weight:...;font-display:swap}
-    ```
+- **Fonts** — `fontFaces` (family, weight, style, the downloaded file under `evidence/fonts/`), `fontFamiliesRanked` and `fontFamilyByContext` (heading / body / button / label). Capture the true family **and weight** for headings vs body (many brands use a **medium-weight** display face for headings — defaulting to bold-700/800 would be wrong; the real weight is in `computed.<home>.h1.fontWeight`). **Then EMBED the real webfont** so output renders pixel-exact instead of in a fallback (a wrong heading face is the #1 "AI slop" tell): copy the downloaded files into `<staging-kit>/fonts/` and list them in `manifest.render.fonts` (`{family, weight, style, file, format}`); the renderer base64-embeds them.
   - **Licensing caveat:** embedding a licensed face is fine for an internal stab / a doc going to the brand owner; for anything redistributed, fall back to the closest free face and say so. Either way keep the real family **first** in the stack so a machine with it installed renders it, with a close free fallback behind. State which path you took in `brand-kit.md`.
-- **Component rules** — grep the real class rules: buttons (`button-primary/secondary/tertiary`), the type scale (`Heading*`, `Text*`, `Label*`), cards. Copy exact `border-radius`, `padding`, `box-shadow`, `background`, inset rings, transitions.
+- **Component rules** — `buttonRules` (the real button selectors with their declarations), `radii`, `shadows`, `transitions`, `maxWidths`, `sectionPadding`, and `computed.<slug>.buttons` (each button group's measured height, padding, radius, fill, font and hover state). Copy exact `border-radius`, `padding`, `box-shadow`, `background`, inset rings, transitions.
 - **Button size scale — capture it, don't ship one guessed size.** Brands define buttons at multiple sizes (sm/md/lg), and the proportions are a strong brand tell. For each size record **height, x/y padding, font-size, corner radius, and icon size** (e.g. sm 32px·r8, md 40px·r12, lg 48px·pill — note that corner radius often grows with size). Note the default size used for primary CTAs and whether CTAs are pill vs the standard rounded-rect. Emit `--brand-btn-{sm,md,lg}-{height,pad,font,radius}` tokens and show all sizes in the gallery.
-- **Palette** — rank actual usage: `grep -oE '#[0-9a-fA-F]{6}' all.css | tr 'A-F' 'a-f' | sort | uniq -c | sort -rn | head -30`. Map the top hits to roles; confirm against the screenshot.
-- **Emphasis & accent mechanism — figure out *how* the brand emphasizes, don't assume.** Look at the hero/section headings and inline copy and identify the actual device(s):
+- **Palette** — `colorsRanked` (usage-ranked hexes), `colorsByProperty` (background / color / border / fill), `gradients`, `customProperties` and `customPropertiesDark`, plus the pixel truth in `pages[].screenshotPalette` (hero, whole page, and a band every 300 px) for surfaces the CSS hides (canvas, video and image heroes). Map the top hits to roles; confirm against the screenshot strips.
+- **Emphasis & accent mechanism — figure out *how* the brand emphasizes, don't assume.** `computed.<home>.emphasis` lists every styled word inside large display text with exactly what differs from its heading (color, chip background, gradient text, weight, face, underline, inline icon), and `emphasisLater` catches treatments that cycle in after load. Confirm against the hero strips and identify the actual device(s):
   - **Color** — is the emphasized word a different color (accent/lavender/blue)? On light vs dark?
   - **Weight** — heavier (or lighter) than surrounding text? (Capture the exact weights — e.g. body 400, emphasis 600; or a *light* display heading with regular-weight emphasis.)
   - **Size** — larger? a different type ramp step?
@@ -93,7 +90,7 @@ Then extract the **real** values (don't transcribe a vibe):
 - **Composition & depth (do not skip — this is what separates "designer-grade" from "AI slop").** Tokens alone produce a correctly-colored but flat, cramped doc. You must also lift the brand's *layout system*:
   - **Rhythm & whitespace** — container `max-width` + responsive gutters, and the **section vertical padding** (grep the hero/section wrapper rules; section padding is often `4–6rem` top/bottom). Brands look professional because they're *airy* — generous section padding, large headings, comfortable line-height. Reproduce that scale; do not pack content edge-to-edge.
   - **Section header pattern** — how a section opens (e.g. a **centered** `eyebrow label → balanced heading (one highlighted word) → muted subhead`). Mirror the brand's actual pattern on every section.
-  - **Depth treatments** — what stops it being a flat rectangle: radial-gradient **glows** on dark sections, **glow box-shadows** on icon tiles (`box-shadow:0 0 100px #01f846`-style), **gradient borders** (`border-image:linear-gradient(...)` or a mask ring), layered surfaces, and any hero **graphic / floating product chips**. Capture these and use them — a dark hero must have glow + a graphic element, not be a plain block.
+  - **Depth treatments** — what stops it being a flat rectangle: radial-gradient **glows** on dark sections, **glow box-shadows** on icon tiles (`box-shadow:0 0 100px #01f846`-style), **gradient borders** (`border-image:linear-gradient(...)` or a mask ring), layered surfaces, and any hero **graphic / floating product chips**. Capture the treatments the source actually uses and reproduce those; a flat dark band is correct when the site is flat, and an invented glow or graphic is a fidelity miss, not a fix.
   - **Texture / pattern** — capture any background *tooth* the brand uses on its bands: dot grids, line/blueprint grids, film grain, mesh-gradient blobs. These read as "premium" and are easy to miss. Set `--brand-texture` (layered above the glow on dark bands; `--brand-hero-texture` for light heroes). Reusable CSS recipes — tint the rgba to the brand:
     - **dot grid:** `radial-gradient(rgba(255,255,255,.07) 1px, transparent 1.4px) 0 0/22px 22px`
     - **line/blueprint grid:** `linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px) 0 0/30px 30px, linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px) 0 0/30px 30px`
@@ -104,13 +101,14 @@ Then extract the **real** values (don't transcribe a vibe):
 
 **Lift the real assets (download + inline, never hotlink):**
 
-- **Logo** — find `<img alt="…Logo">` or the nav logo `<svg>`; `curl` it to `<staging-kit>/` and inline it. **Capture BOTH lockups:** the dark-text version for light backgrounds AND the white/light version for dark bands (look for `logoFullWhite`, `logo-white`, the nav logo on a dark hero, etc.). Use the right one per surface.
-  - **Source rule (this is where contamination starts).** Take the **onLight** logo from the **nav brand lockup** (top-left, linked to `/`). Take the **onDark** logo from the **footer** (footers are usually dark and carry the brand's real white lockup) or the nav rendered over a dark hero. **NEVER take a logo from a "trusted by" / customers / partners / clients / logo-wall container** — those are white *customer* logos and are the #1 source of a wrong-company mark. The onDark variant is the one that gets contaminated, because the customer wall is dark and full of white logos.
+- **Logo** — `logoCandidates` lists every `<img>` and inline `<svg>` candidate from the header, nav, footer and the home link with its `region`, `src` or `viewBox`, the `suspectWall` flag, the saved file under `evidence/logos/`, and `inkLuminance` / `inkSaturation` / `suggestedSurface` (the color of the marks themselves, measured from the rendered SVG when a browser ran: light ink suggests `dark`, dark ink suggests `light`; saturated or gradient marks, mid-tones and `currentColor` marks are `null` because they read on either surface or cannot be measured); `meta` adds the favicon and `og:image`. Copy the chosen files into `<staging-kit>/`. **Capture BOTH lockups:** the dark-text version for light backgrounds AND the white/light version for dark bands (look for `logoFullWhite`, `logo-white`, the nav logo on a dark hero, etc.). Use the right one per surface.
+  - **Surface rule: pick by the logo's own ink, use the page region only as a hint.** `suggestedSurface: "light"` (dark marks) is the onLight candidate; `"dark"` (white or pale marks) is the onDark candidate. Regions are not reliable: a site with a photo or video hero carries its white logo in the **header** and its dark logo in a **white footer**, the reverse of the usual pattern. When ink is `null` (a `currentColor` SVG), render it on both surfaces and look. **NEVER take a logo from a "trusted by" / customers / partners / clients / logo-wall container** (`suspectWall: true`) — those are white *customer* logos and are the #1 source of a wrong-company mark. The onDark variant is the one that gets contaminated, because the customer wall is dark and full of white logos.
   - **Wordmark gate — inspect the pixels, not the metadata.** After downloading EACH variant, **Read the image file (the Read tool renders it) and confirm the wordmark reads THIS brand's name.** Manifest metadata is not enough: a kit can record `lockup.wordmark: "Octave"` while the actual file is a WorkSpan logo scraped from the customer wall. A white logo is invisible on a light preview, so the onDark variant must be checked specifically — render it on a dark background. Reject any asset that shows a different company.
-  - **Run the verifier before caching:** `bash scripts/verify-logos.sh <slug>` renders onLight on white and onDark on dark side by side and flags file/aspect issues. Eyeball both cells; each must read the brand's name.
+  - **Run the verifier before caching:** `bash <plugin-root>/agents/brand-kit/scripts/verify-logos.sh <staging-kit> --out <staging-kit>/.logo-verify.png` checks the files and aspect ratios, writes a swatch page with onLight on white and onDark on dark, and renders it to the PNG when Playwright is installed (without Playwright pass an `.html` path and open it). Eyeball both cells; each must read the brand's name.
   - **Record provenance.** Store the source URL of each variant in the manifest (`logo.onLightSource`, `logo.onDarkSource`). If a source path or its container class/id contains `customers|partners|trusted|clients|logos`, or points at a different domain than the brand's, treat the asset as suspect and re-source.
   - **Fallback ladder for onDark:** verified footer/nav white lockup → `favicon` / `og:image` (authoritative brand marks) → **controlled recolor of the VERIFIED onLight** as a last resort. A recolor (`filter:brightness(0) invert(1)`) flattens a colored mark, so avoid it when a real inverse lockup exists — but a recolor of the *correct* logo always beats shipping the *wrong* company's logo. Never fill the onDark slot from the logo wall.
-- **Icons** — extract the page's own `<svg>` icons (match by `<title>`), save to `<staging-kit>/icons.json`, and reuse them verbatim in cards/tiles. Do **not** substitute generic icons. If the site exposes too few icons to lift, pick ONE line-icon set whose stroke weight matches the brand's (`--brand-icon-stroke`) and **flag the substitution** in `brand-kit.md` (*"icons: <set name> — substitution, swap when the brand's own set is available"*). A flagged single-set substitution is fine; a silent mix of lifted + lookalike icons is not.
+- **Hero imagery** — `heroImages` lists the video poster (or, for a poster-less video, a frame grabbed with ffmpeg as `kind: video-frame`), the opening section's large image and `og:image`, saved under `evidence/images/` (the video file itself is recorded by URL only). A brand whose hero is a photo or a video cannot be expressed with tokens: copy the poster or hero frame into `<staging-kit>/images/`, set `manifest.render.heroVisual: "image"` and `heroImage: "images/<file>"`, and give `--brand-hero-scrim` the gradient or tint the site lays over it for legibility. The renderer inlines the file behind the hero copy. Reach for a bespoke `hero.html` only when the *composition* (not the imagery) cannot be expressed.
+- **Icons** — `evidence/icons.json` holds the page's own icons, inline `<svg>` elements and `<img src="*.svg">` files alike (name, viewBox, inner markup, `source`, deduped); copy it to `<staging-kit>/icons.json` and reuse them verbatim in cards/tiles. Do **not** substitute generic icons. If the site exposes too few icons to lift, pick ONE line-icon set whose stroke weight matches the brand's (`--brand-icon-stroke`) and **flag the substitution** in `brand-kit.md` (*"icons: <set name> — substitution, swap when the brand's own set is available"*). A flagged single-set substitution is fine; a silent mix of lifted + lookalike icons is not.
 
 #### Step 3: Derive the design system
 
@@ -135,6 +133,7 @@ Work primarily from the **real CSS (Step 2.5)** — the screenshots only confirm
 **3b. Typography.**
 - Font families (heading vs body) from `font-family`. Note the web-font source if linkable (Google Fonts name, or a CDN/`@font-face` URL) so other skills can `<link>` it; otherwise pick the closest common fallback and say so.
 - Type scale: H1/H2/H3/body/eyebrow sizes, weights, letter-spacing, line-height (read from the article page especially).
+- **Weights come from evidence, never from defaults.** `--brand-weight-heading` is `computed.<home>.h1.fontWeight` (or the article page's `h2`), `--brand-weight-body` is `computed.<home>.body.fontWeight`; without computed styles, read the weight off the screenshot strips against the downloaded faces. Do not write 600 or 700 because it looks like a heading: a medium display face set bold is the most common fidelity miss.
 - Heading style signals: tight tracking? highlighted words in an accent color? all-caps eyebrows?
 
 **3c. Shape & depth.**
@@ -180,7 +179,13 @@ The reusable core. A single `:root` block plus a web-font `@import`/comment. Use
   --brand-tracking-heading: <em>;
   /* exact weights per role (capture the real values — many brands use medium display, not bold) */
   --brand-weight-heading: <e.g. 500>;
+  --brand-weight-h1: <hero heading weight when it differs from section headings, e.g. 300>;
+  --brand-weight-h2: <section heading weight when it differs>;
   --brand-weight-body: <e.g. 400>;
+  /* the resting primary button has its own tokens; an outline brand sets btn-bg transparent, btn-ink and btn-border to ink */
+  --brand-btn-bg: <fill | transparent>; --brand-btn-ink: <text>; --brand-btn-border: <ring color | transparent>;
+  --brand-btn-hover-bg: <fill on hover>; --brand-btn-hover-ink: <text on hover>; --brand-btn-weight: <e.g. 500>;
+  --brand-btn-bg-dark: <fill on dark bands>; --brand-btn-ink-dark: <text on dark bands>; --brand-btn-border-dark: <ring on dark bands>; /* only when the button inverts on dark surfaces */
   --brand-weight-label: <eyebrow/label weight, e.g. 600>;
   --brand-weight-emphasis: <weight of emphasized words; equal to body if emphasis is color-only>;
   /* emphasis mechanism — how key words stand out (color / weight / size / decoration / none).
@@ -192,8 +197,10 @@ The reusable core. A single `:root` block plus a web-font `@import`/comment. Use
   --brand-emph-underline-dark: <dark-surface underline or none>;
   --brand-emph-weight: <weight of emphasized words | inherit if emphasis is color-only>;
 
-  /* shape */
+  /* shape — every component radius chains to --brand-radius, so a square brand sets it to 0 and is done;
+     override per role only where the site differs */
   --brand-radius-sm: <px>; --brand-radius: <px>; --brand-radius-pill: 999px;
+  --brand-radius-card: <cards, tables, quote, dark footer>; --brand-radius-tile: <icon tiles>; --brand-radius-badge: <pill | 0>;
   --brand-radius-section: <big radius for section containers, e.g. 28px>;
   --brand-shadow: <box-shadow>;
   /* button size scale (height / padding / font / radius per size) */
@@ -248,13 +255,13 @@ The reusable core. A single `:root` block plus a web-font `@import`/comment. Use
 }
 ```
 
-**Light/dark theme pairing.** If the brand ships *both* a light and dark theme (common — Grafana, many dev tools), capture both. Put the default mode in `tokens` and the opposite-mode overrides in `manifest.render.tokensDark` (or `tokensLight`) — only the tokens that differ. The renderer's `--theme light|dark` merges them, so one kit renders either mode. (A brand that is inherently single-mode — e.g. all-dark — just uses `tokens`.)
+**Light/dark theme pairing.** If the brand ships *both* a light and dark theme (common — Grafana, many dev tools), capture both. Put the default mode in `tokens` and the opposite-mode overrides in `manifest.render.tokensDark` (or `tokensLight`) — only the tokens that differ. The renderer's `--theme light|dark` merges them, so one kit renders either mode. (A brand that is inherently single-mode — e.g. all-dark — just uses `tokens`.) Pick the default from evidence, not taste: `computed.<home>.darkMode` is non-null only when the site honours both schemes. Then `tokens` holds the scheme the homepage served at first paint (the `computed.<home>.body` block: dark if its background is dark, otherwise light), the opposite scheme goes into `tokensDark` or `tokensLight` from the `darkMode` block, and `defaultTheme` is written explicitly. When `darkMode` is null the site is single-mode and `tokens` alone is correct.
 
 `kit_base.css` consumes the new scales where they change output: elevation (`shadow-sm/md/xl`), motion (button/card transitions + `prefers-reduced-motion`), icon stroke, and **responsive breakpoints** (grids stack and gutters shrink ≤720px). The ramp / spacing / semantic / gradient tokens are captured as kit metadata and used by components/exports that need them. All are additive with fallbacks, so kits missing them still render.
 
 #### Step 5: Produce `components.html` (the gallery)
 
-Do not hand-write the gallery. After Step 6 has written `manifest.json` with its `render` block, run `scripts/render_gallery.py <kit-dir>`: it composes `components.html` from `manifest.render` through the shared renderer (`render_kit.py` + `assets/kit_base.css`), so the gallery is self-contained, always renderable and identical in structure across brands. Everything the brand looks like must therefore be expressed in the tokens, fonts, logo files and the optional `render.gallery` composition block, which is also what every other consumer of the kit reads.
+Do not hand-write the gallery. After Step 6 has written `manifest.json` with its `render` block, run `agents/brand-kit/scripts/render_gallery.py <kit-dir>`: it composes `components.html` from `manifest.render` through the shared renderer (`render_kit.py` + `agents/brand-kit/assets/kit_base.css`), so the gallery is self-contained, always renderable and identical in structure across brands. Everything the brand looks like must therefore be expressed in the tokens, fonts, logo files and the optional `render.gallery` composition block, which is also what every other consumer of the kit reads.
 
 The gallery contains, in order: hero (top bar with logo and nav, eyebrow, heading with one emphasized word, lead, primary button), stat strip, section header with kicker, three feature cards with icon tiles, comparison table, quote, checklist, pricing cards, CTA band, footer, and a kit reference strip at the end (color swatches, heading and body faces at real size, embedded fonts, rules). Per-block surfaces (`dark`/`light`), heading alignment, card style, nav style and section framing come from `render.gallery` (see the renderer contract). Icons come from `icons.json`; a card without an icon collapses its tile.
 

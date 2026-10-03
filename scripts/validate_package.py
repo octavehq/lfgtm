@@ -12,7 +12,17 @@ def validate(root):
     root=Path(root).resolve();errors=[]
     skills=list((root/'skills').glob('*/SKILL.md'))
     if len(skills)!=30:errors.append(f'expected 30 skills, found {len(skills)}')
-    if len(list((root/'agents').glob('*.md')))!=7:errors.append('expected seven agent resources')
+    agents=list((root/'agents').rglob('*.md'))
+    if len(agents)!=12:errors.append(f'expected 12 agent resources, found {len(agents)}')
+    for path in agents:
+        match=re.match(r'---\n(.*?)\n---\n',path.read_text(),re.S)
+        try:
+            data=yaml.safe_load(match[1]) if match else None
+            if not isinstance(data,dict) or data.get('name')!=path.stem:raise ValueError('agent name must equal the filename')
+            model=data.get('model')
+            if model is not None and model not in ('haiku','sonnet','opus','inherit') and not re.fullmatch(r'claude-[a-z0-9.-]+',str(model)):raise ValueError('unknown model')  # an alias or a full model id
+        except (ValueError,yaml.YAMLError) as error:
+            errors.append(f'invalid agent frontmatter: {path.relative_to(root)}: {error}')
     for name in ('scripts/export-pdf.sh','scripts/deploy.sh','scripts/extract-pptx.py','LICENSE','skills/shared/host-runtime.md'):
         if not (root/name).is_file():errors.append('missing runtime resource: '+name)
     for path in skills:

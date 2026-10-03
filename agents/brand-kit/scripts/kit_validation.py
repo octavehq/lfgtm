@@ -92,7 +92,7 @@ def validate_manifest(root, man, expected_domain=None, workspace=None):
             css_value(value)
     for font in render.get('fonts', []):
         asset_path(root, font['file'])
-        if font.get('format', Path(font['file']).suffix.lstrip('.')) not in ('woff', 'woff2', 'ttf', 'opentype'):
+        if font.get('format', Path(font['file']).suffix.lstrip('.')) not in ('woff', 'woff2', 'ttf', 'truetype', 'otf', 'opentype'):
             raise ValueError('unsupported font format')
         for key in ('family', 'weight', 'style', 'format'):
             if key in font:
@@ -105,6 +105,12 @@ def validate_manifest(root, man, expected_domain=None, workspace=None):
             p = asset_path(root, name)
             if p.suffix.lower() == '.svg':
                 svg_root(p.read_text())
+    if render.get('heroImage'):
+        p = asset_path(root, render['heroImage'])
+        if p.suffix.lower() not in ('.png', '.jpg', '.jpeg', '.webp', '.svg'):
+            raise ValueError('heroImage must be a png, jpg, webp or svg file')
+        if p.suffix.lower() == '.svg':
+            svg_root(p.read_text())
     for name, digest in man.get('assetChecksums', {}).items():
         if hashlib.sha256(asset_path(root, name).read_bytes()).hexdigest() != digest:
             raise ValueError(f'asset checksum mismatch: {name}')

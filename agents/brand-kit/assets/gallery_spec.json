@@ -1,0 +1,15 @@
+{
+  "title": "Brand component gallery",
+  "blocks": [
+    {"type": "hero", "eyebrow": "For revenue teams", "title": "Every customer conversation, in **one record**", "lead": "Calls, emails and meetings land in the same place, so the whole team reads the same account history before they pick up the phone.", "cta": {"label": "Book a demo", "href": "https://example.com/"}, "nav": {"links": [{"label": "Product", "href": "https://example.com/"}, {"label": "Pricing", "href": "https://example.com/"}], "cta": {"label": "Start free", "href": "https://example.com/"}}},
+    {"type": "stats", "items": [{"n": "48", "u": "%", "l": "less time on admin"}, {"n": "3.2", "u": "x", "l": "more accounts per rep"}, {"n": "12", "u": "min", "l": "to a complete account brief"}]},
+    {"type": "section", "kicker": "Why it works", "heading": "Stop reconciling spreadsheets every **Monday**", "paras": ["Your team spends a day a week stitching three tools together, and the gaps still show up in customer calls. One record, kept current automatically, ends the Monday reconciliation.", "Nothing changes for reps. The record fills itself from the tools they already use."]},
+    {"type": "features", "items": [{"title": "Automatic capture", "text": "Every call, email and meeting is recorded without anyone typing it in."}, {"title": "One account history", "text": "Sales, success and marketing read the same page before every conversation."}, {"title": "Answers with sources", "text": "Ask a question about an account and get a cited answer in seconds."}]},
+    {"type": "comparison", "badHead": "Before", "goodHead": "After", "rows": [["Notes typed up after the call", "Captured during the call"], ["Three tools, two spreadsheets", "One record"], ["Numbers argued over", "Numbers agreed on"]]},
+    {"type": "quote", "text": "We stopped arguing about whose numbers were right within the first month.", "name": "Dana Whitfield", "role": "VP Revenue Operations, Halcyon"},
+    {"type": "checklist", "items": ["Works with your CRM and calendar", "No change to how reps work", "Security review pack on request", "Live in under a week"]},
+    {"type": "pricing", "plans": [{"name": "Starter", "price": "$0", "period": "/mo", "blurb": "For one team trying it out", "features": ["Up to 5 seats", "Email and calendar capture"], "cta": {"label": "Start free", "href": "https://example.com/"}}, {"name": "Team", "price": "$49", "period": "/mo", "blurb": "For teams that share accounts", "features": ["Unlimited seats", "Call capture", "Cited answers"], "featured": true, "badge": "Most chosen", "cta": {"label": "Choose Team", "href": "https://example.com/"}}]},
+    {"type": "cta", "heading": "See it on **your** accounts", "sub": "A 30-minute session with your own data loaded.", "cta": {"label": "Book a demo", "href": "https://example.com/"}},
+    {"type": "footer", "links": [{"label": "Privacy", "href": "https://example.com/"}, {"label": "Terms", "href": "https://example.com/"}]}
+  ]
+}

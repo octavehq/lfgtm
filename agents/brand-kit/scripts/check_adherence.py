@@ -93,7 +93,7 @@ def load_kit(slug_or_dir, kit_dir):
     man_path = d / "manifest.json"
     if (d / "current.json").is_file():
         from brand_cache import resolve
-        return resolve(d)
+        return resolve(d, allow_draft=True)  # the lint is capture tooling: a draft kit may be checked
     if not man_path.exists():
         raise ValueError(f"no manifest.json under {d}")
     return d, json.loads(man_path.read_text())
