@@ -107,9 +107,13 @@ p{margin:0 0 14px;}
 .is-dark .topbar .nav .cta-pill{background:var(--brand-btn-bg-dark,var(--brand-btn-bg,var(--brand-primary)));
   color:var(--brand-btn-ink-dark,var(--brand-btn-ink,var(--brand-primary-ink)));
   box-shadow:inset 0 0 0 1.5px var(--brand-btn-border-dark,var(--brand-btn-border,transparent));}
-.btn-secondary{background:var(--brand-secondary-bg,transparent);color:var(--brand-ink);
-  box-shadow:inset 0 0 0 1.5px var(--brand-border);}
-.is-dark .btn-secondary{color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.22);background:rgba(255,255,255,.05);}
+/* secondary button: a solid-pill brand (black pill on light, white pill on dark) sets secondary-ink/-border and the
+   -dark variants; unset, it stays the hairline outline */
+.btn-secondary{background:var(--brand-secondary-bg,transparent);color:var(--brand-secondary-ink,var(--brand-ink));
+  box-shadow:inset 0 0 0 1.5px var(--brand-secondary-border,var(--brand-border));}
+.is-dark .btn-secondary{color:var(--brand-secondary-ink-dark,#fff);
+  box-shadow:inset 0 0 0 1.5px var(--brand-secondary-border-dark,rgba(255,255,255,.22));
+  background:var(--brand-secondary-bg-dark,rgba(255,255,255,.05));}
 .btn .arw{width:15px;height:15px;}
 
 /* ---- hero ---- */
@@ -177,9 +181,10 @@ p{margin:0 0 14px;}
   color:var(--brand-stat-ink,inherit);font-size:30px;letter-spacing:-0.02em;}
 /* gallery.statsStyle "inset": the dark strip floats as a rounded card on the page gutter instead of running full width */
 .stats.inset{margin:0 56px;padding:0;border-radius:var(--brand-radius-card,var(--brand-radius,16px));overflow:hidden;}
-.stat .n .u{color:var(--brand-primary);}
+/* stat units: a light-accent brand whose primary fails contrast on white sets stat-unit-ink */
+.stat .n .u{color:var(--brand-stat-unit-ink,var(--brand-primary));}
 .stat .n .u.w{margin-left:.18em;}
-.stats:not(.on-light) .stat .n .u{color:var(--brand-emph-ink-dark);}
+.stats:not(.on-light) .stat .n .u{color:var(--brand-stat-unit-ink-dark,var(--brand-emph-ink-dark));}
 .stat .l{font-family:var(--brand-font-body);font-size:var(--brand-label-size,12px);color:var(--brand-faint,rgba(255,255,255,.68));margin-top:4px;line-height:1.4;}
 .stats.on-light .stat .l{color:var(--brand-muted);}
 
@@ -243,31 +248,33 @@ p{margin:0 0 14px;}
 .cmp .m{flex:0 0 auto;}
 
 /* B1 — gradient-band header table */
-.cmp-band{border:1px solid var(--brand-border);border-radius:var(--brand-radius-card,var(--brand-radius,18px));overflow:hidden;background:var(--brand-surface);box-shadow:var(--brand-shadow);}
+/* --cmp-pad / --cmp-mark / --cmp-gap: one set of measures for cells, markers and headers, so the header label starts
+   exactly over the row text (after the marker column) in both table styles */
+.cmp-band{--cmp-pad:20px;--cmp-mark:19px;--cmp-gap:11px;border:1px solid var(--brand-border);border-radius:var(--brand-radius-card,var(--brand-radius,18px));overflow:hidden;background:var(--brand-surface);box-shadow:var(--brand-shadow);}
 .cmp-band .head{position:relative;display:grid;grid-template-columns:1fr 1fr;background:var(--brand-band);}
-.cmp-band .head .c{position:relative;z-index:1;padding:15px 20px;font-family:var(--brand-font-body);font-weight:var(--brand-weight-label);font-size:var(--brand-label-size,11.5px);letter-spacing:.055em;text-transform:uppercase;display:flex;align-items:center;gap:9px;}
+.cmp-band .head .c{position:relative;z-index:1;padding:15px 20px;padding-inline-start:calc(var(--cmp-pad) + var(--cmp-mark) + var(--cmp-gap));font-family:var(--brand-font-body);font-weight:var(--brand-weight-label);font-size:var(--brand-label-size,11.5px);letter-spacing:.055em;text-transform:uppercase;display:flex;align-items:center;gap:9px;}
 .cmp-band .head .bad{color:var(--brand-on-dark);opacity:.66;border-right:1px solid var(--brand-border-dark,rgba(255,255,255,.12));}
 .cmp-band .head .good{color:#fff;}
 .cmp-band .r{display:grid;grid-template-columns:1fr 1fr;}
-.cmp-band .r .c{padding:15px 20px;font-family:var(--brand-font-body);font-size:13px;line-height:1.55;display:flex;gap:11px;align-items:flex-start;}
+.cmp-band .r .c{padding:15px 20px;padding-inline-start:var(--cmp-pad);font-family:var(--brand-font-body);font-size:13px;line-height:1.55;display:flex;gap:var(--cmp-gap);align-items:flex-start;}
 .cmp-band .r .bad{border-right:1px solid var(--brand-border);color:var(--brand-muted);}
 .cmp-band .r .good{color:var(--brand-ink);font-weight:500;}
 .cmp-band .r:not(.last) .c{border-bottom:1px solid var(--brand-border);}
-.cmp-band .m{width:19px;height:19px;border-radius:50%;display:grid;place-items:center;font-size:10.5px;font-weight:700;margin-top:1px;}
+.cmp-band .m{width:var(--cmp-mark);height:19px;border-radius:50%;display:grid;place-items:center;font-size:10.5px;font-weight:700;margin-top:1px;}
 .cmp-band .bad .m{background:var(--brand-neg-weak);color:var(--brand-negative);}
 .cmp-band .good .m{background:var(--brand-tile-bg);color:var(--brand-tile-ink,#fff);box-shadow:var(--brand-tile-glow);}
 
 /* B2 — refined soft table (light-brand fallback) */
-.cmp-soft{border:1px solid var(--brand-border);border-radius:var(--brand-radius-card,var(--brand-radius,16px));overflow:hidden;box-shadow:var(--brand-shadow);background:var(--brand-surface);}
+.cmp-soft{--cmp-pad:18px;--cmp-mark:19px;--cmp-gap:10px;border:1px solid var(--brand-border);border-radius:var(--brand-radius-card,var(--brand-radius,16px));overflow:hidden;box-shadow:var(--brand-shadow);background:var(--brand-surface);}
 .cmp-soft .r{display:grid;grid-template-columns:1fr 1fr;}
-.cmp-soft .r .c{padding:14px 18px;font-family:var(--brand-font-body);font-size:13px;line-height:1.55;display:flex;gap:10px;align-items:flex-start;}
+.cmp-soft .r .c{padding:14px 18px;padding-inline-start:var(--cmp-pad);font-family:var(--brand-font-body);font-size:13px;line-height:1.55;display:flex;gap:var(--cmp-gap);align-items:flex-start;}
 .cmp-soft .r .bad{border-right:1px solid var(--brand-border);color:var(--brand-muted);}
 .cmp-soft .r .good{color:var(--brand-ink);font-weight:500;box-shadow:inset 3px 0 0 var(--brand-pos-line);}
 .cmp-soft .r.alt{background:var(--brand-canvas);}
-.cmp-soft .head .c{background:var(--brand-canvas);border-bottom:1px solid var(--brand-border);font-weight:var(--brand-weight-label);font-size:11.5px;letter-spacing:.055em;text-transform:uppercase;}
+.cmp-soft .head .c{padding-inline-start:calc(var(--cmp-pad) + var(--cmp-mark) + var(--cmp-gap));background:var(--brand-canvas);border-bottom:1px solid var(--brand-border);font-weight:var(--brand-weight-label);font-size:11.5px;letter-spacing:.055em;text-transform:uppercase;}
 .cmp-soft .head .bad{color:var(--brand-muted);}
 .cmp-soft .head .good{color:var(--brand-emph-ink-light);box-shadow:inset 3px 0 0 var(--brand-primary);}
-.cmp-soft .m{font-weight:700;}
+.cmp-soft .m{font-weight:700;width:var(--cmp-mark);text-align:center;flex:0 0 auto;}
 .cmp-soft .bad .m{color:var(--brand-negative);}.cmp-soft .good .m{color:var(--brand-emph-ink-light);}
 
 /* D1 — luminous diptych (variant:"diptych") */
@@ -316,7 +323,7 @@ p{margin:0 0 14px;}
 .pricing{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;align-items:start;}
 .plan{position:relative;border:1px solid var(--brand-card-border,var(--brand-border));border-radius:var(--brand-radius-card,var(--brand-radius,16px));padding:22px;
   background:var(--brand-card-bg,var(--brand-surface));box-shadow:var(--brand-shadow-sm,var(--brand-shadow,none));}
-.plan.featured{border:1.5px solid var(--brand-primary);box-shadow:var(--brand-shadow-md,var(--brand-shadow,none));}
+.plan.featured{border:1.5px solid var(--brand-plan-featured-border,var(--brand-primary));box-shadow:var(--brand-shadow-md,var(--brand-shadow,none));}
 .plan-badge{position:absolute;top:-10px;right:16px;background:var(--brand-primary);color:var(--brand-primary-ink);
   font-family:var(--brand-font-body);font-weight:700;font-size:10px;letter-spacing:.04em;text-transform:uppercase;padding:4px 10px;
   border-radius:var(--brand-radius-badge,var(--brand-radius-pill,999px));}

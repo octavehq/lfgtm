@@ -726,22 +726,27 @@ class RendererBands(unittest.TestCase):
                            check=True, capture_output=True)
             self.assertIn('<path d="M1 1h2"/>', out.read_text())
 
-    def test_comparison_headers_align_with_their_columns(self):
-        with tempfile.TemporaryDirectory() as d:
-            kit = make_kit(pathlib.Path(d) / "kit")
-            subprocess.run([sys.executable, str(SKILL / "scripts/render_gallery.py"), str(kit)], check=True, capture_output=True)
-            self.assertNotIn("gdot", (kit / "components.html").read_text())  # no invented glow dot in the header
-            from playwright.sync_api import sync_playwright
-            with sync_playwright() as p:
-                b = p.chromium.launch(); pg = b.new_page(); pg.goto((kit / "components.html").resolve().as_uri())
-                got = pg.evaluate("""() => {
-                    const q = s => document.querySelector(s);
-                    const text = el => { const r = document.createRange(); r.selectNodeContents(el); return r.getBoundingClientRect().left; };
-                    return [text(q('.cmp-band .head .bad')) - q('.cmp-band .r .bad .m').getBoundingClientRect().left,
-                            text(q('.cmp-band .head .good')) - q('.cmp-band .r .good .m').getBoundingClientRect().left]; }""")
-                b.close()
-        for delta in got:
-            self.assertLess(abs(delta), 1.0)  # each header label starts over its column's icon
+    def test_comparison_headers_align_with_their_row_text(self):
+        js = """() => {
+            const q = s => document.querySelector(s);
+            const text = el => { const r = document.createRange(); r.selectNodeContents(el); return r.getBoundingClientRect().left; };
+            const after = cell => { const r = document.createRange(); r.setStartAfter(cell.querySelector('.m')); r.setEnd(cell, cell.childNodes.length);
+                                    return r.getBoundingClientRect().left; };
+            const tbl = q('.cmp-band') ? '.cmp-band' : '.cmp-soft';
+            return [tbl, text(q(tbl + ' .head .bad')) - after(q(tbl + ' .r:not(.head) .bad')),
+                    text(q(tbl + ' .head .good')) - after(q(tbl + ' .r:not(.head) .good'))]; }"""
+        for dark in (True, False):
+            with tempfile.TemporaryDirectory() as d:
+                kit = make_kit(pathlib.Path(d) / "kit", dark_band=dark)
+                subprocess.run([sys.executable, str(SKILL / "scripts/render_gallery.py"), str(kit)], check=True, capture_output=True)
+                self.assertNotIn("gdot", (kit / "components.html").read_text())  # no invented glow dot in the header
+                from playwright.sync_api import sync_playwright
+                with sync_playwright() as p:
+                    b = p.chromium.launch(); pg = b.new_page(); pg.goto((kit / "components.html").resolve().as_uri())
+                    got = pg.evaluate(js); b.close()
+            self.assertEqual(got[0], ".cmp-band" if dark else ".cmp-soft")
+            for delta in got[1:]:
+                self.assertLess(abs(delta), 1.0, got)  # each header label starts over its column's text, after the marker
 
 
 class MinerSecondPass(unittest.TestCase):
