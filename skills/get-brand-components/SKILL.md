@@ -35,22 +35,22 @@ Four rules hold at every step:
 
 - **The plugin is read-only.** During a capture nothing under `PLUGIN_ROOT` is created, edited or deleted: not `kit_base.css`, not the specs, not the agents, not the scripts. An installed plugin is not a checkout. The kit adapts through tokens, knobs, `render.surfaces` and `hero.html` only; what the renderer cannot express is collected as renderer feedback for the plugin maintainers (below), never applied in the run.
 - **Agent tool only.** Dispatch every agent with the Agent tool; never the Workflow tool. No agent spawns agents. Scripts the orchestrator runs itself (`mine`, `judge_context.py`, `gate_decide.py`, `promote`, `mark-ready`) are single commands with their output on disk.
-- **No questions.** Agents cannot ask the user and neither do you, except for an asset-store match (reuse a kit a teammate published, or spend scrape credits).
+- **Two questions, no more.** Agents cannot ask the user and neither do you, except for an asset-store match (reuse a kit a teammate published, or spend scrape credits) and the closing question (open the kit, or host it).
 - **Reports are files** under `RUN_DIR/reports/`; agents return summaries of at most 15 lines ending with the report path. Before the next step you check the file exists; if it does not, save the summary there with a one-line note. Never re-dispatch for a missing report, never paste a report into a prompt.
 
 Agent types are scoped `octave:brand-kit:<name>`; use the name exactly as your host lists it. A host without subagent delegation runs the five agent files as instructions, sequentially, in the same order ([host runtime](../shared/host-runtime.md)).
 
 ### Step 0: resolve
 
-`PLUGIN_ROOT` (absolute installed plugin root), `TARGET` (the domain or URL as typed), `REFRESH=yes|no`, `RUN_DIR=${TMPDIR:-/tmp}/brand-kit-<slug>-<timestamp>` (create it, with `reports/`), `BRAND_CACHE` (default `~/.octave/brands`), `WORKSPACE` (from `verify_connection`, else `unknown`). Note the wall-clock; note it again at every step boundary for the timing table in the final report. `DOMAIN` and `CACHE_ROOT` come back from the home crawler (computed by `brand_cache.py canonical`); adopt them and never derive a hostname yourself.
+`PLUGIN_ROOT` (absolute installed plugin root), `TARGET` (the domain or URL as typed), `REFRESH=yes|no`, `RUN_DIR=${TMPDIR:-/tmp}/brand-kit-<slug>-<timestamp>` (create it, with `reports/`), `BRAND_CACHE` (default `~/.octave/brands`), `WORKSPACE` (from `verify_connection`, else `unknown`). Note the wall-clock; note it again at every step boundary for the timing table in the capture report. `DOMAIN` and `CACHE_ROOT` come back from the home crawler (computed by `brand_cache.py canonical`); adopt them and never derive a hostname yourself.
 
 ### Step 1: homepage — `brand-crawler` `TASK=home` (one agent)
 
-Dispatch with the values above and `TASK=home`. It resolves identity, checks the cache and the asset store, scrapes and ingests the homepage once, and runs `pick-pages`. Act on `outcome`: `READY` (print the summary line, open `components.html`, mention `refresh`, stop); `ASSET_MATCH` (the one question: **Use it (Recommended)** or **Rebuild fresh**, then re-dispatch `TASK=home` with `ASSET_DECISION=use|rebuild`); `HOME` (keep `domain`, `cache_root`, `evidence_dir`, `draft_kit` when the cache held a live draft, and `pages`, the picked URLs).
+Dispatch with the values above and `TASK=home`. It resolves identity, checks the cache and the asset store, scrapes and ingests the homepage once, and runs `pick-pages`. Act on `outcome`: `READY` (the cache already holds a ready kit: go to the closing, no capture report; `refresh` re-walks); `ASSET_MATCH` (the one question: **Use it (Recommended)** or **Rebuild fresh**, then re-dispatch `TASK=home` with `ASSET_DECISION=use|rebuild`); `HOME` (keep `domain`, `cache_root`, `evidence_dir`, `draft_kit` when the cache held a live draft, and `pages`, the picked URLs).
 
 ### Step 1b: the other pages — `brand-crawler` `TASK=pages` × up to 3 (one message)
 
-Only when `pages` is not empty. Deal the URLs round-robin over `N = min(3, number of pages)` crawlers (URL `i` goes to crawler `i mod N`; 5 pages give 2, 2, 1) and dispatch all `N` in one message, each with `TASK=pages PAGES=<its URLs, one per line>` plus `PLUGIN_ROOT`, `DOMAIN`, `RUN_DIR`. Each scrapes and ingests its pages and returns `crawled:` and `failed:` lists. A crawler that fails or times out costs its pages only: do not retry, carry its URLs into the final report under failed pages, and continue. A single-page site (empty `pages`) skips this step entirely.
+Only when `pages` is not empty. Deal the URLs round-robin over `N = min(3, number of pages)` crawlers (URL `i` goes to crawler `i mod N`; 5 pages give 2, 2, 1) and dispatch all `N` in one message, each with `TASK=pages PAGES=<its URLs, one per line>` plus `PLUGIN_ROOT`, `DOMAIN`, `RUN_DIR`. Each scrapes and ingests its pages and returns `crawled:` and `failed:` lists. A crawler that fails or times out costs its pages only: do not retry, carry its URLs into the capture report under failed pages, and continue. A single-page site (empty `pages`) skips this step entirely.
 
 ### Step 1c: mine (orchestrator, one command)
 
@@ -96,21 +96,53 @@ The thresholds live in the script (gallery at least 34, no dimension below 3, no
   python3 <PLUGIN_ROOT>/agents/brand-kit/scripts/brand_cache.py mark-ready <CACHE_ROOT> --score <gallery>/40
   ```
 
-  Then the final report.
+  Then write the capture report and go to the closing.
 - `repair`: step 7.
 - `stop`: step 8.
 
 ### Step 7: repair — `brand-kit-author` (one agent)
 
-`TASK=repair KIT_VERSION=<v+1> BASE=<best so far> SCORECARDS=<this round's scorecard paths> REPORT=reports/brand-kit-author-v<v+1>.md`, then back to step 4. "Best" is the version with the highest gallery score; ties go to `looks_good: yes`. Repairs touch only what the scorecards name, at the token level; a fix marked `renderer` is feedback, not work. At most 3 judge rounds per capture: 2 repairs, 6 judge dispatches, plus at most one tiebreak judge per round. Report the gallery and one-pager scores after every round.
+`TASK=repair KIT_VERSION=<v+1> BASE=<best so far> SCORECARDS=<this round's scorecard paths> REPORT=reports/brand-kit-author-v<v+1>.md`, then back to step 4. "Best" is the version with the highest gallery score; ties go to `looks_good: yes`. Repairs touch only what the scorecards name, at the token level; a fix marked `renderer` is feedback, not work. At most 3 judge rounds per capture: 2 repairs, 6 judge dispatches, plus at most one tiebreak judge per round. Record the gallery and one-pager scores of every round for the capture report.
 
 ### Step 8: stop without a pass
 
-`python3 <PLUGIN_ROOT>/agents/brand-kit/scripts/brand_cache.py status <CACHE_ROOT>`: `missing` (including a stale pointer) means promote the best version as `draft` (the `promote` command above, no `mark-ready`) so the next run resumes it; anything else means leave the pointer untouched (a failed refresh never replaces a working kit) and report the best candidate's path.
+`python3 <PLUGIN_ROOT>/agents/brand-kit/scripts/brand_cache.py status <CACHE_ROOT>`: `missing` (including a stale pointer) means promote the best version as `draft` (the `promote` command above, no `mark-ready`) so the next run resumes it; anything else means leave the pointer untouched (a failed refresh never replaces a working kit); the best candidate's path then goes in the capture report. Then write the capture report and go to the closing.
 
-### The final report
+### The capture report (a file, not terminal output)
 
-Gallery and one-pager scores per round, pointer status (`ready`, `draft` or untouched), kit path, failed pages, the author's assumptions, obstacles, the timing table (one line per step with its wall-clock duration), and **Renderer feedback for the plugin maintainers**: the contents of `renderer-feedback.md`, each line naming the file, the change and why, for a fix in the repository, never in the installed plugin. The agent reports stay in `RUN_DIR/reports/`.
+Write `RUN_DIR/reports/capture-report.md` with everything a maintainer or a curious user may want and the terminal must not carry: gallery and one-pager scores per round, pointer status (`ready`, `draft` or untouched), kit path, failed pages, the author's assumptions, obstacles, the timing table (one line per step with its wall-clock duration), and **Renderer feedback for the plugin maintainers**: the contents of `renderer-feedback.md`, each line naming the file, the change and why, for a fix in the repository, never in the installed plugin. One `Write`; the agent reports stay beside it in `RUN_DIR/reports/`.
+
+### The closing (every path that ends with a kit: `READY`, `pass`, `stop`)
+
+Print at most three lines, then ask one question. Nothing from the capture report is repeated here.
+
+```
+<domain>: brand kit <ready | saved as draft | kept the previous kit> · gallery <score>/40 <(passed | after 3 rounds, bar is 34)> · <total time>
+Kit: <absolute kit directory, ~ expanded>
+Details: <RUN_DIR>/reports/capture-report.md        (omit on READY)
+```
+
+The question (`AskUserQuestion`, two options):
+
+- **Open in browser (Recommended)**: open `<kit>/components.html` with the host's opener (`open` on macOS, `xdg-open` on Linux, `start` on Windows), print the path, stop.
+- **Host on Octave**: hosting below. Print the URL it returns, stop.
+
+When the host has no Octave asset tools, skip the question and open the gallery.
+
+### Hosting via `/octave:asset-manager`
+
+Hosting is the [asset-manager skill](../asset-manager/SKILL.md)'s job; this skill never calls asset tools or upload scripts itself. Invoke it as a user would, `/octave:asset-manager publish <absolute kit directory>` (with a Skill tool: `octave:asset-manager`, args `publish <kit dir>`; without one, read its `SKILL.md` and follow its publish workflow), and hand it these inputs so it asks nothing back:
+
+| Input | Value | Why |
+|---|---|---|
+| source | the kit directory only (`manifest.json`, `tokens.css`, `components.html`, `brand-kit.md`, fonts, logos, icons, images) | the publish manifest excludes everything in `RUN_DIR` |
+| identifier | `<slug>-brand-kit` | what Step 1's asset-store check looks for, so a teammate's next run reuses it |
+| type, entry point | `website`, `components.html` | the gallery is the page |
+| privacy, status | `workspace`, `published` | teammates can reuse it; not public |
+| description | `Brand kit for <domain>, gallery <score>/40`, plus `, draft` when the pointer is not ready | the asset list shows the state |
+| existing asset | Step 1 found a hosted kit you own and the answer was *Rebuild fresh*: `update <identifier>` instead of `publish` | one hosted kit per domain |
+
+The asset-manager's own rules apply from there (publish manifest, readback, registry, URL verification).
 
 ## References by task
 

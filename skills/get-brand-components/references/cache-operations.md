@@ -19,12 +19,13 @@ downstream rendering; a name match alone is not identity.
   validation retains the current kit.
 - **List:** show current captures in the verified workspace with company/domain,
   capture date and readiness. Do not scan other workspace contents to fill gaps.
-- **Show:** resolve the exact selected capture and open its components or visual
-  specification. Distinguish mechanical validation from completed visual review.
+- **Show:** resolve the exact selected capture and end with the closing in SKILL.md
+  (three lines, then open the gallery or host it). Distinguish mechanical validation
+  from completed visual review.
 - **Export:** bundle only approved kit files/assets with allowed-use decisions.
   Include the manifest, tokens, components and visual rules as needed; omit raw
-  source captures, diagnostic output and private notes. For hosting use an explicit
-  publish manifest and asset-manager’s audience/access checks.
+  source captures, diagnostic output and private notes. Hosting goes through
+  `/octave:asset-manager` with the inputs listed under *Hosting* in SKILL.md.
 - **Delete:** an explicit delete request authorizes the identified local cache
   entry. Verify exact workspace/domain/capture scope, prefer reversible removal
   where supported, and preserve unrelated captures and aliases. An ambiguous
