@@ -29,11 +29,12 @@ Resolve current tool schemas before execution; use returned IDs and pagination. 
 
 ## How the capture runs
 
-A capture is a fixed pipeline over five agents in `<plugin-root>/agents/brand-kit/`; the capture scripts and `kit_base.css` live beside them, and the procedure the agents follow is in this skill's references: [capture workflow](references/capture-workflow.md), [fidelity gate](references/fidelity-gate.md), [design judgement](references/design-judgement.md). You are the orchestrator: you dispatch, pass file paths, run the decision script, apply at most one renderer fix, promote, and report. You do not read the evidence pack, write kit files or score renders yourself. `list`, `show`, `export` and `delete` stay in this session ([cache operations](references/cache-operations.md)).
+A capture is a fixed pipeline over five agents in `<plugin-root>/agents/brand-kit/`; the capture scripts and `kit_base.css` live beside them, and the procedure the agents follow is in this skill's references: [capture workflow](references/capture-workflow.md), [fidelity gate](references/fidelity-gate.md), [design judgement](references/design-judgement.md). You are the orchestrator: you dispatch, pass file paths, run the scripts that decide, promote, and report. You do not read the evidence pack, write kit files or score renders yourself. `list`, `show`, `export` and `delete` stay in this session ([cache operations](references/cache-operations.md)).
 
-Three rules hold at every step:
+Four rules hold at every step:
 
-- **Agent tool only.** Dispatch every agent with the Agent tool; never the Workflow tool. No agent spawns agents. Promotion and `mark-ready` are two direct commands you run yourself.
+- **The plugin is read-only.** During a capture nothing under `PLUGIN_ROOT` is created, edited or deleted: not `kit_base.css`, not the specs, not the agents, not the scripts. An installed plugin is not a checkout. The kit adapts through tokens, knobs, `render.surfaces` and `hero.html` only; what the renderer cannot express is collected as renderer feedback for the plugin maintainers (below), never applied in the run.
+- **Agent tool only.** Dispatch every agent with the Agent tool; never the Workflow tool. No agent spawns agents. Scripts the orchestrator runs itself (`mine`, `judge_context.py`, `gate_decide.py`, `promote`, `mark-ready`) are single commands with their output on disk.
 - **No questions.** Agents cannot ask the user and neither do you, except for an asset-store match (reuse a kit a teammate published, or spend scrape credits).
 - **Reports are files** under `RUN_DIR/reports/`; agents return summaries of at most 15 lines ending with the report path. Before the next step you check the file exists; if it does not, save the summary there with a one-line note. Never re-dispatch for a missing report, never paste a report into a prompt.
 
@@ -41,11 +42,24 @@ Agent types are scoped `octave:brand-kit:<name>`; use the name exactly as your h
 
 ### Step 0: resolve
 
-`PLUGIN_ROOT` (absolute installed plugin root), `TARGET` (the domain or URL as typed), `REFRESH=yes|no`, `RUN_DIR=${TMPDIR:-/tmp}/brand-kit-<slug>-<timestamp>` (create it, with `reports/`), `BRAND_CACHE` (default `~/.octave/brands`), `WORKSPACE` (from `verify_connection`, else `unknown`). Note the wall-clock; note it again at every step boundary for the timing table in the final report. `DOMAIN` and `CACHE_ROOT` come back from the crawler (computed by `brand_cache.py canonical`); adopt them and never derive a hostname yourself.
+`PLUGIN_ROOT` (absolute installed plugin root), `TARGET` (the domain or URL as typed), `REFRESH=yes|no`, `RUN_DIR=${TMPDIR:-/tmp}/brand-kit-<slug>-<timestamp>` (create it, with `reports/`), `BRAND_CACHE` (default `~/.octave/brands`), `WORKSPACE` (from `verify_connection`, else `unknown`). Note the wall-clock; note it again at every step boundary for the timing table in the final report. `DOMAIN` and `CACHE_ROOT` come back from the home crawler (computed by `brand_cache.py canonical`); adopt them and never derive a hostname yourself.
 
-### Step 1: fetch — `brand-crawler` (one agent)
+### Step 1: homepage — `brand-crawler` `TASK=home` (one agent)
 
-Dispatch with the values above and "Follow your instructions and return the BRAND CRAWLER RESULT." Inside the agent the homepage is fetched alone, then the picked pages in batches of at most 4 parallel `scrape_website` calls. Act on `outcome`: `READY` (print the summary line, open `components.html`, mention `refresh`, stop); `ASSET_MATCH` (the one question: **Use it (Recommended)** or **Rebuild fresh**, then re-dispatch with `ASSET_DECISION=use|rebuild`); `EVIDENCE` (keep `domain`, `cache_root`, `evidence_dir`, `capabilities`, `source_top`, `source_strips`, `source_bottom`, `draft_kit` when the cache held a live draft, and the report path; print the error line when `capabilities` says `playwright false`).
+Dispatch with the values above and `TASK=home`. It resolves identity, checks the cache and the asset store, scrapes and ingests the homepage once, and runs `pick-pages`. Act on `outcome`: `READY` (print the summary line, open `components.html`, mention `refresh`, stop); `ASSET_MATCH` (the one question: **Use it (Recommended)** or **Rebuild fresh**, then re-dispatch `TASK=home` with `ASSET_DECISION=use|rebuild`); `HOME` (keep `domain`, `cache_root`, `evidence_dir`, `draft_kit` when the cache held a live draft, and `pages`, the picked URLs).
+
+### Step 1b: the other pages — `brand-crawler` `TASK=pages` × up to 3 (one message)
+
+Only when `pages` is not empty. Deal the URLs round-robin over `N = min(3, number of pages)` crawlers (URL `i` goes to crawler `i mod N`; 5 pages give 2, 2, 1) and dispatch all `N` in one message, each with `TASK=pages PAGES=<its URLs, one per line>` plus `PLUGIN_ROOT`, `DOMAIN`, `RUN_DIR`. Each scrapes and ingests its pages and returns `crawled:` and `failed:` lists. A crawler that fails or times out costs its pages only: do not retry, carry its URLs into the final report under failed pages, and continue. A single-page site (empty `pages`) skips this step entirely.
+
+### Step 1c: mine (orchestrator, one command)
+
+```bash
+python3 <PLUGIN_ROOT>/agents/brand-kit/scripts/prefetch.py mine --pages-dir <RUN_DIR>/evidence/firecrawl --out <RUN_DIR>/evidence
+python3 -c "import json;e=json.load(open('<RUN_DIR>/evidence/evidence.json'));h=e['pages'][0];print(json.dumps({'capabilities':e['capabilities'],'top':h.get('screenshotTop'),'strips':h.get('screenshotStrips'),'bottom':h.get('screenshotBottom')}))"
+```
+
+Never pass `--no-playwright`. Keep `capabilities`, `source_top`, `source_strips` and `source_bottom` (paths relative to `<RUN_DIR>/evidence`); print the Playwright error line when `capabilities.playwright` is false.
 
 ### Step 2: evidence — `brand-design-analyst` and `brand-logo-verifier` (two agents, one message)
 
@@ -53,9 +67,7 @@ Both get `PLUGIN_ROOT`, `DOMAIN`, `EVIDENCE_DIR=<RUN_DIR>/evidence`, the `capabi
 
 ### Step 3: build — `brand-kit-author` (one agent)
 
-`TASK=build KIT_VERSION=1` with `DOMAIN`, `WORKSPACE`, `RUN_DIR`, `SOURCE_URLS` (the ok pages), `DESIGN_FINDINGS`, `LOGO_FINDINGS` (the two report paths) and `REPORT=reports/brand-kit-author-v1.md`. With `draft_kit` from the crawler: `TASK=render-only BASE=<draft_kit> KIT_VERSION=1` instead. It writes `kit-v1/`, `review-v1/{gallery,onepager}.png`, `gate.json`, `gate-onepager.json`, lints and checksums. Nothing is promoted yet.
-
-**Step 3a, the renderer pass (optional, at most one per capture).** When the author's summary lists `renderer changes needed` or a pre-gate failure only the stylesheet can fix: edit `agents/brand-kit/assets/kit_base.css`, the specs or `render_*.py` yourself, as a new token or knob with the old look as the fallback ([renderer contract](references/renderer-contract.md)); run `python3 -m unittest discover -s <PLUGIN_ROOT>/agents/brand-kit/tests -k Renderer -k ThirdPass -k GateCheck`; on green dispatch `TASK=render-only BASE=<RUN_DIR>/kit-v1 KIT_VERSION=2`. Record the edit (file, change, why) for the final report. If 3a ran, step 7 never does.
+`TASK=build KIT_VERSION=1` with `DOMAIN`, `WORKSPACE`, `RUN_DIR`, `SOURCE_URLS` (the crawled pages), `DESIGN_FINDINGS`, `LOGO_FINDINGS` (the two report paths) and `REPORT=reports/brand-kit-author-v1.md`. With `draft_kit` from the home crawler: `TASK=render-only BASE=<draft_kit> KIT_VERSION=1` instead. It writes `kit-v1/`, `review-v1/{gallery,onepager}.png`, `gate.json`, `gate-onepager.json`, lints and checksums. Nothing is promoted yet. Its `renderer feedback` lines go into `RUN_DIR/reports/renderer-feedback.md` (append; one line each) and nowhere else.
 
 ### Step 4: judge context (orchestrator, one command per artifact)
 
@@ -71,13 +83,13 @@ One on `gallery.png`, one on `onepager.png`. Each gets `PLUGIN_ROOT`, `DOMAIN`, 
 ### Step 6: decision (orchestrator, one command)
 
 ```bash
-python3 <PLUGIN_ROOT>/agents/brand-kit/scripts/gate_decide.py --round <r> --scorecards <RUN_DIR>/reports/judge-v<v>-r<r>-*.md --gates <RUN_DIR>/review-v<v>/gate.json <RUN_DIR>/review-v<v>/gate-onepager.json
+python3 <PLUGIN_ROOT>/agents/brand-kit/scripts/gate_decide.py --round <r> --scorecards <RUN_DIR>/reports/judge-v<v>-r<r>-*.md --gates <RUN_DIR>/review-v<v>/gate.json <RUN_DIR>/review-v<v>/gate-onepager.json --feedback <RUN_DIR>/reports/renderer-feedback.md
 ```
 
-The thresholds live in the script (gallery at least 34, no dimension below 3, no hard fail, the gallery judge's `looks_good`, both pre-gates passing). Its `next` field is the whole decision:
+The thresholds live in the script (gallery at least 34, no dimension below 3, no hard fail, the gallery judge's `looks_good`, both pre-gates passing); `--feedback` folds the round's `renderer` fixes into the maintainers' file, deduplicated. Its `next` field is the whole decision:
 
 - `tiebreak` (one gallery judge scored 33 to 35): dispatch one more gallery judge for the same version (`REPORT=...-gallery-b.md`), run the command again with both gallery scorecards; the mean counts.
-- `pass`: promote that exact version, then mark it ready, in this order:
+- `pass`: promote that exact version, then mark it ready, in this order and never as an agent dispatch:
 
   ```bash
   python3 <PLUGIN_ROOT>/agents/brand-kit/scripts/brand_cache.py promote <RUN_DIR>/kit-v<v> --domain <DOMAIN> --workspace <WORKSPACE> --base <BRAND_CACHE> --write-checksums
@@ -85,28 +97,20 @@ The thresholds live in the script (gallery at least 34, no dimension below 3, no
   ```
 
   Then the final report.
-- `repair`: step 7 (round 1 only, if 3a did not run and the decision lists `rendererFixes` or a `looks_good` reason names the stylesheet), then step 8.
-- `stop`: step 10.
+- `repair`: step 7.
+- `stop`: step 8.
 
-### Step 7: the renderer pass after round 1 (only if step 3a did not run)
+### Step 7: repair — `brand-kit-author` (one agent)
 
-Same procedure as 3a. Renderer edits never happen in rounds 2 or 3. After a renderer fix, only versions rendered by it compete for "best"; earlier scores are discarded, and nothing old is re-judged.
+`TASK=repair KIT_VERSION=<v+1> BASE=<best so far> SCORECARDS=<this round's scorecard paths> REPORT=reports/brand-kit-author-v<v+1>.md`, then back to step 4. "Best" is the version with the highest gallery score; ties go to `looks_good: yes`. Repairs touch only what the scorecards name, at the token level; a fix marked `renderer` is feedback, not work. At most 3 judge rounds per capture: 2 repairs, 6 judge dispatches, plus at most one tiebreak judge per round. Report the gallery and one-pager scores after every round.
 
-### Step 8: repair — `brand-kit-author` (one agent)
-
-`TASK=repair KIT_VERSION=<v+1> BASE=<best so far> SCORECARDS=<this round's scorecard paths> REPORT=reports/brand-kit-author-v<v+1>.md`. "Best" is the version with the highest gallery score among those rendered by the current renderer; ties go to `looks_good: yes`. Repairs touch only what the scorecards name.
-
-### Step 9: rounds 2 and 3
-
-Repeat steps 4 to 6 for the new version. At most 3 judge rounds per capture: 2 repairs, 6 judge dispatches, plus at most one tiebreak judge per round. Report the gallery and one-pager scores after every round.
-
-### Step 10: stop without a pass
+### Step 8: stop without a pass
 
 `python3 <PLUGIN_ROOT>/agents/brand-kit/scripts/brand_cache.py status <CACHE_ROOT>`: `missing` (including a stale pointer) means promote the best version as `draft` (the `promote` command above, no `mark-ready`) so the next run resumes it; anything else means leave the pointer untouched (a failed refresh never replaces a working kit) and report the best candidate's path.
 
 ### The final report
 
-Gallery and one-pager scores per round, pointer status (`ready` or `draft` or untouched), kit path, renderer edits made (by file), the author's assumptions, obstacles, and the timing table: one line per step with its wall-clock duration. The agent reports stay in `RUN_DIR/reports/`.
+Gallery and one-pager scores per round, pointer status (`ready`, `draft` or untouched), kit path, failed pages, the author's assumptions, obstacles, the timing table (one line per step with its wall-clock duration), and **Renderer feedback for the plugin maintainers**: the contents of `renderer-feedback.md`, each line naming the file, the change and why, for a fix in the repository, never in the installed plugin. The agent reports stay in `RUN_DIR/reports/`.
 
 ## References by task
 

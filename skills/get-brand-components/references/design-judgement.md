@@ -51,4 +51,4 @@ looks_good: yes | no
 reasons: up to three lines, each naming what you saw and where (a band, a component, a surface)
 ```
 
-A "no" from both gallery judges (or from the single gallery judge in later rounds) fails the round even above the numeric pass mark. Reasons that name the stylesheet or a spec become renderer items for the orchestrator; reasons that name a token go to the author. The author views both PNGs after rendering and reports what it sees as an advisory `author view` (it is not a verdict; the judges decide), and fixes what it can at the kit level before returning.
+A "no" from both gallery judges (or from the single gallery judge in later rounds) fails the round even above the numeric pass mark. Reasons that name the stylesheet or a spec become renderer feedback for the plugin maintainers (the installed plugin is never edited during a capture); reasons that name a token go to the author. The author views both PNGs after rendering and reports what it sees as an advisory `author view` (it is not a verdict; the judges decide), and fixes what it can at the kit level before returning.
