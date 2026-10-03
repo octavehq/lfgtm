@@ -81,6 +81,17 @@ class CacheLifecycle(unittest.TestCase):
             target = cache.promote(staging, pathlib.Path(d) / "brands", "acme.com", "ws1", write_checksums_first=True)
             self.assertTrue((target / "current.json").is_file())
 
+    def test_review_renders_inside_the_kit_do_not_block_promotion(self):
+        with tempfile.TemporaryDirectory() as d:
+            staging = staging_kit(pathlib.Path(d) / "staging")
+            (staging / ".review").mkdir()
+            (staging / ".review" / "gallery.png").write_bytes(b"png")
+            sums = cache.write_checksums(staging)
+            self.assertNotIn(".review/gallery.png", sums)
+            target = cache.promote(staging, pathlib.Path(d) / "brands", "acme.com", "ws1")
+            root, _ = cache.resolve(target, allow_draft=True)
+            self.assertFalse((root / ".review").exists())
+
     def test_legacy_pointer_without_status_counts_as_ready(self):
         with tempfile.TemporaryDirectory() as d:
             staging = staging_kit(pathlib.Path(d) / "staging")
@@ -128,6 +139,27 @@ class VerifyLogosCli(unittest.TestCase):
             r = subprocess.run([sys.executable, str(SKILL / "scripts/verify_logos.py"), str(kit), "--out", str(kit / "check.png")], capture_output=True, text=True)
             self.assertEqual(r.returncode, 0, r.stderr)
             self.assertTrue((kit / "check.png").is_file() and (kit / "check.html").is_file())
+
+
+class Canonical(unittest.TestCase):
+    def test_www_and_case_collapse_to_one_domain(self):
+        self.assertEqual(cache.canonical_domain("https://WWW.Acme.com/pricing"), "acme.com")
+        self.assertEqual(cache.canonical_domain("acme.com"), "acme.com")
+        self.assertEqual(cache.canonical_domain("www.acme.co.uk"), "acme.co.uk")
+
+    def test_cli_prints_the_domain_and_the_cache_root(self):
+        r = subprocess.run([sys.executable, str(SKILL / "scripts/brand_cache.py"), "canonical", "https://www.acme.com/", "--workspace", "wa_1", "--base", "/tmp/brands"],
+                           capture_output=True, text=True, check=True)
+        self.assertEqual(json.loads(r.stdout), {"domain": "acme.com", "cacheRoot": "/tmp/brands/wa_1/acme.com"})
+
+
+class Scores(unittest.TestCase):
+    def test_gate_means_are_valid_scores(self):
+        for s in ("34/40", "34.5/40", "40/40", "33.25/40"):
+            self.assertEqual(cache.validate_score(s), s)
+        for s in ("41/40", "34", "34.5", "thirty/40", ""):
+            with self.assertRaises(ValueError, msg=s):
+                cache.validate_score(s)
 
 
 if __name__ == "__main__":

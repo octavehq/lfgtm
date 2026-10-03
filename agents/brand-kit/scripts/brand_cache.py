@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Validate and promote immutable brand captures through an atomic pointer.
 
+  brand_cache.py canonical  <url-or-domain> [--workspace <id>]           # canonical domain (no www.) and the cache root
   brand_cache.py checksums  <staging>                                    # write assetChecksums into manifest.json
   brand_cache.py promote    <staging> --domain <d> --workspace <w> [--base <dir>] [--status draft|ready] [--write-checksums]
   brand_cache.py mark-ready <cache-root> [--score 36/40]                 # after the fidelity gate passed
@@ -32,6 +33,7 @@ def canonical_domain(value):
     parsed=urlsplit(value if '://' in value else 'https://'+value)
     if not parsed.hostname or parsed.username or parsed.password: raise ValueError('invalid brand domain')
     host=parsed.hostname.lower().rstrip('.').encode('idna').decode()
+    host=host.removeprefix('www.')  # one cache per brand: www.acme.com and acme.com are the same kit
     if not re.fullmatch(r'[a-z0-9.-]+',host) or '..' in host:raise ValueError('invalid hostname')
     return host
 
@@ -80,8 +82,9 @@ def capture_files(staging):
     staging=Path(staging)
     for p in sorted(staging.rglob('*')):
         if p.is_symlink():raise ValueError('symlink in capture')
-        if p.is_file() and p.name!='manifest.json' and not p.name.startswith('.') and '__pycache__' not in p.parts:
-            yield p.relative_to(staging).as_posix(),p
+        rel=p.relative_to(staging)
+        if p.is_file() and rel.as_posix()!='manifest.json' and not any(x.startswith('.') for x in rel.parts) and '__pycache__' not in rel.parts:
+            yield rel.as_posix(),p
 
 
 def write_checksums(staging):
@@ -126,6 +129,13 @@ def promote(staging,base,domain,workspace,status='draft',write_checksums_first=F
     return target
 
 
+def validate_score(score):
+    """A fidelity score as the gate reports it: a mean such as 34.5/40 is as valid as 34/40."""
+    m=re.fullmatch(r'(\d{1,2}(?:\.\d{1,2})?)/40',str(score).strip())
+    if not m or float(m[1])>40:raise ValueError('score must look like 34/40 or 34.5/40')
+    return m[0]
+
+
 def mark_ready(root,score=None):
     """Flip the pointer to ready once the fidelity gate passed; records the score and time."""
     root=Path(root)
@@ -133,8 +143,7 @@ def mark_ready(root,score=None):
     if not pointer:raise ValueError(f'no current.json under {root}')
     pointer.update({'status':'ready','readyAt':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())})
     if score:
-        if not re.fullmatch(r'\d{1,2}/40',score):raise ValueError('score must look like 34/40')
-        pointer['fidelityScore']=score
+        pointer['fidelityScore']=validate_score(score)
     write_pointer(root,pointer)
     return pointer
 
@@ -150,10 +159,12 @@ def status(root):
 
 def main(argv=None):
     argv=list(sys.argv[1:] if argv is None else argv)
-    if argv and argv[0] not in ('checksums','promote','mark-ready','status','-h','--help'):
+    if argv and argv[0] not in ('canonical','checksums','promote','mark-ready','status','-h','--help'):
         argv.insert(0,'promote')  # the original positional form: brand_cache.py <staging> --domain .. --workspace ..
     ap=argparse.ArgumentParser(description=__doc__,formatter_class=argparse.RawDescriptionHelpFormatter)
     sub=ap.add_subparsers(dest='cmd',required=True)
+    k=sub.add_parser('canonical',help='print the canonical brand domain for a URL or hostname (lowercase, no www.)');k.add_argument('target')
+    k.add_argument('--base',type=Path,default=Path.home()/'.octave/brands');k.add_argument('--workspace',help='also print the cache root for this workspace')
     c=sub.add_parser('checksums',help='write assetChecksums into the staging manifest');c.add_argument('staging',type=Path)
     p=sub.add_parser('promote',help='validate a staging capture and point the cache at it (status draft)');p.add_argument('staging',type=Path)
     p.add_argument('--base',type=Path,default=Path.home()/'.octave/brands')
@@ -162,7 +173,10 @@ def main(argv=None):
     m=sub.add_parser('mark-ready',help='flip the pointer to ready after the fidelity gate');m.add_argument('root',type=Path);m.add_argument('--score')
     s=sub.add_parser('status',help='show the pointer status of a cache root');s.add_argument('root',type=Path)
     args=ap.parse_args(argv)
-    if args.cmd=='checksums':print(f'{len(write_checksums(args.staging))} files catalogued in {args.staging/"manifest.json"}')
+    if args.cmd=='canonical':
+        domain=canonical_domain(args.target)
+        print(json.dumps({'domain':domain,'cacheRoot':str(cache_root(args.base,domain,args.workspace)) if args.workspace else None}))
+    elif args.cmd=='checksums':print(f'{len(write_checksums(args.staging))} files catalogued in {args.staging/"manifest.json"}')
     elif args.cmd=='promote':
         target=promote(args.staging,args.base,args.domain,args.workspace,args.status,args.write_checksums)
         print(target);print(f'status: {args.status}'+(' (run the fidelity gate, then `brand_cache.py mark-ready` to publish for consumers)' if args.status=='draft' else ''))
