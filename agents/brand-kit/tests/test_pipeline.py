@@ -321,7 +321,7 @@ class Ingest(unittest.TestCase):
             rows = {r["finalUrl"]: r for r in prefetch.read_index(pages)}
             self.assertFalse(rows["https://www.acme.com/gone"]["ok"])
             self.assertEqual(rows["https://www.acme.com/err"]["status"], 500)
-            self.assertEqual(sorted(os.listdir(pages)), ["firecrawl.json"])
+            self.assertEqual(sorted(os.listdir(pages)), ["firecrawl.json", "rows"])  # a failed row is still a row file
 
     def test_ingest_accepts_inline_html_content_without_contenturl(self):
         with tempfile.TemporaryDirectory() as d:
@@ -976,6 +976,77 @@ class FetchGuardAndStrips(unittest.TestCase):
         self.assertEqual(len(got["strips"]), 6)  # the first 9600px as before
         self.assertTrue(got["bottom"].endswith("home-bottom.png"))
         self.assertEqual(fields["screenshotBottom"], "home-bottom.png")
+
+
+def _ingest_worker(args):
+    """Top-level so multiprocessing can import it: ingest one fake result into a shared pages dir."""
+    pages_dir, i = args
+    import importlib.util, pathlib as pl, sys as _sys
+    skill = pl.Path(__file__).resolve().parents[1]
+    spec = importlib.util.spec_from_file_location("prefetch_w", skill / "scripts" / "prefetch.py"); m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+    m.RETRY_DELAY = 0
+    fake = lambda url, max_bytes=None, **kw: (b"<html><head></head><body>page %d</body></html>" % i, url, 200)
+    r = {"found": True, "finalUrl": f"https://www.acme.com/p{i}/", "title": f"P{i}", "statusCode": 200,
+         "contentUrl": f"https://store.example/p{i}.html", "links": []}
+    return m.ingest_result(r, pl.Path(pages_dir), lambda msg: None, fetch=fake)["finalUrl"]
+
+
+class ParallelCrawl(unittest.TestCase):
+    """Several crawlers ingest into one pages dir at once; the picker skips listings and finds real articles."""
+
+    def setUp(self):
+        self._delay = prefetch.RETRY_DELAY; prefetch.RETRY_DELAY = 0
+
+    def tearDown(self):
+        prefetch.RETRY_DELAY = self._delay
+
+    def test_concurrent_ingests_keep_every_row(self):
+        import multiprocessing
+        with tempfile.TemporaryDirectory() as d:
+            pages = pathlib.Path(d) / "firecrawl"
+            seed_pages(pages, with_pricing=False)  # a hand-written homepage row in firecrawl.json survives the merge
+            with multiprocessing.get_context("spawn").Pool(4) as pool:
+                done = pool.map(_ingest_worker, [(str(pages), i) for i in range(4)])
+            rows = prefetch.read_index(pages)
+            loaded = prefetch.load_pages(pages, NOOP_LOG)
+        self.assertEqual(sorted(done), [f"https://www.acme.com/p{i}/" for i in range(4)])
+        self.assertEqual(len([r for r in rows if r["finalUrl"].startswith("https://www.acme.com/p")]), 4)
+        self.assertIn("https://www.acme.com/", [u for u, _ in loaded])  # the seeded homepage is still there
+        self.assertEqual(len(loaded), 5)
+
+    def test_row_files_win_over_the_index_view(self):
+        with tempfile.TemporaryDirectory() as d:
+            pages = pathlib.Path(d) / "firecrawl"; pages.mkdir()
+            (pages / "firecrawl.json").write_text(json.dumps([{"url": "https://acme.com/a/", "finalUrl": "https://acme.com/a/", "ok": False, "status": 500, "htmlFile": None}]))
+            fake = lambda url, max_bytes=None, **kw: (b"<html><head></head><body>ok</body></html>", url, 200)
+            prefetch.ingest_result({"found": True, "finalUrl": "https://acme.com/a/", "statusCode": 200, "contentUrl": "https://s/a.html"}, pages, NOOP_LOG, fetch=fake)
+            rows = prefetch.read_index(pages)
+            self.assertEqual([r["ok"] for r in rows], [True])
+            self.assertTrue((pages / "rows" / "a.json").is_file())
+            self.assertEqual(json.loads((pages / "firecrawl.json").read_text())[0]["ok"], True)  # the view was rebuilt
+
+    def test_transient_download_failures_are_retried(self):
+        calls = []
+        def flaky(url, max_bytes=None, **kw):
+            calls.append(url)
+            if len(calls) < 3: raise ConnectionError("reset")
+            return (b"<html><head></head><body>late</body></html>", url, 200)
+        with tempfile.TemporaryDirectory() as d:
+            row = prefetch.ingest_result({"found": True, "finalUrl": "https://acme.com/", "statusCode": 200, "contentUrl": "https://s/h.html"}, pathlib.Path(d), NOOP_LOG, fetch=flaky)
+        self.assertTrue(row["ok"]); self.assertEqual(len(calls), 3)
+
+    def test_pick_pages_on_the_zuora_links_skips_listings_and_finds_the_article(self):
+        links = ["https://www.zuora.com/#content", "https://www.zuora.com/", "https://www.zuora.com/solutions/quote-to-cash/",
+                 "https://www.zuora.com/solutions/intelligent-pricing-and-packaging/", "https://www.zuora.com/solutions/saas/",
+                 "https://www.zuora.com/products/billing-software/", "https://www.zuora.com/our-customers/case-studies/",
+                 "https://www.zuora.com/our-customers/case-studies/zoom/", "https://www.zuora.com/resources/events/",
+                 "https://www.zuora.com/resources/filter/content_type/video/", "https://www.zuora.com/resources/",
+                 "https://zuora.com/resource/modern-finance-leader-report/strategic-demands-outpace-technology/",
+                 "https://docs.zuora.com/", "https://www.zuora.com/careers/", "https://www.zuora.com/about/", "https://www.zuora.com/about/team/"]
+        picked = prefetch.pick_pages(links, "https://www.zuora.com/")
+        self.assertEqual(picked, ["https://www.zuora.com/solutions/quote-to-cash/", "https://www.zuora.com/solutions/intelligent-pricing-and-packaging/",
+                                  "https://zuora.com/resource/modern-finance-leader-report/strategic-demands-outpace-technology/",
+                                  "https://www.zuora.com/our-customers/case-studies/", "https://www.zuora.com/about/"])
 
 
 if __name__ == "__main__":

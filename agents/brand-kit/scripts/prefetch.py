@@ -32,7 +32,7 @@ UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML,
 PAGE_PREFS = [  # (role, keywords in path) in the skill's priority order
     ("product", ["product", "platform", "features", "solutions", "how-it-works"]),
     ("pricing", ["pricing", "plans"]),
-    ("article", ["blog/", "resources/", "learn/", "guides/", "insights/", "articles/", "news/"]),
+    ("article", ["blog/", "resource/", "resources/", "learn/", "guides/", "insights/", "articles/", "news/"]),
     ("customers", ["customers", "case-stud", "success", "stories"]),
     ("about", ["about", "company"]),
 ]
@@ -184,13 +184,73 @@ class Browser:
 
 # ---- pages dir: ingest scrape results, pick pages, load rows ----
 
+ROWS_DIR = "rows"
+RETRY_DELAY = 1.5  # seconds, grows per attempt; tests set it to 0
+
+
+def _row_key(row):
+    return row.get("finalUrl") or row.get("url")
+
+
 def read_index(pages_dir):
+    """Every row of the pages dir: the entries of firecrawl.json (hand-written rows from the browser fallback
+    included) merged with one row file per ingested page under rows/. Row files win on the same URL, so
+    parallel crawlers can never lose a page, and a half-written index is just ignored."""
     p = pages_dir / PAGES_INDEX
-    return json.loads(p.read_text()) if p.is_file() else []
+    try:
+        rows = json.loads(p.read_text()) if p.is_file() else []
+    except ValueError:
+        rows = []
+    rows = [r for r in rows if isinstance(r, dict)]
+    by_url, order = {}, []
+    for r in rows:
+        k = _row_key(r)
+        if k not in by_url: order.append(k)
+        by_url[k] = r
+    rows_dir = pages_dir / ROWS_DIR
+    if rows_dir.is_dir():
+        for f in sorted(rows_dir.glob("*.json"), key=lambda f: (f.stat().st_mtime, f.name)):
+            try:
+                r = json.loads(f.read_text())
+            except (ValueError, OSError):
+                continue
+            k = _row_key(r)
+            if k not in by_url: order.append(k)
+            by_url[k] = r
+    return [by_url[k] for k in order]
+
+
+def _atomic_write(path, text):
+    tmp = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+    tmp.write_text(text); os.replace(tmp, path)
 
 
 def write_index(pages_dir, rows):
-    (pages_dir / PAGES_INDEX).write_text(json.dumps(rows, indent=1))
+    _atomic_write(pages_dir / PAGES_INDEX, json.dumps(rows, indent=1))
+
+
+def write_row(pages_dir, row):
+    """One page, one file, written atomically; firecrawl.json is then rebuilt as a view of every row."""
+    rows_dir = pages_dir / ROWS_DIR
+    rows_dir.mkdir(parents=True, exist_ok=True)
+    _atomic_write(rows_dir / f"{slug_of(_row_key(row) or 'page')}.json", json.dumps(row, indent=1))
+    try:
+        write_index(pages_dir, read_index(pages_dir))  # the view may lose a race; the row files cannot
+    except OSError:
+        pass
+    return row
+
+
+def fetch_with_retry(fetch, url, max_bytes, log, tries=3):
+    """A hosted-document download that survives a transient failure (timeout, reset, 5xx): two retries."""
+    for attempt in range(tries):
+        try:
+            return fetch(url, max_bytes=max_bytes)
+        except Exception as e:
+            if attempt == tries - 1:
+                raise
+            log(f"download retry {attempt + 1}/{tries - 1} for {url[:80]}: {str(e)[:60]}")
+            time.sleep(RETRY_DELAY * (attempt + 1))
 
 
 def ingest_result(result, pages_dir, log, fetch=http_fetch):
@@ -205,8 +265,7 @@ def ingest_result(result, pages_dir, log, fetch=http_fetch):
     row = {"url": result.get("url") or url, "ok": False, "status": status, "finalUrl": url,
            "title": result.get("title"), "htmlFile": None, "screenshotFile": None, "links": result.get("links") or []}
     def commit(r):
-        rows = [x for x in read_index(pages_dir) if x.get("finalUrl") != r["finalUrl"]]
-        rows.append(r); write_index(pages_dir, rows); return r
+        return write_row(pages_dir, r)
     if not url:
         commit(row); raise ValueError("scrape result has no url")
     if result.get("found") is False or (isinstance(status, int) and status >= 400):
@@ -214,7 +273,7 @@ def ingest_result(result, pages_dir, log, fetch=http_fetch):
     slug = slug_of(url)
     html = None
     if result.get("contentUrl"):
-        body, _, _ = fetch(result["contentUrl"], max_bytes=MAX_PAGE_BYTES)
+        body, _, _ = fetch_with_retry(fetch, result["contentUrl"], MAX_PAGE_BYTES, log)
         html = body.decode("utf-8", errors="replace")
     elif isinstance(result.get("content"), str) and result["content"].lstrip().startswith("<"):
         html = result["content"]
@@ -224,7 +283,7 @@ def ingest_result(result, pages_dir, log, fetch=http_fetch):
     row.update({"ok": True, "status": status if isinstance(status, int) else 200, "htmlFile": f"{slug}.html"})
     if result.get("screenshotUrl"):
         try:
-            shot, _, _ = fetch(result["screenshotUrl"], max_bytes=MAX_SCREENSHOT_BYTES)
+            shot, _, _ = fetch_with_retry(fetch, result["screenshotUrl"], MAX_SCREENSHOT_BYTES, log)
             (pages_dir / f"{slug}.png").write_bytes(shot); row["screenshotFile"] = f"{slug}.png"
         except Exception as e:
             log(f"screenshot download failed for {url}: {str(e)[:100]}")
@@ -268,6 +327,7 @@ def pick_pages(home_links, base):
         if not u.startswith("http") or not same_site(u, host): continue
         path = urllib.parse.urlparse(u).path.lower()
         if re.search(r"\.(pdf|png|jpg|svg|zip|xml)$|/(login|signin|signup|legal|privacy|terms|careers|jobs|cookie)", path): continue
+        if re.search(r"/(filter|tag|tags|category|categories|page|author)/", path): continue  # listings and archives, not content
         cands.append((u, path))
     for role, kws in PAGE_PREFS:
         best = None
@@ -1215,7 +1275,7 @@ def cmd_mine(args):
         mark("logos_icons_shots")
         comp = {}
         # computed styles: the homepage plus the article page (body type) or, failing that, the next page
-        article = next((u for u, _ in pages[1:] if re.search(r"blog|resources|learn|guides|insights|articles|news", u)), None)
+        article = next((u for u, _ in pages[1:] if re.search(r"blog|resource|learn|guides|insights|articles|news", u)), None)  # "resource" also matches "resources"
         comp_pages = [pages[0]] + [(u, pp) for u, pp in pages[1:] if u == article][:1]
         if len(comp_pages) < 2 and len(pages) > 1: comp_pages = pages[:2]
         dark_capable = bool(re.search(r"prefers-color-scheme\s*:\s*dark|data-theme|\.dark\b|color-scheme", css_text))
