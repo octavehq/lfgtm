@@ -312,6 +312,12 @@
       "requiredTools": [],
       "changelog": [
         {
+          "version": "1.2.0",
+          "date": "2026-10-03",
+          "notes": "Capture rebuilt around the scrape_website tool and five brand-kit agents (crawler, design analyst, logo verifier, kit author, judges) with a measurable fidelity gate; capture scripts and kit_base.css moved to agents/brand-kit.",
+          "review": false
+        },
+        {
           "version": "1.0.1",
           "date": "2026-09-28",
           "notes": "Packaged releases now include the shared guidance this skill already points to (information and presentation principles).",
