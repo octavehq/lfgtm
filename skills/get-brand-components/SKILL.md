@@ -29,7 +29,7 @@ Resolve current tool schemas before execution; use returned IDs and pagination. 
 
 ## How the capture runs
 
-A capture is a fixed pipeline over five agents in `<plugin-root>/agents/brand-kit/`; the capture scripts and `kit_base.css` live beside them, and the procedure the agents follow is in this skill's references: [capture workflow](references/capture-workflow.md), [fidelity gate](references/fidelity-gate.md), [design judgement](references/design-judgement.md). You are the orchestrator: you dispatch, pass file paths, run the scripts that decide, promote, and report. You do not read the evidence pack, write kit files or score renders yourself. `list`, `show`, `export` and `delete` stay in this session ([cache operations](references/cache-operations.md)).
+A capture is a fixed pipeline over five agents in `<plugin-root>/agents/brand-kit/`; the capture scripts and `kit_base.css` ship in this skill's `scripts/` and `assets/`, and the procedure the agents follow is in this skill's references: [capture workflow](references/capture-workflow.md), [fidelity gate](references/fidelity-gate.md), [design judgement](references/design-judgement.md). You are the orchestrator: you dispatch, pass file paths, run the scripts that decide, promote, and report. You do not read the evidence pack, write kit files or score renders yourself. `list`, `show`, `export` and `delete` stay in this session ([cache operations](references/cache-operations.md)).
 
 Four rules hold at every step:
 
@@ -55,7 +55,7 @@ Only when `pages` is not empty. Deal the URLs round-robin over `N = min(3, numbe
 ### Step 1c: mine (orchestrator, one command)
 
 ```bash
-python3 <PLUGIN_ROOT>/agents/brand-kit/scripts/prefetch.py mine --pages-dir <RUN_DIR>/evidence/firecrawl --out <RUN_DIR>/evidence
+python3 <PLUGIN_ROOT>/skills/get-brand-components/scripts/prefetch.py mine --pages-dir <RUN_DIR>/evidence/firecrawl --out <RUN_DIR>/evidence
 python3 -c "import json;e=json.load(open('<RUN_DIR>/evidence/evidence.json'));h=e['pages'][0];print(json.dumps({'capabilities':e['capabilities'],'top':h.get('screenshotTop'),'strips':h.get('screenshotStrips'),'bottom':h.get('screenshotBottom')}))"
 ```
 
@@ -72,8 +72,8 @@ Both get `PLUGIN_ROOT`, `DOMAIN`, `EVIDENCE_DIR=<RUN_DIR>/evidence`, the `capabi
 ### Step 4: judge context (orchestrator, one command per artifact)
 
 ```bash
-python3 <PLUGIN_ROOT>/agents/brand-kit/scripts/judge_context.py --design <analyst report> --logo <verifier report> --artifact gallery --gate <RUN_DIR>/review-v<v>/gate.json --top <source_top> --strips <source_strips...> --bottom <source_bottom> --hero-visual <from the author summary> --domain <DOMAIN> --round <r> --version <v> --out <RUN_DIR>/reports/judge-context-v<v>-gallery.md
-python3 <PLUGIN_ROOT>/agents/brand-kit/scripts/judge_context.py ... --artifact one-pager --gate <RUN_DIR>/review-v<v>/gate-onepager.json ... --out <RUN_DIR>/reports/judge-context-v<v>-onepager.md
+python3 <PLUGIN_ROOT>/skills/get-brand-components/scripts/judge_context.py --design <analyst report> --logo <verifier report> --artifact gallery --gate <RUN_DIR>/review-v<v>/gate.json --top <source_top> --strips <source_strips...> --bottom <source_bottom> --hero-visual <from the author summary> --domain <DOMAIN> --round <r> --version <v> --out <RUN_DIR>/reports/judge-context-v<v>-gallery.md
+python3 <PLUGIN_ROOT>/skills/get-brand-components/scripts/judge_context.py ... --artifact one-pager --gate <RUN_DIR>/review-v<v>/gate-onepager.json ... --out <RUN_DIR>/reports/judge-context-v<v>-onepager.md
 ```
 
 ### Step 5: judges — `brand-kit-judge` ×2 (one message)
@@ -83,7 +83,7 @@ One on `gallery.png`, one on `onepager.png`. Each gets `PLUGIN_ROOT`, `DOMAIN`, 
 ### Step 6: decision (orchestrator, one command)
 
 ```bash
-python3 <PLUGIN_ROOT>/agents/brand-kit/scripts/gate_decide.py --round <r> --scorecards <RUN_DIR>/reports/judge-v<v>-r<r>-*.md --gates <RUN_DIR>/review-v<v>/gate.json <RUN_DIR>/review-v<v>/gate-onepager.json --feedback <RUN_DIR>/reports/renderer-feedback.md
+python3 <PLUGIN_ROOT>/skills/get-brand-components/scripts/gate_decide.py --round <r> --scorecards <RUN_DIR>/reports/judge-v<v>-r<r>-*.md --gates <RUN_DIR>/review-v<v>/gate.json <RUN_DIR>/review-v<v>/gate-onepager.json --feedback <RUN_DIR>/reports/renderer-feedback.md
 ```
 
 The thresholds live in the script (gallery at least 34, no dimension below 3, no hard fail, the gallery judge's `looks_good`, both pre-gates passing); `--feedback` folds the round's `renderer` fixes into the maintainers' file, deduplicated. Its `next` field is the whole decision:
@@ -92,8 +92,8 @@ The thresholds live in the script (gallery at least 34, no dimension below 3, no
 - `pass`: promote that exact version, then mark it ready, in this order and never as an agent dispatch:
 
   ```bash
-  python3 <PLUGIN_ROOT>/agents/brand-kit/scripts/brand_cache.py promote <RUN_DIR>/kit-v<v> --domain <DOMAIN> --workspace <WORKSPACE> --base <BRAND_CACHE> --write-checksums
-  python3 <PLUGIN_ROOT>/agents/brand-kit/scripts/brand_cache.py mark-ready <CACHE_ROOT> --score <gallery>/40
+  python3 <PLUGIN_ROOT>/skills/get-brand-components/scripts/brand_cache.py promote <RUN_DIR>/kit-v<v> --domain <DOMAIN> --workspace <WORKSPACE> --base <BRAND_CACHE> --write-checksums
+  python3 <PLUGIN_ROOT>/skills/get-brand-components/scripts/brand_cache.py mark-ready <CACHE_ROOT> --score <gallery>/40
   ```
 
   Then write the capture report and go to the closing.
@@ -106,7 +106,7 @@ The thresholds live in the script (gallery at least 34, no dimension below 3, no
 
 ### Step 8: stop without a pass
 
-`python3 <PLUGIN_ROOT>/agents/brand-kit/scripts/brand_cache.py status <CACHE_ROOT>`: `missing` (including a stale pointer) means promote the best version as `draft` (the `promote` command above, no `mark-ready`) so the next run resumes it; anything else means leave the pointer untouched (a failed refresh never replaces a working kit); the best candidate's path then goes in the capture report. Then write the capture report and go to the closing.
+`python3 <PLUGIN_ROOT>/skills/get-brand-components/scripts/brand_cache.py status <CACHE_ROOT>`: `missing` (including a stale pointer) means promote the best version as `draft` (the `promote` command above, no `mark-ready`) so the next run resumes it; anything else means leave the pointer untouched (a failed refresh never replaces a working kit); the best candidate's path then goes in the capture report. Then write the capture report and go to the closing.
 
 ### The capture report (a file, not terminal output)
 
@@ -170,8 +170,8 @@ For comparisons, trends or rates, use the [analytics contract](../shared/analyti
 
 ## Runtime resources
 
-The capture tooling lives at `<plugin-root>/agents/brand-kit/`, next to the agents that run it; resolve these paths from the installed plugin root, not this skill directory. Inline template JS/CSS into self-contained artifacts; do not add runtime dependencies on the plugin installation.
+The agents live at `<plugin-root>/agents/brand-kit/`; the scripts and assets they run ship in this skill. Commands address both from the installed plugin root (`<plugin-root>/skills/get-brand-components/scripts/…`) so a dispatched agent resolves the same paths as this session. Inline template JS/CSS into self-contained artifacts; do not add runtime dependencies on the plugin installation.
 
-- Agents: [brand-crawler](../../agents/brand-kit/brand-crawler.md), [brand-design-analyst](../../agents/brand-kit/brand-design-analyst.md), [brand-logo-verifier](../../agents/brand-kit/brand-logo-verifier.md), [brand-kit-author](../../agents/brand-kit/brand-kit-author.md), [brand-kit-judge](../../agents/brand-kit/brand-kit-judge.md)
-- Scripts: [prefetch.py](../../agents/brand-kit/scripts/prefetch.py), [gate_check.py](../../agents/brand-kit/scripts/gate_check.py), [gate_decide.py](../../agents/brand-kit/scripts/gate_decide.py), [judge_context.py](../../agents/brand-kit/scripts/judge_context.py), [render_gallery.py](../../agents/brand-kit/scripts/render_gallery.py), [render_kit.py](../../agents/brand-kit/scripts/render_kit.py), [render.py](../../agents/brand-kit/scripts/render.py), [check_adherence.py](../../agents/brand-kit/scripts/check_adherence.py), [kit_validation.py](../../agents/brand-kit/scripts/kit_validation.py), [brand_cache.py](../../agents/brand-kit/scripts/brand_cache.py), [verify_logos.py](../../agents/brand-kit/scripts/verify_logos.py), [verify-logos.sh](../../agents/brand-kit/scripts/verify-logos.sh)
-- Assets: [kit_base.css](../../agents/brand-kit/assets/kit_base.css), [gallery_spec.json](../../agents/brand-kit/assets/gallery_spec.json), [onepager_spec.json](../../agents/brand-kit/assets/onepager_spec.json)
+- Agents, in `<plugin-root>/agents/brand-kit/`: `brand-crawler.md`, `brand-design-analyst.md`, `brand-logo-verifier.md`, `brand-kit-author.md`, `brand-kit-judge.md`
+- Scripts: [prefetch.py](scripts/prefetch.py), [gate_check.py](scripts/gate_check.py), [gate_decide.py](scripts/gate_decide.py), [judge_context.py](scripts/judge_context.py), [render_gallery.py](scripts/render_gallery.py), [render_kit.py](scripts/render_kit.py), [render.py](scripts/render.py), [check_adherence.py](scripts/check_adherence.py), [kit_validation.py](scripts/kit_validation.py), [brand_cache.py](scripts/brand_cache.py), [verify_logos.py](scripts/verify_logos.py), [verify-logos.sh](scripts/verify-logos.sh)
+- Assets: [kit_base.css](assets/kit_base.css), [gallery_spec.json](assets/gallery_spec.json), [onepager_spec.json](assets/onepager_spec.json)

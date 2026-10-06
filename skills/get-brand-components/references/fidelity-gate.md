@@ -7,7 +7,7 @@ The score must come from a fresh session that has not seen the capture (an indep
 ## 0. Pre-gate (mechanical, before any judge)
 
 ```bash
-python3 <plugin-root>/agents/brand-kit/scripts/gate_check.py <components.html> --json <review-dir>/gate.json
+python3 <plugin-root>/skills/get-brand-components/scripts/gate_check.py <components.html> --json <review-dir>/gate.json
 ```
 
 In a real browser it measures text contrast against the effective background for the hero, body, stats, cards, footer, CTA and quote; gutter alignment across bands; the gap between hero buttons; both logo variants in the reference strip; empty icon tiles; and the body measure in characters per line. Exit 0 passes, 1 fails with the failing checks named, 2 means no browser (NOT RUN). A failing check that a token or asset can fix goes back to the author; one that only the stylesheet can fix is a renderer fix for the orchestrator. Judges receive the measurements, so contrast and spacing are read from numbers, not guessed from pixels.
@@ -15,8 +15,8 @@ In a real browser it measures text contrast against the effective background for
 ## 1. Render
 
 ```bash
-python3 <plugin-root>/agents/brand-kit/scripts/render.py --file <output.html> --out <review-dir>/out.png
-# a source frame: python3 <plugin-root>/agents/brand-kit/scripts/render.py --url https://<domain>/ --out <review-dir>/src.png
+python3 <plugin-root>/skills/get-brand-components/scripts/render.py --file <output.html> --out <review-dir>/out.png
+# a source frame: python3 <plugin-root>/skills/get-brand-components/scripts/render.py --url https://<domain>/ --out <review-dir>/src.png
 ```
 
 Review files live outside the kit directory (the cache walk skips dot-directories, but a PNG inside the kit is still a file nobody wants in a brand kit). Without a browser the gate is NOT RUN; say so, never fabricate a scorecard.
@@ -51,15 +51,15 @@ Fresh sessions do not score identically; when comparing pipeline changes use the
 The gallery shows the system; consumers receive collateral. Render the fixed one-pager through the kit and score it on the same rubric, as a second independent judgement:
 
 ```bash
-python3 <plugin-root>/agents/brand-kit/scripts/render_kit.py --kit-dir <kit-dir> --spec <plugin-root>/agents/brand-kit/assets/onepager_spec.json --out <review-dir>/onepager.html
-python3 <plugin-root>/agents/brand-kit/scripts/render.py --file <review-dir>/onepager.html --out <review-dir>/onepager.png
+python3 <plugin-root>/skills/get-brand-components/scripts/render_kit.py --kit-dir <kit-dir> --spec <plugin-root>/skills/get-brand-components/assets/onepager_spec.json --out <review-dir>/onepager.html
+python3 <plugin-root>/skills/get-brand-components/scripts/render.py --file <review-dir>/onepager.html --out <review-dir>/onepager.png
 ```
 
 Each artifact has its own pre-gate (`gate.json`, `gate-onepager.json`) and its own judge context. Report both scorecards. The gate passes on the gallery score; the one-pager score is what the kit's consumers will see, so a gap of more than a few points between the two is itself a finding (usually spacing, depth or edges in the composition rather than the tokens).
 
 ## 3. Then
 
-- Judges per round: two (one on the gallery, one on the one-pager), at most three rounds per capture. When the single gallery judge lands between 33 and 35 a second gallery judge is added for that round and the mean counts. The decision is computed by `agents/brand-kit/scripts/gate_decide.py` from the scorecard files and both pre-gate reports, never by hand.
+- Judges per round: two (one on the gallery, one on the one-pager), at most three rounds per capture. When the single gallery judge lands between 33 and 35 a second gallery judge is added for that round and the mean counts. The decision is computed by `skills/get-brand-components/scripts/gate_decide.py` from the scorecard files and both pre-gate reports, never by hand.
 - Pass requires, for the same candidate: a passing pre-gate for both artifacts (a failing or NOT RUN pre-gate never becomes `ready`), the gallery mean, the per-dimension floor, no hard fail, and the craft verdict. Then promote that exact version and mark it ready, in that order: `brand_cache.py promote <kit> --domain … --workspace … --write-checksums` followed by `brand_cache.py mark-ready <brand-cache>/<workspace>/<domain> --score <mean>/40` (a mean such as 34.5/40 is valid). Nothing is promoted before the gate, so a refresh never takes a working kit away from consumers while it is judged.
 - Fail: up to three repair rounds, all at the token level. The installed plugin is read-only during a capture: a fix marked `renderer` by a judge, a stylesheet-only pre-gate failure, the author's `renderer feedback` and a `looks_good` reason that names the stylesheet are collected (deduplicated, by `gate_decide.py --feedback`) into `renderer-feedback.md` for the plugin maintainers (copied into the capture report, never printed to the terminal), and the capture never waits for or applies a stylesheet fix. The author repairs with tokens, knobs and surfaces, touching only what the scorecards name, and the judges re-score. Keep whichever version scores higher on the gallery mean; the repair is not monotonic, so the keep-better guard is mandatory. After the last round without a pass: a cache with no kit gets the best candidate as `draft` so the next run can resume it with fresh evidence; a cache that already holds a kit keeps its pointer untouched (a failed refresh never replaces a working kit) and the capture report names the candidate's path. Either way the run ends with the closing in SKILL.md: three lines and the open-or-host question.
 - Nothing in this gate asks the user anything. The only question a capture may ask is whether to reuse a kit found in the asset store.

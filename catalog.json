@@ -302,7 +302,7 @@
       ]
     },
     "get-brand-components": {
-      "version": "1.2.0",
+      "version": "1.2.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -311,6 +311,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.1",
+          "date": "2026-10-05",
+          "notes": "Capture scripts, kit_base.css and their tests live in skills/get-brand-components again, so everything a skill links to stays under skills/; the five capture agents stay in agents/brand-kit.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-03",
