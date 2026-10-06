@@ -15,15 +15,15 @@ You fetch the pages a brand capture needs. Page HTML never enters your context: 
 
 `PLUGIN_ROOT`, `TASK` (`home` or `pages`), `RUN_DIR`. For `home`: `TARGET`, `REFRESH`, `BRAND_CACHE` (default `~/.octave/brands`), `WORKSPACE`, optional `ASSET_DECISION`. For `pages`: `DOMAIN`, `PAGES`.
 
-Paths: scripts in `PLUGIN_ROOT/agents/brand-kit/scripts/` ([prefetch.py](scripts/prefetch.py), [brand_cache.py](scripts/brand_cache.py)); the procedure is Step 1 and Step 2 of [the capture workflow](../../skills/get-brand-components/references/capture-workflow.md). The pages dir is `RUN_DIR/evidence/firecrawl`.
+Paths: scripts in `PLUGIN_ROOT/skills/get-brand-components/scripts/` ([prefetch.py](../../skills/get-brand-components/scripts/prefetch.py), [brand_cache.py](../../skills/get-brand-components/scripts/brand_cache.py)); the procedure is Step 1 and Step 2 of [the capture workflow](../../skills/get-brand-components/references/capture-workflow.md). The pages dir is `RUN_DIR/evidence/firecrawl`.
 
 ## TASK=home
 
 1. Read your memory for notes on the domain (failing pages, head recovery, single-page site, prior asset-store match).
 2. `WORKSPACE` unknown: call `verify_connection` and take the workspace id. Without the Octave tools use `local`.
-3. Identity: `python3 PLUGIN_ROOT/agents/brand-kit/scripts/brand_cache.py canonical TARGET --workspace WORKSPACE --base BRAND_CACHE` prints `domain` (no `www.`) and `cacheRoot`; those are `DOMAIN` and `CACHE_ROOT` for the run. The seed URL keeps the host as the site serves it.
+3. Identity: `python3 PLUGIN_ROOT/skills/get-brand-components/scripts/brand_cache.py canonical TARGET --workspace WORKSPACE --base BRAND_CACHE` prints `domain` (no `www.`) and `cacheRoot`; those are `DOMAIN` and `CACHE_ROOT` for the run. The seed URL keeps the host as the site serves it.
 4. `brand_cache.py status CACHE_ROOT`. `ready` and `REFRESH=no`: outcome `READY`. `draft` (the command says `draft` only when the capture folder still exists; a deleted folder reads `missing`): continue, and carry `<CACHE_ROOT>/<capture>` as `draft_kit`. Otherwise the asset-store check as the workflow describes: an actual `assets_list` call, never simulated; a tool error is one line under obstacles and you continue. A plausible match without `ASSET_DECISION`: outcome `ASSET_MATCH`, stop. `ASSET_DECISION=use`: download and promote per the workflow, outcome `READY`.
-5. Scrape the homepage: `scrape_website({ url, includeScreenshot: true, fullDocument: true })`, then in your next message `python3 PLUGIN_ROOT/agents/brand-kit/scripts/prefetch.py ingest --pages-dir RUN_DIR/evidence/firecrawl - <<'EOF' ... EOF` with the result minus its `content` field. Then `prefetch.py pick-pages --pages-dir RUN_DIR/evidence/firecrawl` and keep its lines as `pages`. You do not fetch those pages and you do not run `mine`.
+5. Scrape the homepage: `scrape_website({ url, includeScreenshot: true, fullDocument: true })`, then in your next message `python3 PLUGIN_ROOT/skills/get-brand-components/scripts/prefetch.py ingest --pages-dir RUN_DIR/evidence/firecrawl - <<'EOF' ... EOF` with the result minus its `content` field. Then `prefetch.py pick-pages --pages-dir RUN_DIR/evidence/firecrawl` and keep its lines as `pages`. You do not fetch those pages and you do not run `mine`.
 6. Write `RUN_DIR/reports/brand-crawler.md` with a Bash heredoc (identity, cache outcome, the homepage row, the picked pages, obstacles), update your memory, return the result.
 
 ## TASK=pages
