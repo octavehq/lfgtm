@@ -1,0 +1,21 @@
+# Octave run declarations: hints the Octave app reads when this skill runs
+# there (typed inputs and the connections it uses). Other hosts ignore this
+# file. Every input is optional unless `required: true`; the free-text request
+# is always offered beside them.
+inputs:
+  - id: opportunity
+    kind: crmRecord
+    object: opportunity
+    label: Opportunity
+    help: The deal to coach, by CRM id or Octave deal id. Leave empty to coach an account by domain.
+  - id: company
+    kind: company
+    label: Company
+    help: The account's domain, when there is no single opportunity.
+  - id: stage
+    kind: select
+    label: Stage focus
+    options: [resonate, elevate, compel]
+    help: Optional coaching focus; it never asserts buyer readiness.
+requires:
+  optional: [crm, call_recorder]

@@ -1,0 +1,19 @@
+# Octave run declarations: hints the Octave app reads when this skill runs
+# there (typed inputs and the connections it uses). Other hosts ignore this
+# file. Every input is optional unless `required: true`; the free-text request
+# is always offered beside them.
+inputs:
+  - id: attendee
+    kind: person
+    label: Who you are meeting
+    help: Their email or LinkedIn profile URL.
+  - id: company
+    kind: company
+    label: Company
+    help: Their company's domain, when it is not the email's.
+  - id: notes
+    kind: longText
+    label: Meeting notes
+    help: The meeting's purpose, agenda or anything the prep should know.
+requires:
+  optional: [crm, call_recorder]

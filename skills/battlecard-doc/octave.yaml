@@ -1,0 +1,17 @@
+# Octave run declarations: hints the Octave app reads when this skill runs
+# there (typed inputs and the connections it uses). Other hosts ignore this
+# file. Every input is optional unless `required: true`; the free-text request
+# is always offered beside them.
+inputs:
+  - id: competitor
+    kind: entity
+    entityType: competitor
+    label: Competitor
+    help: Leave empty for the full competitive landscape.
+  - id: opportunity
+    kind: crmRecord
+    object: opportunity
+    label: Opportunity
+    help: Tailor the battlecard to one deal.
+requires:
+  optional: [call_recorder]

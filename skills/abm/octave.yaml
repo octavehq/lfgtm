@@ -1,0 +1,15 @@
+# Octave run declarations: hints the Octave app reads when this skill runs
+# there (typed inputs and the connections it uses). Other hosts ignore this
+# file. Every input is optional unless `required: true`; the free-text request
+# is always offered beside them.
+inputs:
+  - id: company
+    kind: company
+    label: Company
+    help: The target account's domain.
+  - id: depth
+    kind: select
+    label: Depth
+    options: [quick, full]
+requires:
+  optional: [crm]

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "skills": {
     "abm": {
-      "version": "1.0.1",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -11,6 +11,11 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-06",
+          "notes": "Adds an octave.yaml with run declarations for the Octave app: typed inputs (so a run offers the right pickers and can run for each item of a list) and the connections it uses. Hints only; other hosts ignore the file and the skill itself is unchanged."
+        },
         {
           "version": "1.0.1",
           "date": "2026-09-28",
@@ -122,7 +127,7 @@
       ]
     },
     "battlecard-doc": {
-      "version": "1.0.1",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -131,6 +136,11 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-06",
+          "notes": "Adds an octave.yaml with run declarations for the Octave app: typed inputs (so a run offers the right pickers and can run for each item of a list) and the connections it uses. Hints only; other hosts ignore the file and the skill itself is unchanged."
+        },
         {
           "version": "1.0.1",
           "date": "2026-09-28",
@@ -194,7 +204,7 @@
       ]
     },
     "deal-coach": {
-      "version": "1.0.1",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -203,6 +213,11 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-06",
+          "notes": "Adds an octave.yaml with run declarations for the Octave app: typed inputs (so a run offers the right pickers and can run for each item of a list) and the connections it uses. Hints only; other hosts ignore the file and the skill itself is unchanged."
+        },
         {
           "version": "1.0.1",
           "date": "2026-09-28",
@@ -404,7 +419,7 @@
       ]
     },
     "meeting-prep": {
-      "version": "1.0.1",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -413,6 +428,11 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-06",
+          "notes": "Adds an octave.yaml with run declarations for the Octave app: typed inputs (so a run offers the right pickers and can run for each item of a list) and the connections it uses. Hints only; other hosts ignore the file and the skill itself is unchanged."
+        },
         {
           "version": "1.0.1",
           "date": "2026-09-28",
