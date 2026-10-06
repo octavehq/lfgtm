@@ -7,7 +7,7 @@ shared renderer so the gallery is always renderable, consistent across brands,
 and never hand-written. Also prepends a token/type swatch strip so humans can
 read the palette and faces at a glance.
 
-  render_gallery.py <kit-dir> [--skill-scripts <path to agents/brand-kit/scripts>]
+  render_gallery.py <kit-dir> [--skill-scripts <path to skills/get-brand-components/scripts>]
 """
 import argparse, base64, html, json, pathlib, re, subprocess, sys
 

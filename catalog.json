@@ -14,7 +14,14 @@
         {
           "version": "1.1.0",
           "date": "2026-10-06",
-          "notes": "Adds an octave.yaml with run declarations for the Octave app: typed inputs (so a run offers the right pickers and can run for each item of a list) and the connections it uses. Hints only; other hosts ignore the file and the skill itself is unchanged."
+          "notes": "Adds an octave.yaml sidecar with optional run hints for Octave: typed inputs (so a run can offer pickers and run once per item of a list) and the connections the skill uses. Other hosts ignore the file; SKILL.md is unchanged.",
+          "review": false
+        },
+        {
+          "version": "1.0.2",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
         },
         {
           "version": "1.0.1",
@@ -31,7 +38,7 @@
       ]
     },
     "ads": {
-      "version": "1.0.1",
+      "version": "1.0.2",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -40,6 +47,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.2",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
+        },
         {
           "version": "1.0.1",
           "date": "2026-09-28",
@@ -55,7 +68,7 @@
       ]
     },
     "ads-resonance": {
-      "version": "1.0.1",
+      "version": "1.0.2",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -64,6 +77,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.2",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
+        },
         {
           "version": "1.0.1",
           "date": "2026-09-28",
@@ -79,7 +98,7 @@
       ]
     },
     "asset-manager": {
-      "version": "1.0.1",
+      "version": "1.0.2",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -88,6 +107,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.2",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
+        },
         {
           "version": "1.0.1",
           "date": "2026-09-28",
@@ -103,7 +128,7 @@
       ]
     },
     "audit": {
-      "version": "1.0.1",
+      "version": "1.0.2",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -112,6 +137,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.2",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
+        },
         {
           "version": "1.0.1",
           "date": "2026-09-28",
@@ -139,7 +170,14 @@
         {
           "version": "1.1.0",
           "date": "2026-10-06",
-          "notes": "Adds an octave.yaml with run declarations for the Octave app: typed inputs (so a run offers the right pickers and can run for each item of a list) and the connections it uses. Hints only; other hosts ignore the file and the skill itself is unchanged."
+          "notes": "Adds an octave.yaml sidecar with optional run hints for Octave: typed inputs (so a run can offer pickers and run once per item of a list) and the connections the skill uses. Other hosts ignore the file; SKILL.md is unchanged.",
+          "review": false
+        },
+        {
+          "version": "1.0.2",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
         },
         {
           "version": "1.0.1",
@@ -156,7 +194,7 @@
       ]
     },
     "call-analyzer": {
-      "version": "1.0.1",
+      "version": "1.0.2",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -165,6 +203,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.2",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
+        },
         {
           "version": "1.0.1",
           "date": "2026-09-28",
@@ -180,7 +224,7 @@
       ]
     },
     "champion-deal-room": {
-      "version": "1.0.1",
+      "version": "1.0.2",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -189,6 +233,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.2",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
+        },
         {
           "version": "1.0.1",
           "date": "2026-09-28",
@@ -216,7 +266,14 @@
         {
           "version": "1.1.0",
           "date": "2026-10-06",
-          "notes": "Adds an octave.yaml with run declarations for the Octave app: typed inputs (so a run offers the right pickers and can run for each item of a list) and the connections it uses. Hints only; other hosts ignore the file and the skill itself is unchanged."
+          "notes": "Adds an octave.yaml sidecar with optional run hints for Octave: typed inputs (so a run can offer pickers and run once per item of a list) and the connections the skill uses. Other hosts ignore the file; SKILL.md is unchanged.",
+          "review": false
+        },
+        {
+          "version": "1.0.2",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
         },
         {
           "version": "1.0.1",
@@ -233,7 +290,7 @@
       ]
     },
     "deck": {
-      "version": "1.0.1",
+      "version": "1.0.2",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -242,6 +299,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.2",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
+        },
         {
           "version": "1.0.1",
           "date": "2026-09-28",
@@ -257,7 +320,7 @@
       ]
     },
     "digest": {
-      "version": "1.1.2",
+      "version": "1.1.3",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -266,6 +329,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.3",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
+        },
         {
           "version": "1.1.2",
           "date": "2026-09-29",
@@ -293,7 +362,7 @@
       ]
     },
     "generate": {
-      "version": "1.0.1",
+      "version": "1.0.2",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -302,6 +371,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.2",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
+        },
         {
           "version": "1.0.1",
           "date": "2026-09-28",
@@ -317,7 +392,7 @@
       ]
     },
     "get-brand-components": {
-      "version": "1.2.0",
+      "version": "1.2.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -326,6 +401,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.1",
+          "date": "2026-10-05",
+          "notes": "Capture scripts, kit_base.css and their tests live in skills/get-brand-components again, so everything a skill links to stays under skills/; the five capture agents stay in agents/brand-kit.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-03",
@@ -347,7 +428,7 @@
       ]
     },
     "icp-refine": {
-      "version": "1.0.1",
+      "version": "1.0.2",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -356,6 +437,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.2",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
+        },
         {
           "version": "1.0.1",
           "date": "2026-09-28",
@@ -371,7 +458,7 @@
       ]
     },
     "insights": {
-      "version": "1.0.1",
+      "version": "1.0.2",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -380,6 +467,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.2",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
+        },
         {
           "version": "1.0.1",
           "date": "2026-09-28",
@@ -395,7 +488,7 @@
       ]
     },
     "library": {
-      "version": "1.0.1",
+      "version": "1.0.2",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -404,6 +497,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.2",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
+        },
         {
           "version": "1.0.1",
           "date": "2026-09-28",
@@ -431,7 +530,14 @@
         {
           "version": "1.1.0",
           "date": "2026-10-06",
-          "notes": "Adds an octave.yaml with run declarations for the Octave app: typed inputs (so a run offers the right pickers and can run for each item of a list) and the connections it uses. Hints only; other hosts ignore the file and the skill itself is unchanged."
+          "notes": "Adds an octave.yaml sidecar with optional run hints for Octave: typed inputs (so a run can offer pickers and run once per item of a list) and the connections the skill uses. Other hosts ignore the file; SKILL.md is unchanged.",
+          "review": false
+        },
+        {
+          "version": "1.0.2",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
         },
         {
           "version": "1.0.1",
@@ -448,7 +554,7 @@
       ]
     },
     "microsite": {
-      "version": "1.0.1",
+      "version": "1.0.2",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -457,6 +563,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.2",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
+        },
         {
           "version": "1.0.1",
           "date": "2026-09-28",
@@ -472,7 +584,7 @@
       ]
     },
     "one-pager": {
-      "version": "1.0.1",
+      "version": "1.0.2",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -481,6 +593,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.2",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
+        },
         {
           "version": "1.0.1",
           "date": "2026-09-28",
@@ -496,7 +614,7 @@
       ]
     },
     "pipeline": {
-      "version": "1.0.1",
+      "version": "1.0.2",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -505,6 +623,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.2",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
+        },
         {
           "version": "1.0.1",
           "date": "2026-09-28",
@@ -520,7 +644,7 @@
       ]
     },
     "positioning": {
-      "version": "1.0.1",
+      "version": "1.0.2",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -529,6 +653,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.2",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
+        },
         {
           "version": "1.0.1",
           "date": "2026-09-28",
@@ -544,7 +674,7 @@
       ]
     },
     "product-launch": {
-      "version": "1.0.1",
+      "version": "1.0.2",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -553,6 +683,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.2",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
+        },
         {
           "version": "1.0.1",
           "date": "2026-09-28",
@@ -568,7 +704,7 @@
       ]
     },
     "proposal": {
-      "version": "1.0.1",
+      "version": "1.0.2",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -577,6 +713,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.2",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
+        },
         {
           "version": "1.0.1",
           "date": "2026-09-28",
@@ -592,7 +734,7 @@
       ]
     },
     "prospector": {
-      "version": "1.0.1",
+      "version": "1.0.2",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -601,6 +743,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.2",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
+        },
         {
           "version": "1.0.1",
           "date": "2026-09-28",
@@ -616,24 +764,6 @@
       ]
     },
     "public-changelog": {
-      "version": "1.0.0",
-      "default": true,
-      "owner": "octave",
-      "runtimes": [
-        "octave-managed",
-        "claude-code"
-      ],
-      "requiredTools": [],
-      "changelog": [
-        {
-          "version": "1.0.0",
-          "date": "2026-09-23",
-          "notes": "Initial release: create or append the public changelog with line-set publish checks",
-          "review": false
-        }
-      ]
-    },
-    "qual-doctor": {
       "version": "1.0.1",
       "default": true,
       "owner": "octave",
@@ -643,6 +773,36 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
+        },
+        {
+          "version": "1.0.0",
+          "date": "2026-09-23",
+          "notes": "Initial release: create or append the public changelog with line-set publish checks",
+          "review": false
+        }
+      ]
+    },
+    "qual-doctor": {
+      "version": "1.0.2",
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.2",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
+        },
         {
           "version": "1.0.1",
           "date": "2026-09-28",
@@ -658,7 +818,7 @@
       ]
     },
     "research": {
-      "version": "1.0.1",
+      "version": "1.0.2",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -667,6 +827,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.2",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
+        },
         {
           "version": "1.0.1",
           "date": "2026-09-28",
@@ -682,7 +848,7 @@
       ]
     },
     "signals": {
-      "version": "1.0.1",
+      "version": "1.0.2",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -691,6 +857,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.2",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
+        },
         {
           "version": "1.0.1",
           "date": "2026-09-28",
@@ -706,7 +878,7 @@
       ]
     },
     "train": {
-      "version": "1.0.1",
+      "version": "1.0.2",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -715,6 +887,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.2",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
+        },
         {
           "version": "1.0.1",
           "date": "2026-09-28",
@@ -730,7 +908,7 @@
       ]
     },
     "win-loss-report": {
-      "version": "1.0.1",
+      "version": "1.0.2",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -739,6 +917,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.2",
+          "date": "2026-10-06",
+          "notes": "Shared brand-kit guidance links to the brand-kit scripts and kit_base.css under get-brand-components again.",
+          "review": false
+        },
         {
           "version": "1.0.1",
           "date": "2026-09-28",

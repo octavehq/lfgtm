@@ -1,6 +1,6 @@
 # Cache operations
 
-Use [brand_cache.py](../../../agents/brand-kit/scripts/brand_cache.py) for canonical hostname/workspace
+Use [brand_cache.py](../scripts/brand_cache.py) for canonical hostname/workspace
 identity, validation, resolution and promotion. Carry the selected brand through
 downstream rendering; a name match alone is not identity.
 

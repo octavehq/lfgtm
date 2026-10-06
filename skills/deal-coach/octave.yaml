@@ -3,19 +3,18 @@
 # file. Every input is optional unless `required: true`; the free-text request
 # is always offered beside them.
 inputs:
-  - id: opportunity
-    kind: crmRecord
-    object: opportunity
-    label: Opportunity
-    help: The deal to coach, by CRM id or Octave deal id. Leave empty to coach an account by domain.
   - id: company
     kind: company
     label: Company
-    help: The account's domain, when there is no single opportunity.
+    help: The account's domain.
+  - id: contact
+    kind: person
+    label: Buyer
+    help: The buyer's email or LinkedIn profile URL, to coach one conversation.
   - id: stage
     kind: select
-    label: Stage focus
+    label: Framing
     options: [resonate, elevate, compel]
-    help: Optional coaching focus; it never asserts buyer readiness.
+    help: Optional Resonate, Elevate or Compel framing.
 requires:
   optional: [crm, call_recorder]

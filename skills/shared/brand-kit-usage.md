@@ -15,13 +15,13 @@ The **target company's logo** (the prospect, account, or competitor) appears onl
 
 ## 2. Brand kit lookup (cache first)
 
-1. Resolve the selected brand to `~/.octave/brands/<workspaceOId>/<canonicalDomain>/current.json` using [brand_cache.py](../../agents/brand-kit/scripts/brand_cache.py). Preserve the full hostname/TLD. Verify manifest identity; legacy name slugs are aliases only after an exact domain/workspace match. Reuse an inherited brand choice without another extraction or intake.
+1. Resolve the selected brand to `~/.octave/brands/<workspaceOId>/<canonicalDomain>/current.json` using [brand_cache.py](../get-brand-components/scripts/brand_cache.py). Preserve the full hostname/TLD. Verify manifest identity; legacy name slugs are aliases only after an exact domain/workspace match. Reuse an inherited brand choice without another extraction or intake.
 2. **If a kit exists →** use it by default (it's the workspace company's own brand, no need to ask). Style the output with the kit instead of a generic preset:
-   - inline the kit's `tokens.css` (`:root` + the embedded `@font-face`) **and** [`../../agents/brand-kit/assets/kit_base.css`](../../agents/brand-kit/assets/kit_base.css) into the output `<style>`;
+   - inline the kit's `tokens.css` (`:root` + the embedded `@font-face`) **and** [`../get-brand-components/assets/kit_base.css`](../get-brand-components/assets/kit_base.css) into the output `<style>`;
    - follow the kit's `brand-kit.md` → **Signature moves**, and reuse the kit's real **logo**, `images/`, and `icons.json`;
    - **respect the kit's visual rules:** read `brand-kit.md` → **Guardrails** (+ `manifest.rules`) and, if present, `corrections.md` — these constrain visual design. The producing skill owns copy, messaging, and sourced proof points; the brand kit supplies styling only;
-   - for doc-shaped output you can compose directly with the renderer at `../../agents/brand-kit/scripts/render_kit.py` (hero / split / logos / pricing / cta / footer blocks, see the `get-brand-components` skill for the token contract);
-   - **before delivering**, run the deterministic adherence lint on the rendered HTML: `python3 ../../agents/brand-kit/scripts/check_adherence.py --file <out.html> --kit-dir <resolved-capture-path>` — it flags off-palette colors, off-kit fonts, and hotlinked assets in seconds. Fix or justify every finding. (Older kits may lack guardrails or `corrections.md` — skip what's absent.)
+   - for doc-shaped output you can compose directly with the renderer at `../get-brand-components/scripts/render_kit.py` (hero / split / logos / pricing / cta / footer blocks, see the `get-brand-components` skill for the token contract);
+   - **before delivering**, run the deterministic adherence lint on the rendered HTML: `python3 ../get-brand-components/scripts/check_adherence.py --file <out.html> --kit-dir <resolved-capture-path>` — it flags off-palette colors, off-kit fonts, and hotlinked assets in seconds. Fix or justify every finding. (Older kits may lack guardrails or `corrections.md` — skip what's absent.)
 3. **If no kit exists →** offer to build one first: *"No brand kit for <Company> yet, want me to capture it (~1 min) so this is on-brand?"* → run `/octave:get-brand-components <domain>`, then proceed.
 4. **If the user declines →** generate with the default style preset (see [style-presets.md](style-presets.md)).
 
@@ -31,7 +31,7 @@ The **target company's logo** (the prospect, account, or competitor) appears onl
 
 A cached kit can carry a **stray or mislabeled logo** (for example, a customer logo scraped from a "trusted by" wall). This is nearly invisible in normal review, because a white/onDark logo does not show on a light preview and the manifest metadata can claim the right company while the file is wrong. So, before delivering any HTML that uses a kit logo:
 
-- **Render both variants on their intended surfaces and confirm each reads the workspace company's name.** Read the `onLight` file (it sits on a light surface) and the `onDark` file (put it on a dark swatch), or run `../../agents/brand-kit/scripts/verify-logos.sh <slug>`. Do not trust `lockup.wordmark`; inspect the image.
+- **Render both variants on their intended surfaces and confirm each reads the workspace company's name.** Read the `onLight` file (it sits on a light surface) and the `onDark` file (put it on a dark swatch), or run `../get-brand-components/scripts/verify-logos.sh <slug>`. Do not trust `lockup.wordmark`; inspect the image.
 - **The `onDark` variant is the usual culprit** and the one you cannot see on a white page. Always check it on a dark background specifically.
 - If a variant is the wrong company or clearly wrong, do not ship it: use the other cached kit for the same company, re-source from the footer/nav, or recolor the *verified* `onLight` mark. Never ship a logo you have not eyeballed on its real surface.
 - Customers/partners appear only as content proof, never as the document's brand mark. If the logo on the chrome is a customer, it is contaminated.
