@@ -60,6 +60,10 @@ def complete(source, output, prefix):
                                   lambda m: m[1] + prefix + name, text)
                 text = re.sub(r'/octave:([a-z][a-z0-9-]*)', r'/octave-\1', text)
             destination.write_text(text)
+    # Local discussion sidecars are never distributable runtime resources.
+    for pattern in ('*.comments.json', '*.blame.json'):
+        for path in output.rglob(pattern):
+            path.unlink()
     for path in list(output.rglob('__pycache__')):
         shutil.rmtree(path)
     for path in output.rglob('*.pyc'):

@@ -41,7 +41,7 @@ You have access to the full Octave MCP server. Tools grouped by capability (see 
 - **Resources** — `list_resources` / `get_resource` / `create_resource` / `delete_resource` / `search_resources`
 - **Analytics** — `list_events`, `list_findings`, `get_event_detail` (the pipeline is Events → Findings → Insights → Reports); `search_call_transcripts` for verbatim, speaker-attributed quotes across indexed calls (filterable by persona, deal outcome, sentiment, speaker side) — the raw conversation behind a finding, not the paraphrase; `get_entity_evidence` for the best verbatim quotes evidencing one library entity (persona, competitor, objection, use case)
 - **CRM** — `find_crm_records`, `find_crm_activities`, `generate_crm_context`, `get_crm_entity_schema` (introspect valid fields before requesting them via `additionalFields`)
-- **Pipeline** — `list_pipeline_overview`, `list_deal_health`, `get_deal_deep_dive`, `get_pipeline_metrics`
+- **Pipeline** — `list_deals` (paged synced deals; `stalledOnly` for the at-risk portfolio), `get_deal` (one deal by oId or CRM id with opt-in sections), `get_pipeline_metrics`
 - **GTM reports** — `list_gtm_reports`, `get_latest_gtm_report`, `get_report_run` (narrative GTM Explorer / Beats analyses)
 - **Suggestions** — `list_suggestions`, `get_suggestion`, `accept_suggestion` / `reject_suggestion`, `create_suggestion`, `update_suggestion` (proposed library changes queued for human review; accepting one applies it to the library)
 - **Legacy playbooks** — `get_playbook`, `list_value_props`, and related write tools remain for unmigrated workspaces; avoid them for new work

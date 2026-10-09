@@ -6,7 +6,7 @@ Use this reference when the digest includes quotes, companies, people, deals, ci
 
 ### Evidence preview
 
-Call `get_report_run` with `includeEvidence: { perSectionLimit: 3 }`. Use its per-section preview and evidence counts as the default for every digest. Keep claims at the level supported by the report. Do not turn a count of linked findings into a count of unique companies or deals.
+Call `get_report_run` with `includeEvidence: { perSectionLimit: 3 }`, one run per call or up to 20 as `reportRunOIds` when the connected schema offers it. Use its per-section preview and evidence counts as the default for a completed-report recap. Keep claims at the level supported by the report. Do not turn a count of linked findings into a count of unique companies or deals.
 
 ### Selected quotes
 
@@ -18,6 +18,17 @@ For each important section:
 4. Keep only quotes whose wording and attribution can be verified.
 
 If `get_report_section_evidence` is unavailable, search `list_findings` using the section topic, report window, and relevant filters. State that this fallback may not reproduce the report section's exact evidence set because semantic search is not the same as traversing the section-to-finding links.
+
+## Investigative evidence
+
+For an investigative digest, use the [research tool guide](research-tools.md) to measure the population and retrieve supporting events, findings, and transcript moments. Keep the [claim packet](evidence-packet.md) alongside the artifact. A completed report is optional.
+
+- Match aggregate and drill-down selectors, windows, linkage, and eligible units. If a supporting quote comes from a different population, label it contextual rather than evidence for that cell.
+- Verify who said the relevant words, not merely whether an external person attended the event. Inspect same-finding semantics and actual speaker metadata; unknown side stays unknown.
+- Inspect `get_entity_evidence` linkage versus semantic fallback. Preserve source context and timestamps where available; a retrieval score is not an outcome effect or prevalence measure.
+- Use `get_event_detail` or transcript retrieval for exact language. An extracted summary is not automatically a verbatim quote. Verify original wording and attribution before using quotation marks.
+- Keep library positioning, graph-inferred relationships, seller statements, buyer observations, and external research separately attributed.
+- Hydration failure narrows the affected claim. It does not authorize fabricating evidence or discarding independently verified findings.
 
 ## Evidence-worthiness gate
 

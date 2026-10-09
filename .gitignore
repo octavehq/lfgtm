@@ -55,3 +55,8 @@ predictions/
 
 # agent memory
 .claude/agent-memory/
+
+# Local review notes and Margin discussion metadata (not public skill resources)
+/docs/reviews/
+*.comments.json
+*.blame.json

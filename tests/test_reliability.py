@@ -161,6 +161,10 @@ print('201' if method=='POST' else '200',end='')
         (staging/'tokens.css').write_text('changed without checksum')
         with self.assertRaises(ValueError):cache.promote(staging,self.root/'cache','example.com','workspace-a')
         self.assertEqual((target/'current.json').read_text(),before)
+        # a fresh promotion is a draft until the fidelity gate marks it ready: consumers refuse it, capture tooling opens it
+        with self.assertRaises(ValueError):cache.resolve(target,'example.com','workspace-a')
+        self.assertEqual(cache.resolve(target,'example.com','workspace-a',allow_draft=True)[1]['canonicalDomain'],'example.com')
+        cache.mark_ready(target,'36/40')
         self.assertEqual(cache.resolve(target,'example.com','workspace-a')[1]['canonicalDomain'],'example.com')
 
     def test_lint_preserves_quotes_and_draft_inputs(self):

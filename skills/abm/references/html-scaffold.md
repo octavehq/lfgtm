@@ -2,7 +2,7 @@
 
 The proven, self-contained scaffold for the six-job account plan (locked from the Coinbase v2 build). Reproduce this structure and card vocabulary. Content specifics come from `account-plan-template.md`; brand tokens come from the workspace company's cached kit.
 
-**Rules:** self-contained (inline CSS/JS, only Google Fonts external). No em-dashes or en-dashes. The `:root` brand block is inlined from `~/.octave/brands/<workspace-slug>/tokens.css` plus `get-brand-components/assets/kit_base.css`; the semantic + component CSS below is the reusable scaffold. Six sections in order, conclusion-carrying headers, sidebar nav dots, persona selector in section 5, print flattening. The head carries the social share block (rules in [../../shared/social-meta.md](../../shared/social-meta.md)); `assets/og.png` is the one permitted sibling file.
+**Rules:** self-contained (inline CSS/JS, only Google Fonts external). No em-dashes or en-dashes. The `:root` brand block is inlined from `~/.octave/brands/<workspace-slug>/tokens.css` plus `skills/get-brand-components/assets/kit_base.css`; the semantic + component CSS below is the reusable scaffold. Six sections in order, conclusion-carrying headers, sidebar nav dots, persona selector in section 5, print flattening. The head carries the social share block (rules in [../../shared/social-meta.md](../../shared/social-meta.md)); `assets/og.png` is the one permitted sibling file.
 
 ## `<head>` + `<style>`
 

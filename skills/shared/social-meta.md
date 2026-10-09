@@ -47,9 +47,9 @@ The brand-kit renderer already has a 1200×630 OG canvas; the image is a two-com
 
 ```bash
 mkdir -p <deliverable-dir>/assets
-python3 <skill-dir>/../get-brand-components/scripts/render_kit.py --kit <slug> \
+python3 <plugin-root>/skills/get-brand-components/scripts/render_kit.py --kit <slug> \
   --spec og-spec.json --format og --out og-frame.html
-python3 <skill-dir>/../get-brand-components/scripts/render.py \
+python3 <plugin-root>/skills/get-brand-components/scripts/render.py \
   --file og-frame.html --out <deliverable-dir>/assets/og.png --width 1200 --height 630 --scale 1
 ```
 

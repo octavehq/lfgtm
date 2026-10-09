@@ -68,7 +68,7 @@ If your team also has HubSpot, Salesforce, Gong, Granola, or Clay connected to C
 
 See [**docs/org-instructions/**](docs/org-instructions/) for short and long recommended instructions, admin setup, and test prompts.
 
-**Quick test (wait up to 1 hour for propagation first):** in a new Claude conversation, ask *"What's the status of my deal with [company] and what should I be doing next?"* — without mentioning Octave. If Claude reaches for `get_deal_deep_dive` or `/octave:pipeline`, the instructions are working.
+**Quick test (wait up to 1 hour for propagation first):** in a new Claude conversation, ask *"What's the status of my deal with [company] and what should I be doing next?"* — without mentioning Octave. If Claude reaches for `get_deal` or `/octave:pipeline`, the instructions are working.
 
 ## Skills
 
@@ -140,6 +140,7 @@ See [**docs/org-instructions/**](docs/org-instructions/) for short and long reco
 | Skill | Description |
 |-------|-------------|
 | `/octave:asset-manager` | Publish and manage hosted assets — upload, privacy tiers (only_me/workspace/public), share links, asset registry; checks for existing assets before creating so work isn't duplicated |
+| `/octave:public-changelog` | Create or append your public product changelog from approved entries — refuses any change to a line already live, so Octave's release-notes ingestion reads only what is new |
 
 ## Agents
 
@@ -154,6 +155,11 @@ Specialized agent personas for sustained, multi-turn work sessions.
 | `asset-manager` | Publish and manage hosted assets: upload, privacy tiers, share links, persistent registry; cache-aware — reuses existing assets instead of duplicating them |
 | `octave-editorial-reviewer` | Language + information quality reviewer spawned by the review gate after a skill generates a deliverable — audits reader-facing text against the editorial rules and information principles, fixes violations inline (not invoked directly) |
 | `octave-presentation-reviewer` | Visual + structural reviewer spawned by the review gate — renders the generated HTML and inspects the pixels, audits against the presentation principles, format rules, and skill blueprints, fixes CSS/layout violations inline (not invoked directly) |
+| `brand-crawler` | Phase 1 of the brand-kit capture: cache and asset-store check, site fetch through `scrape_website`, evidence pack (dispatched by `/octave:get-brand-components`, not directly) |
+| `brand-design-analyst` | Phase 2: reads the evidence pack and returns fonts, palette, emphasis, buttons, shape and layout as findings with evidence (read-only) |
+| `brand-logo-verifier` | Phase 2: picks and pixel-verifies the logo per surface, decides hero imagery and icons (read-only) |
+| `brand-kit-author` | Phase 3: the single writer; builds the kit from the findings, renders, lints, checksums and promotes it as a draft; applies judge fixes on repair |
+| `brand-kit-judge` | Phase 4: fresh-context judge scoring a rendered gallery or one-pager against the source on the fidelity rubric (three per round) |
 
 ## Skill Details
 
@@ -412,6 +418,17 @@ Internal deal room a rep hands a champion so they can run the buying-committee s
 /octave:champion-deal-room acme.com --champion jane@acme.com
 ```
 
+### /octave:public-changelog
+
+Publish entries to your workspace's permanent public changelog. Paste what a staging page copied, or describe the items in plain words; the skill checks them, shows the exact lines being added, and publishes on your go.
+
+```
+/octave:public-changelog                  # Asks for the entries to publish
+/octave:public-changelog <pasted JSON>    # Entries copied from a changelog staging page
+```
+
+The page is rendered by `skills/public-changelog/scripts/changelog.py` from a `changelog.json` stored beside it, never hand-edited: Octave re-reads it and treats every unseen line as a new capability, so a publish is refused unless every live line survives unchanged.
+
 ### /octave:asset-manager
 Publish and manage hosted assets on the Octave assets service:
 - Cache-aware: lists existing assets before creating and offers matches (with links) so the same work isn't done twice
@@ -554,10 +571,9 @@ The workspace's own company profile (singleton).
 - `get_crm_entity_schema` - Introspect valid fields/properties on a CRM entity (discover field names before requesting them)
 
 ### Pipeline Analytics
-- `list_pipeline_overview` - Deals grouped by stage with counts, total value, and per-deal detail
-- `list_deal_health` - Assess open deals for stalled stages, expired close dates, single-threading, regressions
-- `get_deal_deep_dive` - Full deal context: stage history, close-date changes, activity, benchmarks, competitive intel
-- `get_pipeline_metrics` - Stage velocity, cycle time, win/loss conversion rates, deal counts
+- `list_deals` - Paged synced-deal inventory: filter by open/stage/account/owner/pipeline/motion, sort by close date, amount or created date; `stalledOnly` for the at-risk portfolio (most severe first), `includeRisk` / `includePulse` per row
+- `get_deal` - One deal by Octave oId or CRM id (Salesforce 15- and 18-character both work): core row plus opt-in `activity`, `stakeholders`, `risk`, `pulse`, `history` sections, each with a state saying why it is empty
+- `get_pipeline_metrics` - Stage velocity, cycle time, win/loss conversion rates, and open deals per stage with summed value
 
 ### Agents
 - `list_agents` - List saved agents
