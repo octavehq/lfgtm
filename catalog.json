@@ -470,15 +470,23 @@
       ]
     },
     "library": {
-      "version": "1.0.2",
+      "version": "1.0.3",
       "default": true,
       "owner": "octave",
       "runtimes": [
         "octave-managed",
         "claude-code"
       ],
-      "requiredTools": [],
+      "requiredTools": [
+        "get_entity_schema"
+      ],
       "changelog": [
+        {
+          "version": "1.0.3",
+          "date": "2026-10-09",
+          "notes": "Preserve approved entity copy with schema-guided verbatim create/update, explicit field mapping, and readback verification. Clarify names, nested fields, custom sections, and additional properties. Declare get_entity_schema as a required tool so older deployments hold the release.",
+          "review": false
+        },
         {
           "version": "1.0.2",
           "date": "2026-10-06",

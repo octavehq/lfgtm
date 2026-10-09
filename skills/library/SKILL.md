@@ -1,6 +1,6 @@
 ---
 name: library
-description: Browse, search, create, and update Octave library entities (personas, products, segments, competitors, proof points, references) and Motions / Motion Playbooks / Motion ICP cells. Use when user says "show my personas", "list products", "create a competitor", "update this segment", "search the library", "list motions", "show the motion ICP for [persona]", or references any entity type by name.
+description: Browse, search, create, and update Octave library entities (personas, products, segments, competitors, proof points, references) and Motions / Motion Playbooks / Motion ICP cells. Use when user says "show my personas", "list products", "create a competitor", "update this segment", "add this copy verbatim", "search the library", "list motions", "show the motion ICP for [persona]", or references any entity type by name.
 ---
 
 # /octave:library - Library Management
