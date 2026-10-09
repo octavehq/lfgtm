@@ -136,7 +136,8 @@ Hosting is the [asset-manager skill](../asset-manager/SKILL.md)'s job; this skil
 | Input | Value | Why |
 |---|---|---|
 | source | the kit directory only (`manifest.json`, `tokens.css`, `components.html`, `brand-kit.md`, fonts, logos, icons, images) | the publish manifest excludes everything in `RUN_DIR` |
-| identifier | `<slug>-brand-kit` | what Step 1's asset-store check looks for, so a teammate's next run reuses it |
+| identifier | `<slug>-brand-kit` | readable, and how kits published without a category are still found |
+| category | `brand-kit` | what Step 1's asset-store check filters on, so a teammate's next run reuses it |
 | type, entry point | `website`, `components.html` | the gallery is the page |
 | privacy, status | `workspace`, `published` | teammates can reuse it; not public |
 | description | `Brand kit for <domain>, gallery <score>/40`, plus `, draft` when the pointer is not ready | the asset list shows the state |

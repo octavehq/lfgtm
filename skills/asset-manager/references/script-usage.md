@@ -4,8 +4,9 @@ Use connected `asset_*`/`assets_list` tools as tool calls, never shell commands.
 
 `ARTIFACTS_URL` explicitly selects the service base; default `https://link.octavehq.com`. Scripts do not source `.env` or arbitrary shell files. Reuse an explicitly selected environment. Python 3.10+ and curl are required; jq/zip/sips are not.
 
-- `upload-artifact.sh` or `zip-and-upload-artifact.sh --src <folder-or-zip> --identifier <name> --description <text> --type website|storage --privacy only_me|workspace|public --status published|unpublished --entry-point index.html`
-- `update-artifact.sh --uuid <returned-uuid> --src <folder-or-zip> [--expected-version N] [--note <version-note>]`; file replacement replaces the whole bundle. Metadata-only updates omit --src.
+- `upload-artifact.sh` or `zip-and-upload-artifact.sh --src <folder-or-zip> --identifier <name> --description <text> --type website|storage --privacy only_me|workspace|public --status published|unpublished --entry-point index.html [--category <value>]`
+- `update-artifact.sh --uuid <returned-uuid> --src <folder-or-zip> [--expected-version N] [--note <version-note>] [--category <value>]`; file replacement replaces the whole bundle. Metadata-only updates omit --src.
+- `--category` records what the asset is (e.g. `brand-kit`), separate from `--type`; the service owns the list of values and rejects one it does not know. `assets_list` returns it and filters on it.
 - `download-artifact.sh --uuid <returned-uuid> --out <parent> [--version N] [--overwrite]`. Current files use the service manifest. Historical bundles use .zip when identified as ZIP, otherwise .bin; inspect the returned content before choosing a more specific extension.
 
 Public uploads (including updates of already-public artifacts) require `--manifest <approved-files.json>` containing an explicit array of bundle-relative paths. Public ZIP members must exactly match it. Keep source notes, raw evidence, private input and review outputs outside that manifest. Directory traversal and symlinks are rejected; dotfile filtering applies to members, not dotted ancestors. Metadata quotes and Unicode are serialized with JSON; no manual quote stripping.
