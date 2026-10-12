@@ -163,7 +163,7 @@ def main():
     ap.add_argument('--type', choices=['website', 'storage'])
     ap.add_argument('--privacy', choices=['only_me', 'workspace', 'public'])
     ap.add_argument('--status', choices=['published', 'unpublished'])
-    for flag in ('identifier', 'description', 'entry-point', 'note'):
+    for flag in ('identifier', 'description', 'entry-point', 'category', 'note'):
         ap.add_argument('--' + flag)
     ap.add_argument('--expected-version', type=int)
     ap.add_argument('--out', type=Path, default=Path('.'))
@@ -212,8 +212,8 @@ def main():
     if args.note and not args.src:
         raise ValueError('--note requires --src')
     meta = {key: value for key, value in {'identifier': args.identifier, 'description': args.description,
-            'entryPoint': args.entry_point, 'type': args.type, 'privacy': args.privacy,
-            'status': args.status, 'note': args.note}.items() if value is not None}
+            'entryPoint': args.entry_point, 'type': args.type, 'category': args.category,
+            'privacy': args.privacy, 'status': args.status, 'note': args.note}.items() if value is not None}
     if creating:
         meta = {'identifier': args.src.stem, 'type': 'website', 'privacy': 'workspace', 'status': 'published', **meta}
     if args.entry_point:
