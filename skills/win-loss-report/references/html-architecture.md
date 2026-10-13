@@ -25,6 +25,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Win/Loss Report - [Period]</title>
+  <!-- Social share (link unfurl) metadata -->
+  <meta property="og:title" content="Win/Loss Report: [Period]">
+  <meta property="og:description" content="[1-2 sentence summary a stranger understands]">
+  <meta property="og:image" content="assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
   <!-- Brand kit font link (Typekit or Google Fonts) -->
   <style>
     :root { /* brand kit tokens + chart variables */ }
@@ -238,7 +243,7 @@ Optional one-line callout inside an action item, used where the evidence points 
   <div class="action-body">
     <div class="action-text">No standard pricing response when IT raised budget concerns in week 3</div>
     <div class="action-freq">Appeared in 6 of 9 losses (67%)</div>
-    <div class="winnable-if"><strong>Winnable if:</strong> we had addressed price earlier with a TCO story.</div>
+    <div class="winnable-if"><strong>Intervention to test:</strong> test an earlier, evidence-backed value discussion; the association does not establish a preventable loss.</div>
   </div>
 </div>
 ```
@@ -262,7 +267,7 @@ Only render if loss-reason data distinguishes no-decision from competitor losses
     <li>Leadership change mid-cycle in 3 of 7 (43%)</li>
     <li>Budget reallocation or freeze cited in 2 of 7 (29%)</li>
   </ul>
-  <div class="winnable-if"><strong>Winnable if:</strong> we'd multi-threaded past the single champion before Q4 budget lockup.</div>
+  <div class="winnable-if"><strong>Intervention to test:</strong> validate whether broader committee engagement resolves the observed decision constraint.</div>
 </div>
 ```
 

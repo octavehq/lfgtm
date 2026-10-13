@@ -7,6 +7,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Built for [Company] | [Your Company]</title>
+  <!-- Social share (link unfurl) metadata -->
+  <meta property="og:title" content="Built for [Company] | [Your Company]">
+  <meta property="og:description" content="[1-2 sentence summary a stranger understands]">
+  <meta property="og:image" content="assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
   <!-- Google Fonts (preconnect + stylesheet) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -86,7 +91,7 @@
   </section>
 
   <script>
-    // Intersection Observer for scroll-triggered .animate-in elements
+    // Inline the complete assets/reveal.js implementation here.
     // Smooth scroll for anchor links
     // Counter animation for metric numbers (if present)
     // prefers-reduced-motion check
@@ -94,4 +99,12 @@
 
 </body>
 </html>
+```
+
+Inline [reveal.js](../assets/reveal.js). Base `.animate-in` is visible; only `.reveal-pending` hides offscreen content briefly. Counters keep final accessible values.
+
+```css
+.animate-in{opacity:1;transform:none}.reveal-pending{opacity:0;transform:translateY(12px)}
+:focus-visible{outline:3px solid currentColor;outline-offset:4px}html{scroll-padding-top:80px}
+@media(prefers-reduced-motion:reduce){.reveal-pending{opacity:1;transform:none}*{animation:none!important;transition:none!important}}
 ```

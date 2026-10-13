@@ -17,14 +17,14 @@ The account plan is a tight, account-level **plan** organized as six jobs (fit &
 - [ ] **Six jobs, in order.** Fit & timing → what's driving them / to explore → buying committee → how to position per persona → engagement plan → what could go wrong. No stray extra sections.
 - [ ] **Headers are conclusion-carrying plain English.** A short claim ("One champion engaged; no economic buyer yet"), not a bare label ("Buying committee") and not a cute name ("The Take"). *(2026-07-08, Coinbase)*
 - [ ] **Persona is the spine.** The persona set and role labels are consistent across the committee (4), positioning (5), and engagement plan (6). No persona named one way in one section and another elsewhere.
-- [ ] **Section 3 is pains/triggers, not a signals dump.** Real library buying-triggers are marked Known; everything else is framed Likely / To explore, honest about what's unknown. No manufactured certainty.
+- [ ] **Section 3 is pains/triggers, not a signals dump.** Library definitions are distinct from account occurrences; Known requires dated account evidence or attributed confirmation, honest about what's unknown. No manufactured certainty.
 - [ ] **Section 5 is grounded in the motion cell.** Per-persona concerns / status quo / lead-with / proof come from `find_motion_icp`, not generic invention. Persona selector works and all panels print.
 - [ ] **Section 5 personas are selected by relevance to THIS account**, from the library's actual personas, not a standing eng/CISO/GRC default. They should visibly differ when the account/segment differs (e.g. Privacy/DPO for regulated health/finance, Procurement for enterprise/late-stage, VP of IT for lean mid-market). *(2026-07-09, COUNTRY Financial — positioning defaulted to the same eng/CISO/GRC triad as the Coinbase run even though a finance-specific Privacy/DPO persona existed and the plan flagged the privacy seat as an open gap.)*
 - [ ] **Section 6 is quick.** Entry point + ≤6 sequenced steps + 1-2 real sample emails. Not a 37-step project plan. Sample emails are real and specific, not lorem.
 
 ## Tightness & language
 
-- [ ] **Fixed card shapes, capped.** Stat strip (4), committee (≤5 people, 1-2 per persona), positioning (≤3 personas), risk grid (≤4 pairs). Nothing overruns its cap.
+- [ ] **Fixed card shapes, capped.** Stat strip (4), committee (primary-view default five people, 1-2 per persona), positioning (personas relevant to the requested scope), risk grid (≤4 pairs). Explicit scope overrides default display sizes.
 - [ ] **No dramatic lead-ins.** "The pattern is clear:", "The opportunity:", "The central thesis:" — delete and start with the content.
 - [ ] **No run metadata in the masthead.** No Depth/Motion/Stage chips — tool internals stay out.
 - [ ] **Vertical compression.** Tight rows, small gaps, no hero spacing between sections. A rep scans it in 2-3 minutes.

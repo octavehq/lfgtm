@@ -95,8 +95,18 @@ function luminance(css) {
 
   for (const vp of VIEWPORTS) {
     const page = await browser.newPage({ viewport: { width: vp.width, height: vp.height } });
+    page.on('pageerror', error => problems.push({ viewport: vp.name, check: 'script-error', detail: String(error) }));
+    page.on('requestfailed', request => problems.push({ viewport: vp.name, check: 'asset-load', detail: request.url().split('?')[0] }));
+    page.on('response', response => {
+      if (response.status() >= 400) problems.push({ viewport: vp.name, check: 'asset-load', detail: `HTTP ${response.status()}: ${response.url().split('?')[0]}` });
+    });
     await page.goto('file://' + path.resolve(FILE));
-    await page.evaluate(() => document.fonts.ready);
+    await page.evaluate(() => Promise.race([
+      Promise.all([document.fonts.ready, ...Array.from(document.images, image => image.decode().catch(() => null))]),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Font/image readiness timed out')), 10000))
+    ]));
+    const brokenImages = await page.evaluate(() => [...document.images].filter(i => !i.complete || !i.naturalWidth).length);
+    if (brokenImages) problems.push({ viewport: vp.name, check: 'asset-load', detail: `${brokenImages} images failed to decode` });
     await page.waitForTimeout(400);
 
     // --- 1. fonts actually loaded ---------------------------------------

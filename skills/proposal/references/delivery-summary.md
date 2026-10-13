@@ -1,7 +1,7 @@
 # Delivery Summary
 
 ```
-PROPOSAL READY
+STATUS: [working draft / ready for the requested buyer use]
 ==============
 
 Folder: .octave-proposals/<name>-<date>/
@@ -39,3 +39,5 @@ Want me to:
 6. Create a companion deck — presentation version of this proposal
 7. Done
 ```
+
+Report purpose, included decisions, open operator inputs and intentional future-measurement fields. Keep seller tracking outside buyer copy unless it is a collaborative worksheet. Continue incorporating supplied answers; do not treat a missing commercial field as the mandatory stopping point.

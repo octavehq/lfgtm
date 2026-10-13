@@ -69,7 +69,7 @@ Two tabs, same structure mirrored. The reader flips between tabs to see the cont
 - Framing: "When we lose, it's because..." -> "To fix this..."
 - No evidence quotes or blockquotes — keep it compact
 - These absorb what would have been a standalone "Recommendations" section
-- **Optional "Winnable if:" callout**: for a loss pattern or competitor grouping with a clear turning point, add one sharp line under the action item, "Winnable if: [X]." One sentence, no elaboration. Example: "Winnable if: we had addressed price earlier with a TCO story." Use it where the evidence supports a single clean condition, not on every item, it's a callout, not a new required field.
+- **Optional "Intervention to test:" callout**: for a loss pattern or competitor grouping with a clear turning point, add one sharp line under the action item, "Intervention to test: [X]." One sentence, no elaboration. Example: "Intervention to test: we had addressed price earlier with a TCO story." Use it where the evidence supports a single clean condition, not on every item, it's a callout, not a new required field.
 
 **No Decision / Stalled (optional pattern category)**
 - Gate this on the data: only include if `list_events` loss records or CRM fields actually distinguish "lost to competitor" from "no decision / stalled" outcomes. If the workspace doesn't tag this distinction, skip the category entirely, do not infer or fabricate a no-decision bucket from competitor losses.
@@ -79,10 +79,10 @@ Two tabs, same structure mirrored. The reader flips between tabs to see the cont
   - Single-threaded vs. multi-threaded stakeholder count, wins vs. no-decision losses (e.g., "No-decision losses averaged 1.4 stakeholders engaged vs. 3.2 in wins")
   - Leadership change during the deal cycle (N deals, % of no-decision losses)
   - Budget reallocation / freeze signals (N deals, % of no-decision losses)
-- These are diagnostics, not excuses. Pair with a "Winnable if:" callout where the evidence points to a specific save (e.g., "Winnable if: we'd multi-threaded past the single champion before Q4 budget lockup").
+- These are diagnostics, not excuses. Pair with a "Intervention to test:" callout where the evidence points to a specific save (e.g., "Intervention to test: we'd multi-threaded past the single champion before Q4 budget lockup").
 
 **Objections**
-- Table format (`.obj-table`) sorted by loss correlation (highest loss rate first, not frequency)
+- Table format (`.obj-table`) ranked by evidence-supported intervention priority
 - Columns: Objection | Loss Rate | Frequency | Who Raises It | Counter
 - Each row shows:
   - The objection text
@@ -90,7 +90,7 @@ Two tabs, same structure mirrored. The reader flips between tabs to see the cont
   - Frequency: "N deals (X lost, Y won)"
   - Which personas/segments raise it most
   - Recommended counter / response
-- The sorting by loss correlation is key — an objection raised in 5 deals with 80% loss rate matters more than one raised in 20 deals with 30% loss rate
+- Rank intervention priority using affected volume, incremental association versus a comparable baseline, uncertainty and plausible actionability. A high rate in a tiny sample does not automatically rank first.
 
 ---
 

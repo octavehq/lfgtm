@@ -9,7 +9,8 @@ declarative JSON spec of blocks. One renderer, every brand — no per-asset CSS.
 
 Kit dir: ~/.octave/brands/<slug>/ with manifest.json containing a `render` block:
   render: {
-    hasDarkBand: bool, docWidth: px, heroVisual: "chips"|"masonry"|"none",
+    hasDarkBand: bool, docWidth: px, heroVisual: "chips"|"masonry"|"image"|"none",
+    heroImage: kit-relative file shown behind the hero copy when heroVisual is "image",
     tokens: { "--brand-*": "value", ... },          # the token contract
     fonts:  [ {family,weight,style?,file,format} ],  # embedded base64 @font-face
     logo:   { onDark: file|null, onLight: file|null, lockup: {...}|null }
@@ -21,6 +22,8 @@ comparison: defaults to a gradient-band header table; on light brands (no dark b
   it auto-falls back to a soft table; set "variant":"diptych" for the luminous split panel.
 """
 import argparse, base64, html, json, os, pathlib, re, sys
+from kit_validation import asset_path, safe_url, css_value, svg_root, validate_manifest
+from brand_cache import resolve
 
 BRANDS = pathlib.Path.home() / ".octave" / "brands"
 SKILL = pathlib.Path(__file__).resolve().parent.parent
@@ -28,32 +31,36 @@ WRAP_BLOCKS = {"about", "quote", "section", "features", "comparison", "checklist
                "split", "logos", "pricing"}  # go inside .wrap
 
 
-def load_kit(slug_or_dir):
+def load_kit(slug_or_dir, expected_domain=None, workspace=None):
     """Accept a slug (-> ~/.octave/brands/<slug>) or an explicit kit directory path."""
     d = pathlib.Path(slug_or_dir).expanduser()
     if not (d.is_absolute() or d.exists()):
         d = BRANDS / slug_or_dir
-    man = json.loads((d / "manifest.json").read_text())
+    d, man = resolve(d, expected_domain, workspace, allow_draft=True)  # the renderer is capture tooling: drafts render
     if "render" not in man:
         sys.exit(f"ERROR: {d}/manifest.json has no `render` block. Add the token contract first.")
-    return d, man["render"]
+    return d, validate_manifest(d, man)
 
 
 def b64_file(path, mime):
+    if mime == "image/svg+xml":
+        svg_root(pathlib.Path(path).read_text())
     return f"data:{mime};base64," + base64.b64encode(pathlib.Path(path).read_bytes()).decode()
+
+
+FONT_MIME = {"woff2": "font/woff2", "woff": "font/woff", "ttf": "font/ttf", "truetype": "font/ttf", "otf": "font/otf", "opentype": "font/otf"}
+FONT_FORMAT = {"woff2": "woff2", "woff": "woff", "ttf": "truetype", "truetype": "truetype", "otf": "opentype", "opentype": "opentype"}
 
 
 def font_faces(kitdir, fonts):
     out = []
-    fmt_mime = {"woff2": "font/woff2", "woff": "font/woff", "ttf": "font/ttf"}
     for f in fonts or []:
-        p = kitdir / f["file"]
-        if not p.exists():
-            continue
-        fmt = f.get("format") or p.suffix.lstrip(".")
-        uri = b64_file(p, fmt_mime.get(fmt, "font/woff2"))
+        p = asset_path(kitdir, f["file"])
+        fmt = (f.get("format") or p.suffix.lstrip(".")).lower()
+        uri = b64_file(p, FONT_MIME.get(fmt, "font/woff2"))
         style = f.get("style", "normal")
-        out.append(f"@font-face{{font-family:'{f['family']}';src:url({uri}) format('{fmt}');"
+        # CSS format() takes the format name (truetype/opentype), never the file extension
+        out.append(f"@font-face{{font-family:'{f['family']}';src:url({uri}) format('{FONT_FORMAT.get(fmt, 'woff2')}');"
                    f"font-weight:{f['weight']};font-style:{style};font-display:swap;}}")
     return "\n".join(out)
 
@@ -64,48 +71,47 @@ def logo_img(kitdir, render, dark, height=None):
     fname = lg.get("onDark") if dark else lg.get("onLight")
     style = f'style="height:{height}px;width:auto;display:block;"' if height else 'style="display:block;"'
     if fname:
-        p = kitdir / fname
+        p = asset_path(kitdir, fname)
         mime = "image/svg+xml" if p.suffix == ".svg" else f"image/{p.suffix.lstrip('.')}"
         return f'<img src="{b64_file(p, mime)}" alt="logo" {style}>'
     lk = lg.get("lockup")
     if lk:  # mark + wordmark text in heading font
         h = height or 28
         if lk.get("markImg"):  # raster/colored mark used as an <img> (keeps its real colors)
-            mp = kitdir / lk["markImg"]
+            mp = asset_path(kitdir, lk["markImg"])
             mime = "image/svg+xml" if mp.suffix == ".svg" else f"image/{mp.suffix.lstrip('.')}"
             mark_html = f'<img src="{b64_file(mp, mime)}" alt="" style="height:{h}px;width:auto;display:block;">'
-        else:  # single-path svg mark, recolored per surface
-            mark = (kitdir / lk["mark"]).read_text()
-            fill = "#fff" if dark else lk.get("markFill", "currentColor")
-            d = re.search(r'd="([^"]+)"', mark)
-            vb = re.search(r'viewBox="([^"]+)"', mark)
-            mark_html = (f'<svg viewBox="{vb.group(1) if vb else "0 0 24 24"}" width="{h}" height="{h}" '
-                         f'aria-label="logo"><path fill="{fill}" d="{d.group(1)}"/></svg>')
-        wc = ("#fff" if dark else lk.get("wordmarkColor", "var(--brand-ink)"))
-        tt = lk.get("wordmarkTransform", "none")
+        else:  # preserve the complete verified geometry, gradients and clip paths
+            mp = asset_path(kitdir, lk["mark"])
+            mark_html = f'<img src="{b64_file(mp, "image/svg+xml")}" alt="" style="height:{h}px;width:auto;display:block;">'
+        wc = html.escape(css_value("#fff" if dark else lk.get("wordmarkColor", "var(--brand-ink)")))
+        tt = html.escape(css_value(lk.get("wordmarkTransform", "none")))
         return (f'<span style="display:inline-flex;align-items:center;gap:10px;">{mark_html}'
-                f'<span style="font-family:var(--brand-font-heading);font-weight:{lk.get("wordmarkWeight",700)};'
-                f'font-size:{round(h*0.82)}px;letter-spacing:-0.01em;text-transform:{tt};color:{wc};">{lk["wordmark"]}</span></span>')
+                f'<span style="font-family:var(--brand-font-heading);font-weight:{html.escape(css_value(lk.get("wordmarkWeight",700)))};'
+                f'font-size:{round(h*0.82)}px;letter-spacing:-0.01em;text-transform:{tt};color:{wc};">{html.escape(lk["wordmark"])}</span></span>')
     return ""
 
 
 def inline_img(kitdir, ref, attrs=""):
     """Inline a kit-relative image as a data-URI (self-contained), or pass a remote URL through."""
     if ref.startswith("http"):
-        return f'<img src="{ref}" {attrs} alt="">'
-    p = kitdir / ref
+        return f'<img src="{html.escape(safe_url(ref))}" {attrs} alt="">'
+    p = asset_path(kitdir, ref)
     mime = "image/svg+xml" if p.suffix == ".svg" else f"image/{p.suffix.lstrip('.')}"
     return f'<img src="{b64_file(p, mime)}" {attrs} alt="">'
 
 
 def icon_svg(kitdir, name_or_raw, kit_icons):
+    if not name_or_raw:
+        return ""
     if isinstance(name_or_raw, dict):  # raw {viewBox, inner}
         vb, inner = name_or_raw.get("viewBox", "0 0 24 24"), name_or_raw["inner"]
     elif name_or_raw in kit_icons:
         vb, inner = kit_icons[name_or_raw]["viewBox"], kit_icons[name_or_raw]["inner"]
     else:
         return ""  # unknown icon -> empty (tile still renders)
-    return (f'<svg viewBox="{vb}" width="22" height="22" fill="none" stroke="currentColor" '
+    svg_root(f'<svg viewBox="{html.escape(vb)}">{inner}</svg>')
+    return (f'<svg viewBox="{html.escape(vb)}" width="22" height="22" fill="none" stroke="currentColor" '
             f'stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">{inner}</svg>')
 
 
@@ -119,16 +125,46 @@ WAVE = ('<svg class="wave" viewBox="0 0 1440 44" preserveAspectRatio="none" aria
 
 
 def emph(text):
-    """**word** -> <span class=hl>word</span>; escape the rest."""
+    """**word** -> <span class=hl>word</span>; escape the rest.
+
+    Short highlighted phrases also get .hl-tight (white-space:nowrap in
+    kit_base.css) so a heading's line break can never land inside them and
+    strand a word ("Your GTM, answerable. In / Snowflake."). 24 chars keeps
+    the nowrap run safely narrower than any doc-format heading measure;
+    longer phrases wrap normally.
+    """
     parts = re.split(r'\*\*(.+?)\*\*', text)
     out = ""
     for i, seg in enumerate(parts):
-        out += f'<span class="hl">{html.escape(seg)}</span>' if i % 2 else html.escape(seg)
+        if i % 2:
+            cls = "hl hl-tight" if len(seg) <= 24 else "hl"
+            out += f'<span class="{cls}">{html.escape(seg)}</span>'
+        else:
+            out += html.escape(seg)
     return out
 
 
 def para(text):  # body copy: escape, keep simple
     return html.escape(text)
+
+
+def render_link(item, cls="", arrow=False):
+    if not isinstance(item, dict):
+        raise ValueError('link must be {label, href}; use {type: text, label} for plain text')
+    label = html.escape(item['label'])
+    if item.get('type') == 'text':
+        if cls:
+            raise ValueError('an actionable CTA needs a destination')
+        return f'<span>{label}</span>'
+    href = item.get('href', item.get('url'))
+    if 'href' in item and 'url' in item and item['href'] != item['url']:
+        raise ValueError('conflicting href and url')
+    href = html.escape(safe_url(href))
+    target = item.get('target', '_self')
+    if target not in ('_self', '_blank'):
+        raise ValueError('target must be _self or _blank')
+    attrs = ' target="_blank" rel="noopener noreferrer"' if target == '_blank' else ''
+    return f'<a class="{html.escape(cls)}" href="{href}"{attrs}>{label}{ARROW if arrow else ""}</a>'
 
 
 # ---- block renderers ----
@@ -139,13 +175,16 @@ def r_hero(b, ctx):
     brand = logo_img(kd, render, dark, height=28)
     nav = ""
     if b.get("nav"):
-        items = "".join(f'<span>{html.escape(x)}</span>' for x in b["nav"].get("links", []))
+        items = "".join(render_link(x) for x in b["nav"].get("links", []))
         if b["nav"].get("cta"):
-            items += f'<span class="cta-pill">{html.escape(b["nav"]["cta"])}</span>'
+            items += render_link(b["nav"]["cta"], "cta-pill")
         nav = f'<div class="nav">{items}</div>'
     top = f'<div class="topbar"><div class="brand">{brand}</div>{nav}</div>'
-    cta = f'<a class="btn btn-primary">{html.escape(b["cta"]["label"])} {ARROW}</a>' if b.get("cta") else ""
-    eyebrow = f'<div class="eyebrow">{html.escape(b["eyebrow"])}</div>' if b.get("eyebrow") else ""
+    cta = render_link(b["cta"], "btn btn-primary", arrow=ctx.get("arrow", False)) if b.get("cta") else ""
+    if b.get("secondaryCta"):  # the brand's resting secondary button next to the primary
+        cta += render_link(b["secondaryCta"], "btn btn-secondary")
+    ecls = "eyebrow chip" if (ctx.get("gallery") or {}).get("eyebrowStyle") == "chip" else "eyebrow"
+    eyebrow = f'<div class="{ecls}">{html.escape(b["eyebrow"])}</div>' if b.get("eyebrow") else ""
     copy = (f'<div class="copy">{eyebrow}<h1>{emph(b["title"])}</h1>'
             f'<p class="lead">{para(b["lead"])}</p>'
             f'<div class="actions">{cta}</div></div>') if b.get("lead") else \
@@ -172,17 +211,25 @@ def r_hero(b, ctx):
         cells = "".join(f'<div class="m" style="height:{h}px;background:{bg}"></div>'
                         for h, bg in b.get("masonry", []))
         visual = f'<div class="masonry">{cells}</div>'
+    # photo / video-poster hero: the kit image sits behind the copy (inlined, so no url() is needed)
+    backdrop = ""
+    if vis == "image" and render.get("heroImage"):
+        backdrop = inline_img(kd, render["heroImage"], 'class="hero-bg"') + '<div class="hero-scrim"></div>'
+        cls += " has-image"
     inner = f'<div class="lede">{copy}<div class="visual">{visual}</div></div>' if visual else copy
-    return f'<div class="{cls}">{top}{inner}{cust}</div>'
+    return f'<div class="{cls}">{backdrop}{top}{inner}{cust}</div>'
 
 
 def r_stats(b, ctx):
-    on_light = b.get("surface") == "light"
+    on_light = b.get("surface", "dark" if ctx["darkband"] else "light") == "light"
     wave = b.get("divider") == "wave"
+    def unit(u):  # a word unit ("days", "min") is set apart from the number; symbols (%, x, +) stay tight
+        return f'<span class="u{" w" if len(u) > 1 and u[0].isalpha() else ""}">{html.escape(u)}</span>'
     cells = "".join(f'<div class="stat"><div class="n">{html.escape(s["n"])}'
-                    f'<span class="u">{html.escape(s.get("u",""))}</span></div>'
+                    f'{unit(s.get("u",""))}</div>'
                     f'<div class="l">{html.escape(s["l"])}</div></div>' for s in b["items"])
-    cls = "stats" + (" on-light" if on_light else "") + (" has-wave" if wave else "")
+    inset = (ctx.get("gallery") or {}).get("statsStyle") == "inset" and not on_light
+    cls = "stats" + (" on-light" if on_light else "") + (" inset" if inset else "") + (" has-wave" if wave else "")
     return f'<div class="{cls}">{cells}{WAVE if wave else ""}</div>'
 
 
@@ -195,12 +242,18 @@ def r_about(b, ctx):
 
 def r_quote(b, ctx):
     who = f'<div class="who"><b>{html.escape(b.get("name",""))}</b>{html.escape(b.get("role",""))}</div>'
-    return (f'<div class="quote is-dark"><div class="mark">&ldquo;</div>'
+    cls = "quote is-dark" if b.get("surface", "dark" if ctx["darkband"] else "light") == "dark" else "quote"
+    return (f'<div class="{cls}"><div class="mark">&ldquo;</div>'
             f'<p>{para(b["text"])}</p>{who}</div>')
 
 
+def kicker_cls(ctx):
+    """Section and split kickers share the hero eyebrow's style, so eyebrowStyle "chip" reaches every label."""
+    return "k chip" if (ctx.get("gallery") or {}).get("eyebrowStyle") == "chip" else "k"
+
+
 def r_section(b, ctx):
-    k = f'<div class="k">{html.escape(b["kicker"])}</div>' if b.get("kicker") else ""
+    k = f'<div class="{kicker_cls(ctx)}">{html.escape(b["kicker"])}</div>' if b.get("kicker") else ""
     h = f'<h2>{emph(b["heading"])}</h2>' if b.get("heading") else ""
     ps = "".join(f'<p>{para(p)}</p>' for p in b.get("paras", []))
     return f'<div class="section">{k}{h}{ps}</div>'
@@ -217,7 +270,7 @@ def r_features(b, ctx):
 
 def _cmp_band(bad, good, rows):  # B1 — gradient-band header table (dark-band brands)
     head = (f'<div class="head"><div class="c bad">{bad}</div>'
-            f'<div class="c good"><span class="gdot"></span>{good}</div></div>')
+            f'<div class="c good">{good}</div></div>')
     body = ""
     for i, r in enumerate(rows):
         last = " last" if i == len(rows) - 1 else ""
@@ -244,11 +297,12 @@ def _cmp_diptych(bad, good, rows):  # D1 — luminous diptych (variant)
 
 def r_comparison(b, ctx):
     """Default B1 gradient-band table; B2 soft table when the kit has no dark band;
-    D1 diptych when the block opts in with variant:"diptych" (falls back to B2 on light brands)."""
+    D1 diptych when the block opts in with variant:"diptych" (falls back to B2 on light brands).
+    A block-level `surface` ("dark"|"light") overrides the kit default, like every other surface block."""
     bad = html.escape(b.get("badHead", "Without"))
     good = html.escape(b.get("goodHead", "With"))
     rows = b["rows"]
-    dark = ctx["darkband"]
+    dark = b.get("surface", "dark" if ctx["darkband"] else "light") == "dark"
     if not dark:
         return _cmp_soft(bad, good, rows)
     if b.get("variant") == "diptych":
@@ -264,9 +318,9 @@ def r_checklist(b, ctx):
 def r_cta(b, ctx):
     dark = b.get("surface", "dark" if ctx["darkband"] else "light") == "dark"
     cls = "cta is-dark" if dark else "cta"
-    cta = f'<a class="btn btn-primary">{html.escape(b["cta"]["label"])} {ARROW}</a>' if b.get("cta") else ""
+    cta = render_link(b["cta"], "btn btn-primary", arrow=ctx.get("arrow", False)) if b.get("cta") else ""
     sub = f'<p>{para(b["sub"])}</p>' if b.get("sub") else ""
-    cust = f'<div class="cust-line">{b["custLine"]}</div>' if b.get("custLine") else ""
+    cust = f'<div class="cust-line">{html.escape(b["custLine"])}</div>' if b.get("custLine") else ""
     return f'<div class="{cls}"><h2>{emph(b["heading"])}</h2>{sub}{cta}{cust}</div>'
 
 
@@ -274,19 +328,19 @@ def r_footer(b, ctx):
     dark = b.get("surface", "dark" if ctx["darkband"] else "light") == "dark"
     cls = "footer is-dark dark" if dark else "footer light"
     logo = logo_img(ctx["kitdir"], ctx["render"], dark, height=24)
-    links = "".join(f'<a>{html.escape(l)}</a>' for l in b.get("links", []))
+    links = "".join(render_link(l) for l in b.get("links", []))
     return f'<div class="{cls}">{logo}<div class="links">{links}</div></div>'
 
 
 def r_split(b, ctx):
     rev = b.get("imageSide", "right") == "left"
     img = inline_img(ctx["kitdir"], b["image"], 'class="shot"') if b.get("image") else ""
-    k = f'<div class="k">{html.escape(b["kicker"])}</div>' if b.get("kicker") else ""
+    k = f'<div class="{kicker_cls(ctx)}">{html.escape(b["kicker"])}</div>' if b.get("kicker") else ""
     h = f'<h2>{emph(b["heading"])}</h2>' if b.get("heading") else ""
     ps = "".join(f'<p>{para(p)}</p>' for p in b.get("paras", []))
     bullets = ('<ul class="chk">' + "".join(f'<li><span class="c">&#10003;</span>{para(x)}</li>'
                for x in b["bullets"]) + '</ul>') if b.get("bullets") else ""
-    cta = f'<a class="btn btn-primary">{html.escape(b["cta"]["label"])} {ARROW}</a>' if b.get("cta") else ""
+    cta = render_link(b["cta"], "btn btn-primary", arrow=ctx.get("arrow", False)) if b.get("cta") else ""
     copy = f'<div class="split-copy">{k}{h}{ps}{bullets}{cta}</div>'
     media = f'<div class="split-media">{img}</div>'
     return f'<div class="split{" rev" if rev else ""}">{(media + copy) if rev else (copy + media)}</div>'
@@ -309,8 +363,7 @@ def r_pricing(b, ctx):
     for p in b["plans"]:
         feats = "".join(f'<li><span class="c">&#10003;</span>{para(f)}</li>' for f in p.get("features", []))
         badge = f'<span class="plan-badge">{html.escape(p.get("badge","Most popular"))}</span>' if p.get("featured") else ""
-        cta = (f'<a class="btn {"btn-primary" if p.get("featured") else "btn-secondary"} plan-cta">'
-               f'{html.escape(p.get("cta","Get started"))}</a>') if p.get("cta", True) else ""
+        cta = render_link(p["cta"], "btn " + ("btn-primary" if p.get("featured") else "btn-secondary") + " plan-cta") if p.get("cta") else ""
         price = (f'<div class="plan-price">{html.escape(str(p.get("price","")))}'
                  f'<span>{html.escape(p.get("period",""))}</span></div>') if p.get("price") else ""
         cards += (f'<div class="plan{" featured" if p.get("featured") else ""}">{badge}'
@@ -330,24 +383,36 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--kit", help="kit slug (~/.octave/brands/<slug>) OR a path to a kit directory")
     ap.add_argument("--kit-dir", dest="kit_dir", help="explicit kit directory (overrides --kit)")
+    ap.add_argument("--domain", help="expected canonical brand domain")
+    ap.add_argument("--workspace", help="expected verified workspace ID")
     ap.add_argument("--spec", required=True, help="content spec JSON file (or - for stdin)")
     ap.add_argument("--out", required=True)
     ap.add_argument("--theme", choices=["light", "dark"],
                     help="render a specific theme (needs manifest.render.tokensDark/tokensLight overrides)")
     ap.add_argument("--format", default="doc",
-                    help="output canvas: doc (default) | og (1200x630) | social-square (1080) | social-story (1080x1920) | email (600w)")
+                    help="output canvas: doc (default) | og (1200x630) | social-square (1080) | "
+                         "social-story (1080x1920) | email (600w) | slide (1280x720)")
+    ap.add_argument("--og-desc", dest="og_desc",
+                    help="emit social share metas: og:title (from spec title) + this og:description")
+    ap.add_argument("--og-image", dest="og_image",
+                    help="RELATIVE og:image path (e.g. assets/og.png); also emits twitter:card. Requires --og-desc")
     args = ap.parse_args()
     target = args.kit_dir or args.kit
     if not target:
         sys.exit("ERROR: provide --kit <slug|path> or --kit-dir <path>")
     args.kit = pathlib.Path(target).name  # slug used for icons/featured lookups
-    kitdir, render = load_kit(target)
+    kitdir, render = load_kit(target, args.domain, args.workspace)
     spec = json.loads(sys.stdin.read() if args.spec == "-" else pathlib.Path(args.spec).read_text())
     icons = {}
     if (kitdir / "icons.json").exists():
-        icons = json.loads((kitdir / "icons.json").read_text())
+        icons = json.loads(asset_path(kitdir, "icons.json").read_text())
+        if isinstance(icons, list):  # the evidence pack writes [{name, viewBox, inner}]
+            icons = {i["name"]: i for i in icons if isinstance(i, dict) and i.get("name")}
+    gallery = render.get("gallery") or {}
     ctx = {"kitdir": kitdir, "render": render, "icons": icons, "slug": args.kit,
-           "darkband": render.get("hasDarkBand", True)}
+           "darkband": render.get("hasDarkBand", True), "gallery": gallery,
+           # the trailing arrow on buttons is a device the brand either uses or does not; off unless the kit says so
+           "arrow": bool(gallery.get("arrow", render.get("buttonArrow", False)))}
 
     # resolve theme: base tokens + optional light/dark override map
     tok = dict(render.get("tokens", {}))
@@ -359,8 +424,10 @@ def main():
 
     # output format → canvas size
     FORMATS = {"doc": (None, None), "og": (1200, 630), "social-square": (1080, 1080),
-               "social-story": (1080, 1920), "email": (600, None)}
-    fw, fh = FORMATS.get(args.format, (None, None))
+               "social-story": (1080, 1920), "email": (600, None), "slide": (1280, 720)}
+    if args.format not in FORMATS:
+        raise ValueError(f"unsupported format: {args.format}")
+    fw, fh = FORMATS[args.format]
     docw = fw or render.get("docWidth", 880)
 
     # build <style>: tokens + fonts + base css + format override
@@ -382,13 +449,30 @@ def main():
         if buf:
             parts.append('<div class="wrap">' + "".join(buf) + "</div>")
             buf.clear()
+    # render.surfaces: the brand's own surface per block type (a lavender closing CTA, a white footer), applied to
+    # every asset; a block's explicit "surface" wins, and a kit without the map keeps the darkband default
+    kit_surfaces = render.get("surfaces") or (render.get("gallery") or {}).get("surfaces") or {}  # render.surfaces, else the gallery knob
+    # render.eyebrow / heroEyebrow: a brand without small-caps labels drops them from every asset, not only the gallery
+    no_labels = render.get("eyebrow", gallery.get("eyebrow")) is False
+    no_hero_label = render.get("heroEyebrow", gallery.get("heroEyebrow")) is False
     for blk in spec["blocks"]:
         t = blk["type"]
+        if kit_surfaces.get(t) in ("dark", "light"):
+            blk.setdefault("surface", kit_surfaces[t])
+        if no_labels:
+            blk.pop("eyebrow", None); blk.pop("kicker", None)
+        elif t == "hero" and no_hero_label:
+            blk.pop("eyebrow", None)
+        if t not in RENDERERS:
+            raise ValueError(f"blocks[{len(parts) + len(buf)}]: unknown block type {t}")
         rendered = RENDERERS[t](blk, ctx)
         if t in WRAP_BLOCKS and blk.get("surface") == "dark":
             # break a content block out of the light .wrap into a full-bleed dark band
             flush()
-            parts.append(f'<div class="band is-dark">{rendered}</div>')
+            # on a dark sheet the band is the same surface as the .wrap around it, so its own padding would
+            # stack on the wrap's and open a dead gap; "flush" lets the wrap padding carry the rhythm
+            band_cls = "band is-dark flush" if theme == "dark" else "band is-dark"
+            parts.append(f'<div class="{band_cls}">{rendered}</div>')
         elif t in WRAP_BLOCKS:
             buf.append(rendered)
         else:
@@ -401,9 +485,18 @@ def main():
     link = (f'<link rel="preconnect" href="https://fonts.googleapis.com">'
             f'<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
             f'<link href="{html.escape(wf)}" rel="stylesheet">') if wf else ""
+    # social share metas, opt-in: --format og intermediates must never carry their own OG tags
+    og = ""
+    if args.og_desc:
+        og = (f'<meta property="og:title" content="{title}">'
+              f'<meta property="og:description" content="{html.escape(args.og_desc)}">')
+        if args.og_image:
+            og += (f'<meta property="og:image" content="{html.escape(args.og_image)}">'
+                   f'<meta name="twitter:card" content="summary_large_image">')
     doc = (f'<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">'
            f'<meta name="viewport" content="width=device-width,initial-scale=1"><title>{title}</title>'
-           f'{link}<style>{style}</style></head><body><div class="doc">{"".join(parts)}</div></body></html>')
+           f'{og}{link}<style>{style}</style></head><body><div class="doc">{"".join(parts)}</div></body></html>')
+    pathlib.Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     pathlib.Path(args.out).write_text(doc, encoding="utf-8")
     print(args.out, f"({len(doc)} bytes)")
 

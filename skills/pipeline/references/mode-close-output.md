@@ -1,0 +1,4 @@
+# Close plan
+Retrieve buyer decision criteria, evaluation results, approval chain, procurement/security/legal status, commercial open items, and agreed timing from CRM/calls. Ask the operator together for the remaining approvals, documents, owners, dates, or unrecorded agreements that block the close plan.
+
+Output a decision-readiness table: requirement → evidence/status → remaining work → owner → buyer-agreed timing or proposed date → completion criterion. Separate product/evaluation gaps, business approval, and transaction execution. Identify the critical dependency and prepare its next artifact or message. Do not promise discounts, features, or dates from a generic template. Keep planning placeholders while inputs are pending; incorporate answers before calling the plan complete. If a required decision is genuinely unknown, agree on an explicit decision-to-resolve rather than inventing it.

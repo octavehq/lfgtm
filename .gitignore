@@ -42,6 +42,7 @@ __pycache__/
 # Octave plugin local config
 .claude/config/
 .claude/settings.local.json
+.claude/worktrees/
 PLAN.MD
 
 # Generated asset output dirs (deck, brief, meeting-prep, microsite, one-pager, proposal, battlecard, …)
@@ -54,3 +55,8 @@ predictions/
 
 # agent memory
 .claude/agent-memory/
+
+# Local review notes and Margin discussion metadata (not public skill resources)
+/docs/reviews/
+*.comments.json
+*.blame.json

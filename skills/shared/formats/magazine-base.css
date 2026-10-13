@@ -1,0 +1,151 @@
+/* ============================================================
+   Magazine base — shared mechanical scaffold for editorial
+   swipe magazines (shared/formats/magazine.md).
+
+   Consumption contract: paste this file's FULL contents verbatim
+   into the <style> block of every magazine, then layer the brand
+   system (fonts, palette, compositions) on top. These rules are
+   brand-agnostic mechanics only; override the --mag-* tokens to
+   theme, never re-derive the scaffold by hand.
+
+   DOM contract:
+     <div class="mag">
+       <section class="spread is-dark">…</section>
+       <section class="spread is-light">…</section>
+       …
+     </div>
+     <nav id="nav">…buttons…</nav>
+     <div class="folio left">…</div>
+     <div class="folio right" id="folio-count">1 / N</div>
+   ============================================================ */
+
+:root {
+  /* The reserved bottom band. Content must never render inside it;
+     every .spread reserves it via padding-block-end below. Chrome
+     offsets are pinned in px so band and chrome cannot drift apart
+     at different viewport sizes. */
+  --navsafe: 84px;
+  /* Surface pairs. A spread must always declare surface + ink
+     together; these defaults are overridden by the brand layer. */
+  --mag-light-bg: #ffffff;
+  --mag-light-ink: #111111;
+  --mag-dark-bg: #101010;
+  --mag-dark-ink: #f5f5f5;
+  /* Chrome colors chosen to hold contrast on BOTH polarities:
+     a translucent dark pill with white ink and a light outline. */
+  --mag-chrome-bg: rgba(20, 20, 20, 0.85);
+  --mag-chrome-ink: #ffffff;
+  --mag-chrome-edge: rgba(255, 255, 255, 0.28);
+}
+
+/* Spreads are sized 100vw×100svh with padding; without border-box the
+   padding grows every spread past the viewport and clips content off the
+   right and bottom edges. */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { margin: 0; height: 100%; }
+body { overflow: hidden; }
+
+/* The horizontal track. Native scroll snap keeps swiping direct and
+   interruptible; programmatic jumps go through scrollIntoView. */
+.mag {
+  display: flex;
+  height: 100vh;
+  height: 100svh;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.mag::-webkit-scrollbar { display: none; }
+
+.spread {
+  position: relative;
+  flex: 0 0 100vw;
+  width: 100vw;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  /* Reserve the chrome band. Compositions that bypass a padded
+     wrapper (e.g. full-bleed quadrant grids) must re-apply this
+     reservation on the grid itself — and a spread-level `padding`
+     SHORTHAND in the brand layer silently overrides this rule, so
+     per-spread padding must be set via padding-inline /
+     padding-block-start, or the reservation re-asserted after it. */
+  padding-block-end: max(48px, var(--navsafe));
+}
+
+/* Surface polarity. Background and foreground always move together;
+   a spread that inherits the page background will paint its text
+   invisibly when the polarity alternates. */
+.spread.is-light { background: var(--mag-light-bg); color: var(--mag-light-ink); }
+.spread.is-dark { background: var(--mag-dark-bg); color: var(--mag-dark-ink); }
+
+/* Quirks-adjacent belt-and-braces: tables do not reliably inherit
+   color on themed surfaces. */
+.spread table { color: inherit; }
+
+/* Fixed navigation chrome. Pinned in px (not viewport units) so the
+   --navsafe reservation above always clears it. */
+#nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  z-index: 10;
+  pointer-events: none;
+}
+#nav > * { pointer-events: auto; }
+#nav button {
+  min-width: 44px;
+  min-height: 44px;
+  border: 1px solid var(--mag-chrome-edge);
+  border-radius: 999px;
+  background: var(--mag-chrome-bg);
+  color: var(--mag-chrome-ink);
+  font: inherit;
+  cursor: pointer;
+}
+
+.folio {
+  position: fixed;
+  bottom: 24px;
+  z-index: 10;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--mag-chrome-ink);
+  background: var(--mag-chrome-bg);
+  border: 1px solid var(--mag-chrome-edge);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-variant-numeric: tabular-nums;
+}
+.folio.left { left: 24px; }
+.folio.right { right: 24px; }
+
+@media print {
+  body { overflow: visible; }
+  .mag { display: block; height: auto; overflow: visible; }
+  .spread {
+    width: 100%;
+    height: 100vh;
+    page-break-after: always;
+    break-after: page;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  #nav, .folio { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mag { scroll-behavior: auto; }
+  .spread * { animation: none !important; transition: none !important; }
+}

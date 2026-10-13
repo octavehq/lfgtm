@@ -1,5 +1,8 @@
 # Editorial Rules: Octave Content
 
+Apply wording preferences to authored prose. Preserve exact quotations, customer voice, names, technical terms and necessary domain language. Source code and CSS are not reader-facing prose. Use the purpose-aware policy in [output readiness](output-readiness.md); a word-list hit is advisory unless a concrete meaning/readability problem is established.
+
+
 Universal language, presentation, and writing quality rules for all Octave-generated content. These rules apply regardless of document type: Beats reports, battlecards, one-pagers, microsites, briefs.
 
 ## Presentation Principles

@@ -11,7 +11,7 @@
 **Competitive Displacement:**
 
 1. **Hero** — "Built for [Company]" + "There's a better way than [current approach]"
-2. **The Gap** — what their current solution likely cannot do (without naming competitor directly)
+2. **The Gap** — the buyer criterion and a supported current-workflow tradeoff; use a conditional category comparison when the incumbent is unknown
 3. **What's Possible** — vision of what better looks like, with metrics from switchers
 4. **Who's Moved** — proof points from companies who switched, similar industry/size
 5. **CTA** — "See the difference" + button
@@ -30,3 +30,7 @@
 2. **The Opportunity** — connecting their trigger event to your value
 3. **Relevant Results** — proof from similar situations
 4. **CTA** — timely, specific ask
+
+## Industry
+
+Industry-specific decision → sourced constraint → buyer workflow consequence → selected offering mechanism → applicable proof and limits → CTA. A persona/industry page needs no invented company. Classify incumbents as confirmed deployed, evaluated/mentioned, or hypothetical; unknowns use conditional category comparison.

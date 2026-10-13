@@ -55,3 +55,4 @@ node <skill-dir>/../shared/scripts/render-gate.js <one-pager.html> --viewports 1
 - [ ] **Co-branding present.** Customer logo and Octave branding visible and professional.
 - [ ] **CTA visible.** Next steps or call to action prominent, not buried.
 - [ ] **No overflow.** No content clipped or hidden at page boundaries when printed.
+- [ ] **Share metadata.** og:title and og:description present and filled. og:image, when present, is a relative path to a real sibling file (assets/og.png); no og:url or canonical. See [social-meta.md](../social-meta.md).

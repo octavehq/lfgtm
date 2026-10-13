@@ -12,7 +12,7 @@ If the user declines, skip silently. If they accept, run all five dimensions bel
 ## How to run it
 
 1. **Render the actual output**, don't review the spec/source. Screenshot it:
-   - Docs (one-pager, proposal, brief, microsite, battlecard): full-page PNG via `scripts/render.py --file <out.html> --out <png> --width <docwidth+60>`.
+   - Docs (one-pager, proposal, brief, microsite, battlecard): full-page PNG via `skills/get-brand-components/scripts/render.py --file <out.html> --out <png> --width <docwidth+60>`.
    - Decks: the fixed 1920×1080 stage means each slide must fit its own canvas. **Measure every slide's content height** (load the deck, set slides to `position:static;height:auto`, read each `.inner` `scrollHeight`); anything `> 1080` is clipped at runtime by `overflow:hidden`. Then screenshot a stacked-verify (all slides `position:static`, natural height) to eyeball them.
 2. **Look at the pixels.** This is a multimodal check — open the screenshots and actually inspect them. The most common defects (overflow, misalignment, white-on-white) are invisible in the source and only show in the render.
 3. **Score each dimension** below: pass, or a list of located findings.

@@ -12,7 +12,6 @@ OUT="$SRC_ROOT/build/codex"
 
 # ---- toggles ----------------------------------------------------------------
 NAMESPACE_PREFIX="octave-"   # "" to keep bare names; "octave-" to rename skills/foo → octave-foo
-CONVERT_AGENTS="drop"        # "drop" | "skills" (convert agents/*.md to skills)
 # -----------------------------------------------------------------------------
 
 command -v jq >/dev/null || { echo "jq required"; exit 1; }
@@ -84,22 +83,7 @@ for dir in "$SRC_ROOT"/skills/*/; do
   fi
 done
 
-# 5. agents/: no Codex equivalent
-case "$CONVERT_AGENTS" in
-  drop)
-    echo "→ agents/ dropped (no Codex equivalent)"
-    ;;
-  skills)
-    echo "→ agents/ converted to skills/ (invocation semantics differ — see README note)"
-    mkdir -p "$OUT/skills"
-    for f in "$SRC_ROOT"/agents/*.md; do
-      base="$(basename "$f" .md)"
-      dst="$OUT/skills/${NAMESPACE_PREFIX}${base}"
-      mkdir -p "$dst"
-      cp "$f" "$dst/SKILL.md"
-    done
-    ;;
-esac
+# Agent instructions are packaged as portable resources below.
 
 # 6. Rewrite inline skill references in every shipped markdown file
 #    (SKILL.md, references/, shared/, converted agents):
@@ -128,7 +112,7 @@ Install the skills from this repository using your Codex CLI version's skills/pl
 codex plugin marketplace add https://github.com/octavehq/lfgtm-codex
 \`\`\`
 
-If your Codex version does not support plugin marketplaces, clone this repository and copy the \`skills/\` directories into your Codex skills location (see \`codex --help\` or the Codex documentation for the path your version uses).
+If your Codex version does not support plugin marketplaces, clone the complete repository and use your host’s supported skill discovery or symlinks. Keep skills/shared, sibling skills, agents, root scripts and LICENSE together; copying isolated skill folders breaks dependencies.
 
 ## Configure your Octave MCP server
 
@@ -145,14 +129,19 @@ Use any name starting with \`octave-\`. Skills detect the Octave server from ava
 All upstream skills are available, renamed with the \`octave-\` prefix to avoid collisions in the Codex skill namespace:
 
 - \`/octave-research\` (was \`/octave:research\` in Claude Code)
-- \`/octave-library\`, \`/octave-generate\`, \`/octave-battlecard\`, …
+- \`/octave-library\`, \`/octave-generate\`, \`/octave-battlecard-doc\`, …
 
 See the [upstream README](https://github.com/octavehq/lfgtm#skills) for full descriptions.
 
-## Not included
+## Review and runtime resources
 
-The upstream plugin ships five subagent personas (\`octave-assistant\`, \`pmm-strategist\`, \`sdr-coach\`, \`revenue-strategist\`, \`asset-manager\`). Codex has no subagent concept, so these are not available in this build. Use the corresponding skills directly.
+All seven upstream agent instruction files and root helper scripts are included.
+Use supported host delegation when available; otherwise run the packaged reviewer
+instructions sequentially. See skills/shared/host-runtime.md.
+
 EOF
+
+python3 "$SRC_ROOT/scripts/package_resources.py" --source "$SRC_ROOT" --output "$OUT" --prefix "$NAMESPACE_PREFIX"
 
 # 8. Summary
 echo

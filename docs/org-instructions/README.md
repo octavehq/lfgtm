@@ -41,7 +41,7 @@ Once propagation is done, start a new Claude conversation (any surface) and run 
 
 | Prompt | Expected tool |
 |---|---|
-| *"What's the status of my deal with [company] and what should I be doing next?"* | `get_deal_deep_dive` or `/octave:pipeline` |
+| *"What's the status of my deal with [company] and what should I be doing next?"* | `get_deal` or `/octave:pipeline` |
 | *"Prep me for my discovery call with [name] at [company]."* | `generate_call_prep`, `/octave:research`, or `/octave:meeting-prep` |
 | *"Qualify [name] at [company] against our ICP."* | `qualify_person` + `qualify_company` |
 | *"Enrich [name] at [company] — I don't know much about them."* | `enrich_person` + `enrich_company` |

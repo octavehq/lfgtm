@@ -1,0 +1,5 @@
+# asset-manager: task method
+
+Create a publish manifest containing only the entry point, its required assets, and intentionally selected downloads. Keep drafts, source notes, input JSON, private evidence and unrelated exports out of the staged bundle unless explicitly part of the requested distribution. Show the selected scope when material. Build create/zip/update from the same manifest. For full replacement, compare included/removed files with the current version before applying the authorized change.
+
+Key registry entries by verified workspaceOId plus artifact UUID. Store schemaVersion, owner ID, identifier, artifact type, current version, privacy/status, source/publish manifest checksum, last verified timestamp, and stable site/download identity. Do not store access tokens, share secrets or expiring preview URLs. Before reuse or mutation, fetch current metadata and verify workspace, ownership, version and intended target. Treat an old entry without workspace identity as unverified until reconciled; never infer identity from matching name alone.

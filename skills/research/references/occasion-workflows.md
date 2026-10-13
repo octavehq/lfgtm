@@ -1,0 +1,8 @@
+# Occasion workflows
+Use only the selected occasion. Do not expand a narrow request into every section below.
+
+- Follow-up: recover the interaction and explicit commitments; separate unanswered questions from proposed actions; prepare the promised response, owner, timing, and next decision. Do not invent agreements.
+- QBR: retrieve contracted scope, stakeholders, renewal timing, and call-recorded success criteria. Organize commitments/baseline → reported or measured outcomes and period → delivery gaps/owner → renewal risks → justified expansion → next joint milestone. Ask the operator together for missing deployment/usage, baseline/result, measurement source/period, POC findings, and unresolved delivery issues. Use only inputs relevant to this account's value model. Continue the supported sections; incorporate and check answers. If measurements are unavailable, agree on qualitative outcomes, an explicit provisional assumption, omitted claims, or a working draft. Another customer's result is proof of possibility, never this account's realized value.
+- Executive: state the decision sought, business consequence, options/tradeoffs, buyer-relevant evidence, and specific sponsor ask. Ask for missing business impact or decision authority after reading CRM/calls.
+- Deal review: identify the opportunity; reconcile current stage with buyer commitments; state competing blocker hypotheses, evidence against each, and the next test with an owner.
+- General: answer the actual research question, distinguish account facts from segment patterns, and end with an action only when the task calls for one.

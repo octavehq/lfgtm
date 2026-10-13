@@ -1,0 +1,11 @@
+# one-pager: task method
+
+Before outlining, select one reader, one occasion, one material problem, one offering mechanism, one suitable proof item, and one next decision. Record whether the account problem is confirmed in CRM/calls, supplied by the operator, or an ICP-based hypothesis.
+
+For a demo follow-up, read the relevant call and CRM next step; identify what was demonstrated, the buyer's response, the unresolved issue, and agreed action. Ask only for absent material inputs: “The call confirms the reporting bottleneck and requested POC. Which next step should this document request, and is there a validated POC result missing from Octave?” Draft while awaiting that answer; populate the working field and rerun the review afterward.
+
+For cold outreach, describe a relevant buyer situation as a hypothesis to validate. Do not assert that this account has a particular pain or installed competitor without evidence. Connect the problem to a specific capability/workflow change, then to a relevant result or honest qualitative proof. A POC planning one-pager can leave future results open when the measurement, owner, timing, and decision are explicit.
+
+Resolve format from the request: a printable one-pager/leave-behind is one physical page; a scrolling brief is a webpage and may be longer. Ask only when the request is ambiguous. For print, choose the requested paper size or state the default, and generate the corresponding Letter or A4 layout with @page dimensions and explicit margins. Keep essential text at least 11 pt. Fit by editing priorities and shortening copy; never shrink the entire document to hide overflow. Check the actual PDF page count and render before delivery. If another paper size is promised, validate that export too.
+
+Choose proof supported by the source: a measured transformation with period/units, an approved attributable quote, or a concrete qualitative workflow/result. One strong relevant item is sufficient; no metric is required when none is available. Never add a second number merely to match a layout. Download the validated logo/icon into the selected asset bundle or embed it, verify its identity and use status, and check offline rendering. Do not rely on a third-party favicon hotlink in an output described as self-contained.

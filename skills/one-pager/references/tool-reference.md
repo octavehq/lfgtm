@@ -5,7 +5,7 @@
 | Tool | Purpose | Use when... |
 |------|---------|-------------|
 | `list_entities({ entityType })` | Fetch all entities of a type (minimal fields) | You want a quick inventory -- "show me all our personas" |
-| `list_entities({ entityType })` | Fetch entities with full data (paginated) | You need the actual content -- "get full proof point details" |
+| `get_entity({ oId })` | Fetch entities with full data (paginated) | You need the actual content -- "get full proof point details" |
 | `get_entity({ oId })` | Deep dive on one specific entity | You found something relevant and need the complete picture |
 | `list_motions()` | List Motions in the workspace | You want the Motion-era equivalent of "show me all our playbooks" |
 | `list_motion_icps({ motionOId })` | The persona × segment matrix under a Motion | You want to see which Motion ICP cells cover this audience |

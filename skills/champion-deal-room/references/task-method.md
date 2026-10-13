@@ -1,0 +1,17 @@
+# champion-deal-room: task method
+
+### Audience, context, and completion
+This is buyer-facing champion enablement, intended for circulation within the buyer's organization. Read [gtm-context.md](../../shared/gtm-context.md) for offering/motion and committee framing, [evidence-and-inputs.md](../../shared/evidence-and-inputs.md) for source and operator inputs, and [output-readiness.md](../../shared/output-readiness.md) for the agreed document state. Load [analytics-contract.md](../../shared/analytics-contract.md) only when using cohort-derived benchmarks; direct account value calculations follow the method below.
+
+Resolve the account and opportunity, then retrieve CRM scope, actual participants, buying roles, goals, approval path, and relevant calls. Select the offering/motion/custom playbook before choosing value drivers. Read full relevant cells for each seat, including available linked elements and learnings supported by the installed tool contract. Separate confirmed participants, operator-reported roles, and suggested seats.
+
+Keep candid seller strategy and restricted source details in the seller working record. Use only evidence appropriate to this buyer audience. Internal Octave links, another customer's private quote, and unapproved reference stories do not become shareable merely because the document is called internal. Provide accessible approved sources or a plain source description in buyer copy.
+
+Ask a grouped set only for missing facts that affect the case or path forward. Continue the supported narrative, committee framing, and action plan while answers are pending. Intentional placeholders are valid in a working draft or printable worksheet. Explain what belongs in each slot; incorporate replies with provenance, regenerate, and validate the final document. Browser editing is optional. If the operator chooses to retain worksheet blanks, label that purpose and do not present them as completed facts.
+
+### Account value model
+Choose the value mechanism supported by the offering and buyer objective. Retrieve commercial scope, recorded baseline, buyer goals, and POC results from CRM/calls first. Ask together for the missing model-specific volumes, frequency, baseline/result, measurement period/source, labor/cost basis, adoption/ramp, and implementation/ongoing cost. Do not request irrelevant inputs or assume Octave contains usage telemetry.
+
+Keep an input table: value, units, period, source/date, and actual versus operator estimate versus proposed assumption. Calculate each benefit from eligible volume × relevant frequency × per-unit change × adoption/realization factor, only where those factors describe the mechanism. Normalize periods. Show investment/ongoing costs and exclude overlapping benefits. Distinguish cash savings, freed capacity, revenue influence, and risk reduction; saved hours are not cash savings without a realization mechanism.
+
+Reference outcomes establish possibility and applicability, not this account's projection. Use account inputs to build a projection. If inputs are unavailable, agree on explicit provisional assumptions, a qualitative case, omitted dollar claims, or a retained draft. Use conservative/base/upside only when assumptions justify a range. Derive cost of delay from the same valid model and time basis; otherwise describe urgency qualitatively. Recompute after operator answers and check units, arithmetic, overlap, and claim labels before delivery.

@@ -12,6 +12,7 @@ Self-contained HTML with a dark "sheet" container on a black body. Design modele
 - **Comparison grids** for side-by-side competitive content
 - **Eyebrow labels** for section categorization
 - **No emoji** -- use CSS-based indicators (colored borders, markers)
+- **Share metadata in `<head>`** -- og:title + og:description on every output, relative og:image when published; canonical block in [../../shared/social-meta.md](../../shared/social-meta.md)
 
 ## CSS Variable System
 

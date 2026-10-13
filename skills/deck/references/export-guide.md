@@ -140,34 +140,9 @@ Review the carousel HTML before exporting to PDF.
 
 ## PPTX Export
 
-Generate a Python script using `python-pptx` that recreates the slides as a PowerPoint file:
+Use a working converter or write and execute a complete conversion with the available `python-pptx` runtime. Resolve actual colors from the selected kit; do not run placeholder hex values. Recreate editable text and solid fills only where that matches the requested fidelity. For unsupported gradients, complex layouts or media, explain the limitation and use rasterized slides or an agreed PDF/HTML fallback.
 
-```python
-# Install if needed: pip install python-pptx
-from pptx import Presentation
-from pptx.util import Inches, Pt, Emu
-from pptx.dml.color import RGBColor
-from pptx.enum.text import PP_ALIGN
-
-prs = Presentation()
-prs.slide_width = Inches(13.333)  # 16:9 widescreen
-prs.slide_height = Inches(7.5)
-
-# Extract brand colors from the HTML CSS variables
-bg_color = RGBColor(0xXX, 0xXX, 0xXX)      # --bg
-text_color = RGBColor(0xXX, 0xXX, 0xXX)     # --text-primary
-brand_color = RGBColor(0xXX, 0xXX, 0xXX)    # --brand-primary
-
-# For each slide in the HTML, create a corresponding PPTX slide:
-# - Title slides -> blank layout + centered text boxes
-# - Content slides -> title + body text boxes
-# - Metric slides -> title + large number text boxes
-# - Grid slides -> title + arranged text boxes
-# - Quote slides -> centered italic text box
-# Apply brand colors to backgrounds and text
-
-prs.save(".octave-decks/<deck-name>-<date>/<deck-name>.pptx")
-```
+Open or parse the resulting PPTX, verify slide count, text, imagery and layout, and inspect rendered slides before reporting it ready. A script returning zero does not prove a complete conversion. No converter available means NOT RUN with the actual limitation, not an exported-file claim.
 
 Run the script and present the file:
 ```
@@ -259,3 +234,7 @@ Export slide content as structured markdown:
 ```
 
 Save to file: `.octave-decks/<deck-name>-<date>/<deck-name>-content.md`
+
+## Export acceptance
+
+Check the actual produced file for every route: expected page/slide count, readable type, preserved text/images, valid links where supported, and no clipping. For physical one-page output verify exactly one Letter/A4 page at ≥11pt body. Describe rasterized versus editable content accurately; do not imply parity for unsupported features.

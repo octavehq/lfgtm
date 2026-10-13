@@ -1,0 +1,4 @@
+# Expansion plan
+Retrieve contracted offering/footprint, account stakeholders, renewal timing, call-recorded outcomes, and adjacent needs. Ask the operator for missing usage, delivered value, POC results, adoption obstacles, or commercial constraints; their absence from Octave is not poor adoption.
+
+Choose upsell, cross-sell, or recovery based on supported account state. Connect the new use case to its offering and persona cell; distinguish an existing champion from a new decision-maker. Output current value/health, expansion hypothesis, readiness evidence, new buyer/proof, commercial timing, and the next validation step. Confirmed dissatisfaction or failed adoption may require recovery first. If outcomes are unavailable, agree on qualitative/provisional planning or a validation milestone. Incorporate supplied measurements with period/source before validating the final recommendation.

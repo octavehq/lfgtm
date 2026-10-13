@@ -2,7 +2,7 @@
 
 The proven, self-contained scaffold for the six-job account plan (locked from the Coinbase v2 build). Reproduce this structure and card vocabulary. Content specifics come from `account-plan-template.md`; brand tokens come from the workspace company's cached kit.
 
-**Rules:** self-contained (inline CSS/JS, only Google Fonts external). No em-dashes or en-dashes. The `:root` brand block is inlined from `~/.octave/brands/<workspace-slug>/tokens.css` plus `get-brand-components/assets/kit_base.css`; the semantic + component CSS below is the reusable scaffold. Six sections in order, conclusion-carrying headers, sidebar nav dots, persona selector in section 5, print flattening.
+**Rules:** self-contained (inline CSS/JS, only Google Fonts external). No em-dashes or en-dashes. The `:root` brand block is inlined from `~/.octave/brands/<workspace-slug>/tokens.css` plus `skills/get-brand-components/assets/kit_base.css`; the semantic + component CSS below is the reusable scaffold. Six sections in order, conclusion-carrying headers, sidebar nav dots, persona selector in section 5, print flattening. The head carries the social share block (rules in [../../shared/social-meta.md](../../shared/social-meta.md)); `assets/og.png` is the one permitted sibling file.
 
 ## `<head>` + `<style>`
 
@@ -10,11 +10,15 @@ The proven, self-contained scaffold for the six-job account plan (locked from th
 <!DOCTYPE html><html lang="en"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Account Plan: [Company]</title>
+<meta property="og:title" content="Account Plan: [Company]">
+<meta property="og:description" content="[1-2 sentence summary a stranger understands]">
+<meta property="og:image" content="assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=[kit fonts]&display=swap" rel="stylesheet">
 <style>
-/* ===== Brand tokens inlined from the workspace kit (tokens.css + kit_base.css). Below is the Material Security set as reference. ===== */
+/* ===== Brand tokens inlined from the workspace kit (tokens.css + kit_base.css). Below is the [Seller company] set as reference. ===== */
 :root{
   --brand-bg:#efefef; --brand-bg-alt:#ffffff; --brand-surface:#ffffff;
   --brand-ink:#333; --brand-muted:#666; --brand-on-dark:#efefef;
@@ -169,7 +173,7 @@ main{padding:40px 48px 12px;}
     <!-- 4. Committee: .people grid of .person cards (avatar, nm, tt, role-badge, disp, li link, .unconfirmed as needed) + .gap-line -->
     <section class="section" id="committee">...</section>
     <!-- 5. Positioning: .persona-tabs (role=tablist) + .persona-panel[data-tab-label] each with .pfield blocks (concerns/status quo/.lead-with/proof-fit).
-         The <key>/<Persona Name> below are PLACEHOLDERS — choose the ≤3 personas per account (see account-plan-template.md §5); do NOT default to a fixed eng/ciso/grc set. -->
+         The <key>/<Persona Name> below are PLACEHOLDERS — choose the personas relevant to the requested scope per account (see account-plan-template.md §5); do NOT default to a fixed eng/ciso/grc set. -->
     <section class="section" id="positioning">...</section>
     <!-- 6. Engagement: .entry-card + .talk-track sample emails + .seq numbered steps + seed/CRM note -->
     <section class="section" id="engagement">...</section>

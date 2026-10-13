@@ -55,8 +55,8 @@ This turns a generic "here's our product" asset into "here's what we heard from 
 
 | What you need | Tool | When to use |
 |---------------|------|-------------|
-| All proof points | `list_entities({ entityType: "proof_point" })` | Metrics, quotes, logos with full data |
-| All references | `list_entities({ entityType: "reference" })` | Customer references with full details |
+| Proof discovery | `list_entities({ entityType: "proof_point" })`, then `get_entity({ oId })` for selected IDs | Slim candidates, then full metrics, quotes, scope and permission |
+| Reference discovery | `list_entities({ entityType: "reference" })`, then `get_entity({ oId })` for selected IDs | Slim candidates, then full customer stories and applicability |
 | Proof by topic | `search_knowledge_base({ query: "<industry> results", entityTypes: ["proof_point", "reference"] })` | Proof *about* a specific topic, industry, or use case |
 | Uploaded case studies | `search_resources({ query: "<topic> case study" })` | Existing case study docs or assets |
 

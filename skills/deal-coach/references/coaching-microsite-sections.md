@@ -70,7 +70,7 @@ Provenance line (which calls, which buyer, which Motion ICP cell; note where dea
 | Job 1 evidence rows | ≤ 4, one line each |
 | Job 1 placeholders | 1 |
 | Job 2 heard-on-call | ≤ 4, one line each |
-| Job 3 goals | exactly 5 |
+| Job 3 goals | one goal per grounded priority |
 | Job 3 value props | 3 to 4 |
 | Job 3 talk tracks | 3 |
 | Job 4 readiness tells | 4 |
@@ -85,7 +85,7 @@ Provenance line (which calls, which buyer, which Motion ICP cell; note where dea
 - [ ] Headers are conclusion-carrying, none theatrical or clickbait.
 - [ ] Zero em/en-dashes (lint passes).
 - [ ] Every named person, quote, competitor, and count traces to a real tool result; unverified deal data is a placeholder, not invented.
-- [ ] Job 3 goals number exactly 5; value props are a clean list, not chips; talk tracks name the account's real pains and map to goals.
+- [ ] Job 3 goals number one goal per grounded priority; value props are a clean list, not chips; talk tracks name the account's real pains and map to goals.
 - [ ] Job 5 renders one card per real risk (not forced to two); no invented risk, none dropped for layout.
 - [ ] Responsive at 375px (no horizontal overflow); print flattens (details open, nav hidden, cards avoid breaks); keyboard focus visible.
 - [ ] Any CSS-grid list item wrapping an inline `<em>` keeps it inline (item text in a `<span>`).

@@ -149,3 +149,7 @@ Lead with the lowest-risk next step (e.g. a read-only assessment). A cheap, reve
 - [ ] No stakeholder is quoted beyond what the source data supports.
 - [ ] No section reads as generic positioning. Each carries a fact a champion could repeat to move someone.
 - [ ] Fill-in slots (blank names, missing inputs, the specific ask) are visible and honest, not faked.
+
+## Value and completion
+
+Apply [the account value model](task-method.md#account-value-model): normalize units/periods, include cost/adoption/realization, avoid double counting, and distinguish capacity from cash. Cost of delay is conditional on a valid account model; qualitative urgency is valid. Incorporate worksheet answers and revalidate. This document crosses into the buyer’s organization; seller-internal strategy and private third-party proof stay outside it.
