@@ -2,6 +2,12 @@
 
 Discover the current asset tools and verify their actual schemas. Reuse exact workspace/artifact identity; apply scoped mutation/readback rules from [task-method.md](task-method.md).
 
+## Who can manage an asset
+
+Every asset response carries `owner` (`"me"`, or the teammate's `"First Last <email>"` plus a structured `ownerEmail`) and computed `canEdit` / `canManage` booleans. They are true for your own assets, and for any non-`only_me` asset in your workspace when your role is workspace admin/owner. When `canManage` is true, the full management surface works on a teammate-owned asset too: files, metadata, shares, versions, stats, and transfer, including machine-published assets such as pre-captured brand kits. When it is false the asset is read-only: reuse or download it, but never call `asset_update`, `asset_delete`, or a share tool on it; create the user's own copy instead. Never re-derive this from roles; trust the fields on the response.
+
+`only_me` stays a personal drawer: `canManage` is never true for anyone but the owner, so no admin can read, edit, or share an `only_me` asset. The one way it changes hands is a transfer, which reassigns the owner outright and is recorded (see Transfer Ownership).
+
 ## Versions & Rollback
 
 Every file update mints an **immutable version** — an upload never overwrites history. Two fields on every asset response tell the story:
@@ -71,12 +77,23 @@ Surface pending requests whenever the user asks anything like "who wants access"
 
 ## Workflow: Who Opened It (Stats & Visitors)
 
-Two owner-only reads answer "how is my asset doing" — pick by the question:
+Two reads answer "how is my asset doing" — available to the owner and to workspace admins/owners (anyone whose `canManage` is true for the asset). Pick by the question:
 
 - **How many** → `asset_stats_get`: per-day unique visit and download counts. Trends, not names.
 - **Who** → `asset_visitors_list`: the identified viewers — share recipients who code-verified (`via: share`) and workspace members who verified their work email (`via: workspace`).
 
 Anonymous public visitors are **counted in stats but never identified** — never imply the visitor list is complete for a `public` asset. The honest phrasing: "N visits, of which these verified viewers: …".
+
+## Workflow: Transfer Ownership
+
+`asset_transfer` (uuid + `targetUserOId`) reassigns an asset to another member of its workspace. Use it when an asset should outlive its author's involvement: handing a deck to the teammate now running the campaign, adopting a departed colleague's asset, or claiming a machine-published asset (e.g. an auto-captured brand kit) so a human owns it.
+
+1. Allowed when you own the asset, or its `canManage` reads true (workspace admin/owner, non-`only_me`). Managed skills are the one exception: they belong to the workspace itself rather than to a person, so transfer refuses them — manage those from the Skills page.
+2. The target must be an active member of the asset's workspace, and must have used assets at least once (the tool returns a clear error otherwise — have them open the asset gallery or run any asset call, then retry).
+3. Versions and share links ride along unchanged; the previous owner keeps whatever access the privacy tier grants everyone else.
+4. Update the registry (`owner` changes; your own registry entry may now belong to someone else — note it rather than delete it) and report the asset's link.
+
+Offboarding is automatic: when a member is removed from the workspace, their assets (all tiers, including `only_me`) transfer to a workspace owner. Manual transfer is for everything short of that.
 
 ## Workflow: Download / List / Delete
 

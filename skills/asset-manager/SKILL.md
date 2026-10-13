@@ -1,6 +1,6 @@
 ---
 name: asset-manager
-description: "Publish and manage hosted websites and file bundles on the Octave assets service. Upload or update files, manage privacy and shares, inspect access requests and visits, configure vanity URLs, restore versions, download, list, or delete an identified asset. Use for hosting and asset management, including recipient-restricted microsites; use the content skills to author the material."
+description: "Publish and manage hosted websites and file bundles on the Octave assets service. Upload or update files, manage privacy and shares, inspect access requests and visits, configure vanity URLs, restore versions, transfer ownership to a teammate, download, list, or delete an identified asset. Use for hosting and asset management, including recipient-restricted microsites; use the content skills to author the material."
 ---
 
 # /octave:asset-manager - Publish & Manage Hosted Assets
@@ -23,6 +23,7 @@ Resolve current tool schemas before execution; use returned IDs and pagination. 
 /octave:asset-manager update <identifier>   # Replace files or change metadata
 /octave:asset-manager share <identifier>    # Create/manage share links
 /octave:asset-manager versions <identifier> # Version history, rollback, pinned URLs
+/octave:asset-manager transfer <identifier> # Transfer ownership to a teammate
 /octave:asset-manager requests              # Access-request inbox (grant / dismiss)
 /octave:asset-manager stats <identifier>    # Visits, downloads, who opened it
 /octave:asset-manager list                  # List published assets (from registry)
