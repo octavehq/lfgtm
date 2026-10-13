@@ -38,6 +38,8 @@ Four rules hold at every step:
 - **Two questions, no more.** Agents cannot ask the user and neither do you, except for an asset-store match (reuse a kit a teammate published, or spend scrape credits) and the closing question (open the kit, or host it).
 - **Reports are files** under `RUN_DIR/reports/`; agents return summaries of at most 15 lines ending with the report path. Before the next step you check the file exists; if it does not, save the summary there with a one-line note. Never re-dispatch for a missing report, never paste a report into a prompt.
 
+**Headless use.** Octave's onboarding also runs a pinned copy of this skill without a user, to pre-publish each workspace's own `<slug>-brand-kit` (octave-conductor vendors it from this repo). Keep the capture flow in [capture workflow](references/capture-workflow.md) self-contained: a new step must not need user input or an MCP tool without a documented fallback. A change to this skill's files, its agents or the shared principle files it links reaches that copy at its next vendoring.
+
 Agent types are scoped `octave:brand-kit:<name>`; use the name exactly as your host lists it. A host without subagent delegation runs the five agent files as instructions, sequentially, in the same order ([host runtime](../shared/host-runtime.md)).
 
 ### Step 0: resolve
@@ -141,7 +143,7 @@ Hosting is the [asset-manager skill](../asset-manager/SKILL.md)'s job; this skil
 | type, entry point | `website`, `components.html` | the gallery is the page |
 | privacy, status | `workspace`, `published` | teammates can reuse it; not public |
 | description | `Brand kit for <domain>, gallery <score>/40`, plus `, draft` when the pointer is not ready | the asset list shows the state |
-| existing asset | Step 1 found a hosted kit you own and the answer was *Rebuild fresh*: `update <identifier>` instead of `publish` | one hosted kit per domain |
+| existing asset | Step 1 found a hosted kit you own, or one whose `canManage` is true, and the answer was *Rebuild fresh*: `update <identifier>` instead of `publish` | one hosted kit per domain |
 
 The asset-manager's own rules apply from there (publish manifest, readback, registry, URL verification).
 

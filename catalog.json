@@ -386,7 +386,7 @@
       ]
     },
     "get-brand-components": {
-      "version": "1.3.0",
+      "version": "1.3.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -395,6 +395,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.1",
+          "date": "2026-10-13",
+          "notes": "The asset-store check expects the workspace's own kit from onboarding, and Rebuild fresh updates a hosted kit you can manage (canManage) instead of only one you own. Documents that onboarding runs a pinned copy of this skill headless.",
+          "review": false
+        },
         {
           "version": "1.3.0",
           "date": "2026-10-09",
