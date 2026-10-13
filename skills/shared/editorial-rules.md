@@ -119,6 +119,7 @@ These words are legitimate individually. Two or more in the same content block s
 | Pattern | What it looks like | What to do instead |
 |---|---|---|
 | **Staccato flex** | Short declarative sentences stacked back-to-back to sound punchy. Reads like a manifesto. | Vary sentence length. Mix short with long. |
+| **Command-pair headline** | A headline, title or tagline built from two or three clipped imperatives with the same shape: "Verb the noun. Verb the noun." / "Find the gap. Close the deal." Reads like a slogan, says nothing the reader can check, and is the most recognizable AI cadence in a document title. | Write one plain sentence that states the finding or the plan: who, what, and the evidence it rests on. |
 | **Negation as depth** | "X isn't just about Y, it's about Z." "It's more than just a tool." Setting something up to negate past it. | Say what it IS, not what it isn't. |
 | **"Wrong question" pivot** | "That's the wrong question. The real question is..." Dismisses the premise to reframe. | Lead with the better framing directly. |
 | **Gerund relay** | "Managing X means navigating Y." Two -ing verbs chained, says the same thing twice. | Pick one verb, make the point. |
@@ -293,6 +294,7 @@ Self-contained editorial audit. Run every check against the generated file. Fix 
 **3b. Headlines**
 - [ ] Every headline states a finding, not a topic, including chart titles and stat labels
 - Test: can the reader agree or disagree? Yes = claim (correct). No = label (violation).
+- [ ] No command-pair headlines: no title, hero line or section heading made of two or more short parallel imperatives ("Verb the noun. Verb the noun."). Detection: split each headline on periods; two or more fragments that each start with a verb and run under ~5 words is a violation. Rewrite as one sentence that states the finding.
 - [ ] No section eyebrow/kicker paraphrases its own heading (rule 8b). Detection: for each section, read the eyebrow and the H2 as a pair. If they're synonyms ("INVESTMENT & NEXT STEPS" / "Investment & next steps"), cut the eyebrow to a number or make the heading a distinct claim. Default to number-only eyebrows.
 
 **3c. Implications / Recommendations**

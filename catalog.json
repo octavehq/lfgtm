@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "skills": {
     "abm": {
-      "version": "1.0.2",
+      "version": "1.0.3",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -11,6 +11,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.3",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
+          "review": false
+        },
         {
           "version": "1.0.2",
           "date": "2026-10-06",
@@ -32,7 +38,7 @@
       ]
     },
     "ads": {
-      "version": "1.0.2",
+      "version": "1.0.3",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -41,6 +47,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.3",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
+          "review": false
+        },
         {
           "version": "1.0.2",
           "date": "2026-10-06",
@@ -62,7 +74,7 @@
       ]
     },
     "ads-resonance": {
-      "version": "1.0.2",
+      "version": "1.0.3",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -71,6 +83,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.3",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
+          "review": false
+        },
         {
           "version": "1.0.2",
           "date": "2026-10-06",
@@ -108,6 +126,12 @@
           "review": false
         },
         {
+          "version": "1.1.1",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
+          "review": false
+        },
+        {
           "version": "1.1.0",
           "date": "2026-10-09",
           "notes": "Upload and update scripts take --category, which records what the asset is (e.g. brand-kit) separately from its type.",
@@ -134,7 +158,7 @@
       ]
     },
     "audit": {
-      "version": "1.0.2",
+      "version": "1.0.3",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -143,6 +167,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.3",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
+          "review": false
+        },
         {
           "version": "1.0.2",
           "date": "2026-10-06",
@@ -164,7 +194,7 @@
       ]
     },
     "battlecard-doc": {
-      "version": "1.0.2",
+      "version": "1.0.3",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -173,6 +203,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.3",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
+          "review": false
+        },
         {
           "version": "1.0.2",
           "date": "2026-10-06",
@@ -194,7 +230,7 @@
       ]
     },
     "call-analyzer": {
-      "version": "1.0.2",
+      "version": "1.0.3",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -203,6 +239,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.3",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
+          "review": false
+        },
         {
           "version": "1.0.2",
           "date": "2026-10-06",
@@ -224,7 +266,7 @@
       ]
     },
     "champion-deal-room": {
-      "version": "1.0.2",
+      "version": "1.0.3",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -233,6 +275,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.3",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
+          "review": false
+        },
         {
           "version": "1.0.2",
           "date": "2026-10-06",
@@ -254,7 +302,7 @@
       ]
     },
     "deal-coach": {
-      "version": "1.0.2",
+      "version": "1.0.3",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -263,6 +311,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.3",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
+          "review": false
+        },
         {
           "version": "1.0.2",
           "date": "2026-10-06",
@@ -284,7 +338,7 @@
       ]
     },
     "deck": {
-      "version": "1.0.2",
+      "version": "1.0.3",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -293,6 +347,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.3",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
+          "review": false
+        },
         {
           "version": "1.0.2",
           "date": "2026-10-06",
@@ -314,7 +374,7 @@
       ]
     },
     "digest": {
-      "version": "1.1.3",
+      "version": "1.1.4",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -323,6 +383,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.4",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
+          "review": false
+        },
         {
           "version": "1.1.3",
           "date": "2026-10-06",
@@ -356,7 +422,7 @@
       ]
     },
     "generate": {
-      "version": "1.0.2",
+      "version": "1.0.3",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -365,6 +431,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.3",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
+          "review": false
+        },
         {
           "version": "1.0.2",
           "date": "2026-10-06",
@@ -386,7 +458,7 @@
       ]
     },
     "get-brand-components": {
-      "version": "1.3.1",
+      "version": "1.3.2",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -396,9 +468,15 @@
       "requiredTools": [],
       "changelog": [
         {
-          "version": "1.3.1",
+          "version": "1.3.2",
           "date": "2026-10-13",
           "notes": "The asset-store check expects the workspace's own kit from onboarding, and Rebuild fresh updates a hosted kit you can manage (canManage) instead of only one you own. Documents that onboarding runs a pinned copy of this skill headless.",
+          "review": false
+        },
+        {
+          "version": "1.3.1",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
           "review": false
         },
         {
@@ -434,7 +512,7 @@
       ]
     },
     "icp-refine": {
-      "version": "1.0.2",
+      "version": "1.0.3",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -443,6 +521,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.3",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
+          "review": false
+        },
         {
           "version": "1.0.2",
           "date": "2026-10-06",
@@ -464,7 +548,7 @@
       ]
     },
     "insights": {
-      "version": "1.0.2",
+      "version": "1.0.3",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -473,6 +557,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.3",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
+          "review": false
+        },
         {
           "version": "1.0.2",
           "date": "2026-10-06",
@@ -494,7 +584,7 @@
       ]
     },
     "library": {
-      "version": "1.0.3",
+      "version": "1.0.4",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -505,6 +595,12 @@
         "get_entity_schema"
       ],
       "changelog": [
+        {
+          "version": "1.0.4",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-09",
@@ -532,7 +628,7 @@
       ]
     },
     "meeting-prep": {
-      "version": "1.0.2",
+      "version": "1.0.3",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -541,6 +637,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.3",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
+          "review": false
+        },
         {
           "version": "1.0.2",
           "date": "2026-10-06",
@@ -562,7 +664,7 @@
       ]
     },
     "microsite": {
-      "version": "1.0.2",
+      "version": "1.0.3",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -571,6 +673,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.3",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
+          "review": false
+        },
         {
           "version": "1.0.2",
           "date": "2026-10-06",
@@ -592,7 +700,7 @@
       ]
     },
     "one-pager": {
-      "version": "1.0.2",
+      "version": "1.0.3",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -601,6 +709,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.3",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
+          "review": false
+        },
         {
           "version": "1.0.2",
           "date": "2026-10-06",
@@ -622,7 +736,7 @@
       ]
     },
     "pipeline": {
-      "version": "1.0.2",
+      "version": "1.0.3",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -631,6 +745,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.3",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
+          "review": false
+        },
         {
           "version": "1.0.2",
           "date": "2026-10-06",
@@ -652,7 +772,7 @@
       ]
     },
     "positioning": {
-      "version": "1.0.2",
+      "version": "1.0.3",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -661,6 +781,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.3",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
+          "review": false
+        },
         {
           "version": "1.0.2",
           "date": "2026-10-06",
@@ -682,7 +808,7 @@
       ]
     },
     "product-launch": {
-      "version": "1.0.2",
+      "version": "1.0.3",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -691,6 +817,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.3",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
+          "review": false
+        },
         {
           "version": "1.0.2",
           "date": "2026-10-06",
@@ -712,7 +844,7 @@
       ]
     },
     "proposal": {
-      "version": "1.0.2",
+      "version": "1.0.3",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -721,6 +853,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.3",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
+          "review": false
+        },
         {
           "version": "1.0.2",
           "date": "2026-10-06",
@@ -742,7 +880,7 @@
       ]
     },
     "prospector": {
-      "version": "1.0.2",
+      "version": "1.0.3",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -751,6 +889,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.3",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
+          "review": false
+        },
         {
           "version": "1.0.2",
           "date": "2026-10-06",
@@ -796,7 +940,7 @@
       ]
     },
     "qual-doctor": {
-      "version": "1.0.2",
+      "version": "1.0.3",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -805,6 +949,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.3",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
+          "review": false
+        },
         {
           "version": "1.0.2",
           "date": "2026-10-06",
@@ -826,7 +976,7 @@
       ]
     },
     "research": {
-      "version": "1.0.2",
+      "version": "1.0.3",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -835,6 +985,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.3",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
+          "review": false
+        },
         {
           "version": "1.0.2",
           "date": "2026-10-06",
@@ -856,7 +1012,7 @@
       ]
     },
     "signals": {
-      "version": "1.0.2",
+      "version": "1.0.3",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -865,6 +1021,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.3",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
+          "review": false
+        },
         {
           "version": "1.0.2",
           "date": "2026-10-06",
@@ -886,7 +1048,7 @@
       ]
     },
     "train": {
-      "version": "1.0.2",
+      "version": "1.0.3",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -895,6 +1057,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.3",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
+          "review": false
+        },
         {
           "version": "1.0.2",
           "date": "2026-10-06",
@@ -916,7 +1084,7 @@
       ]
     },
     "win-loss-report": {
-      "version": "1.0.2",
+      "version": "1.0.3",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -925,6 +1093,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.3",
+          "date": "2026-10-12",
+          "notes": "Shared editorial rules now ban command-pair headlines (two or three clipped parallel imperatives used as a title).",
+          "review": false
+        },
         {
           "version": "1.0.2",
           "date": "2026-10-06",
