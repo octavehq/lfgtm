@@ -32,6 +32,8 @@ customer experience, and hypothesis. Refresh mutable disputed feature or
 price claims through available authoritative sources, or ask the operator
 for current documentation; label unresolved comparison facts explicitly.
 
+For a deal card, and for a reusable card when the workspace has history with the rival, use [Ask Octave first](../../shared/octave-research-toolkit.md#ask-octave-first-for-questions-that-span-records): ask `ask_octave` which deals, calls, objections, and personas the competitor is tied to, and where it won and lost. Treat the result as a map to the calls and events worth reading in full, and as a source of workspace evidence for concessions and counters, not as a replacement for current rival capability checks. Landscape cards may ask one question per rival. If the tool is unavailable, use the competitor, findings, and call tools and say so.
+
 Write a counter only when it addresses the actual criterion. A legitimate
 rival advantage may require concession, qualification, partner support,
 or a proof task. Never manufacture a rhetorical answer to a product gap.

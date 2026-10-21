@@ -6,6 +6,8 @@ triggers, and disqualifiers. Read full selected entities/cells. Segment is
 one dimension of ICP; the same company type can fit renewal and net-new
 differently. Services and Solutions are first-class offerings.
 
+Use [Ask Octave first](../../shared/octave-research-toolkit.md#ask-octave-first-for-questions-that-span-records) to form hypotheses before building the cohorts: ask `ask_octave` which segments, personas, use cases, and proof points are most tied to won and to lost deals. Test every hypothesis with the opportunity rows below; a graph ranking is not a win rate. If the tool is unavailable, start from the cohort rows and say so.
+
 Load [analytics-contract.md](../../shared/analytics-contract.md). Build one opportunity row per final
 outcome with firmographics, use case, buying roles, motion, acquisition
 source, pursued/qualified status where recorded, win/loss, value, cycle,

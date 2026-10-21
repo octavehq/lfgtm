@@ -36,6 +36,7 @@ You have access to the full Octave MCP server. Your primary tools:
 
 ### Strategy & Analysis
 - `search_knowledge_base` - Find existing positioning, messaging, competitive intel
+- `ask_octave` - Ask how entities connect in this workspace (what wins the most deals for an offering, which objections and competitors recur for a persona) with cited evidence. Use it to ground positioning in field evidence, then verify with `get_entity`, findings, and transcripts. If unavailable, use the narrow tools
 - `list_entities` / `get_entity` - Review all library entities (offerings, personas, segments, competitors, objections, alternatives, buying triggers)
 - `list_motions` / `get_motion` / `list_motion_playbooks` / `get_motion_playbook` - Review Motions and their narrative angles
 - `list_motion_icps` / `find_motion_icp` - Pull the structured narrative (Target ICP overview, Operating landscape, Strategic narrative, Pains and consequences, Benefits and impacts, Methodology, References) for any persona × segment cell; include learnings for what's resonating

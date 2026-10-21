@@ -41,3 +41,5 @@ Replace speculative “Winnable if” with “Intervention to test.” Retain a
 buyer-stated necessary condition only when sourced, without claiming that
 satisfying it would guarantee the win. Each action names owner, next step,
 validation event, and the condition that would change the recommendation.
+
+Use [Ask Octave first](../../shared/octave-research-toolkit.md#ask-octave-first-for-questions-that-span-records) for orientation before building the cohort: ask `ask_octave` which objections, competitors, personas, and proof points are most tied to won and to lost deals in the scope. Use the answer to form hypotheses and decide which cuts and deal deep dives to examine. Every figure in the report still comes from the normalized opportunity rows and the analytics contract; a graph ranking or count is never the headline number. If the tool is unavailable, build from the CRM rows and findings and say so.

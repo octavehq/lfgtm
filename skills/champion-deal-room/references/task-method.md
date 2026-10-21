@@ -9,6 +9,8 @@ Keep candid seller strategy and restricted source details in the seller working 
 
 Ask a grouped set only for missing facts that affect the case or path forward. Continue the supported narrative, committee framing, and action plan while answers are pending. Intentional placeholders are valid in a working draft or printable worksheet. Explain what belongs in each slot; incorporate replies with provenance, regenerate, and validate the final document. Browser editing is optional. If the operator chooses to retain worksheet blanks, label that purpose and do not present them as completed facts.
 
+When retrieving the account and opportunity context, use [Ask Octave first](../../shared/octave-research-toolkit.md#ask-octave-first-for-questions-that-span-records): one `ask_octave` question on who has taken part in the account's calls and deals, what each has raised, and which proof points back comparable won deals. Use the evidence list to choose which calls to read in full, and keep seller-only material out of the buyer document as above. If the tool is unavailable, use the narrow CRM and call tools and say so.
+
 ### Account value model
 Choose the value mechanism supported by the offering and buyer objective. Retrieve commercial scope, recorded baseline, buyer goals, and POC results from CRM/calls first. Ask together for the missing model-specific volumes, frequency, baseline/result, measurement period/source, labor/cost basis, adoption/ramp, and implementation/ongoing cost. Do not request irrelevant inputs or assume Octave contains usage telemetry.
 
