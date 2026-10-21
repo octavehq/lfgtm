@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "skills": {
     "abm": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -11,6 +11,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-20",
+          "notes": "Account plans use an Ask Octave graph question to find the people, objections, and comparable won accounts to start from, with identity and role still verified by the narrow tools.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -38,7 +44,7 @@
       ]
     },
     "ads": {
-      "version": "1.0.3",
+      "version": "1.0.4",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -47,6 +53,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.4",
+          "date": "2026-10-20",
+          "notes": "Packages the shared research toolkit's new Ask Octave guidance; ad workflow unchanged.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -194,7 +206,7 @@
       ]
     },
     "battlecard-doc": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -203,6 +215,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-20",
+          "notes": "Deal and workspace-backed competitor cards use an Ask Octave graph question to map the rival's deals, calls, and objections before reading evidence in full.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -230,7 +248,7 @@
       ]
     },
     "call-analyzer": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -239,6 +257,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-20",
+          "notes": "Optionally calibrates a call analysis against comparable calls and won deals in the workspace through an Ask Octave graph question, shown beside the supplied transcript evidence.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -266,7 +290,7 @@
       ]
     },
     "champion-deal-room": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -275,6 +299,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-20",
+          "notes": "Account context retrieval uses an Ask Octave graph question on participants, concerns, and comparable won-deal proof; seller-only material stays out of the buyer document.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -302,7 +332,7 @@
       ]
     },
     "deal-coach": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -311,6 +341,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-20",
+          "notes": "Coaching goals start from an Ask Octave graph question on how the account's calls, stakeholders, objections, and competitors connect and what worked on comparable won deals. Falls back to the deal's own CRM and call evidence.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -422,7 +458,7 @@
       ]
     },
     "generate": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -431,6 +467,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-20",
+          "notes": "Follow-ups and call prep for a named account first check its calls and deals with an Ask Octave graph question; generic copy is unchanged.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -512,7 +554,7 @@
       ]
     },
     "icp-refine": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -521,6 +563,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-20",
+          "notes": "Refinement hypotheses start from an Ask Octave graph question on what is most tied to wins and losses; every claim is tested against the opportunity cohorts.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -548,7 +596,7 @@
       ]
     },
     "insights": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -557,6 +605,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-20",
+          "notes": "Scoped questions can be oriented with an Ask Octave graph question; counts and trends still come from filtered retrieval and the analytics contract.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -628,7 +682,7 @@
       ]
     },
     "meeting-prep": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -637,6 +691,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-20",
+          "notes": "Leads the account retrieval with one Ask Octave graph question (calls, deals, objections, competitors, comparable won deals), then verifies with the narrow tools and cites the evidence. Falls back to the narrow tools when the tool is unavailable.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -700,7 +760,7 @@
       ]
     },
     "one-pager": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -709,6 +769,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-20",
+          "notes": "Named-account one-pagers check the account's history and comparable won-deal proof with an Ask Octave graph question before choosing the problem, proof, and next step.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -736,7 +802,7 @@
       ]
     },
     "pipeline": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -745,6 +811,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-20",
+          "notes": "Deal coaching uses an Ask Octave graph question to map the buying group, blockers, competitors, and comparable won and lost deals before reading calls in full. Falls back to CRM and call retrieval.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -772,7 +844,7 @@
       ]
     },
     "positioning": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -781,6 +853,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-20",
+          "notes": "Positioning is grounded in field evidence through an Ask Octave graph question on what wins deals, draws positive feedback, and recurs as objections and competitors.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -844,7 +922,7 @@
       ]
     },
     "proposal": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -853,6 +931,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-20",
+          "notes": "Named-opportunity proposals start the evidence pass with an Ask Octave graph question on scope, criteria, concerns, and comparable won-deal proof, confirmed with the narrow tools.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -976,7 +1060,7 @@
       ]
     },
     "research": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -985,6 +1069,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-20",
+          "notes": "Account and person research starts with an Ask Octave graph question for cross-record orientation, then verifies the claims the brief rests on. Falls back cleanly when the tool is unavailable or the account has no history.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -1084,7 +1174,7 @@
       ]
     },
     "win-loss-report": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1093,6 +1183,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-20",
+          "notes": "Orients the cohort analysis with an Ask Octave graph question on what is most tied to wins and losses; headline figures still come from the normalized opportunity rows.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",

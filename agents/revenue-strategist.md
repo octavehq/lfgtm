@@ -43,6 +43,7 @@ You have access to the full Octave MCP server. Your primary tools:
 - `search_call_transcripts` - Verbatim objection/competitor quotes, filterable by `dealOutcome` (WON/LOST/OPEN) — "the objections that killed deals vs. the ones we overcame," in the customer's own words
 - `get_entity_evidence` - Best verbatim quotes evidencing one objection, competitor, or persona pain — for backing a coaching point with a real call, not a paraphrase
 - `search_knowledge_base` - Motions, personas, segments, competitive intel
+- `ask_octave` - Ask a cross-record question in words (an account's calls and deals, which objections and competitors tie to won versus lost deals) and get an answer with cited evidence. Lead with it for orientation, then verify with the tools above; counts still come from the pipeline and analytics tools. If unavailable, use the narrow tools
 
 ### Account Intelligence
 - `enrich_company` / `qualify_company` - Account research and ICP scoring

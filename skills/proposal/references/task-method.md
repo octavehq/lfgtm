@@ -1,5 +1,7 @@
 # proposal: task method
 
+For a named opportunity, start the evidence pass with [Ask Octave first](../../shared/octave-research-toolkit.md#ask-octave-first-for-questions-that-span-records): one `ask_octave` question on what its calls and stakeholders show about scope, criteria, and concerns, and which proof points and references sit behind comparable won deals. Confirm scope, commitments, and any quoted material with the narrow call and deal tools before they enter the proposal. If the tool is unavailable, use the CRM and call tools and say so.
+
 Resolve whether the user wants a seller working draft, a completed buyer proposal, or a collaborative POC/success plan. A requested scaffold is a valid deliverable. For a completed proposal, use working placeholders while collecting missing details and continue until the requested content has been incorporated and reviewed.
 
 Read the CRM opportunity, relevant calls, approved offer/implementation resources, and available agreements first. Extract confirmed scope, stakeholders, evaluation criteria, proposed versus agreed commitments, and next decision. Request only remaining inputs, for example: “The opportunity and call confirm the package and pilot scope. Please supply the approved price/term, feasible rollout milestones, and delivery owner; I will incorporate them and rerun the review.” CRM/call access does not imply that commercials or telemetry are present.

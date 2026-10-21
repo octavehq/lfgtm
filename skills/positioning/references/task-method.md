@@ -8,6 +8,8 @@ then get_entity for full selected entities and find_motion_icp with
 learnings for selected cells. Follow linked capabilities/core features,
 use cases, alternatives, triggers, objections, proof, and references.
 
+Ground the strategy in field evidence with [Ask Octave first](../../shared/octave-research-toolkit.md#ask-octave-first-for-questions-that-span-records): ask `ask_octave` what wins the most deals and draws the most positive feedback for the selected offering, and which objections and competitors recur for the selected personas and segments. Use the answer to choose which cell learnings, findings, and calls to read in full, and cite the entities behind any field-evidence claim. Authored positioning still comes from the entities and cells; if the tool is unavailable, use findings and learnings directly and say so.
+
 Build one strategy row per selected cell:
 - Buyer situation, operating job, current alternative, and trigger to act.
 - Consequence of staying put; buyer's desired outcome and success measure.

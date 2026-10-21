@@ -11,8 +11,39 @@ Shared reference for the Octave document and deck skills: how to choose between 
 | `get_entity({ oId })` | Deep dive on one specific entity | You found something relevant and need the complete picture |
 | `search_knowledge_base({ query })` | Semantic search across library + resources | You have a concept or question: "how do we position for healthcare?" |
 | `list_resources()` / `search_resources({ query })` | Uploaded docs, URLs, Google Drive files | You need reference material, uploaded assets, or source docs |
+| `ask_octave({ question })` | A question in words, answered by walking the workspace's knowledge graph with cited evidence | The answer spans several linked records (accounts, deals, calls, people, personas, competitors, objections, findings, library content). See [Ask Octave first](#ask-octave-first-for-questions-that-span-records) |
 
 **Rule of thumb:** Use `list_*` when you know *what type* of thing you want. Use `search_*` when you know *what topic* you're looking for.
+
+## Ask Octave first for questions that span records
+
+`ask_octave` answers a question put in plain words by walking the workspace's knowledge graph (accounts, deals, calls and events, people, personas, competitors, objections, extracted findings, and library content) hop by hop. It returns a short written answer, the entities it started from, and an evidence list: each item has a name, a type, an identifier, a plain-language reason it is included, and whether the link was authored by a person (`defined`) or calculated by the system (`inferred`). It is the quickest way to learn how this workspace's own records connect, such as "what has this account discussed across its calls", "which objections come up most on deals we lost to this competitor", or "which proof points sit behind our won deals in this segment".
+
+**Lead with it** when the task is about this workspace's own deals, calls, people, or what has worked, and the answer depends on relationships between records. Do this once, early, as orientation. Then verify and expand with the narrow tools below, because the narrow tools return the full records, transcripts, and complete lists that a written answer summarizes.
+
+**Use the narrow tool instead** when you already know the record and need its content (`get_entity`, `get_deal`, `get_event_detail`), want a full inventory (`list_entities`, `list_events`, `list_findings`), need verbatim quotes (`search_call_transcripts`, `get_entity_evidence`), or need authored strategy prose (`search_knowledge_base`, `find_motion_icp`). `ask_octave` does not write assets or give advice; do not hand it "write me an email" or "build a battlecard". Break the job into relationship questions, ask those, and compose the result yourself.
+
+**How to ask**
+- One focused question per call. Related parts about the same subject can share a call. Unrelated questions go in separate calls, because the retrieval budget is per call and stacking questions thins the evidence behind each one.
+- Name the account, person, persona, or competitor in the question. Pass `seedOIds` when you already hold the identifier (an account, persona, or other library entity). To start from a deal, resolve it with `list_deals` or `get_deal` first.
+- Pass `originalQuery` with the user's own words when there are some (analytics only).
+- Cost and speed: each question the graph walk actually runs on uses workspace credits, and a call takes noticeably longer than a list or get call because it plans, retrieves, and composes an answer. Refusals and clarification requests are free. Make the few calls that change the work rather than one per sentence, and run independent ones together.
+
+**Read the response before using it**
+- `followUpNeeded` with `candidates`: the name matched several records. Choose from context, or ask the user, then call again with the chosen identifier in `seedOIds`. Never guess.
+- `refusal` with `guidance`: the walk did not run. Follow the guidance, which names the right narrow tool, and do not rephrase the same request.
+- `dataGap`: the walk ran and the workspace has no data of the kind the question needs. Report the gap as a finding and do not retry with different wording. This is not a connection failure.
+- `isReconciling`: the answer may be incomplete while the graph catches up. Say so.
+- `conceptBridgingUnavailable`: "what addresses this" answers came from authored links only. Do not present them as matched on underlying pains.
+
+**Use the evidence honestly**
+- Cite the entities in `evidence` for any claim you take from the answer, and open the consequential ones with the narrow tool for their kind before relying on them (`get_entity` for library entities, `list_findings` with `findingOIds` for findings, `get_event_detail` for events, `get_deal` for opportunities).
+- Treat `defined` items as curated fact and `inferred` items as likely or calculated, and say which when it matters.
+- The answer is orientation, not a population statistic. A ranked or counted answer does not replace the cohort definition, coverage checks, and arithmetic in the [analytics contract](analytics-contract.md); use it to decide what to measure.
+- An answer is not a quote. Use transcript tools for exact words.
+
+**When it is not available**
+If the host does not expose `ask_octave`, the call errors, or the workspace lacks the entitlement, continue with the narrow tools in this file and say once in the output's source notes that the cross-record graph pass was not run. That is a reduced check, not a failure. Do not invent an answer, and do not mention the tool to the end reader of a customer-facing asset.
 
 ## Follow-up assets: ground them in what actually happened
 

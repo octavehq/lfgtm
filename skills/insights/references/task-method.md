@@ -42,3 +42,5 @@ coverage (complete/partial/absent/unverified) → proposed specific improvement.
 Do not call content missing when it was not retrieved. Repeated seller use
 of existing guidance plus buyer rejection is a conflict to investigate,
 not evidence that the guidance works or should automatically be deleted.
+
+To orient a scoped question, use [Ask Octave first](../../shared/octave-research-toolkit.md#ask-octave-first-for-questions-that-span-records): ask `ask_octave` how the topic, persona, competitor, or account connects across findings, deals, and library entities, and use its evidence to choose filters and examples. It does not replace the retrieval, deduplication, and counting above: counts and trends in the output come from the filtered event and finding retrieval, never from a graph answer. If the tool is unavailable, start from the findings retrieval and say so.
