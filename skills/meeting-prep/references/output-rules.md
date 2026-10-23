@@ -34,6 +34,8 @@ A persona card tells the seller who this person is, what pressure they're under,
 Every count names its base ("2 of the 3 won deals with call records"). Comparable-deal findings are told as sequence, never as cause, and carry the word "likely" when they predict this account. Other customers' names appear only in the internal lookalike table and never in wording the rep would say to the buyer. Say how the lookalike set was chosen in its first line.
 
 ### 7. State facts, not lookups
+Process words ("found", "checked", "not checked", "linked activity", "filed under") do not run through the body. A gap is one plain sentence where it matters ("No reply from us since Oct 19"); "No X found for Y" is fine once where it changes what the rep does, not as a refrain; what was not checked goes once in the sources footer.
+
 The reader sees the fact with its date or source in plain words. No "returned", "retrieved", "the graph", "the data shows", "I opened", "I read", "I counted", tool or field names, or ids as prose, in any heading, table or note. Ids and tool names appear only as links or in the keep-going prompts, which are written for an agent.
 
 ### 8. Next best action has four parts
