@@ -31,7 +31,7 @@ A row may be written only after that deal's own row (`list_deals`) or `get_deal`
 
 ## Table cells: a fixed set of fields
 
-Each lookalike row uses only these fields, each read from that deal's own record or calls: outcome and close date, segment, employee count, the CRM loss reason category (lost deals), number of calls and the span between them, titles of the people who joined, the competitor or alternative named in its findings, the concern raised (a quote or a finding you read), and what the rep did on the call you read. "What they share with this deal" lists the filter terms the deal passed, nothing more. No adjectives about a deal's use case, size or "type of buyer" that you did not read. A cell you did not check says "not checked". Quotes carry a date.
+Each lookalike row uses only these fields, each read from that deal's own record or calls: outcome and close date, segment, employee count, the CRM's loss reason in its own words, quoted (lost deals), number of calls and the span between them, titles of the people who joined, the competitor or alternative named in its findings, the concern raised (a quote or a finding you read), and what the rep did on the call you read. "What they share with this deal" lists the filter terms the deal passed, nothing more. No adjectives about a deal's use case, size or "type of buyer" that you did not read. A cell you did not check says "not checked". Quotes carry a date.
 
 ## Rules for this section
 
@@ -41,7 +41,7 @@ Each lookalike row uses only these fields, each read from that deal's own record
 - An account name appears only in the internal comparison. Mark the section internal.
 - When no play separates the deals that moved from the ones that stalled (the same rep behavior appears on both), say exactly that: "no separating play found in the N deals with call records", and give the one thing that did differ, if any (who was on the calls, how many calls, how long between them). A flat result still tells the rep not to expect a trick.
 - When the set is thin (fewer than three decided deals), say that in the first line and present what exists as individual deals, not a pattern. When none exists, say what you looked for (segment, persona, competitor) and that no decided deals matched. Do not widen the cut silently; if you widen it, say how.
-- Loss reasons are the CRM's recorded category in plain words, not a diagnosis.
+- Loss reasons are the CRM's own words, quoted, and carry no diagnosis. A category from a cohort filter is normalized from the CRM text: never present it as the CRM's.
 - Verification is the point: any figure that came from the graph answer alone is marked as unverified or dropped.
 
 ## What to expect, persona by persona
