@@ -11,7 +11,7 @@ Read [the task method](references/task-method.md) before selecting context, clai
 
 Infer meeting type and duration. Use one content schema: lookalikes, context, goals, competitive, expect, content, say-ask, next-action, in that order, then the keep-going prompts. The outline, HTML IDs, review, and delivery summary use meeting-sections.md. The scaffold supplies layout, not a second content schema.
 
-Lead the research with `ask_octave` about the account and its lookalike deals, then verify what it cites with the narrow tools. The two sections that set this prep apart, lookalike deals and the next best action, are built by [lookalikes and expectations](references/lookalikes-and-expectations.md) and [strategy gap](references/strategy-gap.md). Never invent quotes, numbers, customers, roles or content; counts carry their base; other customers stay internal.
+Resolve the account and deal first, then lead the analysis with seeded `ask_octave` calls about the account and its lookalike deals, and verify what they cite with the narrow tools. The two sections that set this prep apart, lookalike deals and the next best action, are built by [lookalikes and expectations](references/lookalikes-and-expectations.md) and [strategy gap](references/strategy-gap.md). Never invent quotes, numbers, customers, roles or content; counts carry their base; other customers stay internal.
 
 Use [GTM context](../shared/gtm-context.md) for strategic tasks and [evidence and inputs](../shared/evidence-and-inputs.md) for material claims and missing facts. A narrow list/get or a render-only handoff does not require unrelated research. Read [host runtime](../shared/host-runtime.md) for available tools, portable resource paths, routing, and review fallback.
 
