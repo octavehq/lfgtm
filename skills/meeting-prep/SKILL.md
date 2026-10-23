@@ -33,7 +33,7 @@ Resolve current tool schemas before execution; use returned IDs and pagination. 
 - [positioning coach](references/positioning-coach.md)
 - [strategic coach](references/strategic-coach.md)
 
-Read the lookalike and strategy-gap references for every run, the positioning references only when choosing an approach, then the format/layout references when rendering. Do not repeat intake or change approved claims when routing to a renderer.
+Read the lookalike and strategy-gap references for every full prep run, the positioning references only when choosing an approach, then the format/layout references when rendering. Do not repeat intake or change approved claims when routing to a renderer.
 
 ## Delivery and changes
 
