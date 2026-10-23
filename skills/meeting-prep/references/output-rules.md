@@ -28,4 +28,19 @@ Not branding, not tool names, not raw metadata. The header is a frame that orien
 Use grounding diagnostic questions when the workflow is unknown, then consequence and decision probes. Select essential versus optional questions for the purpose and duration; there is no universal L2/L3 requirement or numeric cap. Ground questions in available context and label hypotheses. Recognition can be disconfirmed by the buyer.
 
 ### 5. Persona cards are briefings, not dossiers
-A persona card tells the seller who this person is, what pressure they're under, and why our product matters to them. That's it. No sub-sections for "How we make them the hero," "Top use cases," "Don't lead with" stacked inside persona cards. Keep each card to 2-3 rows: Pressure + Why [Product]. Use cases and messaging guidance belong in the messaging or strategy sections.
+A persona card tells the seller who this person is, what pressure they're under, and why our product matters to them. That's it. No sub-sections for "How we make them the hero," "Top use cases," "Don't lead with" stacked inside persona cards. Keep each card in the context section to 2-3 rows: Pressure + Why [Product]. The "What to expect" section is the one place with a longer per-person block (who they are, what they said, what the persona typically raises, the answer that worked, the question to ask), and it does not repeat the context card. Use cases and messaging guidance belong in the messaging or strategy sections.
+
+### 6. Lookalike and expectation claims
+Every count names its base ("2 of the 3 won deals with call records"). Comparable-deal findings are told as sequence, never as cause, and carry the word "likely" when they predict this account. Other customers' names appear only in the internal lookalike table and never in wording the rep would say to the buyer. Say how the lookalike set was chosen in its first line.
+
+### 7. State facts, not lookups
+The reader sees the fact with its date or source in plain words. No "returned", "retrieved", "the graph", "the data shows", "I opened", "I read", "I counted", tool or field names, or ids as prose, in any heading, table or note. Ids and tool names appear only as links or in the keep-going prompts, which are written for an agent.
+
+### 8. Next best action has four parts
+The move, why now, strategy source, follow-through. A move without all four is cut or turned into a question inside another move. Zero moves is stated plainly.
+
+### 9. Content and framework are real
+Recommend only content, slides, proof and frameworks you saw in the library or resources, named as they appear. The framework treatment appears only when one exists.
+
+### 10. Plain language
+Short sentences, concrete pictures from the account, ordinary sales words left unexplained. No em dashes. No contrast constructions in prose ("X, not Y"). Do not use: leverage, robust, comprehensive, seamless, actionable, impactful, landscape, unpack, deep dive, best practices. Headings state the finding or action of their section in one clear clause. Never write "library", "entity", "concept graph", "outcome stats" or "approved answer" as a term; say what the strategy says in plain words. Ordinary domain words (coverage, match, mention) stay when they are the buyer's or the seller's own vocabulary, and a verbatim quote is never altered to satisfy a word rule.

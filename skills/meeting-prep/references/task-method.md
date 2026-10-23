@@ -1,14 +1,71 @@
 # meeting-prep: task method
 
-### Meeting method
-Read [gtm-context.md](../../shared/gtm-context.md) for offering/motion/buyer framing, [evidence-and-inputs.md](../../shared/evidence-and-inputs.md) for account claims and operator completion, and [output-readiness.md](../../shared/output-readiness.md) for the requested prep state. Load [meeting-sections.md](meeting-sections.md) for content and [html-scaffold.md](html-scaffold.md) only for rendering. Load coaching references only when selecting a positioning approach; they cannot override the customer's strategy.
+The prep answers four questions for the rep, in this order: who has been in this exact situation before and what happened (lookalike deals), who will be in the room and what each person will likely raise (what to expect), what to say and bring, and what single move to make next. Everything else supports those four.
 
-Retrieve the meeting context, selected opportunity, attendees/roles, latest commitments, and relevant calls. Ask one grouped set for missing purpose, participants, duration, or unrecorded changes that alter the game plan. Continue supported preparation; fill intentional draft slots from the reply and revalidate the final plan. Distinguish a new account with no prior interaction from a workspace access failure.
+When rules conflict: accuracy and honest uncertainty first, then the issue that decides the next buyer decision, then style.
 
-Open the retrieval with [Ask Octave first](../../shared/octave-research-toolkit.md#ask-octave-first-for-questions-that-span-records): one `ask_octave` question about the account and its attendees, such as what has been discussed across its calls and deals, which objections and competitors have surfaced, and what has worked on comparable won deals. Use its evidence list as the map of what to hydrate, then confirm the commitments, roles, and quotes that drive the game plan with the narrow call, event, and deal tools. Cite the entities behind account claims in the source notes. If the tool is unavailable, proceed with the narrow tools and note that the graph pass was not run.
+## Ground rules
 
-Select positioning from the actual offer and motion: complement an existing approach when coexistence creates value; replace when supported superiority justifies switching costs; consolidate when evidence supports replacing several tools; build-versus-buy when ongoing ownership is the buyer's alternative; service/outsourcing when delivery and expertise create the value. Explain the fit condition, prerequisites, and tradeoff. Never assume every customer sells an intelligence/context layer, improves every adjacent tool, or achieves an unsupported multiplier.
+- **Sources, strongest first:** transcripts and the records of this account (what happened); the deal record; outcome data from comparable deals; the seller's authored strategy (guidance, never facts about this account); extracted findings and summaries (pointers to moments that prove nothing by their absence). Check every finding you rely on against the call or email it came from.
+- **Never invent** quotes, numbers, customers, proof, content, capabilities, roles, objections the buyer did not voice, attendees, or events. A gap is stated as what was checked and not found ("no earlier calls with this account were found"), never with a reason the data does not give.
+- **Three voices stay apart:** what the buyer said, what the rep said, what the seller's strategy says. Strategy text is our guidance ("our answer when marketers say alerts are noisy is ..."), never observed data about this buyer or our deals.
+- **Claims carry their strength** (seen on this deal, seen on comparable deals, compared, guessed). Label anything derived from comparable deals as *likely*. No causal verbs: comparable deals are told as sequence ("2 of 3 deals where the rep ran a same-data comparison moved to a pilot"), never as the reason a deal was won.
+- **Counts carry their base.** "2 of 3" names what the 3 are ("3 won insurance deals with call records"), and a rate never appears without its count. Say how the comparable set was chosen. Counts computed in this run are labeled as such. A pattern seen on one deal is told as one deal.
+- **State facts, never how you got them.** The reader sees the fact with its date or source in plain words ("about 3,900 employees"; "call on Oct 20"), never the lookup: no "returned", "the graph", "retrieved", "the data shows", tool or field names, in any heading or table.
+- **Other customers stay internal.** Lookalike deals are for the rep. Never put another customer's name, deal or numbers in wording the rep would say to the buyer, and say so in the section intro. A reference record is not permission to name a customer.
+- **Roles** only as the data gives them; a derived role is labeled ("likely the budget holder").
+- **Status words need a source.** Call a proof point, deck or claim "approved", "current" or "in production" only when the record says so (an active flag, a status field, a date); otherwise say "in the library" and name what the record shows.
 
-For each goal, state the buyer belief or decision to explore, evidence already established, what remains hypothetical, the question that could confirm or disconfirm it, and the next commitment if supported. Recognition is a joint test, not a predetermined conclusion. Permit grounding diagnostic questions where the account workflow is unknown, then consequence and decision probes. Select essential versus optional questions using the meeting's duration and purpose; do not require a universal number or sophistication tier.
+## 1. Gather
 
-Read [meeting-sections.md](meeting-sections.md) for the applicable mode.
+Resolve the meeting and the deal. The target can be an account, a contact, a deal id, or a calendar title; if several deals match, name the choice you made. Infer type and duration from stage and history. Ask one grouped set only for missing purpose, participants, date, or recent changes that would alter the plan; continue with everything supported while waiting, and in a run nobody can answer, prepare for the next conversation with the primary contact and say once that no date, length or attendee list is on record. Distinguish a new account with no interaction from a workspace access failure. When records disagree (a call linked to a different deal, a customer-versus-prospect label, a summary that names someone the transcript does not), state the conflict in one line in the context section and prefer, in order: the transcript, the deal's own linked activity, the CRM fields, the generated summary.
+
+Read [lookalikes and expectations](lookalikes-and-expectations.md) and [strategy gap](strategy-gap.md) before selecting evidence; they hold the method for the two sections that make this prep different from a summary of the account.
+
+Retrieval order. Run independent calls together.
+
+1. **This account.** The deal (`get_deal` with activity and stakeholders), every call and email with the account (`list_events` by domain with participants, and `includeDeal` when you need the deal each event belongs to; page it and read only the fields you need), the latest call in full or by findings (`get_event_detail`), CRM activity. Employee count and segment from the deal's account. Fix the position in one sentence: stage, last touch, who has been engaged, who has not.
+2. **Ask Octave, seeded.** One question per call, seeded with the deal (`crmo_`) and every entity id you have resolved (segment, persona, competitor, objection). Calls to make, in this order, each only if the one before leaves it open:
+   - "What worked in deals like this one, and who was involved?" (lookalikes).
+   - "What do [persona] buyers in [segment] raise at [stage], and which answers came before the deal moving?" (what to expect). One call per persona in the room.
+   - "Which approved narratives, proof points and references appear on won deals in this segment or for this persona?" (content; skip when the strategy cell's linked elements already answer it).
+   - "What does our strategy for this persona, segment and stage say to do, and which of that has not happened on this deal?" (strategy gap).
+   Use the answer as a map. It is orientation, never a quote and never a statistic. Open every consequential item it cites with the narrow tool for its kind before using it, and use items marked inferred as *likely*. If the answer says it lacks something (participants, timing, outcomes), take that as the next narrow call, not as a finding. The responses can be very large (hundreds of thousands of characters, mostly inferred links): when a result is saved to a file, read only the `answer` and `seeds` and the first forty evidence names and rationales with a script, and open at most ten items. Treat any count in the answer that is not a deal count (associations, mentions, findings) as unverified: check it with `list_cohort_deals` or `list_deals` before quoting it, and drop a figure that cannot be checked or that looks like an artifact (every deal in a set).
+3. **Verify with the narrow tools.** Cohorts and counts (`compare_cohorts`, `list_cohort_deals`), the deals behind them (`get_deal`, `get_event_detail` on their calls before they closed), exact words (`search_call_transcripts`, `get_entity_evidence`), authored guidance (`find_motion_icp` for the persona and segment cell, `get_entity` for the objection, proof point, use case, competitor, reference), and win and loss patterns (`deal_pulse_win_loss_cohort`, `get_competitive_insights`).
+4. **Content.** The cell's linked proof points, use cases and references (`find_motion_icp` with elements), approved narratives and decks (`search_resources`, `list_resources`), and how each performs (`get_entity` with usage).
+5. **Framework.** Look for a pitch framework, methodology or rubric the workspace has authored (see [meeting sections](meeting-sections.md), "What to say and ask").
+
+If a tool is unavailable or empty, name the gap once in the source notes and continue with the narrow tools. A missing graph pass is a reduced check, never a reason to stop.
+
+## 2. Resolve the context (internal, not printed as a table)
+
+1. **People.** Each attendee's title, persona and buying role, and which personas the strategy expects at this stage that are absent. Flag a title that contradicts the call. When no persona resolves for a title, say so, pick the nearest persona by buying role, and label it "nearest persona, low confidence"; never present it as the person's persona.
+2. **Where the buyer is.** What they said they want and their next decision, in their words. Commitments either side made.
+3. **What they use instead,** in their words; where it works (concede) and where it breaks (test).
+4. **Lookalike set.** The closest won and lost deals and what happened on their calls before they moved or stalled.
+5. **Expectations.** Per persona, what the persona raises at this stage in this segment and which answers came before deals that moved.
+6. **Strategy gap.** What the strategy prescribes for this persona, segment and stage against what the evidence shows has happened on this deal.
+7. **Content.** The specific approved narrative, slide material or proof that fits, with where it came from.
+8. **Framework.** Present or absent.
+
+## 3. Decide the few things that matter
+
+1. **The job this meeting has,** in one sentence, with the buyer's next decision.
+2. **Rank what you found by its effect on that decision.** Buyer admissions and stated pains, a request raised twice or unanswered, an earlier loss or silence, the reason to act now, an unanswered signal the strategy has a play for. Context that changes no line, row, question or move stays off the page.
+3. **Pick the move.** One to three next best actions from the [strategy gap](strategy-gap.md). Zero is a valid answer.
+
+## 4. Positioning
+
+Select positioning from the actual offer and motion: complement an existing approach when coexistence creates value; replace when supported superiority justifies switching costs; consolidate when evidence supports replacing several tools; build-versus-buy when ongoing ownership is the buyer's alternative; service when delivery and expertise create the value. State the fit condition, prerequisites and tradeoff. Never assume every customer sells the same thing or achieves an unsupported multiplier. Load [positioning coach](positioning-coach.md) and [strategic coach](strategic-coach.md) only when choosing the approach.
+
+For each goal, state the buyer belief or decision to explore, the evidence already established, what remains hypothetical, the question that could confirm or disconfirm it, and the next commitment if supported. Recognition is a joint test, not a predetermined conclusion.
+
+## 5. Say plainly when there is nothing to find
+
+A thin or flat result is a finding. When the lookalike set is small, when no play separates the deals that moved from those that stalled, when no strategy cell exists for this persona and segment, when no framework or content fits, or when there is no call to read, write one plain line saying what you looked for and what you found, then continue with what is supported. Do not manufacture a pattern, widen a cut silently, or borrow another account's pain. Starting from the nearest strategy cell is allowed when you say which cell and why (same persona in another segment first, then the same segment with the closest buying role), and treat its text as guidance for the kind of buyer, not for this one.
+
+## 6. Before delivering
+
+Keep an internal ledger while you work (never printed): one line per claim that will appear on the page, with the saved result that supports it. Build the page only from ledger lines. (a) Every per-deal detail in the lookalike table (outcome, date, competitor in play, use case, loss reason, who joined) comes from that deal's own record; an attribute you did not check for that deal is left blank or marked "not checked". (b) Describe every content item, proof point and reference only with words from the record you fetched; never infer what it covers from its name. (c) Tally every count from the listed rows, write the base beside it, and make the totals on the page agree with each other. (d) Never say a pattern is absent or "predicts nothing" when you have rates: give the rates with their counts. (e) Rewrite lookup phrasing as facts: not "I opened 3 won deals" but "3 of the won deals have call records"; no "on record", "the record shows", "I counted", "I read", "computed in this run", ids as prose, or tool names in the body. (f) Remove contrast constructions ("X, not Y", "not X but Y", "rather than", "instead of" used to contrast, "one deal, not a pattern") and state the one thing that is true. Ids and tool names are allowed only inside the keep-going prompts, which are written for an agent.
+
+Then check the draft against these rules. The checks go in your chat reply, never in the document (the document has no "checks run" block and no account of how it was built; a short "sources" footer naming dates and kinds of source is enough). Report only the checks you ran: every quote and date looked up; every count has its base; every item from comparable deals is labeled likely and names no customer in buyer-facing wording; every content item exists in the library or resources; the framework section appears only if a framework was found; each next best action has all four parts; headings, vocabulary and punctuation follow [output rules](output-rules.md); ids and links match a result you saw.
