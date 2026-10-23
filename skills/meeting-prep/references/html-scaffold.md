@@ -983,7 +983,7 @@ Use [meeting-sections.md](meeting-sections.md) as the single content/ID schema. 
     </div>
 
     <!-- Short version: three lines (the situation, what comparable deals say, the move). -->
-    <div class="card short-version">
+    <div class="card">
       <p class="sub-section-title">The short version</p>
       <ul class="response-list">
         <li><strong>Where this stands.</strong> [one line]</li>
@@ -994,7 +994,8 @@ Use [meeting-sections.md](meeting-sections.md) as the single content/ID schema. 
 
     <details class="prep-section" open id="lookalikes">
       <summary>1. Deals like this: what worked, what didn't</summary>
-      <!-- Internal. Intro line says how the set was chosen and its size. .lookalike-table: deal, outcome, what matched, what happened on their calls. Contrast line with counts and base. Never a customer name in rep-facing wording. -->
+      <p class="internal-note">Internal only. Other customers' names stay out of anything said to the buyer.</p>
+      <!-- Intro line says how the set was chosen and its size. .lookalike-table: deal, outcome, what matched, what happened on their calls. Contrast line with counts and base. Never a customer name in rep-facing wording. -->
     </details>
 
     <details class="prep-section" open id="context">
@@ -1037,6 +1038,8 @@ Use [meeting-sections.md](meeting-sections.md) as the single content/ID schema. 
       <p class="section-intro">Asset: [asset id or URL, or "not published; deal [id], [domain], [date]"]. Copy a prompt into Claude, ChatGPT or your internal agent with the Octave MCP connected.</p>
       <div class="prompt-block"><!-- stand-alone prompt: account, deal id, stage, date, attendees and roles, asset id, task, key facts, start with ask_octave --></div>
     </section>
+
+    <p class="section-intro" id="sources"><!-- Sources: dates and kinds of source, and what was not checked. --></p>
 
   </main>
 

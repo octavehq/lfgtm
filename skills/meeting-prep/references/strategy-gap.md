@@ -8,7 +8,7 @@ One sentence: stage in the CRM, what the buyer's language says about where they 
 
 ## 2. Read the prescription
 
-`find_motion_icp` for the persona and segment cell (stage objectives, buyer mindset, value propositions, talking points; add elements and learnings). When the workspace has no cell for this combination, use the nearest cell and say which one and why (same persona in another segment first, then the same segment with the closest buying role). When both the segment and the persona differ, use no cell: record a gap in one line, and fall back to `search_knowledge_base` for the persona and segment and to the lookalike evidence. Use only what the cell says at this deal's stage. Prescription text is guidance, never a fact about this account.
+Resolve the motion with `list_motions`, then call `find_motion_icp` with `motionOId`, `personaOId` and `segmentOId` for the persona and segment cell (stage objectives, buyer mindset, value propositions, talking points; add elements and learnings). When the workspace has more than one motion, use the cell from the motion whose type matches this deal (net new, displace incumbent, expansion) and say which; do not use a displacement cell unless the buyer named an incumbent. When the workspace has no cell for this combination, use the nearest cell and say which one and why (same persona in another segment first, then the same segment with the closest buying role). When both the segment and the persona differ, use no cell: record a gap in one line, and fall back to the authored records that still apply (the objection, competitor, use case and proof point records the buyer's own words point to, and the persona nearest by buying role) plus the lookalike evidence. A search that returns only an unrelated cell is not guidance. Use only what the cell says at this deal's stage. Prescription text is guidance, never a fact about this account.
 
 ## 3. Read the evidence
 
@@ -20,7 +20,7 @@ Walk these. A gap fires only when you can point to the result that shows it.
 
 - **Unanswered signal.** The buyer voiced a concern, pain or question the strategy has an answer for, and nothing shows it was answered after they said it.
 - **Stage mismatch.** The CRM stage runs ahead of what the buyer has confirmed (the riskier case) or behind it.
-- **Missing person.** The strategy expects a persona at this stage (decision maker, user, technical gate) and nobody matching is on the deal. Real candidates come from `find_person`, or from names the buyer mentioned; never invent a name.
+- **Missing person.** The strategy expects a persona at this stage (decision maker, user, technical gate) and nobody matching is on the deal. Real candidates come from the deal's stakeholders and CRM contacts first, `find_person` (an external people search, so the company link is unverified) for outside candidates, or from names the buyer mentioned; never invent a name.
 - **Competitor exposed.** A competitor or alternative is live and the competitive answer has not run.
 - **Proof gap.** The buyer doubted a claim we can prove and the proof was not shown after the doubt.
 - **Lookalike divergence.** The deals like this one that moved did something this deal has not (a comparison, a person added, a document sent), or the ones that stalled shared a pattern this deal shows. Counts are real counts.
