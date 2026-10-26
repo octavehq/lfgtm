@@ -58,7 +58,7 @@
 
     /* === Components (cards, metrics, proof blocks) === */
     /* === Scroll-triggered animations === */
-    /* === Mobile responsive === */
+    /* === Mobile responsive: 520px and 375px rules, min-width: 0 on grid/flex children with text === */
     /* === prefers-reduced-motion === */
   </style>
 </head>
@@ -100,6 +100,8 @@
 </body>
 </html>
 ```
+
+Cards and proof blocks grow with their text (no fixed heights or `overflow: hidden`), card rows share one height, accordion `<summary>` rows hide the native marker, and customer logos sit on the page surface with no forced white chip, checked on any dark section ([presentation principles 9i to 9l](../../shared/presentation-principles.md) and the Brand & Logo checklist). The hero subhead adds information; it never completes the headline as a second half.
 
 Inline [reveal.js](../assets/reveal.js). Base `.animate-in` is visible; only `.reveal-pending` hides offscreen content briefly. Counters keep final accessible values.
 
