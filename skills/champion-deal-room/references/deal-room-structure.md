@@ -122,7 +122,7 @@ Grounding: `reference` and `proof_point` entities (see [entity-model.md](../../s
 
 **B. Cost of waiting** (1-2 lines): what each month of the status quo costs, tied to the real compelling event.
 
-Lead with the lowest-risk next step (e.g. a read-only assessment). A cheap, reversible first move protects the champion and is the easiest internal yes.
+Set the steps by the deal's setting ([Reading Calls and Deals](../../shared/information-principles.md#reading-calls-and-deals)): sale size, which meetings have happened and the stage today. The steps follow the champion's internal path: what they forward, who they show next, what security and procurement will ask later. After a first enterprise meeting, no step asks the buyer for their data, transcripts or a pilot; a hands-on step waits until a sponsor and an agreement exist. Lead with the lowest-risk move that stage supports. A cheap, reversible first move protects the champion and is the easiest internal yes.
 
 ---
 
@@ -147,6 +147,9 @@ Lead with the lowest-risk next step (e.g. a read-only assessment). A cheap, reve
 - [ ] Every objection traces to a real call moment or a library objection entity.
 - [ ] Every proof metric/quote traces to a real entity.
 - [ ] No stakeholder is quoted beyond what the source data supports.
+- [ ] No personal fact (health, family, personal life) from a call or CRM note appears anywhere; the count left out goes in the delivery message to the rep, not in the document.
+- [ ] The path forward matches the stage: no data, transcript or pilot ask after a first enterprise meeting.
+- [ ] A concern that praises the offering's reach is framed in Job 2 as scope, and becomes a Job 4 objection only when it carries a condition that could stop the purchase.
 - [ ] No section reads as generic positioning. Each carries a fact a champion could repeat to move someone.
 - [ ] Fill-in slots (blank names, missing inputs, the specific ask) are visible and honest, not faked.
 
