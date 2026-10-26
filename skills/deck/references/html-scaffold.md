@@ -380,9 +380,10 @@ This only applies to **decks** (slides). The document-style skills (one-pager, p
 Check for these before shipping a deck. Each has bitten a real deck.
 
 1. **Background specificity.** `viewport-base.css` sets `.slide{background:var(--slide-bg)}` and is pasted after the preset CSS, so at equal specificity it wins over a themed slide background. Theme slide backgrounds with a higher-specificity selector (`.slide.gradient`, `.slide.dark`), or gradient/dark bands silently render as flat `--slide-bg`.
-2. **Equal-height card rows.** In a `.grid-2`/`.grid-3` card row, the tallest card sets the row height, and shorter siblings get a dead band of bottom padding. Balance the copy across cards to similar length, or vertically center the card content instead of top-aligning it.
+2. **Equal-height card rows.** In a `.grid-2`/`.grid-3` card row, the tallest card sets the row height, and shorter siblings get a dead band of bottom padding. Balance the copy across cards to similar length, or vertically center the card content instead of top-aligning it. A card that carries a link or footer pins it to the bottom ([presentation principles 9j](../../shared/presentation-principles.md)), and grid or flex children holding text get `min-width: 0`.
 3. **Stat numbers with arrows or symbols.** In a `.big-number`, put spaces around arrows (`6mo -> 3wk`), set `white-space:nowrap`, and size the number for its column so it doesn't wrap or cramp. A lone symbol reads as a glyph, not a metric, so give it a worded value.
 4. **Brandmark vs eyebrow.** A top-left logo collides with a top-left `.pill` or section label on content slides. Put the brandmark top-right when slide content is left-aligned.
+5. **Text clipped by a fixed box.** The canvas is fixed, so a card with `overflow: hidden` (`.metric-card`) or a percentage height (staircase tiers) cuts off text that runs long, with no scrollbar to show it. Check that every text element sits fully inside its card and slide at 1920×1080 and in the 720px linear layout; when copy does not fit, shorten it or split the slide rather than shrinking type.
 
 ## Executable controller
 
