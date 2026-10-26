@@ -72,9 +72,13 @@
     }
 
     /* === Responsive === */
+    .grid-2 > *, .grid-3 > * { min-width: 0; } /* long words wrap inside the column */
     @media (max-width: 600px) {
       .grid-3 { grid-template-columns: 1fr; }
       .grid-2 { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 375px) {
+      .page { padding-left: 16px; padding-right: 16px; }
     }
   </style>
 </head>
@@ -97,4 +101,4 @@ Key differences from the deck skill's HTML:
 - **No slide-level animations** -- subtle entrance animations are fine, but no Intersection Observer per-section
 - **Narrower container** -- `max-width: 800px` (vs deck's 1100px)
 - **Print-friendly** -- includes `@media print` styles for PDF/print output
-- **No `overflow: hidden` sections** -- content flows naturally
+- **No `overflow: hidden` sections** -- content flows naturally; cards grow with their text and fit comes from shorter copy ([presentation principles 9i to 9k](../../shared/presentation-principles.md))

@@ -130,7 +130,8 @@ What fed this report:
 - Segments represented
 - Competitors represented
 - Personas represented
-- Data completeness notes (e.g., "No conversation data for 12 deals — metrics only")
+- Data completeness notes (e.g., "No conversation data for 12 deals, metrics only")
+- Evidence list, when the report quotes calls: opens with the quote count, then the numbered quotes the other sections link to
 - Generation date and branding footer
 
 ---

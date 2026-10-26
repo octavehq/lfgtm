@@ -27,7 +27,7 @@ Three horizontal bands forming a "house" — Market layer at the top, MVP in the
   background: transparent;
   border: 1px solid var(--border);
   padding: 0;
-  overflow: hidden;
+  overflow-x: auto; /* the 8-column grid scrolls inside the band on narrow screens; never clip it */
 }
 .house-layer-label {
   font-family: var(--font-display);
@@ -58,7 +58,8 @@ Three horizontal bands forming a "house" — Market layer at the top, MVP in the
 /* Value Proposition Grid (8-column layout) */
 .vp-grid {
   display: grid;
-  grid-template-columns: 120px repeat(7, 1fr);
+  grid-template-columns: 120px repeat(7, minmax(0, 1fr));
+  min-width: 720px;
   font-size: clamp(0.7rem, 0.9vw, 0.8rem);
 }
 .vp-header {
@@ -399,9 +400,10 @@ Horizontal scrollable phase timeline. Each phase is a column card with header, a
   flex: 1;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
-  overflow: hidden;
+  min-width: 0;
 }
 .phase-header {
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   padding: 0.6rem 0.75rem;
   background: var(--bg-elevated);
   border-bottom: 1px solid var(--border);
