@@ -31,7 +31,7 @@ The proposal uses the same CSS variable system as `/octave:deck` (see the shared
     /* Side-by-side proof/result cards: align internal bands (header, body, metric row, quote) across cards via CSS subgrid — parent sets the row tracks, each card sets grid-template-rows: subgrid and spans them. Give cards a parallel metric count so the number row reads as one strip. */
     /* Cover: no Stage/deal-process chip; no Confidential stamp unless requested. Section titles are standard proposal headings, one label per heading (no eyebrow that repeats the title). */
     /* Print Styles (critical) — hide sidebar, full-width content, page-break-after on cover, page-break-inside avoid on sections/cards */
-    /* Responsive — hide sidebar below 900px; at 520px side-by-side cards and the timeline stack; at 375px 16px gutters and no sideways page scroll (presentation principles 9k). Cards grow with their text: no fixed heights or overflow:hidden on text containers, min-width:0 on grid children (9i). Any mono stack ends ui-monospace, SFMono-Regular, Menlo, Consolas, monospace (4d). */
+    /* Responsive: hide sidebar below 900px; at 520px side-by-side cards and the timeline stack; at 375px 16px gutters and no sideways page scroll (presentation principles 9k). Cards grow with their text: no fixed heights or overflow:hidden on text containers, min-width:0 on grid children (9i). Any mono stack ends ui-monospace, SFMono-Regular, Menlo, Consolas, monospace (4d). */
     /* prefers-reduced-motion — disable transitions */
   </style>
 </head>
