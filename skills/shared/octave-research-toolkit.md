@@ -26,10 +26,13 @@ Shared reference for the Octave document and deck skills: how to choose between 
 **How to ask**
 - One focused question per call. Related parts about the same subject can share a call. Unrelated questions go in separate calls, because the retrieval budget is per call and stacking questions thins the evidence behind each one.
 - Name the account, person, persona, or competitor in the question. Pass `seedOIds` when you already hold the identifier (an account, persona, or other library entity). To start from a deal, resolve it with `list_deals` or `get_deal` first.
+- Anchor every question on the focal deal or account the output is about, and seed it with that record's id plus the ids you have already resolved for it (segment, persona, competitor, objection).
 - Pass `originalQuery` with the user's own words when there are some (analytics only).
 - Cost and speed: each question the graph walk actually runs on uses workspace credits, and a call takes noticeably longer than a list or get call because it plans, retrieves, and composes an answer. Refusals and clarification requests are free. Make the few calls that change the work rather than one per sentence, and run independent ones together.
 
 **Read the response before using it**
+- Check the seeds it started from first. If the deal, account or persona it resolved is a different one from the one you asked about, discard the answer and ask again with the right id in `seedOIds`.
+- Answers can be very long (tens of kilobytes of evidence). Read the answer text and the entities it names, take only what a line in the output needs, and do not paste or re-read the rest.
 - `followUpNeeded` with `candidates`: the name matched several records. Choose from context, or ask the user, then call again with the chosen identifier in `seedOIds`. Never guess.
 - `refusal` with `guidance`: the walk did not run. Follow the guidance, which names the right narrow tool, and do not rephrase the same request.
 - `dataGap`: the walk ran and the workspace has no data of the kind the question needs. Report the gap as a finding and do not retry with different wording. This is not a connection failure.
@@ -37,7 +40,9 @@ Shared reference for the Octave document and deck skills: how to choose between 
 - `conceptBridgingUnavailable`: "what addresses this" answers came from authored links only. Do not present them as matched on underlying pains.
 
 **Use the evidence honestly**
-- Cite the entities in `evidence` for any claim you take from the answer, and open the consequential ones with the narrow tool for their kind before relying on them (`get_entity` for library entities, `list_findings` with `findingOIds` for findings, `get_event_detail` for events, `get_deal` for opportunities).
+- Cite the entities in `evidence` for any claim you take from the answer, and open each one behind a visible line with the narrow tool for its kind before writing that line (`get_entity` for library entities, `list_findings` with `findingOIds` for findings, `get_event_detail` for events, `get_deal` for opportunities). Answers are sometimes wrong about the focal deal itself.
+- Trace any statement about what happened on the focal account's calls or deals to the item it cites. When that item belongs to another account, or the account has no such calls, drop the statement.
+- For outcomes (which deals were won or lost after a given answer), read each deal it names with `get_deal` and count only those; a graph answer is weakest at outcomes.
 - Treat `defined` items as curated fact and `inferred` items as likely or calculated, and say which when it matters.
 - The answer is orientation, not a population statistic. A ranked or counted answer does not replace the cohort definition, coverage checks, and arithmetic in the [analytics contract](analytics-contract.md); use it to decide what to measure.
 - An answer is not a quote. Use transcript tools for exact words.
