@@ -889,7 +889,7 @@ Use [meeting-sections.md](meeting-sections.md) as the single content/ID schema. 
 
     /* === Print === */
     @media print {
-      .prep-nav, .brand-header, .brand-footer { display: none; }
+      .prep-nav, .brand-header, .brand-footer, .copy-btn { display: none; }
       .prep-container { max-width: 100%; padding: 1rem; }
       details.prep-section[open] { break-inside: avoid; }
       .card, .table-card { break-inside: avoid; }
@@ -911,7 +911,16 @@ Use [meeting-sections.md](meeting-sections.md) as the single content/ID schema. 
     .content-list { list-style: none; padding: 0; margin: 0; }
     .content-list li { padding: 0.5rem 0; border-bottom: 1px solid var(--border); font-size: 0.84rem; }
     .keep-going { margin-top: 1.5rem; }
-    .prompt-block { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 0.9rem 1rem; margin-bottom: 0.6rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.74rem; line-height: 1.5; white-space: pre-wrap; user-select: all; }
+    .prompt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.6rem; }
+    .prompt-card { display: flex; flex-direction: column; min-width: 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 0.9rem 1rem; }
+    .prompt-card h3 { font-size: 0.9rem; margin: 0 0 0.3rem; color: var(--text-primary); }
+    .prompt-card p { font-size: 0.8rem; color: var(--text-secondary); margin: 0 0 0.6rem; }
+    .prompt-card details { margin-bottom: 0.6rem; }
+    .prompt-card summary { list-style: none; cursor: pointer; font-size: 0.72rem; color: var(--text-muted); }
+    .prompt-card summary::-webkit-details-marker { display: none; }
+    .prompt-text, .prompt-context { background: var(--bg-panel); border-radius: var(--radius-lg); padding: 0.6rem 0.75rem; margin-top: 0.4rem; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.72rem; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .copy-btn { margin-top: auto; align-self: flex-start; min-height: 44px; padding: 0 1rem; border-radius: var(--radius-pill); border: 1px solid var(--border); background: var(--bg-card); color: var(--text-primary); font: 600 0.78rem var(--font-body); cursor: pointer; }
+    .prompt-context { margin-top: 0.75rem; }
     @media (max-width: 768px) { .ex-row { grid-template-columns: 1fr; } .lookalike-table { display: block; overflow-x: auto; } }
 
     /* === Responsive === */
@@ -1035,8 +1044,17 @@ Use [meeting-sections.md](meeting-sections.md) as the single content/ID schema. 
 
     <section class="keep-going" id="keep-going">
       <h2>Keep going</h2>
-      <p class="section-intro">Asset: [asset id or URL, or "not published; deal [id], [domain], [date]"]. Copy a prompt into Claude, ChatGPT or your internal agent with the Octave MCP connected.</p>
-      <div class="prompt-block"><!-- stand-alone prompt: account, deal id, stage, date, attendees and roles, asset id, task, key facts, start with ask_octave --></div>
+      <p class="section-intro">Asset: [asset id or URL, or "not published; deal [id], [domain], [date]"]. Copy a prompt and paste it into any assistant with the Octave tools connected.</p>
+      <div class="prompt-grid">
+        <!-- One card per prompt (three to five). -->
+        <div class="prompt-card">
+          <h3>[Prompt title]</h3>
+          <p>[One line on what it produces]</p>
+          <details><summary>Show prompt</summary><div class="prompt-text">[Task: what to produce, anything specific to this card]</div></details>
+          <button type="button" class="copy-btn">Copy prompt</button>
+        </div>
+      </div>
+      <div class="prompt-context" id="prompt-context">[Shared context, written once: "Use the Octave tools you have to read [Workspace]'s records." Account and domain, deal id and stage, meeting date, attendees and roles, asset id, key facts, fetch the asset or rebuild it from the deal, start with ask_octave.]</div>
     </section>
 
     <p class="section-intro" id="sources"><!-- Sources: dates and kinds of source, and what was not checked. --></p>
@@ -1086,6 +1104,18 @@ Use [meeting-sections.md](meeting-sections.md) as the single content/ID schema. 
         ? '<span class="toggle-icon">&#9650;</span> Collapse all'
         : '<span class="toggle-icon">&#9660;</span> Expand all';
     }
+
+    // Copy prompt: the card's task, then the shared context block
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const task = btn.closest('.prompt-card').querySelector('.prompt-text').textContent.trim();
+        const ctx = document.getElementById('prompt-context').textContent.trim();
+        const text = task + '\n\n' + ctx;
+        const done = () => { btn.textContent = 'Copied'; setTimeout(() => { btn.textContent = 'Copy prompt'; }, 1600); };
+        if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(text).then(done); }
+        else { const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); done(); }
+      });
+    });
 
     function switchTab(btn, containerId) {
       const container = document.getElementById(containerId);
