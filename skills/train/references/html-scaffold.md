@@ -57,13 +57,14 @@ A single self-contained HTML file. Inline all CSS and JS; the only external depe
 /* Slide 3 persona panel */
 .block-label { font-family: var(--brand-font-mono); color: var(--brand-primary); text-transform:uppercase; }
 .leadwith { background: var(--brand-surface); border-radius: var(--brand-radius); }
-.rec-strip { display:grid; grid-template-columns:repeat(3,1fr); gap:.65rem; }         /* Resonate / Elevate / Compel */
+.rec-strip { display:grid; grid-template-columns:repeat(3,1fr); gap:.65rem; }         /* three talk-track stages, named by the workspace's methodology */
 .rec-stage { border-top:3px solid var(--brand-accent); border-radius:10px; }
 .pending-note { background: var(--brand-warning-weak); border:1px dashed; }            /* persona with no ready ICP version */
 
 /* Slide 4 competitor deep-dive */
 .comp-verdict { border-radius: var(--brand-radius-pill); font-size:.62rem; }           /* Direct / Adjacent / Build */
 .cap-table { width:100%; border-collapse:collapse; }                                   /* Capability | alternative | selected offering */
+.cap-table-wrap { overflow-x:auto; }                                                  /* a wide table scrolls inside itself */
 .cap-table .us { background: color-mix(in srgb, var(--brand-primary) 6%, transparent); }
 .hearsay { display:grid; grid-template-columns:1fr 1fr; gap:.7rem; }                    /* You'll hear | What to say */
 .hs-say { background: var(--brand-positive-weak); }
@@ -95,6 +96,8 @@ A single self-contained HTML file. Inline all CSS and JS; the only external depe
 }
 :focus-visible{outline:3px solid var(--brand-primary);outline-offset:3px}
 @media (max-width:760px) { .how-steps, .rec-strip, .hearsay, .proof-grid, .seg-grid, .grid-2, .grid-3 { grid-template-columns:1fr; } }
+@media (max-width:520px) { .topbar { gap:.75rem; padding:0 16px; } .step-label { display:none; } .progress-dots { min-width:0; flex-wrap:wrap; } .slide-inner { padding-left:16px; padding-right:16px; } .tab, .cp-opt, .slide-nav .btn { min-height:44px; } }
+.slide-body > *, .archetype-card, .seg-card, .proof-card { min-width:0; }
 @media (prefers-reduced-motion: reduce) { * { animation:none !important; transition:none !important; } }
 ```
 

@@ -44,6 +44,14 @@ missing coverage must not become negative evidence about a buyer.
   Zero cell associations does not establish stale content; inspect current
   applicability, source age, conflicting evidence, and Motion activity.
 
+Calibrate every risk to the opportunity's setting, per
+[Reading Calls and Deals](../../shared/information-principles.md#reading-calls-and-deals):
+a missing dated next step after a first enterprise meeting is normal and
+raises no signal, a concern praising the product's reach is a buying
+signal, and no action asks an early enterprise buyer for data, transcripts
+or a pilot. Health, family or personal-life details never appear in a
+signal or action; report the count left out in the delivery message.
+
 Rank by decision consequence, deadline, affected opportunity value/scope,
 evidence quality, and whether a useful action exists. CRITICAL requires a
 credible imminent decision/risk, not merely a novel extraction. Distinguish

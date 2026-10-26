@@ -23,6 +23,12 @@ and date to each fact. Load [evidence-and-inputs.md](../../shared/evidence-and-i
 material criteria, POC evidence, or process facts; ask grouped questions,
 incorporate sourced operator answers, and resume the card. Agree on working
 placeholders or general guidance where answers remain unknown.
+Read the account's calls in their setting per
+[Reading Calls and Deals](../../shared/information-principles.md#reading-calls-and-deals)
+(a concern praising the product's reach is a scoping cue and stays
+out of the objections), link each deal-specific point to its call or
+record, and keep health, family or personal-life details out of the card;
+report the count left out in the delivery message.
 
 For each important buyer criterion record: priority and source; our
 applicable capability/tier and proof; competitor capability/tier and dated
@@ -32,7 +38,7 @@ customer experience, and hypothesis. Refresh mutable disputed feature or
 price claims through available authoritative sources, or ask the operator
 for current documentation; label unresolved comparison facts explicitly.
 
-For a deal card, and for a reusable card when the workspace has history with the rival, use [Ask Octave first](../../shared/octave-research-toolkit.md#ask-octave-first-for-questions-that-span-records): ask `ask_octave` which deals, calls, objections, and personas the competitor is tied to, and where it won and lost. Treat the result as a map to the calls and events worth reading in full, and as a source of workspace evidence for concessions and counters, not as a replacement for current rival capability checks. Landscape cards may ask one question per rival. If the tool is unavailable, use the competitor, findings, and call tools and say so.
+For a deal card, and for a reusable card when the workspace has history with the rival, use [Ask Octave first](../../shared/octave-research-toolkit.md#ask-octave-first-for-questions-that-span-records): ask `ask_octave` which deals, calls, objections, and personas the competitor is tied to, and where it won and lost. Treat the result as a map to the calls and events worth reading in full, and as a source of workspace evidence for concessions and counters, not as a replacement for current rival capability checks; verify any claim about this deal with a narrow read before it reaches the card. Landscape cards may ask one question per rival. If the tool is unavailable, use the competitor, findings, and call tools and say so.
 
 Write a counter only when it addresses the actual criterion. A legitimate
 rival advantage may require concession, qualification, partner support,
