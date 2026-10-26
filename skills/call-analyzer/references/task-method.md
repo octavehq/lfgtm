@@ -70,8 +70,10 @@ among the recommendations. A delivery habit (pacing, filler words, slide count)
 is a recommendation only when the buyer's reaction shows it cost something.
 Never recommend asking an enterprise buyer for their data, transcripts or a
 pilot after a first meeting; the next step follows the champion's internal path.
-Leave personal facts said on the call out of the analysis and any draft, and
-report how many you left out.
+Leave sensitive personal facts said on the call out of the analysis and any
+draft, and report how many you left out; a relationship or circumstance that
+changes how the deal is run stays in the analysis, once, with what it changes
+(rule 19).
 Separate explicit commitments (who/what/when, with source) from suggestions,
 unanswered product questions, and assumptions. Preserve the buyer's agreed
 sequence. Do not add every omitted message to the follow-up.

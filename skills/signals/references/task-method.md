@@ -49,8 +49,9 @@ Calibrate every risk to the opportunity's setting, per
 a missing dated next step after a first enterprise meeting is normal and
 raises no signal, a concern praising the product's reach is a buying
 signal, and no action asks an early enterprise buyer for data, transcripts
-or a pilot. Health, family or personal-life details never appear in a
-signal or action; report the count left out in the delivery message.
+or a pilot. Health, family-event or personal-life details never appear in a
+signal or action; report the count left out in the delivery message. A tie
+that changes how the deal is run may appear, once (rule 19).
 
 Rank by decision consequence, deadline, affected opportunity value/scope,
 evidence quality, and whether a useful action exists. CRITICAL requires a

@@ -41,8 +41,8 @@ a concern that praises the product's reach ("this could touch a lot of
 teams") is a buying signal and scoping cue, counted apart from objections;
 a first enterprise meeting without a dated next step is not an unresolved
 exchange. Each theme and quote links to its event or record (rule 20), and
-health, family or personal-life details stay out of every theme, quote and
-recommendation; report the count left out in the delivery message (rule 19).
+health, family-event or personal-life details stay out of every theme, quote
+and recommendation; report the count left out in the delivery message (rule 19).
 
 Before declaring a library gap, load [gtm-context.md](../../shared/gtm-context.md) and hydrate
 the relevant offering, persona/segment, objection, and Motion ICP narrative.
