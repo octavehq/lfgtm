@@ -6,7 +6,7 @@ triggers, and disqualifiers. Read full selected entities/cells. Segment is
 one dimension of ICP; the same company type can fit renewal and net-new
 differently. Services and Solutions are first-class offerings.
 
-Use [Ask Octave first](../../shared/octave-research-toolkit.md#ask-octave-first-for-questions-that-span-records) to form hypotheses before building the cohorts: ask `ask_octave` which segments, personas, use cases, and proof points are most tied to won and to lost deals. Test every hypothesis with the opportunity rows below; a graph ranking is not a win rate. If the tool is unavailable, start from the cohort rows and say so.
+Use [Ask Octave first](../../shared/octave-research-toolkit.md#ask-octave-first-for-questions-that-span-records) to form hypotheses before building the cohorts: ask `ask_octave` which segments, personas, use cases, and proof points are most tied to won and to lost deals. Anchor the question on the offering and Motion by name and id, and read outcomes, stages and loss reasons from the opportunity records rather than from the answer's wording. Test every hypothesis with the opportunity rows below; a graph ranking is not a win rate. If the tool is unavailable, start from the cohort rows and say so.
 
 Load [analytics-contract.md](../../shared/analytics-contract.md). Build one opportunity row per final
 outcome with firmographics, use case, buying roles, motion, acquisition
@@ -31,6 +31,8 @@ Classify each proposed signal before proposing an ICP change:
 - Commercial constraint: economically viable deal/terms or delivery model.
 - Competitive/product gap: specific unmet requirement or stronger alternative.
 - Unknown: not observed, conflicting, or not inferable from current sources.
+
+Read each loss's conversations in their setting ([information principles #16](../../shared/information-principles.md#reading-calls-and-deals)): an enterprise deal that stalled after a first meeting without a dated next step, or a buyer remark that the product could touch many teams, is a readiness or scoping signal, not evidence against fit.
 
 A loss association alone cannot create a disqualifier. For each proposed
 criterion specify target entity/cell; question/definition; rationale;
