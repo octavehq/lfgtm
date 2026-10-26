@@ -93,6 +93,25 @@ Visual design determines how content LOOKS. Language rules determine how it READ
 
 15. **One idea per unit.** Each card, slide, section, or content block conveys one concept. If a reader needs to hold two unrelated ideas simultaneously to understand a block, split it.
 
+## Reading Calls and Deals
+
+These rules apply to any output that reads calls, emails or deals to judge them, coach on them, rate risk or recommend a next step.
+
+16. **Judge against the setting before judging the content.** Write down the setting first: the size of the sale (enterprise or small and mid-size, from segment, headcount and deal amount), which meeting it was (first meeting, discovery, demo, final prep, negotiation, renewal), the deal's stage on that date, earlier calls and earlier deals with the account, whether they are already a customer, who was in the room, and what was shown (sample data or their own). Read the event's stated purpose, and when the content disagrees (an internal prep call filed as a demo), go by the content and say so. Every grade, risk and next step is then judged against what a meeting in that setting can achieve:
+    - A first enterprise meeting rarely ends with a dated next step, so a missing date there never lowers the read of the buyer's response to "mixed".
+    - After a first enterprise meeting, the plan follows the champion's internal path: what they forward, who they show next, what security and procurement will ask later. Never recommend asking an enterprise buyer for their own data, transcripts or a pilot at that point; that waits for a sponsor and an agreement.
+    - A concern that praises the product's reach ("this could touch a lot of teams", "we couldn't act on all of it") is the buyer sizing the rollout. Record it as a buying signal and a scoping cue, and treat it as an objection only when it carries a condition that could stop the purchase.
+    - Count the buyer's reactions to named capabilities ("that's what we've been trying to do"), with their timestamps, as response before calling engagement unclear.
+    - Calibrate risk to the setting: items a first meeting never settles (budget, a pilot) are open questions at that stage, and proof or headline tests wait for the stage where the buyer asks for proof or a sponsor exists.
+
+17. **An unanswered buyer pain ranks near the top.** When the buyer named a pain in their own work (especially a task they call manual, tedious or slow) and the seller never addressed it, it ranks at least second among the fixes or becomes the agenda of the next meeting. Search the whole transcript before writing that something was never addressed.
+
+18. **Apply only the workspace's own frameworks.** Use a sales methodology, pitch framework or call rubric only when the user supplied it or the workspace has one on file (an entity, motion or resource with named steps and a description of what good looks like for each). Never grade against a generic framework (MEDDICC, SPIN, BANT and the like) as if it were the seller's, and never invent step names. With none on file, the output carries no framework section and no line about one. A framework the buyer describes is buyer context, written in their words.
+
+19. **Leave sensitive personal facts out, and count them.** Health, family, personal life, and personal financial or relationship ties, whether said on a call or noted in the CRM, never appear in the output, a prompt, a draft or a risk. Count each one you left out and report the count to the operator in the delivery message ("2 personal details left out"), so the omission is visible without repeating the detail.
+
+20. **Every point links to its evidence.** Each claim about a call or deal points to the quote or record behind it (a numbered reference, a timestamp or a record link). Where the output has an evidence section, it opens with one sentence saying how many quotes back the page, with the quotes listed below it. A point with no quote or record behind it is cut (#6). A delivery habit (pacing, filler words, slide count, check-ins) counts as a finding only when the buyer's reaction shows it cost something.
+
 ---
 
 ## Review Checklist
@@ -132,3 +151,11 @@ Information architecture audit. Run every check against the generated content. T
 - [ ] **Audience-appropriate.** Framing matches the stated audience (executive, practitioner, technical).
 - [ ] **Pain vs. deal risk separated.** The customer's pain (their words, their world) is kept distinct from internal deal health signals (single-threaded, stalled, low activity), which live in deal context, not in "their pain."
 - [ ] **One idea per unit.** No content block requires the reader to hold multiple unrelated concepts simultaneously.
+
+### Reading Calls and Deals (where the output judges calls, emails or deals)
+
+- [ ] **Setting stated and applied.** Sale size, meeting type, stage on the date, history, customer status and who attended were read before any grade. No first enterprise meeting marked down for lacking a dated step; no request for the buyer's data, transcripts or a pilot after a first enterprise meeting; reach-praising concerns recorded as buying signals; reactions counted; risk matched to the stage.
+- [ ] **Unanswered pain ranked.** A pain the buyer named that went unaddressed is at least the second fix or the next meeting's agenda.
+- [ ] **Framework is the workspace's own.** Any methodology or rubric used traces to the request or a workspace record with named steps. No generic framework presented as the seller's.
+- [ ] **Sensitive personal facts omitted and counted.** No health, family or personal-life detail anywhere in the output; the count of omitted items is in the delivery message.
+- [ ] **Each point traces to a quote or record.** The evidence section, when present, states how many quotes back the page. Delivery-habit points appear only with the cost the buyer showed.

@@ -86,6 +86,7 @@ The reviewer subagents own language and visual quality; **content accuracy is th
 - **Preserve source meaning.** Use [evidence and inputs](evidence-and-inputs.md). Keep uncertainty, scope, counterevidence, quote fidelity, and buyer/seller/strategy attribution through final edits. Recheck load-bearing claims after changes.
 - **News and "recently..." claims carry a date and a source link.** Anything time-sensitive needs to trace back to `deep_web_research` or `scrape_website` output, not to model memory.
 - **Internal entity deep-links are context-dependent, not universally wrong.** A link like `app.octavehq.com/entity/{oId}` is correct in internal or seller-facing assets (briefs, call prep, meeting prep). In customer-facing assets (deck, one-pager, microsite, proposal), that same link is a DEFECT: flag it as internal-tooling leakage and strip it.
+- **Calls and deals read in their setting, private details out.** When the output judges calls or deals, check it against [Reading Calls and Deals](information-principles.md#reading-calls-and-deals): grades and risks fit the meeting's setting, any framework is the workspace's own, and no health, family or personal-life detail appears anywhere (report the count left out in the delivery message).
 - **No hallucinated proof points, fake logos, paraphrases passed off as verbatim quotes, or capabilities not present in the product data.** If a quote can't be matched to source text verbatim, it's a paraphrase: label it as one or cut it.
 
 ### Presentation Reviewer
