@@ -84,6 +84,23 @@ class BrowserChecks(unittest.TestCase):
         self.assertEqual(result.returncode,1,result.stderr+result.stdout)
         self.assertIn('asset-load',result.stdout)
 
+    def test_shared_render_gate_contrast_clipping_and_sideways_scroll(self):
+        path=self.root/'gate.html';head='<!doctype html><html><style>body{margin:0;padding:16px;color:#111;background:white;font-family:Arial}</style>'
+        def gate(body,viewport='800x600'):
+            path.write_text(head+body+'</html>')
+            result=subprocess.run(['node',str(ROOT/'skills/shared/scripts/render-gate.js'),str(path),'--viewports',viewport,'--json'],capture_output=True,text=True)
+            self.assertIn(result.returncode,(0,1),result.stderr);return json.loads(result.stdout)
+        checks=lambda report:[p['check'] for p in report['problems']]
+        mixed='<div style="background:color-mix(in srgb,#fff 90%,#eee);padding:8px"><p{}>Text on a mixed fill</p></div>'
+        self.assertEqual(checks(gate(mixed.format(''))),[])
+        self.assertEqual(checks(gate(mixed.format(' style="color:#fafafa"'))),['low-contrast'])
+        unknown=gate('<div style="background:oklch(0.97 0.01 250);padding:8px"><p style="color:#fafafa">Unknown fill</p></div>')
+        self.assertEqual((checks(unknown),unknown['contrastSkipped']),([],1))
+        self.assertIn('clipped-text',checks(gate('<p style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:120px">A single line that is much too long for its box</p>')))
+        deliberate='<div style="max-height:0;overflow:hidden"><p>Collapsed body</p></div><div style="width:200px;overflow:hidden"><div style="display:flex;width:600px"><p style="width:200px;flex:none">One</p><p style="width:200px;flex:none">Two</p></div></div><div style="overflow-x:auto;width:200px"><p style="white-space:nowrap">A wide row that scrolls inside its own container</p></div>'
+        self.assertEqual(checks(gate(deliberate,'375x812')),[])
+        self.assertIn('page-scroll-x',checks(gate('<div style="width:600px"><p>Fixed wide block</p></div>','375x812')))
+
     def test_renderer_blocks_fit_and_og_capture_size(self):
         kit=self.root/'kit';kit.mkdir()
         tokens={'--brand-bg':'#fff','--brand-ink':'#111','--brand-primary':'#124c80','--brand-font-heading':'Arial','--brand-font-body':'Arial','--brand-muted':'#555','--brand-border':'#ddd','--brand-on-dark':'#fff','--brand-band':'#123','--brand-doc-width':'880px'}

@@ -174,6 +174,13 @@ print('201' if method=='POST' else '200',end='')
         policy['readiness']='buyer_ready';self.assertTrue(lint.lint(path,policy)[0])
         policy['intentionalPlaceholders']=['[PRICE]'];self.assertFalse(lint.lint(path,policy)[0])
 
+    def test_lint_flags_short_monospace_stacks(self):
+        path=self.root/'a.html';policy=dict(lint.DEFAULT)
+        path.write_text("<!DOCTYPE html><style>:root{--mono:'Geist Mono',monospace}</style><p>x</p>")
+        self.assertTrue(any('Monospace stack' in w for w in lint.lint(path,policy)[1]))
+        path.write_text("<!DOCTYPE html><style>:root{--mono:'Geist Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}code{font-family:var(--mono)}</style><p>x</p>")
+        self.assertEqual(lint.lint(path,policy),([],[]))
+
     def test_lint_rejects_private_links_and_missing_resource(self):
         path=self.root/'a.html';path.write_text('<!DOCTYPE html><a href="https://app.octavehq.com/entity/abc">source</a><img src="missing.png">')
         policy=dict(lint.DEFAULT);policy['audience']='restricted_external'

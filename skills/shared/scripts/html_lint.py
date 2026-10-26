@@ -14,6 +14,7 @@ DEFAULT = {'audience': 'internal', 'readiness': 'ready_for_review', 'assets': 'b
 ENUMS = {'audience': {'internal', 'restricted_external', 'public'},
          'readiness': {'seller_draft', 'ready_for_review', 'buyer_ready', 'published_verified'},
          'assets': {'embedded', 'bundled', 'hosted'}}
+MONO_FALLBACK = ('ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace')
 WORDS = 'delve robust comprehensive leverage seamless pivotal meticulous utilize holistic synergy tapestry paradigm'.split()
 
 
@@ -124,6 +125,17 @@ def lint(path, policy):
         if re.search(r'\b(?:evt|ex|crmo|op|pe|sg|uu|oj|rr|wa)_[A-Za-z0-9]{8,}\b', text):
             errors.append('External artifact exposes raw workspace record IDs')
     css = re.sub(r'/\*.*?\*/', '', '\n'.join(doc.css), flags=re.S)
+    short_stacks = set()
+    for value in re.findall(r'(?:font-family|font|--[\w-]+)\s*:\s*([^;{}]+)', css, re.I):
+        lowered = value.lower()
+        if not re.search(r'(?<![\w-])monospace\b|\bmenlo\b|\bconsolas\b|sfmono-regular|ui-monospace', lowered):
+            continue
+        missing = [f for f in MONO_FALLBACK[:-1] if f.lower() not in lowered]
+        if missing or not re.search(r'(?<![\w-])monospace[\s)]*(?:!important)?\s*$', lowered):
+            short_stacks.update(missing or ['monospace last'])
+    if short_stacks:
+        warnings.append('Monospace stack lacks a full fallback (' + ', '.join(sorted(short_stacks)) +
+                        '); end it with ' + ', '.join(MONO_FALLBACK))
     doc.resources.extend(m[0] or m[1] for m in re.findall(r'''url\(\s*["']?([^\s)'";]+)|@import\s+["']([^"']+)''', css, re.I))
     root = path.parent.resolve()
     for uri in set(doc.resources):

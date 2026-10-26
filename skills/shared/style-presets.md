@@ -55,7 +55,7 @@ Dark navy with clean white text and subtle blue accents. Executive, high-stakes 
   /* Typography */
   --font-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   /* Animation */
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
@@ -106,7 +106,7 @@ Charcoal with warm gold accents. Premium boardroom aesthetic.
 
   --font-display: 'Playfair Display', Georgia, serif;
   --font-body: 'Source Sans 3', -apple-system, sans-serif;
-  --font-mono: 'IBM Plex Mono', monospace;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --pad-x: clamp(2rem, 5vw, 6rem);
@@ -154,7 +154,7 @@ Octave's purple palette on dark navy. Product-aligned, on-brand.
 
   --font-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: 'IBM Plex Mono', monospace;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --pad-x: clamp(2rem, 5vw, 6rem);
@@ -202,7 +202,7 @@ Pure black canvas with electric blue accent. Clean, tech-forward.
 
   --font-display: 'Manrope', -apple-system, sans-serif;
   --font-body: 'Manrope', -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --pad-x: clamp(2rem, 5vw, 6rem);
@@ -250,7 +250,7 @@ Dark background with neon green and cyan. Developer energy, hacker aesthetic.
 
   --font-display: 'Space Grotesk', -apple-system, sans-serif;
   --font-body: 'Space Grotesk', -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --pad-x: clamp(2rem, 5vw, 6rem);
@@ -298,7 +298,7 @@ Dark canvas with warm gold, pink, and rose accents. Elegant and premium.
 
   --font-display: 'Cormorant', Georgia, serif;
   --font-body: 'IBM Plex Sans', -apple-system, sans-serif;
-  --font-mono: 'IBM Plex Mono', monospace;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --pad-x: clamp(2rem, 5vw, 6rem);
@@ -352,7 +352,7 @@ White canvas with red accent. Bauhaus-inspired, grid-driven minimalism.
 
   --font-display: 'Archivo', -apple-system, sans-serif;
   --font-body: 'Nunito', -apple-system, sans-serif;
-  --font-mono: 'IBM Plex Mono', monospace;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --pad-x: clamp(2rem, 5vw, 6rem);
@@ -402,7 +402,7 @@ Warm white with sage green accents. Calm, approachable, friendly.
 
   --font-display: 'DM Sans', -apple-system, sans-serif;
   --font-body: 'DM Sans', -apple-system, sans-serif;
-  --font-mono: 'DM Mono', monospace;
+  --font-mono: 'DM Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --pad-x: clamp(2rem, 5vw, 6rem);
@@ -450,7 +450,7 @@ Off-white with pure black type. Editorial simplicity. Content speaks for itself.
 
   --font-display: 'Libre Baskerville', Georgia, serif;
   --font-body: 'Source Sans 3', -apple-system, sans-serif;
-  --font-mono: 'IBM Plex Mono', monospace;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --pad-x: clamp(2rem, 5vw, 6rem);
@@ -500,7 +500,7 @@ Deep orange and amber gradients on dark. Bold, energetic, high-impact.
 
   --font-display: 'Sora', -apple-system, sans-serif;
   --font-body: 'Sora', -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --pad-x: clamp(2rem, 5vw, 6rem);
@@ -550,7 +550,7 @@ Purple-to-teal gradients on deep dark. Visionary, modern, forward-looking.
 
   --font-display: 'Outfit', -apple-system, sans-serif;
   --font-body: 'Outfit', -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --pad-x: clamp(2rem, 5vw, 6rem);
@@ -600,7 +600,7 @@ High-contrast black and white. Statement typography. No color distractions.
 
   --font-display: 'Bebas Neue', Impact, sans-serif;
   --font-body: 'Inter', -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --pad-x: clamp(2rem, 5vw, 6rem);
@@ -687,7 +687,7 @@ To create a brand-specific preset from extracted brand colors:
 
   --font-display: [brand heading font], [system fallback];
   --font-body: [brand body font], [system fallback];
-  --font-mono: 'IBM Plex Mono', monospace;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --pad-x: clamp(2rem, 5vw, 6rem);

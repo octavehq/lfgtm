@@ -2,10 +2,11 @@
 /*
  * Shared render gate for Octave skill HTML outputs.
  *
- * The presentation checklist asks for four things that need a real browser but
- * NOT a human eye: fonts actually loaded, text contrast against its painted
- * background, text staying inside its content box, and text not sliding under
- * fixed chrome. Each is deterministic. Running them here means screenshots get
+ * The presentation checklist asks for things that need a real browser but NOT
+ * a human eye: fonts actually loaded, text contrast against its painted
+ * background, text staying inside its content box, text not cut off by a
+ * container that clips it, text not sliding under fixed chrome, and (on
+ * scrolling pages) no sideways page scroll. Each is deterministic. Running them here means screenshots get
  * spent on taste (is the hierarchy right, does the rail feel airy) instead of
  * on defect discovery.
  *
@@ -74,11 +75,28 @@ const VIEWPORTS = flag('viewports', '1600x900,1680x1050,2560x1080,1180x820')
 // borderline aesthetic choices, which are the reviewer's judgment call.
 const MIN_CONTRAST = 2.4;
 
-function luminance(css) {
-  const m = String(css).match(/[\d.]+/g);
+// Only rgb()/rgba() and color(srgb ...) can be turned into a luminance here.
+// Anything else the browser hands back (oklch(), oklab(), lab(), display-p3,
+// which is how color-mix() often resolves) returns null and the element is
+// skipped, so the gate never reports a ratio it guessed.
+function parseColor(css) {
+  const s = String(css).trim();
+  let m = s.match(/^rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)(?:\s*[,/]\s*([\d.]+%?))?\s*\)$/);
+  let scale = 1;
+  if (!m) {
+    m = s.match(/^color\(srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)(?:\s*\/\s*([\d.]+%?))?\s*\)$/);
+    scale = 255;
+  }
   if (!m) return null;
-  if (m.length > 3 && Number(m[3]) === 0) return null; // fully transparent
-  const [r, g, b] = m.slice(0, 3).map(Number);
+  const alpha = m[4] === undefined ? 1
+    : m[4].endsWith('%') ? parseFloat(m[4]) / 100 : Number(m[4]);
+  return { r: m[1] * scale, g: m[2] * scale, b: m[3] * scale, a: alpha };
+}
+
+function luminance(css) {
+  const c = parseColor(css);
+  if (!c || c.a === 0) return null; // unknown format or fully transparent
+  const { r, g, b } = c;
   const f = (v) => {
     v /= 255;
     return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
@@ -92,6 +110,7 @@ function luminance(css) {
   });
   const problems = [];
   let fontReport = null;
+  let contrastSkipped = 0;
 
   for (const vp of VIEWPORTS) {
     const page = await browser.newPage({ viewport: { width: vp.width, height: vp.height } });
@@ -143,6 +162,7 @@ function luminance(css) {
 
     const paneCount = await page.evaluate((sel) => document.querySelectorAll(sel).length, PANES);
     const n = paneCount || 1;
+    let vpSkipped = 0;
 
     for (let i = 0; i < n; i++) {
       // Bring pane i into view. Horizontal decks scroll a container; vertical
@@ -188,20 +208,71 @@ function luminance(css) {
         const chromeRects = chromeEls.map((el) => ({ el, r: el.getBoundingClientRect() }));
         const isChrome = (el) => chromeEls.some((ce) => ce === el || ce.contains(el));
 
-        // Painted background of the nearest non-transparent ancestor.
+        // Painted background of the nearest non-transparent ancestor. A fill
+        // the gate cannot compute (color-mix() resolving to oklab, oklch,
+        // display-p3, or a background image or gradient) returns null, so the
+        // element is skipped until an opaque fill it can read sits closer.
+        const readable = /^(rgba?\(|color\(srgb\s)/;
+        const alphaOf = (bg) => {
+          const a = bg.match(/(?:,|\/)\s*([\d.]+%?)\s*\)$/);
+          if (!a) return 1;
+          return a[1].endsWith('%') ? parseFloat(a[1]) / 100 : Number(a[1]);
+        };
         const paintedBg = (el) => {
           let e = el;
           while (e && e !== document.documentElement) {
-            const bg = getComputedStyle(e).backgroundColor;
-            const m = bg.match(/[\d.]+/g);
-            if (m && (m.length < 4 || Number(m[3]) > 0.55)) return bg;
+            const st = getComputedStyle(e);
+            if (st.backgroundImage && st.backgroundImage !== 'none') return null;
+            const bg = st.backgroundColor;
+            if (!readable.test(bg)) return null;
+            if (alphaOf(bg) > 0.55) return bg;
             e = e.parentElement;
           }
-          return getComputedStyle(document.body).backgroundColor;
+          const bodyBg = getComputedStyle(document.body).backgroundColor;
+          return readable.test(bodyBg) ? bodyBg : null;
+        };
+
+        // Text cut off by a container that clips it (fixed height plus
+        // overflow hidden, line clamps, ellipsis). Rectangle-based: the text's
+        // own rect against the clipping box. Returns the cut in px, or -1 when
+        // the text is hidden on purpose (a clipping container under 4px, such
+        // as a collapsed disclosure, or text slid fully out of view, such as a
+        // carousel slide); hidden text is skipped by every check. Scroll
+        // containers are meant to scroll and do not count as clipping.
+        const clipsText = (st) => /hidden|clip/.test(st.overflowX + ' ' + st.overflowY);
+        const clippedBy = (el, fontSize) => {
+          const range = document.createRange();
+          range.selectNodeContents(el);
+          const t = range.getBoundingClientRect();
+          if (!t.width || !t.height) return 0;
+          const slackY = Math.max(2, fontSize * 0.3);
+          const slackX = Math.max(2, fontSize * 0.15);
+          for (let a = el; a && a !== pane && a !== document.body; a = a.parentElement) {
+            const st = getComputedStyle(a);
+            if (!clipsText(st)) continue;
+            const ar = a.getBoundingClientRect();
+            if (ar.width < 4 || ar.height < 4) return -1;
+            const overlaps = t.left < ar.right && t.right > ar.left && t.top < ar.bottom && t.bottom > ar.top;
+            if (!overlaps) return -1;
+            const by = Math.max(t.bottom - ar.bottom - slackY, ar.top - t.top - slackY,
+                                t.right - ar.right - slackX, ar.left - t.left - slackX);
+            if (by > 0) return Math.round(by);
+          }
+          return 0;
+        };
+        // Content inside a horizontal scroller is meant to extend past the edge.
+        const inScrollerX = (el) => {
+          for (let a = el.parentElement; a && a !== pane && a !== document.body; a = a.parentElement) {
+            if (/auto|scroll/.test(getComputedStyle(a).overflowX)) return true;
+          }
+          return false;
         };
 
         const out = { label: pane.getAttribute('aria-label') || pane.id || `pane ${idx + 1}`,
-                      spillBelow: [], spillRight: [], underChrome: [], lowContrast: [] };
+                      spillBelow: [], spillRight: [], underChrome: [], lowContrast: [],
+                      clipped: [], contrastSkipped: 0,
+                      pageScrollX: panes.length ? 0
+                        : Math.max(0, document.scrollingElement.scrollWidth - window.innerWidth) };
 
         const isTextLeaf = (el) => {
           if (!el.innerText || !el.innerText.trim()) return false;
@@ -219,11 +290,14 @@ function luminance(css) {
 
           const txt = el.innerText.trim().slice(0, 56);
           const tag = { tag: el.tagName.toLowerCase(), cls: (el.className || '').toString().slice(0, 30), txt };
+          const cut = clippedBy(el, parseFloat(s.fontSize) || 16);
+          if (cut < 0) continue;
+          if (cut) out.clipped.push({ ...tag, by: cut });
 
           if (b.bottom > contentBottom + 1.5) {
             out.spillBelow.push({ ...tag, by: Math.round(b.bottom - contentBottom) });
           }
-          if (b.right > contentRight + 1.5 && !el.closest('[data-full-bleed]')) {
+          if (b.right > contentRight + 1.5 && !el.closest('[data-full-bleed]') && !inScrollerX(el)) {
             out.spillRight.push({ ...tag, by: Math.round(b.right - contentRight) });
           }
           for (const { r } of chromeRects) {
@@ -235,6 +309,7 @@ function luminance(css) {
 
           const fg = s.color;
           const bg = paintedBg(el);
+          if (bg === null || !readable.test(fg)) { out.contrastSkipped++; continue; }
           out.lowContrast.push({ ...tag, fg, bg });
         }
         out._minContrast = minContrast;
@@ -262,6 +337,12 @@ function luminance(css) {
       push('spill-right', report.spillRight);
       push('under-fixed-chrome', report.underChrome);
       push('low-contrast', badContrast);
+      push('clipped-text', report.clipped);
+      if (report.pageScrollX > 1) {
+        problems.push({ viewport: vp.name, check: 'page-scroll-x',
+          detail: `The page scrolls sideways by ${Math.round(report.pageScrollX)}px at this width.` });
+      }
+      vpSkipped += report.contrastSkipped;
 
       if (SHOTS) {
         await page.screenshot({
@@ -269,13 +350,14 @@ function luminance(css) {
         });
       }
     }
+    contrastSkipped = Math.max(contrastSkipped, vpSkipped);
     await page.close();
   }
 
   await browser.close();
 
   if (AS_JSON) {
-    console.log(JSON.stringify({ file: FILE, fonts: fontReport, problems }, null, 2));
+    console.log(JSON.stringify({ file: FILE, fonts: fontReport, contrastSkipped, problems }, null, 2));
   } else {
     console.log('RENDER GATE');
     console.log('===========');
@@ -286,6 +368,10 @@ function luminance(css) {
                   `body "${fontReport.bodyFamily}" ` +
                   `(${fontReport.bodyLoaded ? 'loaded' : 'NOT LOADED'}), ` +
                   `${fontReport.declaredFaces.length} @font-face declared`);
+    }
+    if (contrastSkipped) {
+      console.log(`Contrast: ${contrastSkipped} text elements skipped on fills the gate cannot ` +
+                  'compute (color-mix, oklch, gradients, images); check those by eye.');
     }
     console.log('');
     if (!problems.length) {

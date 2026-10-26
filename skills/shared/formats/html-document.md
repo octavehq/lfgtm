@@ -32,9 +32,11 @@ Format-specific audit for scrollable HTML documents. Run alongside the universal
 
 Run the render gate first. A scrolling document has no panes, so pass none: the contrast and font checks are what matter here, and they catch the two defects this format actually produces. The first is a light card nested inside a dark band that inherits the band's light text colour and paints near-white on near-white. The second is a brand font that was declared but never delivered, which falls back to a system face with nothing on screen to announce it.
 
+The gate also reports text cut off by a container that clips it (`clipped-text`) and, at the 375px viewport, a page that scrolls sideways (`page-scroll-x`).
+
 ```bash
 node <skill-dir>/../shared/scripts/render-gate.js <document.html> \
-  --chrome "nav,.toc,.sticky-nav" --viewports 1600x900,1280x800
+  --chrome "nav,.toc,.sticky-nav" --viewports 1600x900,1280x800,375x812
 ```
 
 - [ ] **Sticky nav present.** `<nav>` element with jump links, `position: sticky`, backdrop-filter for frosted glass. Links match existing sections only: no dead links, no missing links.
