@@ -2,7 +2,7 @@
 
 The microsite does six jobs, in this order. Each is one section. Cut nothing and add nothing: if a job has no grounded content, say so honestly rather than pad. Every section is scannable in about three seconds.
 
-Headers are **conclusion-carrying plain English** — a short claim that states the finding ("Early Resonate, ready to tip into Elevate"), NOT a two-word label and NOT theatrical/clickbait framing ("Where you're exposed", "The two things that stall this deal", "Have the counter ready before the next call" are all rejected; see editorial-rules on theatrical vs conclusion headers).
+Headers are **conclusion-carrying plain English**: one sentence that states the finding ("Pain is agreed, and the champion has not yet named who signs"), NOT a two-word label and NOT theatrical/clickbait framing ("Where you're exposed", "The two things that stall this deal", "Have the counter ready before the next call" are all rejected; see editorial-rules on theatrical vs conclusion headers).
 
 Hard rules that apply everywhere: no em-dashes or en-dashes (use commas, colons, "to", or middle dots). No emoji. One idea per line. Fixed card shapes with the density caps below. Every named person, quote, competitor, and count traces to a real tool result.
 
@@ -10,7 +10,9 @@ Hard rules that apply everywhere: no em-dashes or en-dashes (use commas, colons,
 
 ## Hero (chrome, not a job)
 
-Workspace-company logo (verified real asset) + methodology badge "Resonate → Elevate → Compel". Eyebrow "Deal coaching plan". H1 is a claim about this deal, with the pivotal words in color emphasis (e.g. "DocuSign: convert agreed pain into internal urgency"). Then meta chips: **Buyer** (real name + title), **Persona**, **Segment**. Then a three-step **stage rail** (Resonate / Elevate / Compel with objectives), current stage highlighted.
+Workspace-company logo (verified real asset). Eyebrow "Deal coaching plan". H1 is a claim about this deal, with the pivotal words in color emphasis (e.g. "Acme: convert agreed pain into internal urgency"). Then meta chips: **Buyer** (real name + title), **Persona**, **Segment**.
+
+The methodology badge and the **stage rail** (current stage highlighted) appear only when a methodology is the workspace's own or the user asked for one by name ([information principles #18](../../shared/information-principles.md#reading-calls-and-deals)), and they carry that methodology's step names and objectives. Resonate → Elevate → Compel is used only when the workspace has it on file or the user asks for that framing. With none, omit both; Job 1 reads the CRM stage and demonstrated readiness, Job 4 previews the next CRM stages, and the Job 6 rubric uses the stage's own definition of good.
 
 ## Job 1 — Where this deal stands
 
@@ -55,7 +57,7 @@ The biggest risks already live in the account, each with its counter. **Not lock
 A quick self-check and the bar for a strong stage.
 
 - **Quiz (`.quiz`):** 3 questions on this stage's judgment. Each = a question, 3 options, and an explanation revealed on click. Native `<button>`s, keyboard-reachable, works without JS. Ground the scenarios in this deal (the real objection, the real competitor, the stage-transition tell).
-- **Rubric (`.card` + `.rubric`):** 4 rows, criterion + what good looks like, one line each, from the stage's coaching rubric in `coaching-agents.md`.
+- **Rubric (`.card` + `.rubric`):** 4 rows, criterion + what good looks like, one line each, from the workspace methodology's description of good for this stage (the `coaching-agents.md` rubric only under Resonate/Elevate/Compel framing).
 
 ## Footer
 
@@ -82,6 +84,8 @@ Provenance line (which calls, which buyer, which Motion ICP cell; note where dea
 ## Review checklist (run against the generated file)
 
 - [ ] Six jobs present, in order; hero has verified real logo + real buyer name/title.
+- [ ] Methodology badge and rail show the workspace's own steps, or are absent; no Resonate/Elevate/Compel unless it is on file or was requested.
+- [ ] Personal facts from calls left out and counted in the delivery message; each heard-on-call line and risk traces to a quote or record.
 - [ ] Headers are conclusion-carrying, none theatrical or clickbait.
 - [ ] Zero em/en-dashes (lint passes).
 - [ ] Every named person, quote, competitor, and count traces to a real tool result; unverified deal data is a placeholder, not invented.

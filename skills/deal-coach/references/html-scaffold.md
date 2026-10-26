@@ -10,7 +10,7 @@ Self-contained, single HTML file. The only external dependency is Google Fonts (
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Deal Coaching: [Company] · Resonate → Elevate → Compel</title>
+<title>Deal Coaching: [Company]</title>
 <meta property="og:title" content="Deal Coaching: [Company]">
 <meta property="og:description" content="[1-2 sentence summary a stranger understands]">
 <meta property="og:image" content="assets/og.png">
@@ -44,7 +44,7 @@ Paste this whole block into `<style>` after the `@font-face` rules. Replace the 
   --brand-negative: #b42318; --brand-negative-weak: #fef3f2;
   --brand-band: linear-gradient(135deg, #0a0828, #2e1973 45%, #582ecc 78%, #a081f5 108%); --brand-band-dark: #080724;
   --emph: #582ecc; --emph-dark: #a384f6;
-  --font-display: 'Alliance No 2', system-ui, Arial, sans-serif; --font-body: 'Inter', -apple-system, sans-serif; --font-mono: 'Geist Mono', monospace;
+  --font-display: 'Alliance No 2', system-ui, Arial, sans-serif; --font-body: 'Inter', -apple-system, sans-serif; --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --radius-sm: 8px; --radius: 12px; --radius-md: 16px; --radius-lg: 20px; --radius-pill: 96px;
   --shadow-sm: 0 1px 2px rgba(20,20,43,0.06); --shadow: 1px 1px 12px rgba(20,20,43,0.08); --shadow-lg: 0 8px 24px rgba(10,8,40,0.12);
   --gap: 1rem; --gap-lg: 2rem;
@@ -82,7 +82,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, details.path > sum
 
 /* stage rail */
 .rail { display: flex; align-items: stretch; margin-top: 0.25rem; border: 1px solid var(--brand-border-dark); border-radius: var(--radius); overflow: hidden; }
-.rail-step { flex: 1; padding: 0.7rem 0.9rem; display: flex; flex-direction: column; gap: 0.15rem; border-right: 1px solid var(--brand-border-dark); }
+.rail-step { flex: 1; min-width: 0; padding: 0.7rem 0.9rem; display: flex; flex-direction: column; gap: 0.15rem; border-right: 1px solid var(--brand-border-dark); }
 .rail-step:last-child { border-right: 0; }
 .rail-step .s-name { font-family: var(--font-display); font-weight: 400; font-size: 1rem; }
 .rail-step .s-obj { font-size: 0.72rem; color: var(--brand-on-dark-muted); }
@@ -181,6 +181,7 @@ details.path .p-body { padding: 0 1.15rem 1.15rem; display: flex; flex-direction
 /* Job 5 risk list (scales to any number of risks) */
 .risk-list { display: flex; flex-direction: column; gap: var(--gap); }
 .risk-pair { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--brand-border-soft); border-radius: var(--radius); overflow: hidden; }
+.risk-pair > * { min-width: 0; }
 .risk-pair .r-risk { padding: 0.9rem 1.15rem; border-left: 3px solid var(--brand-negative); background: var(--brand-negative-weak); }
 .risk-pair .r-counter { padding: 0.9rem 1.15rem; border-left: 3px solid var(--brand-positive); background: var(--brand-positive-weak); }
 .risk-pair .label { margin-bottom: 0.3rem; }
@@ -246,7 +247,8 @@ footer .src { max-width: 60ch; }
 <header class="hero"><div class="wrap">
   <div class="hero-top">
     <img class="brand-logo" src="data:image/png;base64,<LOGO>" alt="[Workspace Company]" width="133" height="32">
-    <span class="method-badge">Resonate → Elevate → Compel</span>
+    <!-- Only when the workspace has a methodology on file or the user asked for one: its own stage names. Otherwise omit the badge. -->
+    <span class="method-badge">[Stage 1] → [Stage 2] → [Stage 3]</span>
   </div>
   <div>
     <p class="eyebrow">Deal coaching plan</p>
@@ -257,10 +259,11 @@ footer .src { max-width: 60ch; }
     <span class="chip">Persona: <b>[Persona]</b></span>
     <span class="chip">Segment: <b>[Segment]</b></span>
   </div>
+  <!-- Same condition as the badge: the workspace's own stages and objectives, or no rail. -->
   <div class="rail" role="list" aria-label="Methodology stages">
-    <div class="rail-step current" role="listitem"><span class="s-name">Resonate</span><span class="s-obj">Drive awareness</span></div>
-    <div class="rail-step" role="listitem"><span class="s-name">Elevate</span><span class="s-obj">Drive urgency</span></div>
-    <div class="rail-step" role="listitem"><span class="s-name">Compel</span><span class="s-obj">Drive action</span></div>
+    <div class="rail-step current" role="listitem"><span class="s-name">[Stage 1]</span><span class="s-obj">[Objective]</span></div>
+    <div class="rail-step" role="listitem"><span class="s-name">[Stage 2]</span><span class="s-obj">[Objective]</span></div>
+    <div class="rail-step" role="listitem"><span class="s-name">[Stage 3]</span><span class="s-obj">[Objective]</span></div>
   </div>
 </div></header>
 
@@ -268,7 +271,7 @@ footer .src { max-width: 60ch; }
   <section class="sec" id="stands">   <!-- Job 1: gloss + verdict + stand(read + placeholder) --></section>
   <section class="sec" id="head">     <!-- Job 2: mindset + heard-list --></section>
   <section class="sec" id="say">      <!-- Job 3: goals + vp-list + 3 tt --></section>
-  <section class="sec" id="path">     <!-- Job 4: ready + details.path (Elevate, Compel) --></section>
+  <section class="sec" id="path">     <!-- Job 4: ready + details.path (one per stage ahead) --></section>
   <section class="sec" id="exposed">  <!-- Job 5: risk-list of N risk-pair --></section>
   <section class="sec" id="practice"> <!-- Job 6: quiz + rubric --></section>
 </main>
