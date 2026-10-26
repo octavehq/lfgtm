@@ -36,11 +36,13 @@
     .section { margin-bottom: clamp(3rem, 6vh, 5rem); padding-top: 1rem; }
     .section-number { font-family: var(--font-mono); font-size: 0.75rem; color: var(--brand-primary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.25rem; }
     .section-title { font-family: var(--font-display); font-size: clamp(1.4rem, 2.5vw, 2rem); font-weight: 700; margin-bottom: 0.5rem; }
+    /* .section-subtitle is the section's lede inside .section-body: a sentence that adds information, never a muted second half of the title */
     .section-subtitle { font-size: clamp(0.85rem, 1.2vw, 1rem); color: var(--text-secondary); margin-bottom: 1.5rem; }
 
     /* === Collapsible Sections (details/summary) === */
     details.section { border-bottom: 1px solid var(--border); padding-bottom: 2rem; }
     details.section summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 0.75rem; }
+    details.section summary::-webkit-details-marker { display: none; }
     details.section summary::before { content: "\25B6"; font-size: 0.6em; color: var(--brand-primary); transition: transform 0.2s ease; }
     details.section[open] summary::before { transform: rotate(90deg); }
     details.section .section-body { margin-top: 1.5rem; }
@@ -59,6 +61,7 @@
     .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(0.75rem, 1.5vw, 1.25rem); }
     .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(0.75rem, 1.5vw, 1.25rem); }
     .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: clamp(0.75rem, 1.5vw, 1rem); }
+    .grid-2 > *, .grid-3 > *, .grid-4 > *, .grid-5 > * { min-width: 0; }
 
     /* === Callout Box === */
     .callout { padding: clamp(1rem, 2vh, 1.5rem); border-radius: var(--radius-lg); background: var(--bg-card); border-left: 4px solid var(--brand-primary); }
@@ -89,6 +92,7 @@
     .badge-error { background: rgba(248, 113, 113, 0.15); color: var(--error); }
 
     /* === Highlighted Text (for positioning anchors) === */
+    /* These pale text colors are for dark presets; on a light preset use the -700 shade of each hue so the text keeps 4.5:1 */
     .highlight { padding: 0.1rem 0.4rem; border-radius: 3px; font-weight: 600; }
     .highlight-category { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
     .highlight-persona { background: rgba(59, 130, 246, 0.2); color: #93c5fd; }
@@ -107,6 +111,9 @@
       .canvas-split { grid-template-columns: 1fr; }
       .timeline-phases { overflow-x: auto; }
     }
+
+    @media (max-width: 520px) { .meta-badges { display: none; } }
+    @media (max-width: 375px) { .doc-container { padding-left: 16px; padding-right: 16px; } }
 
     /* === Print === */
     @media print {
@@ -193,6 +200,8 @@
 </body>
 </html>
 ```
+
+**Robustness:** text containers grow and wide grids scroll inside their own container, never clipped (presentation principles [9i, 9k, 9l](../../shared/presentation-principles.md)). If the user asks for a positioning map or any 2x2, follow principle 15b: labels inside each box, no arrows, the item's current box marked, and the condition that moves it written as text.
 
 **Self-contained:** Inline CSS, zero external dependencies (except Google Fonts). No JavaScript frameworks.
 
