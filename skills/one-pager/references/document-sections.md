@@ -88,7 +88,7 @@ This section's format is validated — big transformation numbers ("$14M → $3M
 </section>
 ```
 
-Customer logos (nice-to-have, not required): if the reference customer entity has a logo or known domain, show a small mark next to the attribution. Resolution order: (1) logo stored on the Octave reference/proof-point entity, (2) `get_external_brand_logo` for the customer's domain, (3) Google favicon lookup (`https://www.google.com/s2/favicons?domain=<domain>&sz=64`). Only include it if the resolved image is a real, recognizable mark — a generic globe/blank favicon is worse than no logo. Omit silently on failure.
+Customer logos (nice-to-have, not required): if the reference customer entity has a logo or known domain, show a small mark next to the attribution. Resolution order: (1) logo stored on the Octave reference/proof-point entity, (2) `get_external_brand_logo` for the customer's domain, (3) Google favicon lookup (`https://www.google.com/s2/favicons?domain=<domain>&sz=64`). Show the mark on the page surface as delivered, with no forced white chip on a light page, and check it stays visible on a dark preset. Only include it if the resolved image is a real, recognizable mark; a generic globe/blank favicon is worse than no logo. Omit silently on failure.
 
 **Next Steps:**
 ```html
