@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "skills": {
     "abm": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -11,6 +11,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Account plans now follow the champion's internal path after a first enterprise meeting, keep personal details out, and hold up at phone width.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",
@@ -44,7 +50,7 @@
       ]
     },
     "ads": {
-      "version": "1.0.4",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -53,6 +59,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-26",
+          "notes": "Ad creative built from call language now leaves out anything personal a buyer said and reports how many details were dropped.",
+          "review": false
+        },
         {
           "version": "1.0.4",
           "date": "2026-10-20",
@@ -86,7 +98,7 @@
       ]
     },
     "ads-resonance": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -95,6 +107,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-26",
+          "notes": "The resonance report now states each section's finding in its heading and reads cleanly on a phone.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -122,7 +140,7 @@
       ]
     },
     "asset-manager": {
-      "version": "1.2.0",
+      "version": "1.2.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -131,6 +149,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.1",
+          "date": "2026-10-26",
+          "notes": "Shared guidance: read calls and deals in their setting, keep personal details out, one-sentence headings, and render checks for clipped text, sideways scroll and colours the contrast check can't read.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-13",
@@ -170,7 +194,7 @@
       ]
     },
     "audit": {
-      "version": "1.0.3",
+      "version": "1.0.4",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -179,6 +203,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.4",
+          "date": "2026-10-26",
+          "notes": "Shared guidance: read calls and deals in their setting, keep personal details out, one-sentence headings, and render checks for clipped text, sideways scroll and colours the contrast check can't read.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -206,7 +236,7 @@
       ]
     },
     "battlecard-doc": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -215,6 +245,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Battlecards read deal calls in their setting, keep personal details out, and no longer clip comparison rows or win-rate labels.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",
@@ -248,7 +284,7 @@
       ]
     },
     "call-analyzer": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -257,6 +293,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Call scores now judge each conversation against the meeting it was, so a strong first enterprise meeting without a dated next step is no longer marked down.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",
@@ -290,7 +332,7 @@
       ]
     },
     "champion-deal-room": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -299,6 +341,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Champion deal rooms lay out the path to yes as the champion's own internal route and keep personal details out of a document that travels inside the buyer's company.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",
@@ -332,7 +380,7 @@
       ]
     },
     "deal-coach": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -341,6 +389,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Coaching plans now show your workspace's own sales methodology, and they leave the methodology badge off when none is on file.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",
@@ -374,7 +428,7 @@
       ]
     },
     "deck": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -383,6 +437,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-26",
+          "notes": "Deck slides now use one-sentence headlines, and the pre-ship checks catch text cut off inside fixed-size cards.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -410,7 +470,7 @@
       ]
     },
     "digest": {
-      "version": "1.1.4",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -419,6 +479,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Digests keep personal details out, open the evidence section with its quote count, and offer the follow-up prompt as a copy-ready card.",
+          "review": false
+        },
         {
           "version": "1.1.4",
           "date": "2026-10-12",
@@ -458,7 +524,7 @@
       ]
     },
     "generate": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -467,6 +533,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Generated follow-ups match the meeting they follow and never repeat personal details from a call.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",
@@ -500,7 +572,7 @@
       ]
     },
     "get-brand-components": {
-      "version": "1.3.2",
+      "version": "1.4.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -509,6 +581,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.4.0",
+          "date": "2026-10-26",
+          "notes": "Brand kits now define a mono token with a complete fallback and never put a logo on a white plate.",
+          "review": false
+        },
         {
           "version": "1.3.2",
           "date": "2026-10-13",
@@ -554,7 +632,7 @@
       ]
     },
     "icp-refine": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -563,6 +641,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "ICP refinement now reads won and lost outcomes straight from the deal records and no longer counts a normal early-stage stall against fit.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",
@@ -596,7 +680,7 @@
       ]
     },
     "insights": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -605,6 +689,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Insights counts concerns that praise the product's reach as buying signals, links every theme to its source call, and keeps personal details out.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",
@@ -638,7 +728,7 @@
       ]
     },
     "library": {
-      "version": "1.0.4",
+      "version": "1.0.5",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -649,6 +739,12 @@
         "get_entity_schema"
       ],
       "changelog": [
+        {
+          "version": "1.0.5",
+          "date": "2026-10-26",
+          "notes": "Shared guidance: read calls and deals in their setting, keep personal details out, one-sentence headings, and render checks for clipped text, sideways scroll and colours the contrast check can't read.",
+          "review": false
+        },
         {
           "version": "1.0.4",
           "date": "2026-10-12",
@@ -694,7 +790,7 @@
         {
           "version": "1.2.0",
           "date": "2026-10-23",
-          "notes": "Leads with lookalike deals (the closest won and lost deals and what happened on their calls, with counts and bases), charts what each attendee is likely to raise, recommends real library content, structures the pitch around the workspace's own framework only when one exists, and ends on one to three next best actions (move, why now, strategy source, follow-through). Adds copy-ready keep-going prompts and a Markdown delivery for chat and agent hosts.",
+          "notes": "Leads with lookalike deals (the closest won and lost deals and what happened on their calls, with counts and bases), charts what each attendee is likely to raise, recommends real library content, structures the pitch around the workspace's own framework only when one exists, and ends on one to three next best actions (move, why now, strategy source, follow-through). Adds copy-ready keep-going prompts and a Markdown delivery for chat and agent hosts. Meeting prep's keep-going prompts are now copy-ready cards with a single Copy prompt button, and personal details stay out of the page and its prompts.",
           "review": false
         },
         {
@@ -730,7 +826,7 @@
       ]
     },
     "microsite": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -739,6 +835,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-26",
+          "notes": "Account microsites built from calls use a call to action that fits the deal's stage and leave personal details out.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -766,7 +868,7 @@
       ]
     },
     "one-pager": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -775,6 +877,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Demo follow-up one-pagers propose a next step that fits the meeting and leave personal details from the call off the page.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",
@@ -808,7 +916,7 @@
       ]
     },
     "pipeline": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -817,6 +925,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Deal plans now read each deal in its setting, so a first enterprise meeting leads to the champion's next internal step instead of an early data or pilot ask.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",
@@ -850,7 +964,7 @@
       ]
     },
     "positioning": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -859,6 +973,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Positioning documents no longer clip their value-prop grid on phones and show no stray disclosure markers.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",
@@ -892,7 +1012,7 @@
       ]
     },
     "product-launch": {
-      "version": "1.0.3",
+      "version": "1.0.4",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -901,6 +1021,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.4",
+          "date": "2026-10-26",
+          "notes": "Shared guidance: read calls and deals in their setting, keep personal details out, one-sentence headings, and render checks for clipped text, sideways scroll and colours the contrast check can't read.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -928,7 +1054,7 @@
       ]
     },
     "proposal": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -937,6 +1063,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Proposals only suggest a pilot or data request when the deal's stage supports it, keep personal details out, and follow the small-screen rules.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",
@@ -970,7 +1102,7 @@
       ]
     },
     "prospector": {
-      "version": "1.0.3",
+      "version": "1.0.4",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -979,6 +1111,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.4",
+          "date": "2026-10-26",
+          "notes": "Shared guidance: read calls and deals in their setting, keep personal details out, one-sentence headings, and render checks for clipped text, sideways scroll and colours the contrast check can't read.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -1006,7 +1144,7 @@
       ]
     },
     "public-changelog": {
-      "version": "1.0.1",
+      "version": "1.0.2",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1015,6 +1153,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.2",
+          "date": "2026-10-26",
+          "notes": "Shared guidance: read calls and deals in their setting, keep personal details out, one-sentence headings, and render checks for clipped text, sideways scroll and colours the contrast check can't read.",
+          "review": false
+        },
         {
           "version": "1.0.1",
           "date": "2026-10-06",
@@ -1030,7 +1174,7 @@
       ]
     },
     "qual-doctor": {
-      "version": "1.0.3",
+      "version": "1.0.4",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1039,6 +1183,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.0.4",
+          "date": "2026-10-26",
+          "notes": "Shared guidance: read calls and deals in their setting, keep personal details out, one-sentence headings, and render checks for clipped text, sideways scroll and colours the contrast check can't read.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -1066,7 +1216,7 @@
       ]
     },
     "research": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1075,6 +1225,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Call and demo prep now proposes a next step sized to the meeting and the deal, with personal details kept out of the brief.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",
@@ -1108,7 +1264,7 @@
       ]
     },
     "signals": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1117,6 +1273,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-26",
+          "notes": "Signals no longer flags a first enterprise meeting without a dated next step as a risk, and keeps personal details out of the briefing.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -1144,7 +1306,7 @@
       ]
     },
     "train": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1153,6 +1315,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-26",
+          "notes": "The onboarding primer teaches the workspace's own sales methodology on the persona slide and fits phone screens without clipping.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -1180,7 +1348,7 @@
       ]
     },
     "win-loss-report": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1189,6 +1357,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Win/loss reports group losses by the reasons your CRM recorded, link every driver to its quote, and keep win and loss figures readable.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",
