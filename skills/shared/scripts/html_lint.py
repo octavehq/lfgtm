@@ -45,6 +45,9 @@ class Document(HTMLParser):
             self.ids.add(a['id'])
         if tag == 'a' and not a.get('href') and (a.get('role') == 'button' or 'btn' in a.get('class', '')):
             self.inert_links += 1
+        if tag == 'br':
+            for head in self.open_heads:
+                head[1].append(' ')
         if tag not in {'meta', 'link', 'img', 'br', 'hr', 'input', 'source', 'wbr'}:
             self.tags.append(tag)
             if tag == 'h1' or 'vk-display' in (a.get('class') or '').split():
@@ -74,7 +77,9 @@ class Document(HTMLParser):
         if tag in self.tags:
             depth = len(self.tags) - self.tags[::-1].index(tag)
             while self.open_heads and self.open_heads[-1][0] >= depth:
-                self.headlines.append(' '.join(self.open_heads.pop()[1]).split())
+                # Joined without a separator so punctuation after an inline tag
+                # stays on its word; a <br> adds its own space.
+                self.headlines.append(''.join(self.open_heads.pop()[1]).split())
             self.tags = self.tags[:len(self.tags) - 1 - self.tags[::-1].index(tag)]
 
     def handle_data(self, data):

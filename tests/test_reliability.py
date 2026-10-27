@@ -190,6 +190,11 @@ print('201' if method=='POST' else '200',end='')
         self.assertIn('Headline runs 17 words',lint.lint(path,policy)[1][0])
         path.write_text('<!DOCTYPE html><h1>Twelve words fit <em>easily</em> on three lines at the hero size here</h1>')
         self.assertEqual(lint.lint(path,policy),([],[]))
+        sixteen='one two three four five six seven eight nine ten eleven twelve thirteen fourteen <em>fifteen</em>, <b>Acme</b>.'
+        path.write_text(f'<!DOCTYPE html><h1>{sixteen}</h1>')
+        self.assertEqual(lint.lint(path,policy),([],[]))
+        path.write_text(f'<!DOCTYPE html><h1>{sixteen}<br>seventeen</h1>')
+        self.assertIn('Headline runs 17 words',lint.lint(path,policy)[1][0])
 
     def test_lint_allows_google_fonts_unless_embedded(self):
         path=self.root/'a.html';policy=dict(lint.DEFAULT)
