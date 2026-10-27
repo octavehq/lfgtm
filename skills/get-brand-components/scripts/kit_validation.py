@@ -47,6 +47,54 @@ ELEMENTS = set('svg g path rect circle ellipse line polyline polygon defs linear
 ATTRS = set('id viewBox width height x y x1 y1 x2 y2 cx cy r rx ry d points fill fill-rule fill-opacity stroke stroke-width stroke-linecap stroke-linejoin stroke-miterlimit stroke-dasharray stroke-dashoffset stroke-opacity opacity transform gradientTransform gradientUnits offset stop-color stop-opacity clip-path clip-rule mask maskUnits preserveAspectRatio href role aria-label'.split())
 
 
+SVG_MARKUP_TAG = re.compile(r'<(/?)([A-Za-z][\w:.-]*)((?:\s+[^\s=>/]+(?:\s*=\s*(?:"[^"]*"|\'[^\']*\'|[^\s"\'>]+))?)*)\s*(/?)>')
+SVG_MARKUP_ATTR = re.compile(r'([^\s=>/]+)(?:\s*=\s*("[^"]*"|\'[^\']*\'|[^\s"\'>]+))?')
+
+
+def _safe_svg_value(value):
+    if re.search(r'url\s*\(', value, re.I) and not re.fullmatch(r'url\(#[\w.-]+\)', value.strip()):
+        return False
+    return not re.search(r'javascript:|data:|https?:|[<>]|expression\s*\(', value, re.I)
+
+
+def sanitize_svg_markup(raw):
+    """Icon markup the renderer accepts: style declarations it allows become presentation attributes, and style,
+    class, data-* and every other attribute outside ATTRS are dropped. Raises ValueError on an element outside
+    ELEMENTS, so a caller can skip that icon. svg_root still validates the result."""
+    raw = re.sub(r'<!--.*?-->', '', raw, flags=re.S)
+    if re.search(r'<!|<\?', raw):
+        raise ValueError('SVG declarations are not allowed')
+
+    def tag(m):
+        closing, name, attrs, selfclose = m.groups()
+        if name.split(':')[-1] not in ELEMENTS:
+            raise ValueError(f'unsupported SVG element: {name}')
+        if closing:
+            return f'</{name}>'
+        kept, styled = {}, {}
+        for am in SVG_MARKUP_ATTR.finditer(attrs or ''):
+            key, value = am.group(1), am.group(2) or ''
+            if value[:1] in ('"', "'"):
+                value = value[1:-1]
+            if key == 'xlink:href':
+                key = 'href'
+            if key == 'style':
+                for decl in value.split(';'):
+                    prop, _, val = decl.partition(':')
+                    prop, val = prop.strip(), val.strip()
+                    # a CSS transform uses units and functions the transform attribute does not, so it is dropped
+                    if prop in ATTRS and prop != 'transform' and val and _safe_svg_value(val):
+                        styled[prop] = val
+            elif key in ATTRS:
+                kept[key] = value
+        for prop, val in styled.items():  # an inline style beats the attribute it shadows, as in a browser
+            kept[prop] = val
+        out = ''.join(f' {k}="{v.replace(chr(34), "&quot;")}"' for k, v in kept.items())
+        return f'<{name}{out}{"/" if selfclose else ""}>'
+
+    return SVG_MARKUP_TAG.sub(tag, raw)
+
+
 def svg_root(raw):
     if re.search(r'<!DOCTYPE|<!ENTITY', raw, re.I):
         raise ValueError('SVG declarations are not allowed')
