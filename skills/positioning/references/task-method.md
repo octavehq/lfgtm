@@ -19,6 +19,17 @@ Build one strategy row per selected cell:
 - Committee roles: who experiences, champions, evaluates, funds, and vetoes.
 - Applicable proof, scope/source, counterevidence, and unresolved claim.
 
+Cover every audience the request names. When the request names two groups
+("enablement and content leaders"), each gets its own cell or its own row
+in the framework, matrix and committee map; fold one into another only when
+the operator agrees, and say so in the document. A line saying an audience
+has given no feedback, or that no proof exists for it, follows a search of
+its calls, contacts and findings and names what was searched
+([rule 23](../../shared/information-principles.md#claims-against-the-data)).
+An operating estimate or typical figure ("about 15 minutes a week") keeps
+its qualifier in the convincer, the pitch, the matrix and every other place
+it appears (rule 26).
+
 Derive the eight lenses from these rows. Explain the primary audience
 choice; do not automatically prioritize User + Champion. Map the customer's
 operating lifecycle separately from the buying journey. Homepage hierarchy
