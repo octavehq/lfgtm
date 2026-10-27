@@ -34,7 +34,7 @@ The current stage's Buyer Mindset (from the Motion ICP `salesMethodology` block)
 
 The concrete aims for the current stage, then how to hit them. This is the meat.
 
-- **Goals (`.goals`, numbered):** exactly the 5 outcomes to achieve this stage before advancing. Each one line. Draw from the stage Talking Points, made specific to this account.
+- **Goals (`.goals`, numbered):** one outcome per grounded priority for this stage, at most 5. Each one line. Draw from the stage Talking Points, made specific to this account.
 - **Value props to land (`.vp-list`):** 3 to 4 belief statements to plant (from the stage Value Propositions). A clean bulleted list, NOT pills/chips (chips read as raw-metadata badges).
 - **Talk tracks (`.tt`):** 3 cards, each = a label that maps to a goal ("Talking point › goal 4 · expose the hidden cost"), a verbatim thing to say (in quotes), and a one-line note. **Weave the account's real named pains into the talk tracks** (e.g. "regional content fragmentation", "e-learning isn't landing") — this is what separates it from a generic methodology handout.
 
@@ -72,7 +72,7 @@ Provenance line (which calls, which buyer, which Motion ICP cell; note where dea
 | Job 1 evidence rows | ≤ 4, one line each |
 | Job 1 placeholders | 1 |
 | Job 2 heard-on-call | ≤ 4, one line each |
-| Job 3 goals | one goal per grounded priority |
+| Job 3 goals | one per grounded priority, at most 5 |
 | Job 3 value props | 3 to 4 |
 | Job 3 talk tracks | 3 |
 | Job 4 readiness tells | 4 |
@@ -89,7 +89,7 @@ Provenance line (which calls, which buyer, which Motion ICP cell; note where dea
 - [ ] Headers are conclusion-carrying, none theatrical or clickbait.
 - [ ] Zero em/en-dashes (lint passes).
 - [ ] Every named person, quote, competitor, and count traces to a real tool result; unverified deal data is a placeholder, not invented.
-- [ ] Job 3 goals number one goal per grounded priority; value props are a clean list, not chips; talk tracks name the account's real pains and map to goals.
+- [ ] Job 3 goals number one per grounded priority, at most 5; value props are a clean list, not chips; talk tracks name the account's real pains and map to goals.
 - [ ] Job 5 renders one card per real risk (not forced to two); no invented risk, none dropped for layout.
 - [ ] Responsive at 375px (no horizontal overflow); print flattens (details open, nav hidden, cards avoid breaks); keyboard focus visible.
 - [ ] Any CSS-grid list item wrapping an inline `<em>` keeps it inline (item text in a `<span>`).
