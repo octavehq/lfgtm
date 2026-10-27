@@ -14,7 +14,7 @@
         {
           "version": "1.2.0",
           "date": "2026-10-26",
-          "notes": "Account plans now follow the champion's internal path after a first enterprise meeting, keep personal details out, and hold up at phone width.",
+          "notes": "Account plans now follow the champion's internal path after a first enterprise meeting, keep personal details out, and hold up at phone width. Regression notes no longer name real accounts.",
           "review": false
         },
         {
@@ -296,7 +296,7 @@
         {
           "version": "1.2.0",
           "date": "2026-10-26",
-          "notes": "Call scores now judge each conversation against the meeting it was, so a strong first enterprise meeting without a dated next step is no longer marked down.",
+          "notes": "Call scores now judge each conversation against the meeting it was, so a strong first enterprise meeting without a dated next step is no longer marked down. It also flags a seller's number or customer story the record doesn't back, keeps quotation marks for exact words, and coaches talk time when the buyer got little room to speak.",
           "review": false
         },
         {
@@ -344,7 +344,7 @@
         {
           "version": "1.2.0",
           "date": "2026-10-26",
-          "notes": "Champion deal rooms lay out the path to yes as the champion's own internal route and keep personal details out of a document that travels inside the buyer's company.",
+          "notes": "Champion deal rooms lay out the path to yes as the champion's own internal route and keep personal details out of a document that travels inside the buyer's company. Proof cards use a reference only as its record states it.",
           "review": false
         },
         {
@@ -392,7 +392,7 @@
         {
           "version": "1.2.0",
           "date": "2026-10-26",
-          "notes": "Coaching plans now show your workspace's own sales methodology, and they leave the methodology badge off when none is on file.",
+          "notes": "Coaching plans now show your workspace's own sales methodology, and they leave the methodology badge off when none is on file. Goals follow the grounded priorities up to five, talk tracks use only proof the record supports, colours and fonts come from your brand kit, the current stage reads clearly in the stage strip, and a deal with no CRM opportunity gets a one-line note in place of an empty card.",
           "review": false
         },
         {
@@ -536,7 +536,7 @@
         {
           "version": "1.2.0",
           "date": "2026-10-26",
-          "notes": "Generated follow-ups match the meeting they follow and never repeat personal details from a call.",
+          "notes": "Generated follow-ups match the meeting they follow and never repeat personal details from a call. A figure or customer story the seller told on the call goes into the follow-up only as the record states it.",
           "review": false
         },
         {
@@ -584,7 +584,7 @@
         {
           "version": "1.4.0",
           "date": "2026-10-26",
-          "notes": "Brand kits now define a mono token with a complete fallback and never put a logo on a white plate.",
+          "notes": "Brand kits now define a mono token with a complete fallback and never put a logo on a white plate. A capture example no longer names a real company.",
           "review": false
         },
         {
@@ -880,7 +880,7 @@
         {
           "version": "1.2.0",
           "date": "2026-10-26",
-          "notes": "Demo follow-up one-pagers propose a next step that fits the meeting and leave personal details from the call off the page.",
+          "notes": "Demo follow-up one-pagers propose a next step that fits the meeting and leave personal details from the call off the page. Proof on the page comes from the proof record, never from an unsupported claim made on the call.",
           "review": false
         },
         {
@@ -928,7 +928,7 @@
         {
           "version": "1.2.0",
           "date": "2026-10-26",
-          "notes": "Deal plans now read each deal in its setting, so a first enterprise meeting leads to the champion's next internal step instead of an early data or pilot ask.",
+          "notes": "Deal plans now read each deal in its setting, so a first enterprise meeting leads to the champion's next internal step instead of an early data or pilot ask. Draft wording repeats a proof point or customer story only as the record states it.",
           "review": false
         },
         {
@@ -1066,7 +1066,7 @@
         {
           "version": "1.2.0",
           "date": "2026-10-26",
-          "notes": "Proposals only suggest a pilot or data request when the deal's stage supports it, keep personal details out, and follow the small-screen rules.",
+          "notes": "Proposals only suggest a pilot or data request when the deal's stage supports it, keep personal details out, and follow the small-screen rules. Regression notes no longer name real accounts.",
           "review": false
         },
         {
@@ -1228,7 +1228,7 @@
         {
           "version": "1.2.0",
           "date": "2026-10-26",
-          "notes": "Call and demo prep now proposes a next step sized to the meeting and the deal, with personal details kept out of the brief.",
+          "notes": "Call and demo prep now proposes a next step sized to the meeting and the deal, with personal details kept out of the brief. Prep also checks the seller's earlier claims against the proof records.",
           "review": false
         },
         {
