@@ -51,7 +51,7 @@ class BrowserChecks(unittest.TestCase):
     def test_deck_navigation_edit_export_mobile(self):
         script=(ROOT/'skills/deck/assets/presentation.js').read_text()
         css='@media(min-width:721px){.slide{display:none}.slide.active{display:block}}'
-        path=self.root/'deck.html';path.write_text(f'''<!doctype html><html data-content-version="fixture-1"><style>{css}</style><div id="deckStage"><section class="slide"><p data-editable>First</p></section><section class="slide"><p>Second</p></section></div><div id="deckControls"></div><button id="editToggle">Edit</button><button data-export-html>Export</button><script>{script}</script></html>''')
+        path=self.root/'deck.html';path.write_text(f'''<!doctype html><html data-content-version="fixture-1" data-deck-edit><style>{css}</style><div id="deckStage"><section class="slide"><p data-editable>First</p></section><section class="slide"><p>Second</p></section></div><div id="deckControls"></div><button id="editToggle">Edit</button><button data-export-html>Export</button><script>{script}</script></html>''')
         self.page.goto(path.as_uri());self.page.get_by_text('Next',exact=True).click()
         self.assertEqual(self.page.locator('.slide.active').inner_text(),'Second')
         self.page.get_by_text('Previous',exact=True).click();self.page.get_by_text('Edit',exact=True).click()
@@ -60,11 +60,15 @@ class BrowserChecks(unittest.TestCase):
         export=self.root/'export.html';info.value.save_as(export)
         self.assertIn('Revised',export.read_text())
         self.page.goto(export.as_uri());self.assertEqual(self.page.locator('[contenteditable]').count(),0)
+        self.assertEqual(self.page.locator('#editToggle,[data-export-html],html[data-deck-edit]').count(),0)  # the export is the shareable file
         self.page.get_by_text('Next',exact=True).click()
         self.assertEqual(self.page.locator('.slide.active').inner_text(),'Second')
         self.page.set_viewport_size({'width':375,'height':812})
         self.page.wait_for_function('document.querySelectorAll(\'.slide[aria-hidden="false"]\').length === 2')
         self.assertEqual(self.page.locator('.slide[aria-hidden="false"]').count(),2)
+        shared=self.root/'shared.html';shared.write_text(path.read_text().replace(' data-deck-edit',''))
+        self.page.goto(shared.as_uri());self.page.keyboard.press('e')
+        self.assertEqual(self.page.locator('#editToggle,[data-export-html],[contenteditable=true]').count(),0)  # no editor chrome without opt-in
 
     def test_reveal_failure_and_reduced_motion_preserve_content(self):
         script=(ROOT/'skills/microsite/assets/reveal.js').read_text()
