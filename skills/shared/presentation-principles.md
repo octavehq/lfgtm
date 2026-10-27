@@ -27,7 +27,7 @@ Skill-specific blueprints (design system CSS, document structure) add the most s
 
 2. **Type hierarchy must be clear and consistent.** Headings, subheadings, body text, labels, and captions each have a distinct visual role. The reader should instantly understand what level of information they're looking at. Hierarchy is built through size, weight, color, and spacing working together: if everything carries the same visual weight, nothing stands out and the eye has nowhere to land.
 
-3. **Headings are large and confident.** Don't shrink headings to conserve space. Generous heading sizes with comfortable line-height communicate professionalism. Heading case follows the brand kit (sentence case when the kit says nothing): write headings, titles and card titles in that case and never force them to uppercase with CSS.
+3. **Headings are large and confident.** Don't shrink headings to conserve space. A hero or display headline aims for three lines at its hero size, which is about 16 words at story and cover sizes; when it runs longer, cut words and never shrink the type to fit. Generous heading sizes with comfortable line-height communicate professionalism. Heading case follows the brand kit (sentence case when the kit says nothing): write headings, titles and card titles in that case and never force them to uppercase with CSS.
 
 4. **Labels use uppercase + letterspacing.** Section labels, stat labels, category markers, and other structural signposts use the label voice: uppercase, letterspaced, smaller size. This differentiates them from body content. The label voice never applies to headings or to product, company or person names (in badges, pills or tags they keep their own case).
 
@@ -151,6 +151,7 @@ Self-contained visual/presentation audit. Run every check against the generated 
 - [ ] **No text walls.** No single `<p>` exceeds ~2 sentences. Scan for any `<p>` containing 3+ period-space-capital sequences. Multi-sentence content uses wrapper `<div>` with child `<p>` tags.
 - [ ] **Type hierarchy.** At least 3 distinct type levels visible (heading, subheading, body). Each is visually differentiated by size, weight, or family.
 - [ ] **Headings are large.** Main headings are at least `1.5rem` (ideally `2rem+`). Not shrunk to fit.
+- [ ] **Hero headlines run three lines or fewer.** Each hero or display headline wraps to at most three lines at its rendered size, about 16 words; a longer one is cut, never shrunk (the source lint warns past 16 words).
 - [ ] **Labels use label voice.** Structural labels (section markers, stat labels, table headers) use uppercase + letterspacing, distinct from body text.
 - [ ] **Single-run headings.** No heading carries a muted second line or span (editorial rule 8c).
 - [ ] **Full mono fallback.** Every monospace stack ends `ui-monospace, SFMono-Regular, Menlo, Consolas, monospace` (the source lint flags short stacks).

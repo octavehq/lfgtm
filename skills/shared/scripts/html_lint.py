@@ -16,6 +16,7 @@ ENUMS = {'audience': {'internal', 'restricted_external', 'public'},
          'assets': {'embedded', 'bundled', 'hosted'}}
 WEB_FONT_HOSTS = {'fonts.googleapis.com', 'fonts.gstatic.com'}  # the one external dependency presentation-principles allow
 MONO_FALLBACK = ('ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace')
+HEADLINE_WORDS = 16  # about three lines at story and cover hero sizes (presentation principle 3)
 WORDS = 'delve robust comprehensive leverage seamless pivotal meticulous utilize holistic synergy tapestry paradigm'.split()
 
 
@@ -31,6 +32,8 @@ class Document(HTMLParser):
         self.doctype = False
         self.ids = set()
         self.inert_links = 0
+        self.open_heads = []  # [depth, words] for an h1 or .vk-display being read
+        self.headlines = []
 
     def handle_decl(self, decl):
         if decl.lower() == 'doctype html':
@@ -44,6 +47,8 @@ class Document(HTMLParser):
             self.inert_links += 1
         if tag not in {'meta', 'link', 'img', 'br', 'hr', 'input', 'source', 'wbr'}:
             self.tags.append(tag)
+            if tag == 'h1' or 'vk-display' in (a.get('class') or '').split():
+                self.open_heads.append([len(self.tags), []])
         if a.get('style'):
             self.css.append(a['style'])
         if tag == 'meta':
@@ -67,9 +72,14 @@ class Document(HTMLParser):
 
     def handle_endtag(self, tag):
         if tag in self.tags:
+            depth = len(self.tags) - self.tags[::-1].index(tag)
+            while self.open_heads and self.open_heads[-1][0] >= depth:
+                self.headlines.append(' '.join(self.open_heads.pop()[1]).split())
             self.tags = self.tags[:len(self.tags) - 1 - self.tags[::-1].index(tag)]
 
     def handle_data(self, data):
+        for head in self.open_heads:
+            head[1].append(data)
         if 'style' in self.tags:
             self.css.append(data)
         elif not any(t in self.tags for t in ('script', 'template')):
@@ -115,6 +125,10 @@ def lint(path, policy):
             warnings.append(f'Review authored wording: {word}; preserve customer terminology')
     if re.search('[—–]', authored):
         warnings.append('Review dash usage in authored prose; range punctuation and exact quotes are allowed')
+    for words in doc.headlines:
+        if len(words) > HEADLINE_WORDS:
+            warnings.append(f'Headline runs {len(words)} words ("{" ".join(words[:6])} ..."); aim for three lines at the hero size, '
+                            f'about {HEADLINE_WORDS} words, and cut words rather than shrink the type')
     placeholders = set(re.findall(r'\[(?:TBD|TODO|NEEDS[^\]]*|INSERT[^\]]*|PRICE|AMOUNT|DATE|OWNER|CTA[^\]]*)\]|\{\{[^}]+\}\}', text, re.I))
     unresolved = placeholders - set(policy['intentionalPlaceholders'])
     if unresolved:

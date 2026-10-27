@@ -181,6 +181,16 @@ print('201' if method=='POST' else '200',end='')
         path.write_text("<!DOCTYPE html><style>:root{--mono:'Geist Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}code{font-family:var(--mono)}</style><p>x</p>")
         self.assertEqual(lint.lint(path,policy),([],[]))
 
+    def test_lint_warns_on_long_hero_headlines(self):
+        path=self.root/'a.html';policy=dict(lint.DEFAULT)
+        long='one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen'
+        path.write_text(f'<!DOCTYPE html><h1>{long}</h1><h2 class="vk-display">Short <b>claim</b> here</h2><h2>{long}</h2>')
+        warnings=lint.lint(path,policy)[1];self.assertEqual(len(warnings),1);self.assertIn('Headline runs 17 words',warnings[0])
+        path.write_text(f'<!DOCTYPE html><h2 class="vk-display vk-rise">{long}</h2>')
+        self.assertIn('Headline runs 17 words',lint.lint(path,policy)[1][0])
+        path.write_text('<!DOCTYPE html><h1>Twelve words fit <em>easily</em> on three lines at the hero size here</h1>')
+        self.assertEqual(lint.lint(path,policy),([],[]))
+
     def test_lint_allows_google_fonts_unless_embedded(self):
         path=self.root/'a.html';policy=dict(lint.DEFAULT)
         path.write_text('<!DOCTYPE html><link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"><p>x</p>')
