@@ -107,7 +107,7 @@ Rows are steps, the track is time, bars sit on real day or week columns. Use for
 
 ### Stage strip (`.vk-stages`)
 
-Where something stands in a sequence and what moves it. Use for deal stage, rollout phase or the stage where losses end. Mark `is-done` and `is-now`; the `.vk-stages-note` states the condition in words ("Moves to Proof when …"), per [presentation principle 15b](../presentation-principles.md). Stacks vertically below 640px.
+Where something stands in a sequence and what moves it. Use for a rollout phase, the stage where losses end, the buyer's decision path or, on internal pages only, the CRM deal stage. A buyer-facing page labels the steps in the buyer's words and never shows CRM stage names ([information principle 22](../information-principles.md)). Mark `is-done` and `is-now`; the `.vk-stages-note` states the condition in words ("Moves to Proof when …"), per [presentation principle 15b](../presentation-principles.md). Stacks vertically below 640px.
 
 ```html
 <ol class="vk-stages">

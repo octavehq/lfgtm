@@ -10,13 +10,13 @@ These principles supplement the universal visual rules in `presentation-principl
 
 1. **One idea per screen.** A screen carries one claim, stated in its headline as one sentence, and one visual or one block of support. When a screen needs a second visual or a second heading, it is two screens.
 
-2. **A screen budget replaces a section count.** Six screens is the floor, eight is the ceiling. The skill's content rules still decide what earns space; the budget decides how it is cut. Map the skill's sections to screens before writing, and merge or drop until the count fits. Length is measured in screens, never in pixels.
+2. **A screen budget replaces a section count.** Six to eight screens is the default budget. A count the user asks for ("5 slides", "3 screens") replaces it, above or below, and the arc is cut to fit that count. The skill's content rules still decide what earns space; the budget decides how it is cut. Map the skill's sections to screens before writing, and merge or drop until the count fits. Length is measured in screens, never in pixels.
 
 3. **The arc is fixed.** Opening claim with the signature visual, the one number, the mechanism, the change (today against with), who reads it or the proof, the plan, the ask. A skill reshapes its sections onto this arc rather than inventing a new one.
 
 4. **Type carries the screen.** The headline uses `.vk-display`: 2.2rem to 5rem, the brand's display weight (light unless the kit says otherwise), balanced wrapping, at most 16 words. A lede of one or two sentences sits under it in `.vk-lede`. Body text appears only inside a component (a split panel, a plan row, a stat basis), never as paragraphs under the headline.
 
-5. **One signature visual that explains.** Each page has one visual that shows the mechanism or the data (a signal flow, an orbit, a card grid, a plan timeline) and that visual sits on the opening or mechanism screen. Other screens use the smaller components (stat, split, stages) or nothing. A visual that could be removed without the reader losing a fact is decoration and goes.
+5. **One signature visual that explains.** Each page has one visual that shows the mechanism or the data (a signal flow, an orbit, a card grid, a plan timeline) and that visual sits on the opening or mechanism screen. Screen 1 always pairs its headline with a kit visual of the mechanism or the data, the signature visual or a smaller one; a two-column opening never leaves its second column empty or decorative. Other screens use the smaller components (stat, split, stages) or nothing. A visual that could be removed without the reader losing a fact is decoration and goes.
 
 6. **Surfaces alternate.** Dark band and light page alternate screen to screen; the opening and the ask are dark. The grid texture and glow belong to dark screens only and come from the kit, never from a hand-written gradient.
 
@@ -28,7 +28,9 @@ These principles supplement the universal visual rules in `presentation-principl
 
 10. **Every number has a basis on the screen that shows it.** Period, denominator and source sit under the stat in `.vk-stat-basis` or in the caption of the visual, in the same words the skill's evidence rules require.
 
-11. **The ask is a screen, with the stage.** The last screen states the next step as one sentence with a date, a primary button and a contact line, and the stage strip with the condition that moves the deal written as text.
+11. **The ask is a screen, with the path.** The last screen states the next step as one sentence with a date, a primary button and a contact line, and a strip with the condition that moves to the next step written as text. On a buyer-facing page the strip shows the buyer's own decision path or the mutual plan steps in the buyer's words ("Security review", "Board sign-off"), never CRM stage names or amounts ([information principle 22](../information-principles.md)). Only internal pages may show CRM stages.
+
+13. **Editorial rules win over a brand kit's copy preferences.** A kit governs visuals only. When a kit prefers two-sentence or two-line headlines, the headline stays one sentence in one run of text ([editorial rule 8c](../editorial-rules.md), [brand-kit-usage.md](../brand-kit-usage.md)).
 
 12. **Share metadata and a single file.** `og:title` and `og:description` describe the page for a stranger; everything is inline except Google Fonts and, when published, the sibling `assets/og.png` ([social-meta.md](../social-meta.md)).
 
@@ -44,9 +46,9 @@ Before writing, fill this table from the skill's section list and the evidence g
 | 4 | What changes first | `.vk-split` | light |
 | 5 | Who reads it, or the proof | `.vk-orbit`, `.vk-quotes` or `.vk-stat-row` | dark |
 | 6 | The plan | `.vk-gantt` | light |
-| 7 | The ask | `.vk-stages` + buttons | dark |
+| 7 | The ask | `.vk-stages` (buyer's path) + buttons | dark |
 
-Six screens drop screen 5; eight screens add one proof or one objection screen after 5, never a second mechanism.
+Six screens drop screen 5; eight screens add one proof or one objection screen after 5, never a second mechanism. For a requested count below six, keep the opening, the mechanism and the ask, then add the number and the plan as the count allows.
 
 ## Scaffold
 
@@ -89,10 +91,13 @@ node <skill-dir>/../shared/scripts/render-gate.js <story.html> \
   --chrome ".vk-bar,.vk-keys,[data-chrome]" --viewports 1440x900,1280x800,375x812
 ```
 
-- [ ] **Six to eight screens.** Count the `.vk-screen` elements; the arc runs opening, number, mechanism, change, proof or readers, plan, ask.
+- [ ] **Screen count matches the request.** Count the `.vk-screen` elements: the count the user asked for, else six to eight; the arc runs opening, number, mechanism, change, proof or readers, plan, ask.
+- [ ] **Screen 1 carries a visual.** The opening headline sits beside or above a kit visual that explains the mechanism or the data; no empty or decorative half.
 - [ ] **One idea per screen.** Each screen has one headline (one sentence, at most 16 words) and one visual or one support block.
 - [ ] **One signature visual.** Exactly one component explains the mechanism or the data at full size, on the opening or mechanism screen; every other visual is a stat, a split, a strip or a plan.
 - [ ] **Every visual is captioned or labelled.** Tiles, flows, orbits and plans say what their units are; every stat shows its basis.
+- [ ] **The last strip speaks the buyer's words.** On a buyer-facing page the strip shows the buyer's decision path or mutual plan steps, with no CRM stage name or amount.
+- [ ] **Headlines stay one sentence whatever the kit prefers.** No two-sentence or two-line headline carried over from a brand kit's copy style.
 - [ ] **Surfaces alternate** and the kit paints the dark screens (no hand-written gradients).
 - [ ] **Fits the viewport.** No `under-fixed-chrome` at 1280x800; a screen that grows past the viewport is cut or split.
 - [ ] **Keys and scroll both work.** Arrow keys step, pips jump, the skip link lands, the hint fades after the first move and hides on touch.

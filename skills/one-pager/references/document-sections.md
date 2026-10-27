@@ -9,7 +9,7 @@ The sections below are the content contract for both renderings. A physical page
 | 3 | How [Product] Helps | `.vk-flow` or `.vk-orbit` |
 | 4 | Why [Your Company], today against with | `.vk-split` |
 | 5 | What Teams Are Seeing: the remaining proof and the quote | `.vk-stat-row` or `.vk-quotes` |
-| 6 | Next Step, with the stage and the two action lines | `.vk-stages` and `.vk-btn` |
+| 6 | Next Step, with where the buyer's decision stands (their own steps, never CRM stage names) and the two action lines | `.vk-stages` and `.vk-btn` |
 
 Each section's rules (one-sentence ledes, bullets over prose, real proof only) hold on the screens as they do on the page.
 

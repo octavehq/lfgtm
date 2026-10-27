@@ -138,7 +138,7 @@ Seven screens, one job each; the masthead becomes the bar and the verdict opens.
 | 4 | Job 2, positioning | What it replaces, today against with | `.vk-split` | light |
 | 5 | Job 3 | Who else to bring in: the seats around the decision | `.vk-orbit` with the seats as nodes; blank names stay blank in the list beside it | dark |
 | 6 | Jobs 4 and 5 | Objections answered and the proof behind the answers | `.vk-quotes` (question, answer, proof anchor) or `.vk-stat-row` for reference outcomes | light |
-| 7 | Job 6 | The path forward: steps, stage, cost of waiting, the first move | `.vk-gantt` or `.vk-stages` with the condition that moves the deal | dark |
+| 7 | Job 6 | The path forward: steps, where the decision stands, cost of waiting, the first move | `.vk-gantt` or `.vk-stages` with the buyer's own decision steps (never CRM stage names) and the condition that moves to the next one | dark |
 
 Six screens merge 3 into 1 when the case has no quotable buyer words; eight add a second proof screen when there are three reference cards. The compelling event, champion and committee count from the intel strip move into the bar title and screen 1's kicker.
 
