@@ -1,5 +1,18 @@
 # Document Sections
 
+The sections below are the content contract for both renderings. A physical page lays them out as the print-first document in [html-architecture.md](html-architecture.md). A web leave-behind renders them as six screens in [story mode](../../shared/formats/story-mode.md) with the [visual kit](../../shared/formats/visual-kit.md):
+
+| Screen | Section | Component |
+|---|---|---|
+| 1 | Header and The Problem Today: the lede is the headline, prepared-for in the kicker | `.vk-tiles` when the problem is a share of a known set, else headline and lede alone |
+| 2 | The proof number, with its basis | `.vk-stat` |
+| 3 | How [Product] Helps | `.vk-flow` or `.vk-orbit` |
+| 4 | Why [Your Company], today against with | `.vk-split` |
+| 5 | What Teams Are Seeing: the remaining proof and the quote | `.vk-stat-row` or `.vk-quotes` |
+| 6 | Next Step, with the stage and the two action lines | `.vk-stages` and `.vk-btn` |
+
+Each section's rules (one-sentence ledes, bullets over prose, real proof only) hold on the screens as they do on the page.
+
 **Header:**
 ```html
 <header class="section header">
