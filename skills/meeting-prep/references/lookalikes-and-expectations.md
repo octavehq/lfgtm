@@ -46,7 +46,7 @@ Each lookalike row uses only these fields, each read from that deal's own record
 
 ## What to expect, persona by persona
 
-One block per attendee, or per suggested role when attendees are unknown (label it "suggested, not confirmed").
+One block per invited guest who is likely to speak or decide, at most five (the guest list comes from the invite, see the task method step 0). Suggested roles, labeled "suggested, not confirmed", are used only when no invite was found.
 
 1. **Who they are.** Name, title, persona and buying role as the data gives them. A derived role is labeled "likely". If the persona record exists, take the persona's stated pains and priorities from it as guidance, not as fact about this person.
 2. **What this person has already said** on this account, in their words with the date. This is the strongest item.
