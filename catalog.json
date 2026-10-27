@@ -344,7 +344,7 @@
         {
           "version": "1.2.0",
           "date": "2026-10-26",
-          "notes": "Champion deal rooms lay out the path to yes as the champion's own internal route and keep personal details out of a document that travels inside the buyer's company. Proof cards use a reference only as its record states it. Deal rooms drop product and security claims with no record behind them, show no internal sources such as who coached an objection, and keep search-only names off the page. Reference names and the prepared-for line no longer force uppercase, so company names keep their own case. The room renders by default as seven story screens, one job each, with a stage strip and plan on the last; the fill-in worksheet layout stays available on request. Proof cards answer the metric the buyer asked about, or say they measure something adjacent.",
+          "notes": "Champion deal rooms lay out the path to yes as the champion's own internal route and keep personal details out of a document that travels inside the buyer's company. Proof cards use a reference only as its record states it. Deal rooms drop product and security claims with no record behind them, show no internal sources such as who coached an objection, and keep search-only names off the page. Reference names and the prepared-for line no longer force uppercase, so company names keep their own case. The room renders by default as seven story screens, one job each, with the plan on the last; the fill-in worksheet layout stays available on request. Proof cards answer the metric the buyer asked about, or say they measure something adjacent. A screen count the user asks for replaces the default, the opening screen always pairs its headline with a visual, and the closing strip shows the buyer's own decision steps instead of CRM stages.",
           "review": false
         },
         {
@@ -440,7 +440,7 @@
         {
           "version": "1.1.0",
           "date": "2026-10-26",
-          "notes": "Deck slides now use one-sentence headlines, and the pre-ship checks catch text cut off inside fixed-size cards. Pill tags no longer force uppercase, so product names keep their own case. A buyer-facing deck shared as a link and read without a presenter renders as story screens; presented and exported decks keep the slide format.",
+          "notes": "Deck slides now use one-sentence headlines, and the pre-ship checks catch text cut off inside fixed-size cards. Pill tags no longer force uppercase, so product names keep their own case. A buyer-facing deck shared as a link and read without a presenter renders as story screens; presented and exported decks keep the slide format. A screen count the user asks for replaces the default, the opening screen always pairs its headline with a visual, and the closing strip shows the buyer's own decision steps instead of CRM stages.",
           "review": false
         },
         {
@@ -838,7 +838,7 @@
         {
           "version": "1.1.0",
           "date": "2026-10-26",
-          "notes": "Account microsites built from calls use a call to action that fits the deal's stage and leave personal details out. Microsites drop claims with no record behind them, show no internal sources, and name only people on record. Account and persona pages render by default as six to eight story screens with one signature visual that explains the mechanism; the long scrolling page stays available on request.",
+          "notes": "Account microsites built from calls use a call to action that fits the deal's stage and leave personal details out. Microsites drop claims with no record behind them, show no internal sources, and name only people on record. Account and persona pages render by default as six to eight story screens with one signature visual that explains the mechanism; the long scrolling page stays available on request. A screen count the user asks for replaces the default, the opening screen always pairs its headline with a visual, and the closing strip shows the buyer's own decision steps instead of CRM stages.",
           "review": false
         },
         {
@@ -880,7 +880,7 @@
         {
           "version": "1.2.0",
           "date": "2026-10-26",
-          "notes": "Demo follow-up one-pagers propose a next step that fits the meeting and leave personal details from the call off the page. Proof on the page comes from the proof record, never from an unsupported claim made on the call. One-pagers drop claims with no record behind them, show no internal sources, and name only people on record. A web leave-behind renders as six story screens with one signature visual; the physical page keeps its print layout.",
+          "notes": "Demo follow-up one-pagers propose a next step that fits the meeting and leave personal details from the call off the page. Proof on the page comes from the proof record, never from an unsupported claim made on the call. One-pagers drop claims with no record behind them, show no internal sources, and name only people on record. A web leave-behind renders as six story screens with one signature visual; the physical page keeps its print layout. A screen count the user asks for replaces the default, the opening screen always pairs its headline with a visual, and the closing strip shows the buyer's own decision steps instead of CRM stages.",
           "review": false
         },
         {
