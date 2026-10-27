@@ -85,7 +85,7 @@ Skill-specific blueprints (design system CSS, document structure) add the most s
 
 ## Visual floor and craft bar
 
-The floor keeps a page from being wrong; the bar keeps it from being forgettable. Both apply to every output.
+Both the floor rules and the craft bar apply to every output.
 
 10. **Editorial, not dashboard.** Clean typography, generous whitespace, reading-first layout. The reader should feel like they're getting a brief from a sharp analyst, not a report from a software tool.
 
