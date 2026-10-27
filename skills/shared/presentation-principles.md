@@ -15,10 +15,11 @@ This file is one of three independent review dimensions:
 - `slide-deck.md`: paginated slide presentations (deck, coaching)
 - `one-pager.md`: single-page leave-behinds (one-pager, proposal condensed)
 - `microsite.md`: landing pages (microsite)
+- `story-mode.md`: six to eight full-viewport screens for buyer-facing pages (champion-deal-room, one-pager web, deck async, microsite), built on `visual-kit.md`
 
 Skill-specific blueprints (design system CSS, document structure) add the most specific layer on top.
 
-**Floor vs. craft.** Rules like "no emoji," "no text walls," "token-based colors," and "semantic HTML" are floor rules: violations are always wrong. Principles like "first-glance clarity," "annotate key data points," and "editorial feel" are craft standards: they improve output when applied naturally but shouldn't be forced. If applying a principle makes the output feel over-designed or mechanical, skip it.
+**Floor vs. craft.** Rules like "no emoji," "no text walls," "token-based colors," and "semantic HTML" are floor rules: violations are always wrong. Principles like "first-glance clarity," "annotate key data points," and "one signature visual" are craft standards: they are the bar the output is judged against once the floor holds, and a page that clears the floor with nothing above it reads as a report from a tool. Apply them where the content gives them something to explain; if a principle only adds effect, skip it.
 
 ## Text & Typography
 
@@ -40,7 +41,7 @@ Skill-specific blueprints (design system CSS, document structure) add the most s
 
 5. **Order by importance within every section.** Most impactful item first. Never chronological, never alphabetical. Position communicates priority.
 
-6. **Cut rather than expand.** When the output feels long, fewer items with sharper content beats more sections or subsections. Restraint is the product.
+6. **Cut rather than expand.** When the output feels long, fewer items with sharper content beats more sections or subsections. Fewer, sharper items read as judgment.
 
 7. **Generous whitespace.** Sections need breathing room: comfortable padding between major blocks. Content packed edge-to-edge looks rushed. Airy layouts look professional.
 
@@ -82,17 +83,25 @@ Skill-specific blueprints (design system CSS, document structure) add the most s
 
 9l. **Disclosure rows show no stray markers.** A styled `<summary>` hides the native marker (`list-style: none` and `summary::-webkit-details-marker { display: none }`) so no triangle appears beside the custom icon, open or closed.
 
-## Visual Restraint
+## Visual floor and craft bar
+
+The floor keeps a page from being wrong; the bar keeps it from being forgettable. Both apply to every output.
 
 10. **Editorial, not dashboard.** Clean typography, generous whitespace, reading-first layout. The reader should feel like they're getting a brief from a sharp analyst, not a report from a software tool.
 
 11. **No emoji.** Zero emoji characters anywhere in the document.
 
-12. **No decorative imagery.** No generic icons, stock illustrations, or background images used for decoration. Every visual element must reinforce the message: it adds information, clarifies a concept, or anchors the intended emotion. If it doesn't strengthen the reader's understanding, it's noise. Cut it.
+12. **Every visual explains.** No generic icons, stock illustrations or background images. A visual earns its place by showing the mechanism (how data moves, what connects to what) or the data (how many, which ones, when); if it could be deleted without the reader losing a fact, cut it. The [visual kit](formats/visual-kit.md) holds the components that pass this test.
 
 12b. **No raw metadata as UI elements.** Research and enrichment data (deal range, strategy type, market names, investment criteria) must be woven into prose or used to inform the narrative. Never surface enrichment data as standalone chips, badges, tags, or pill-shaped metadata labels. If the reader would ask "why am I seeing this as a label?" it belongs in a sentence, not a UI element.
 
-13. **Restraint in effects.** Avoid stacking visual effects. One or two signature treatments (a subtle glow, a scroll-reveal) are enough. More than that becomes noise.
+13. **One signature visual per page.** Each output has one visual that carries its mechanism or its headline data at full size, placed where the claim is made. Everything else is support (a stat, a split, a strip, a plan). Two competing signature visuals cancel each other, and none at all leaves the page as cards and bullets.
+
+13b. **Length is budgeted in screens.** Plan a buyer-facing page as six to eight screens ([story mode](formats/story-mode.md)) and an internal document as three to five screens' worth of sections. A page that runs past its budget is cut by merging or dropping sections, never by shrinking type or padding.
+
+13c. **Type is scaled for impact.** The claim on each screen or section sits in display type (2.2rem to 5rem, balanced, the brand's display weight) with one lede under it, and body text lives inside components. A heading that could be mistaken for body text has failed; so has a wall of 16px prose under a 24px heading.
+
+13d. **Motion explains.** A bar grows to its length, a dot travels the path it describes, a number counts to its value, each once as its screen enters, and nothing starts hidden. Effects that decorate (floating, pulsing, parallax, stacked glows) are cut; one or two treatments per page, both of them meaningful.
 
 ## Data Visualization
 
@@ -167,13 +176,17 @@ Self-contained visual/presentation audit. Run every check against the generated 
 - [ ] **Reasonable length.** The document doesn't feel padded. Every section earns its space.
 - [ ] **First-glance clarity.** Each section is scannable in ~3 seconds. A reader unfamiliar with the content should immediately understand what each section is about and what matters most. If a section requires study to parse, it needs clearer hierarchy or chunking.
 
-### Visual Restraint
+### Visual floor and craft bar
 
 - [ ] **No emoji.** Zero emoji characters anywhere in reader-facing text.
-- [ ] **No decorative imagery.** No generic icons or illustrations used for decoration.
+- [ ] **Every visual explains.** No generic icons or illustrations; each visual shows a mechanism or data and says in a caption or label what its units are.
 - [ ] **No raw metadata UI.** No enrichment/research data displayed as standalone chips, badges, tags, or pill labels. All personalized data is woven into prose.
 - [ ] **Editorial feel.** The output reads as a market brief, not a software dashboard.
-- [ ] **Effects are minimal.** No more than 2-3 signature visual treatments. No stacked gradients, glows, shadows competing for attention.
+- [ ] **One signature visual.** Exactly one full-size visual carries the mechanism or the headline data, placed with the claim; the rest are support components.
+- [ ] **Screen budget held.** A buyer-facing page is six to eight screens; an internal document is three to five screens' worth of sections. Nothing was shrunk to fit.
+- [ ] **Type scaled for impact.** Each screen or section opens in display type with one lede; body text sits inside components, never as runs of paragraphs under a heading.
+- [ ] **Motion explains.** Every animation plays once as its screen enters and shows a length, a path or a value; nothing starts hidden; `prefers-reduced-motion` stops it all.
+- [ ] **Effects are minimal.** No more than two signature treatments. No stacked gradients, glows, shadows competing for attention.
 
 ### Data Visualization (where applicable)
 

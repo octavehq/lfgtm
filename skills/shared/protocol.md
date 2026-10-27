@@ -39,6 +39,7 @@ The invocation depends only on the output's shape, and the format doc for that s
 | Scrolling document | none | `nav,.toc,.sticky-nav` | [html-document.md](formats/html-document.md) |
 | Microsite | none | `nav,.sticky-nav,.cta-bar` | [microsite.md](formats/microsite.md) |
 | One-pager | none | none | [one-pager.md](formats/one-pager.md) |
+| Story page | `.vk-screen` (carries `data-pane`) | `.vk-bar,.vk-keys,[data-chrome]` | [story-mode.md](formats/story-mode.md) |
 
 ```bash
 node <skill-dir>/../shared/scripts/render-gate.js <path-to-file> \
@@ -110,8 +111,9 @@ Task tool:
 - `html-document.md`: abm, battlecard-doc, champion-deal-room, deal-coach, meeting-prep, positioning, proposal, research (HTML mode), win-loss-report
 - `slide-deck.md`: deck, train
 - `magazine.md`: digest (magazine mode), any skill producing a swipe-magazine leave-behind
-- `one-pager.md`: one-pager
-- `microsite.md`: microsite
+- `one-pager.md`: one-pager (print or physical page)
+- `microsite.md`: microsite (document mode)
+- `story-mode.md`: champion-deal-room, one-pager, deck and microsite when the output is a buyer-facing story page (their default); pass `visual-kit.md` with it
 
 Adjust the skill-specific blueprint paths for the skill being reviewed. Some skills may have more or fewer blueprints, so pass all that are relevant.
 
