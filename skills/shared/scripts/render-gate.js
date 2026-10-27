@@ -6,7 +6,8 @@
  * a human eye: fonts actually loaded, text contrast against its painted
  * background, text staying inside its content box, text not cut off by a
  * container that clips it, text not sliding under fixed chrome, and (on
- * scrolling pages) no sideways page scroll. Each is deterministic. Running them here means screenshots get
+ * scrolling pages) no sideways page scroll. Each is deterministic, and each is
+ * measured after entrance animations are jumped to their end state. Running them here means screenshots get
  * spent on taste (is the hierarchy right, does the rail feel airy) instead of
  * on defect discovery.
  *
@@ -104,6 +105,27 @@ function luminance(css) {
   return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
 }
 
+// Entrance animations and transitions move and fade text while they play, so
+// a screen measured mid-animation reports overflow, clipping or low contrast
+// that the settled page does not have. Jump every finite animation to its end
+// state, a few rounds in case finishing one starts the next, and leave
+// infinite loops (a travelling dot, a slow spin) running.
+async function settle(page) {
+  await page.evaluate(async () => {
+    const frame = () => new Promise((resolve) => requestAnimationFrame(() => resolve()));
+    for (let round = 0; round < 4; round++) {
+      await frame();
+      await frame();
+      const running = document.getAnimations().filter((a) => a.playState !== 'finished' &&
+        a.effect && Number.isFinite(a.effect.getComputedTiming().endTime));
+      if (!running.length) break;
+      for (const a of running) {
+        try { a.finish(); } catch { /* an animation that cannot finish is left as it is */ }
+      }
+    }
+  });
+}
+
 (async () => {
   const browser = await chromium.launch({
     executablePath: process.env.CHROME_PATH || undefined,
@@ -127,6 +149,7 @@ function luminance(css) {
     const brokenImages = await page.evaluate(() => [...document.images].filter(i => !i.complete || !i.naturalWidth).length);
     if (brokenImages) problems.push({ viewport: vp.name, check: 'asset-load', detail: `${brokenImages} images failed to decode` });
     await page.waitForTimeout(400);
+    await settle(page);
 
     // --- 1. fonts actually loaded ---------------------------------------
     if (!fontReport) {
@@ -181,6 +204,7 @@ function luminance(css) {
         }
       }, { sel: PANES, idx: i });
       await page.waitForTimeout(180);
+      await settle(page);
 
       const report = await page.evaluate(({ sel, chromeSel, idx, minContrast }) => {
         const panes = document.querySelectorAll(sel);

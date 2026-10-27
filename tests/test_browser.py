@@ -100,6 +100,8 @@ class BrowserChecks(unittest.TestCase):
         deliberate='<div style="max-height:0;overflow:hidden"><p>Collapsed body</p></div><div style="width:200px;overflow:hidden"><div style="display:flex;width:600px"><p style="width:200px;flex:none">One</p><p style="width:200px;flex:none">Two</p></div></div><div style="overflow-x:auto;width:200px"><p style="white-space:nowrap">A wide row that scrolls inside its own container</p></div>'
         self.assertEqual(checks(gate(deliberate,'375x812')),[])
         self.assertIn('page-scroll-x',checks(gate('<div style="width:600px"><p>Fixed wide block</p></div>','375x812')))
+        entrance='<style>@keyframes in{from{transform:translateX(60px);opacity:0}}@keyframes spin{to{transform:rotate(1turn)}}</style><p style="animation:in 20s ease both">A headline that slides in from the right</p><i style="display:block;width:8px;height:8px;animation:spin 3s linear infinite"></i>'
+        self.assertEqual(checks(gate(entrance,'375x812')),[])
 
     def test_renderer_blocks_fit_and_og_capture_size(self):
         kit=self.root/'kit';kit.mkdir()
