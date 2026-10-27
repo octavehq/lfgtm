@@ -27,7 +27,11 @@ their deadline is today:
   becomes a signal with what it is for, who attends and what the seller
   needs ready. When synced events stop before today, the scope strip says
   where calendar coverage ends and the sweep relies on the CRM dates and on
-  emails that confirm a time ("see you Tuesday at 2").
+  emails that confirm a time ("see you Tuesday at 2"). Name a meeting's
+  type only as its source does: an invite titled "Acme sync" or a call
+  that says "see you Tuesday" is a session on Tuesday, never a "final
+  demo" or "decision meeting" unless the invite, CRM or a participant
+  calls it that.
 - Promises due today: read the seller-side commitments with a date in the
   last two weeks of calls and emails ("I'll send the security answers
   Monday"), resolving relative days against the event's own date. A
