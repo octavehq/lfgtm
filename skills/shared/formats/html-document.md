@@ -2,7 +2,7 @@
 
 Long-form scrollable HTML documents with section-based structure. The most common Octave output format.
 
-**Skills that produce this format:** research (HTML mode), positioning, meeting-prep, battlecard (HTML mode), win-loss (HTML mode), proposal
+**Skills that produce this format:** research (HTML mode), positioning, meeting-prep, battlecard (HTML mode), win-loss (HTML mode), proposal, and champion-deal-room on request. It stays the default for internal reports; buyer-facing pages default to [story mode](story-mode.md). Single components from the [visual kit](visual-kit.md) (a big stat, a stage strip, a plan timeline) belong here when one explains a mechanism or a dataset better than prose; see [`examples/acme-report.html`](examples/acme-report.html).
 
 These principles supplement the universal visual rules in `presentation-principles.md` (one directory up). The universal principles are the floor; these add format-specific requirements.
 

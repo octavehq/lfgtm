@@ -2,7 +2,7 @@
 
 Paginated HTML slide presentations designed for screen sharing, projection, or async viewing. One idea per slide, progressive disclosure through slide sequence.
 
-**Skills that produce this format:** deck, coaching (deck mode)
+**Skills that produce this format:** deck (presented, projected or exported), coaching (deck mode), train. A buyer-facing deck read as a link without a presenter uses [story mode](story-mode.md) instead.
 
 These principles supplement the universal visual rules in `presentation-principles.md` (one directory up). The universal principles are the floor; these add format-specific requirements.
 
