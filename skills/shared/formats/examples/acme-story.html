@@ -151,9 +151,10 @@ html:has(body.vk-story) { scroll-snap-type: y proximity; scroll-padding-top: 0; 
 .vk-bar-chapter { display: flex; align-items: center; gap: 14px; }
 .vk-bar-label { font: 500 0.74rem/1 var(--vk-font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--vk-muted); white-space: nowrap; }
 .vk-pips { display: flex; gap: 6px; margin: 0; padding: 0; list-style: none; }
-.vk-pips li { width: 26px; height: 3px; border-radius: 2px; background: var(--vk-border); transition: background 0.3s var(--vk-ease); }
+.vk-pips li { position: relative; width: 26px; height: 3px; border-radius: 2px; background: var(--vk-border); transition: background 0.3s var(--vk-ease); }
 .vk-pips li.is-on { background: var(--vk-primary); }
-.vk-pips li a { display: block; height: 100%; }
+.vk-pips li a { position: absolute; inset: -20px -3px; } /* a 43px-tall tap target around the 3px pip */
+.vk-pips li:has(a:focus-visible) { outline: 2px solid var(--vk-primary); outline-offset: 4px; }
 
 .vk-keys {
   position: fixed; inset: auto 0 0 0; z-index: 200;
