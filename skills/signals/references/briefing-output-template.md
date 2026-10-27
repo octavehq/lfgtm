@@ -1,6 +1,6 @@
 # Signals brief
 
-Scope strip: workspace, active CRM roster/as-of, event window and history, per-detector coverage, configured heuristics and missing sources.
+Scope strip: workspace, active CRM roster/as-of, event window and history, how far calendar coverage reaches, per-detector coverage, configured heuristics and missing sources.
 
 For each supported signal show: exact opportunity/account ID in the internal working record; observed change and dates; prior baseline; why it matters to this offering/motion; confidence/limits; evidence and alternative explanation. Keep account context separate from opportunity-specific events.
 
