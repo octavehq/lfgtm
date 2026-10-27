@@ -15,7 +15,8 @@ The **target company's logo** (the prospect, account, or competitor) appears onl
 
 ## 2. Brand kit lookup (cache first)
 
-1. Resolve the selected brand to `~/.octave/brands/<workspaceOId>/<canonicalDomain>/current.json` using [brand_cache.py](../get-brand-components/scripts/brand_cache.py). Preserve the full hostname/TLD. Verify manifest identity; legacy name slugs are aliases only after an exact domain/workspace match. Reuse an inherited brand choice without another extraction or intake.
+1. Resolve the selected brand to `~/.octave/brands/<workspaceOId>/<canonicalDomain>/current.json` using [brand_cache.py](../get-brand-components/scripts/brand_cache.py). Preserve the full hostname/TLD. Verify manifest identity. Reuse an inherited brand choice without another extraction or intake.
+   - **Legacy fallback.** When nothing resolves at the workspace path, look for an older kit at `~/.octave/brands/<name>/` (a name-based folder holding `manifest.json` and `tokens.css` directly, with no `current.json`). Accept it only when its manifest's `canonicalDomain` or `domain` equals the canonical domain exactly; never match on the folder name alone. Use that folder as the kit directory everywhere below (tokens, guardrails, logo, `--kit-dir`), and tell the operator once that the kit predates workspace binding and a fresh capture would migrate it.
 2. **If a kit exists →** use it by default (it's the workspace company's own brand, no need to ask). Style the output with the kit instead of a generic preset:
    - inline the kit's `tokens.css` (`:root` + the embedded `@font-face`) **and** [`../get-brand-components/assets/kit_base.css`](../get-brand-components/assets/kit_base.css) into the output `<style>`;
    - follow the kit's `brand-kit.md` → **Signature moves**, and reuse the kit's real **logo**, `images/`, and `icons.json`;
