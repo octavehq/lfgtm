@@ -120,6 +120,20 @@ These rules apply to any output that reads calls, emails or deals to judge them,
 
 22. **Customer-facing outputs show no internal sources and name only people on record.** A page that may be forwarded inside the buyer's organization (deal room, proposal, microsite, one-pager) never shows how the seller learned something: no "coached by" or "anticipating the room" labels, no internal call titles or dates of seller-side prep, no CRM amounts, stages or deal notes. Cite the buyer's own words or an approved source instead. A person appears on that page only when they are in a CRM record or took part in a call or email; a name found by search alone goes in the rep's delivery message marked "you confirm" and stays off the page, where the seat shows its role with a blank name.
 
+## Claims Against the Data
+
+These rules apply to every output that states findings, counts or proof, whether or not it reads calls.
+
+23. **An absence claim needs a search, and says what was searched.** Write "no enablement leader has given feedback", "none on record" or "nobody raised pricing" only after searching the records that would hold it (calls, emails, CRM records, library entities, as the claim needs), and name the search beside the claim ("no pricing objection in 42 calls from Jun 1 to Oct 1"). When a search wasn't run or returned nothing because a tool failed, write that the records weren't checked, never that the thing doesn't exist.
+
+24. **A headline agrees with every number shown under it.** A heading, summary or chart title holds for each figure in its own section and chart. "Every segment with a win converts between 8% and 15%" can't sit above a bar at 5%. Before finishing, read each headline against its own data and rewrite the headline to name the exception or the true range.
+
+25. **A driver differs from the baseline in its own direction.** Call something a win driver only when its win rate is above the cohort's baseline, and a loss driver only when its loss rate is above the baseline. A group that loses 71% of the time when the baseline is 78% is not a loss driver, whatever its count. State the baseline beside each driver's rate, and leave out findings that follow from what a stage or label means (deals that reached a late stage tend to win).
+
+26. **An estimate stays labeled every time it appears.** A modeled, typical or operating figure ("about 15 minutes a week", "first model in about 24 hours") carries its qualifier ("estimate", "typical", "Acme's operating figure") in the hero, the convincer, the table and the summary alike. Once a figure is labeled as an estimate, it never reappears later as a plain fact.
+
+27. **Proof answers the question the buyer asked.** Match the proof's metric to the one the buyer asked about. When a buyer asks about time to full productivity, a reference that measures time to first activity doesn't answer it; either find proof on the asked metric or present the reference as adjacent ("this measures time to first live calls, not time to full quota") and name the gap. Never describe a reference as covering an outcome its record doesn't measure.
+
 ---
 
 ## Review Checklist
@@ -169,3 +183,11 @@ Information architecture audit. Run every check against the generated content. T
 - [ ] **Each point traces to a quote or record.** The evidence section, when present, states how many quotes back the page. Each quoted string was found word for word in its source; every number shows its source. Delivery-habit points appear only with the cost the buyer showed.
 - [ ] **Seller claims checked.** Every number, customer story or promise the seller made was checked against its proof point or reference record; unsupported ones appear only as coaching with the recorded version, never as proof in a follow-up. Every capability, security, data-handling or results statement the output drafts has a record, or is marked "confirm with product" (internal) or dropped or turned into a question for the rep (customer-facing).
 - [ ] **Customer-facing pages carry no internal sources.** No coaching provenance, internal call labels, CRM amounts or deal notes; every named person is in a record or on a call, and search-only names appear only in the delivery message marked "you confirm".
+
+### Claims Against the Data
+
+- [ ] **Absence claims searched.** Every "none", "no one" or "not on record" line names the records searched; an unchecked or failed search reads as unchecked (rule 23).
+- [ ] **Headlines match their data.** Each headline and summary claim holds for every number in its own section or chart (rule 24).
+- [ ] **Drivers beat the baseline.** Each win or loss driver's rate differs from the stated baseline in the direction claimed; no finding that only restates what a stage means (rule 25).
+- [ ] **Estimates labeled everywhere.** Each estimated or typical figure carries its qualifier at every appearance (rule 26).
+- [ ] **Proof matches the question.** Each proof answers the metric the buyer asked about, or is marked adjacent with the gap named (rule 27).
