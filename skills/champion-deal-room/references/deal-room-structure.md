@@ -78,6 +78,8 @@ Density: ≤6 numbers total, each with a one-line basis.
 | The line that lands | The framing for that role, from its Motion ICP cell, backed by Job 2 |
 | Suggested contact | OPTIONAL: a `find_person` result listed in the delivery message to the rep, marked "you confirm". It stays off the page, where the role keeps its blank name. |
 
+Split the roles by the deal's stage: people to engage now, then the roles needed later with the step they join, so the champion doesn't chase procurement or legal early ([information principles](../../shared/information-principles.md#reading-calls-and-deals) rule 23). Read the deal's place in the lifecycle first (rule 24): a renewal during onboarding is an adoption story with no approver to find yet.
+
 Cap: any confirmed stakeholders other than the champion (often none early) + up to 4 roles to loop in.
 
 **Groundedness (hard):** a `find_person` result is a suggestion, never a confirmed stakeholder. When in doubt, it is a role, not a name. The champion knows their org better than the tools do, blanks are honest and useful.

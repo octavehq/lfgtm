@@ -155,9 +155,14 @@ This is the document-mode scaffold, used when the rep asks for a working documen
       <div class="stake"><span class="role-badge">[role]</span><div class="who">[name, title]</div><div class="need">[what they need + how to frame it]</div></div>
       <!-- only real deal-signal people OTHER than the champion (call/CRM/email); no stance tag, the committee reads this page -->
     </div>
-    <p class="tier-label">Roles to loop in</p>
+    <p class="tier-label">People to engage now</p>
     <div class="committee">
       <div class="stake role"><span class="role-badge">[role]</span><div class="who"><span class="fillname">Name: ____</span></div><div class="need">[what they'll care about + the line that lands]</div></div>
+    </div>
+    <!-- Needed later: roles that join at a later step, each with the step; OMIT if none -->
+    <p class="tier-label">Needed later</p>
+    <div class="committee">
+      <div class="stake role"><span class="role-badge">[role]</span><div class="who">[the step they join, e.g. "before signature"]</div><div class="need">[what they will ask then]</div></div>
     </div>
   </details>
 

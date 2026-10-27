@@ -85,6 +85,7 @@ Two tabs, same structure mirrored. The reader flips between tabs to see the cont
   - Single-threaded vs. multi-threaded stakeholder count, wins vs. no-decision losses (e.g., "No-decision losses averaged 1.4 stakeholders engaged vs. 3.2 in wins")
   - Leadership change during the deal cycle (N deals, % of no-decision losses)
   - Budget reallocation / freeze signals (N deals, % of no-decision losses)
+- A won deal has no missing people: report who took part. A lost deal can name who was never engaged, as part of why it was lost, with the search behind it ([information principles](../../shared/information-principles.md#reading-calls-and-deals) rule 24).
 - These are diagnostics, not excuses. Pair with a "Intervention to test:" callout where the evidence points to a specific save (e.g., "Intervention to test: we'd multi-threaded past the single champion before Q4 budget lockup").
 
 **Objections**
