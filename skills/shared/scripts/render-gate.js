@@ -163,6 +163,7 @@ function luminance(css) {
     const paneCount = await page.evaluate((sel) => document.querySelectorAll(sel).length, PANES);
     const n = paneCount || 1;
     let vpSkipped = 0;
+    let vpScrollX = false;
 
     for (let i = 0; i < n; i++) {
       // Bring pane i into view. Horizontal decks scroll a container; vertical
@@ -268,10 +269,16 @@ function luminance(css) {
           return false;
         };
 
+        // Sideways page scroll is measured whenever the document itself can
+        // scroll sideways: a scrolling page with or without panes (story
+        // screens are panes on a vertical page). A horizontal track that
+        // clips the document (a swipe magazine) is left alone.
+        const docOverflowX = getComputedStyle(document.documentElement).overflowX + ' ' +
+                             getComputedStyle(document.body).overflowX;
         const out = { label: pane.getAttribute('aria-label') || pane.id || `pane ${idx + 1}`,
                       spillBelow: [], spillRight: [], underChrome: [], lowContrast: [],
                       clipped: [], contrastSkipped: 0,
-                      pageScrollX: panes.length ? 0
+                      pageScrollX: /hidden|clip/.test(docOverflowX) ? 0
                         : Math.max(0, document.scrollingElement.scrollWidth - window.innerWidth) };
 
         const isTextLeaf = (el) => {
@@ -338,7 +345,8 @@ function luminance(css) {
       push('under-fixed-chrome', report.underChrome);
       push('low-contrast', badContrast);
       push('clipped-text', report.clipped);
-      if (report.pageScrollX > 1) {
+      if (report.pageScrollX > 1 && !vpScrollX) {
+        vpScrollX = true;
         problems.push({ viewport: vp.name, check: 'page-scroll-x',
           detail: `The page scrolls sideways by ${Math.round(report.pageScrollX)}px at this width.` });
       }
