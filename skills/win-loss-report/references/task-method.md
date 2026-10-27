@@ -51,6 +51,15 @@ if comparability/support is weak, mark exploratory and avoid a reliable
 ranking. Show uncertainty and alternate explanations: deal difficulty,
 late-stage exposure, acquisition mix, and sales execution may confound it.
 
+A theme is a loss driver only when its loss rate is above the baseline loss
+rate, and a win driver only when its win rate is above the baseline win
+rate; show the baseline beside each driver's rate, and a theme on the wrong
+side of it is reported as neutral or as counterevidence, never as a driver
+([rule 25](../../shared/information-principles.md#claims-against-the-data)).
+Before finishing, read every section title, summary line and chart title
+against the numbers under it: a claimed range or "every band" must hold for
+each bar shown, or the headline names the exception (rule 24).
+
 Group losses by the loss reasons the CRM recorded, quoted as recorded, and by the workspace's own library entities. The product gap / value / readiness / process / competition split below is your reading of buyer exchanges, labeled as such; apply a sales methodology or loss taxonomy only when the workspace has one on file ([rule 18](../../shared/information-principles.md#reading-calls-and-deals)). Every driver, pattern and counter links to the quote or deal behind it, and the evidence list states how many quotes back the report (rule 20). Personal facts from calls or CRM notes (health, family, personal life) stay out of quotes and patterns; report the count left out in the delivery message (rule 19).
 
 Prioritize an intervention using excess-loss association, affected volume/
