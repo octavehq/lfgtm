@@ -4,7 +4,7 @@ Six jobs, one section each, plus a thin masthead and a verdict banner. Each sect
 
 **This is a working kit the champion completes, not a finished artifact.** Get the content and structure right, ground what can be grounded, and make the fill-in slots honest and visible (blank committee names, business-case inputs, the specific ask). Do not fake precision to look done.
 
-**Density discipline.** Short sentences, one idea per line, fixed card shapes with caps. Numbers, badges, and status dots do the work prose would. No paragraph over 2 sentences. The test for any line: could a champion repeat it in an internal meeting and have it move someone? If it is generic positioning, cut it.
+**Density discipline.** Short sentences, one idea per line, fixed card shapes with caps. Numbers and badges do the work prose would. No paragraph over 2 sentences. The test for any line: could a champion repeat it in an internal meeting and have it move someone? If it is generic positioning, cut it.
 
 **Layout:** story mode by default (the screen plan below, rendered with [story-mode.md](../../shared/formats/story-mode.md) and the [visual kit](../../shared/formats/visual-kit.md)). Document mode on request: sticky sidebar nav dots (one per section), collapsible `details` sections (open by default, forced open on print), card vocabulary in [html-scaffold.md](html-scaffold.md). The six jobs, their caps and the groundedness rules are the same in both.
 
@@ -66,7 +66,7 @@ Density: ≤6 numbers total, each with a one-line basis.
 | Element | Content |
 |---|---|
 | Role badge + name | Seat + real name/title, from the deal signal |
-| Position | Champion / supporter / neutral / skeptic (status dot), only if the signal supports it |
+| Position | Not on the page. The committee reads this room, so a stance tag (supporter, neutral, skeptic) beside a name goes in the rep's delivery message only ([rule 22](../../shared/information-principles.md#reading-calls-and-deals)) |
 | What they need | The framing for this person, from their Motion ICP cell |
 
 **Tier 2, roles to loop in.** The seats that decide a deal like this, from the ICP / personas (`persona` entity type, see [entity-model.md](../../shared/entity-model.md)). Shown as roles, **name left blank for the champion to fill.**

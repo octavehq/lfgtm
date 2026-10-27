@@ -76,9 +76,6 @@ This is the document-mode scaffold, used when the rep asks for a working documen
   .stake{background:var(--brand-surface);border:1px solid var(--brand-border);border-radius:var(--brand-radius);padding:1.1rem 1.25rem;}
   .stake.champion{border:2px solid var(--brand-primary);}
   .role-badge{display:inline-block;font-family:var(--mono);font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#fff;background:var(--brand-primary);padding:.2rem .55rem;border-radius:var(--brand-radius-pill);}
-  .pos{display:inline-flex;align-items:center;gap:.35rem;font-size:.7rem;color:var(--brand-muted);margin-left:.4rem;}
-  .pos .dot{width:9px;height:9px;border-radius:50%;}
-  .dot.supporter{background:var(--brand-positive);} .dot.neutral{background:var(--brand-yellow);} .dot.skeptic{background:var(--brand-negative);} .dot.champion{background:var(--brand-primary);}
   .stake .who{font-weight:600;font-size:.95rem;margin:.5rem 0 .4rem;}
   .stake .need{border-left:3px solid var(--brand-accent);padding-left:.7rem;font-size:.88rem;text-wrap:pretty;}
   .tier-label{font-family:var(--mono);font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--brand-muted);margin:1rem 0 .6rem;}
@@ -155,8 +152,8 @@ This is the document-mode scaffold, used when the rep asks for a working documen
     <!-- Tier 1, OMIT ENTIRELY if the only confirmed person is the champion (common early): -->
     <p class="tier-label">Confirmed, from your deal</p>
     <div class="committee">
-      <div class="stake"><span class="role-badge">[seat]</span><span class="pos"><span class="dot supporter"></span>[position]</span><div class="who">[name, title]</div><div class="need">[what they need + how to frame it]</div></div>
-      <!-- only real deal-signal people OTHER than the champion (call/CRM/email) -->
+      <div class="stake"><span class="role-badge">[seat]</span><div class="who">[name, title]</div><div class="need">[what they need + how to frame it]</div></div>
+      <!-- only real deal-signal people OTHER than the champion (call/CRM/email); no stance tag, the committee reads this page -->
     </div>
     <p class="tier-label">Roles to loop in</p>
     <div class="committee">
