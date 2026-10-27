@@ -92,6 +92,26 @@ def checked_zip(path):
     return names
 
 
+AUTH_HINT = {
+    '401': 'mint a new token with asset_generate_access_token and retry',
+    '403': 'mint a token in the workspace that owns this asset',
+}
+
+
+def auth_failure_detail(raw):
+    """The service's own reason for a 401/403, never the raw body. A 401/403 is
+    refused before the handler runs, so its body is the error envelope about
+    the caller's own token: only its `reason` and `message` strings are kept."""
+    try:
+        value = json.loads(raw)
+    except (ValueError, UnicodeDecodeError):
+        return ''
+    if not isinstance(value, dict):
+        return ''
+    parts = [value[k] for k in ('reason', 'message') if isinstance(value.get(k), str) and value[k]]
+    return re.sub(r'[\x00-\x1f\x7f]', ' ', ': '.join(parts))[:300]
+
+
 def request(base, token, route, method='GET', payload=None, archive=None):
     with tempfile.TemporaryDirectory(prefix='octave-http-') as tmp:
         body = Path(tmp) / 'body'
@@ -108,6 +128,10 @@ def request(base, token, route, method='GET', payload=None, archive=None):
         if result.returncode:
             error = f'{method} transport failed; remote state must be reconciled' if method != 'GET' else 'GET transport failed'
             raise (Indeterminate(error) if method != 'GET' else ValueError(error))
+        if result.stdout in AUTH_HINT:
+            detail = auth_failure_detail(body.read_bytes()) if body.exists() else ''
+            raise ValueError(f'{method} returned HTTP {result.stdout}' + (f' ({detail})' if detail else '')
+                             + f'; {AUTH_HINT[result.stdout]}')
         if result.stdout not in ('200', '201'):
             raise ValueError(f'{method} returned HTTP {result.stdout}; response body omitted to protect credentials')
         return body.read_bytes(), result.stdout

@@ -590,8 +590,8 @@ The workspace's own company profile (singleton).
 - `run_qualify_company_agent` - Run company qualification agent
 
 ### Assets
-- `asset_generate_access_token` - Mint the per-user access token used by the upload/download scripts (rotates the previous one)
-- `asset_refresh_access_token` - Rotate the access token (e.g. after a 401)
+- `asset_generate_access_token` - Mint an access token for the upload/download scripts (an additional token; earlier ones stay valid, and an optional `name` replaces only your earlier token of that name)
+- `asset_refresh_access_token` - Mint a fresh token and revoke only the one named by `replacesPrefix`
 - `assets_list` - List your assets and your workspace's assets, with status/privacy filters
 - `asset_get_by_id` - Get one asset by uuid
 - `asset_update` - Update metadata: identifier, description, entry point, privacy (only_me/workspace/public), status, vanity slug (pretty `/s/<handle>/<slug>/` URL)

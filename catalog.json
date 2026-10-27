@@ -140,7 +140,7 @@
       ]
     },
     "asset-manager": {
-      "version": "1.3.0",
+      "version": "1.3.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -149,6 +149,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.1",
+          "date": "2026-10-27",
+          "notes": "A 401 or 403 from the asset service now prints the service's reason (the token expired, was replaced, rotated or revoked, or belongs to a different workspace) instead of only the status code. Other failures still omit the response body.",
+          "review": false
+        },
         {
           "version": "1.3.0",
           "date": "2026-10-26",
