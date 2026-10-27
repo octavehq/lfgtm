@@ -37,6 +37,8 @@ Skill-specific blueprints (design system CSS, document structure) add the most s
 
 4d. **Mono stacks carry a full fallback.** Any monospace stack ends with `ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`, after the brand's mono face when there is one, so a missing face never drops to a proportional font.
 
+4e. **Headlines keep a readable measure.** Cap a headline's width in characters, about 60 to 70 (`max-width: 65ch`), and a subtitle or lede at about 80 to 90, never as a percentage of its container, which stretches lines across wide screens. Display type at hero sizes keeps the [visual kit](formats/visual-kit.md)'s tighter measure.
+
 ## Layout & Spacing
 
 5. **Order by importance within every section.** Most impactful item first. Never chronological, never alphabetical. Position communicates priority.
@@ -83,6 +85,14 @@ Skill-specific blueprints (design system CSS, document structure) add the most s
 
 9l. **Disclosure rows show no stray markers.** A styled `<summary>` hides the native marker (`list-style: none` and `summary::-webkit-details-marker { display: none }`) so no triangle appears beside the custom icon, open or closed.
 
+9m. **Card actions sit in the same place on every card.** An action such as "View evidence" or "Copy prompt" has one position and one order on every card of its kind across the page, not only within a row, so the reader finds it without looking.
+
+9n. **A reading-order cue only for a real order.** Step numbers or a subtle flow line join items only when they have a real sequence (plan steps, decision stages). Parallel items (risks, people, proof) get neither.
+
+9o. **A collapsed section still says what it holds.** A collapsible section shows a one-sentence headline and its status when closed ("Acme's buying committee is missing 2 people", "3 of 5 criteria met"), so a reader who never opens it still gets the point.
+
+9p. **Deal-level facts live in the header.** Stage, size, amount and motion appear once, in the page header. Sections refer to them and don't repeat them.
+
 ## Visual floor and craft bar
 
 Both the floor rules and the craft bar apply to every output.
@@ -102,6 +112,10 @@ Both the floor rules and the craft bar apply to every output.
 13c. **Type is scaled for impact.** The claim on each screen or section sits in display type (2.2rem to 5rem, balanced, the brand's display weight) with one lede under it, and body text lives inside components. A heading that could be mistaken for body text has failed; so has a wall of 16px prose under a 24px heading.
 
 13d. **Motion explains.** A bar grows to its length, a dot travels the path it describes, a number counts to its value, each once as its screen enters, and nothing starts hidden. The one exception is an ambient loop that carries no information of its own, such as the kit's slow orbit ring and its flow dots once the path is drawn: it stays slow and low in contrast and stops under `prefers-reduced-motion`. Effects that decorate (floating, pulsing, parallax, stacked glows) are cut; one or two treatments per page, both of them meaningful.
+
+13e. **Hover shows only that something is clickable.** A hover state changes the cursor, an underline, a border or the control's own shade. No decorative glow, tint or texture appears on hover.
+
+13f. **Dense data can start condensed.** For dense data such as scorecards or committees, consider a condensed view that expands on click.
 
 ## Data Visualization
 
@@ -155,6 +169,7 @@ Self-contained visual/presentation audit. Run every check against the generated 
 - [ ] **Labels use label voice.** Structural labels (section markers, stat labels, table headers) use uppercase + letterspacing, distinct from body text.
 - [ ] **Single-run headings.** No heading carries a muted second line or span (editorial rule 8c).
 - [ ] **Full mono fallback.** Every monospace stack ends `ui-monospace, SFMono-Regular, Menlo, Consolas, monospace` (the source lint flags short stacks).
+- [ ] **Readable headline measure.** Headlines cap at about 60 to 70 characters and subtitles at about 80 to 90, set in `ch`, never a percentage width (4e).
 - [ ] **No orphan words.** Headings use `text-wrap: balance`, body text uses `text-wrap: pretty`. No single short word stranding alone on a final line in headings or short text blocks.
 
 ### Layout & Spacing
@@ -174,6 +189,10 @@ Self-contained visual/presentation audit. Run every check against the generated 
 - [ ] **Equal-height card rows.** Cards in a row share one height and their action links align at the bottom.
 - [ ] **Small screens.** At ~520px timelines and side-by-side summaries stack and decorative tags hide; at ~375px no horizontal page scroll (the render gate reports `page-scroll-x`), no table clipped at its right edge (it stacks into labelled cards below 520px, or scrolls in its box with a visible cue), 16px gutters, tap targets at least 44px.
 - [ ] **No stray disclosure markers.** Styled `<summary>` rows hide the native marker, open and closed.
+- [ ] **Card actions in one place.** Every card of a kind has its actions in the same position and order across the page (9m).
+- [ ] **Order cues match a real order.** Step numbers or flow lines appear only on items with a real sequence (9n).
+- [ ] **Collapsed sections carry their point.** Each collapsible section shows a one-sentence headline and status while closed (9o).
+- [ ] **Deal facts stated once.** Stage, size, amount and motion sit in the header and are not repeated inside sections (9p).
 - [ ] **Reasonable length.** The document doesn't feel padded. Every section earns its space.
 - [ ] **First-glance clarity.** Each section is scannable in ~3 seconds. A reader unfamiliar with the content should immediately understand what each section is about and what matters most. If a section requires study to parse, it needs clearer hierarchy or chunking.
 
@@ -188,6 +207,7 @@ Self-contained visual/presentation audit. Run every check against the generated 
 - [ ] **Type scaled for impact.** Each screen or section opens in display type with one lede; body text sits inside components, never as runs of paragraphs under a heading.
 - [ ] **Motion explains.** Every animation plays once as its screen enters and shows a length, a path or a value, except slow ambient loops that carry no information (the kit's orbit ring and flow dots); nothing starts hidden; `prefers-reduced-motion` stops it all.
 - [ ] **Effects are minimal.** No more than two signature treatments. No stacked gradients, glows, shadows competing for attention.
+- [ ] **No decorative hover.** Hover changes cursor, underline, border or the control's shade only; no glow, tint or texture (13e).
 
 ### Data Visualization (where applicable)
 

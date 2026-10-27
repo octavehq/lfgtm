@@ -148,12 +148,13 @@ A 2px line at the top that sweeps while fonts settle and finishes when `document
 
 ### Type scale and layout helpers
 
-`.vk-kicker` (label voice, mono, uppercase), `.vk-display` (the screen headline, 2.2rem to 5rem, light weight unless the brand says otherwise, `.is-wide` for a full-width screen, smaller automatically inside `.is-two`), `.vk-title` (section heading in document mode), `.vk-lede`, `.vk-body`, `.vk-cap` (a caption that explains a visual), `.vk-list`, `.vk-quote` with a `footer` for attribution, `.vk-btn` and `.vk-btn.is-ghost`. Story screens are `<section class="vk-screen" data-pane>` with `.is-dark` for the band; `.vk-screen-inner` centres the content and `.is-two` makes a text-and-visual pair. Document mode uses `.vk-doc`, `.vk-doc-nav` (sticky, opaque), `.vk-doc-hero`, `.vk-section`, `.vk-grid` and `.vk-footer`.
+`.vk-kicker` (label voice, mono, uppercase), `.vk-display` (the screen headline, 2.2rem to 5rem, light weight unless the brand says otherwise, `.is-wide` for a full-width screen, smaller automatically inside `.is-two`), `.vk-title` (section heading in document mode), `.vk-lede`, `.vk-body`, `.vk-cap` (a caption that explains a visual), `.vk-list`, `.vk-quote` with a `footer` for attribution, `.vk-btn` and `.vk-btn.is-ghost`. Story screens are `<section class="vk-screen" data-pane>` with `.is-dark` for the band; `.vk-screen-inner` centres the content and `.is-two` makes a text-and-visual pair. Document mode uses `.vk-doc`, `.vk-doc-nav` (sticky, opaque), `.vk-doc-hero`, `.vk-section`, `.vk-grid` and `.vk-footer`. The type helpers cap their width in `ch`; a page that overrides one keeps a character measure (about 60 to 70 for a headline at body-adjacent sizes, 80 to 90 for a lede) and never a percentage ([presentation principle 4e](../presentation-principles.md)).
 
 ## Motion rules
 
 - Motion explains or it goes: bars grow to their length, dots travel the path they describe, lit tiles light after the rest, a number counts to its value. Nothing bounces, floats or pulses for its own sake.
 - Every entrance plays once, from `.is-in`, with `--d` staggers under 2 seconds. The orbit ring and the flow dots are the only loops: ambient motion that adds no information, slow, low in contrast, and stopped under reduced motion ([presentation principle 13d](../presentation-principles.md)).
+- Hover changes the cursor, an underline, a border or the control's own shade, never a glow, tint or texture ([presentation principle 13e](../presentation-principles.md)).
 - No canvas or shader effects. The kit is CSS and SVG so the render gate, the print path and reduced motion all see the same page.
 
 ## Checks
