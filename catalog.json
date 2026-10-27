@@ -62,7 +62,7 @@
         {
           "version": "1.1.0",
           "date": "2026-10-26",
-          "notes": "Ad creative built from call language now leaves out anything personal a buyer said and reports how many details were dropped.",
+          "notes": "Ad creative built from call language now leaves out anything personal a buyer said and reports how many details were dropped. Headline and description fields hold only copy the platform can serve, with caveats and working notes kept in the source card. Campaign tables stack into cards or scroll with a visible cue on phones instead of clipping.",
           "review": false
         },
         {
@@ -344,7 +344,7 @@
         {
           "version": "1.2.0",
           "date": "2026-10-26",
-          "notes": "Champion deal rooms lay out the path to yes as the champion's own internal route and keep personal details out of a document that travels inside the buyer's company. Proof cards use a reference only as its record states it. Deal rooms drop product and security claims with no record behind them, show no internal sources such as who coached an objection, and keep search-only names off the page. Reference names and the prepared-for line no longer force uppercase, so company names keep their own case. The room renders by default as seven story screens, one job each, with the plan on the last; the fill-in worksheet layout stays available on request. Proof cards answer the metric the buyer asked about, or say they measure something adjacent. A screen count the user asks for replaces the default, the opening screen always pairs its headline with a visual, and the closing strip shows the buyer's own decision steps instead of CRM stages. On a screen taller than the window, the arrow, Page Down and Space keys scroll through it before moving on, and each screen carries one visual with a single hero visual per page.",
+          "notes": "Champion deal rooms lay out the path to yes as the champion's own internal route and keep personal details out of a document that travels inside the buyer's company. Proof cards use a reference only as its record states it. Deal rooms drop product and security claims with no record behind them, show no internal sources such as who coached an objection, and keep search-only names off the page. Reference names and the prepared-for line no longer force uppercase, so company names keep their own case. The room renders by default as seven story screens, one job each, with the plan on the last; the fill-in worksheet layout stays available on request. Proof cards answer the metric the buyer asked about, or say they measure something adjacent. A screen count the user asks for replaces the default, the opening screen always pairs its headline with a visual, and the closing strip shows the buyer's own decision steps instead of CRM stages. On a screen taller than the window, the arrow, Page Down and Space keys scroll through it before moving on, and each screen carries one visual with a single hero visual per page. Deal rooms keep to five to eight screens, lead with the buyer's own figure or a verified record instead of a vendor-reported range, keep counts and names the same on every screen, and no longer show a supporter or skeptic tag beside a name the committee will read.",
           "review": false
         },
         {
@@ -440,7 +440,7 @@
         {
           "version": "1.1.0",
           "date": "2026-10-26",
-          "notes": "Deck slides now use one-sentence headlines, and the pre-ship checks catch text cut off inside fixed-size cards. Pill tags no longer force uppercase, so product names keep their own case. A buyer-facing deck shared as a link and read without a presenter renders as story screens; presented and exported decks keep the slide format. A screen count the user asks for replaces the default, the opening screen always pairs its headline with a visual, and the closing strip shows the buyer's own decision steps instead of CRM stages. On a screen taller than the window, the arrow, Page Down and Space keys scroll through it before moving on, and each screen carries one visual with a single hero visual per page. Deep-dive slides name the entity above a one-sentence claim headline.",
+          "notes": "Deck slides now use one-sentence headlines, and the pre-ship checks catch text cut off inside fixed-size cards. Pill tags no longer force uppercase, so product names keep their own case. A buyer-facing deck shared as a link and read without a presenter renders as story screens; presented and exported decks keep the slide format. A screen count the user asks for replaces the default, the opening screen always pairs its headline with a visual, and the closing strip shows the buyer's own decision steps instead of CRM stages. On a screen taller than the window, the arrow, Page Down and Space keys scroll through it before moving on, and each screen carries one visual with a single hero visual per page. Deep-dive slides name the entity above a one-sentence claim headline. Link-shared decks keep to five to eight screens with a buyer or verified hero number. Delivered decks no longer carry Edit or Download HTML buttons; editing is an opt-in working copy.",
           "review": false
         },
         {
@@ -482,7 +482,7 @@
         {
           "version": "1.2.0",
           "date": "2026-10-26",
-          "notes": "Digests keep personal details out, open the evidence section with its quote count, and offer the follow-up prompt as a copy-ready card.",
+          "notes": "Digests keep personal details out, open the evidence section with its quote count, and offer the follow-up prompt as a copy-ready card. Weekly won and lost counts come from a full read of the deals that closed in the window, so a loss with no call that week is still counted.",
           "review": false
         },
         {
@@ -584,7 +584,7 @@
         {
           "version": "1.4.0",
           "date": "2026-10-26",
-          "notes": "Brand kits now define a mono token with a complete fallback and never put a logo on a white plate. A capture example no longer names a real company. Skills that use a kit fall back to an older name-based kit folder when its manifest domain matches.",
+          "notes": "Brand kits now define a mono token with a complete fallback and never put a logo on a white plate. A capture example no longer names a real company. Skills that use a kit fall back to an older name-based kit folder when its manifest domain matches. The page miner reads the site's main stylesheet first and keeps reading until it has the fonts and colour variables, finds the full header logo behind a labelled home link, and cleans inline styles off icons so the gallery accepts them. The gallery headline shrinks on phones and the before and after table keeps its two columns at 375px.",
           "review": false
         },
         {
@@ -644,7 +644,7 @@
         {
           "version": "1.2.0",
           "date": "2026-10-26",
-          "notes": "ICP refinement now reads won and lost outcomes straight from the deal records and no longer counts a normal early-stage stall against fit.",
+          "notes": "ICP refinement now reads won and lost outcomes straight from the deal records and no longer counts a normal early-stage stall against fit. Proposed criteria are tested on accounts from a period before the window that produced them, and a signal that reverses in a sub-segment no longer gets the top weight.",
           "review": false
         },
         {
@@ -838,7 +838,7 @@
         {
           "version": "1.1.0",
           "date": "2026-10-26",
-          "notes": "Account microsites built from calls use a call to action that fits the deal's stage and leave personal details out. Microsites drop claims with no record behind them, show no internal sources, and name only people on record. Account and persona pages render by default as six to eight story screens with one signature visual that explains the mechanism; the long scrolling page stays available on request. A screen count the user asks for replaces the default, the opening screen always pairs its headline with a visual, and the closing strip shows the buyer's own decision steps instead of CRM stages. On a screen taller than the window, the arrow, Page Down and Space keys scroll through it before moving on, and each screen carries one visual with a single hero visual per page.",
+          "notes": "Account microsites built from calls use a call to action that fits the deal's stage and leave personal details out. Microsites drop claims with no record behind them, show no internal sources, and name only people on record. Account and persona pages render by default as five to eight story screens with one signature visual that explains the mechanism; the long scrolling page stays available on request. A screen count the user asks for replaces the default, the opening screen always pairs its headline with a visual, and the closing strip shows the buyer's own decision steps instead of CRM stages. On a screen taller than the window, the arrow, Page Down and Space keys scroll through it before moving on, and each screen carries one visual with a single hero visual per page. Microsites keep to five to eight screens, lead with the buyer's own figure or a verified record with its source on screen, and keep counts and names the same on every screen.",
           "review": false
         },
         {
@@ -880,7 +880,7 @@
         {
           "version": "1.2.0",
           "date": "2026-10-26",
-          "notes": "Demo follow-up one-pagers propose a next step that fits the meeting and leave personal details from the call off the page. Proof on the page comes from the proof record, never from an unsupported claim made on the call. One-pagers drop claims with no record behind them, show no internal sources, and name only people on record. A web leave-behind renders as six story screens with one signature visual; the physical page keeps its print layout. A screen count the user asks for replaces the default, the opening screen always pairs its headline with a visual, and the closing strip shows the buyer's own decision steps instead of CRM stages. On a screen taller than the window, the arrow, Page Down and Space keys scroll through it before moving on, and each screen carries one visual with a single hero visual per page.",
+          "notes": "Demo follow-up one-pagers propose a next step that fits the meeting and leave personal details from the call off the page. Proof on the page comes from the proof record, never from an unsupported claim made on the call. One-pagers drop claims with no record behind them, show no internal sources, and name only people on record. A web leave-behind renders as story screens with one signature visual; the physical page keeps its print layout. A screen count the user asks for replaces the default, the opening screen always pairs its headline with a visual, and the closing strip shows the buyer's own decision steps instead of CRM stages. On a screen taller than the window, the arrow, Page Down and Space keys scroll through it before moving on, and each screen carries one visual with a single hero visual per page. A web leave-behind is at most three story screens, or one scrolling page with a single signature visual. The hero number is the buyer's own figure or a verified record with its source on screen, and every count and name agrees across screens.",
           "review": false
         },
         {
@@ -1318,7 +1318,7 @@
         {
           "version": "1.1.0",
           "date": "2026-10-26",
-          "notes": "The onboarding primer teaches the workspace's own sales methodology on the persona slide and fits phone screens without clipping.",
+          "notes": "The onboarding primer teaches the workspace's own sales methodology on the persona slide and fits phone screens without clipping. The capability comparison table stacks into labelled cards on phones, so the workspace's own column is never cut off.",
           "review": false
         },
         {
