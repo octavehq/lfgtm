@@ -27,6 +27,8 @@ New items go at the bottom of the relevant section with the date and test case t
 - [ ] **Sibling cards vary their cadence.** Cards in the same grid don't all use the same rhetorical template (e.g., "X, not Y" headers on every card). Max one contrast-construction header per grid. *(2026-07-02, one-pager review)*
 - [ ] **No raw metadata as UI elements.** Research/enrichment data (deal range, strategy type, market names) woven into prose, not displayed as standalone chips, badges, or pill labels. *(2026-06-23, one-pager review)*
 - [ ] **How It Works / approach headings are short.** 4-6 words max. Not full sentences. The body text carries the detail. *(2026-06-23, one-pager review)*
+- [ ] **Every claim the page writes has a record.** Each capability, security, data-handling or results statement traces to a product, proof point or reference record; one with nothing on file is dropped or sent to the rep as a question (rule 21). *(2026-10-26, skill audit)*
+- [ ] **No internal sources or unsourced names.** No coaching provenance, seller-side call labels, CRM amounts or deal notes, and every named person is in a CRM record or took part in a call or email; search-only names go in the delivery message marked "you confirm" (rule 22). *(2026-10-26, skill audit)*
 
 ## Layout & Spacing
 

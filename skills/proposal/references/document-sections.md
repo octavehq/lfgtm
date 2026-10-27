@@ -130,7 +130,7 @@ De-risks the decision by showing it's achievable, then closes on one action.
 - **One idea per line.** Executives skim. Badges, tags, and figures do the work prose would.
 - **Lead with their world.** Open every section from the customer's perspective, not ours.
 - **No dramatic lead-ins.** "In today's landscape", "At its core", "The opportunity is clear" — delete and start with the content.
-- **Ground every claim.** Company name, real call quotes, real proof points. Every named person, title, metric, and especially every quote must trace to a real tool result. Honest gaps beat plausible inventions. Tag anything unconfirmed with `.unconfirmed`.
+- **Ground every claim.** Company name, real call quotes, real proof points. Every named person, title, metric, and especially every quote must trace to a real tool result. Honest gaps beat plausible inventions. Tag an unconfirmed detail with `.unconfirmed`; a person not in a CRM record or on a call stays out of the document and goes to the rep in the delivery message (rule 22).
 - **Don't pad to look complete.** A tight 4-section proposal for an early-stage deal beats a padded 6-section one. Omit sections with no real content silently.
 - Match the requested purpose: a scaffold can retain defined slots; a completed proposal requires collecting, incorporating and checking missing seller inputs. Future measurement fields may remain in a defined POC worksheet.
 
@@ -163,4 +163,6 @@ These were explicitly praised in real outputs. Do not "improve" them away.
 - [ ] Exactly ONE steps/timeline treatment in the closing job — no separate Implementation + Next Steps
 - [ ] No three consecutive prose-dominant sections (pull Proof up or add visual treatment)
 - [ ] No tile-grid fatigue — each job has a distinct visual treatment
-- [ ] Every named person, title, prior employer, and LinkedIn URL traces to a real `find_person`/`enrich_person` result; unconfirmed tagged with `.unconfirmed`
+- [ ] Every capability, security, data-handling or results statement traces to a product, proof point or reference record; one with nothing on file is dropped or sent to the rep as a question (rule 21)
+- [ ] No internal source shows: no coaching provenance, seller-side call labels, CRM amounts or deal notes (rule 22)
+- [ ] Every named person is in a CRM record or took part in a call or email; a name found only by `find_person` goes in the delivery message marked "you confirm", never in the document (rule 22)

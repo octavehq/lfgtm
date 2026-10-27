@@ -81,11 +81,9 @@ This is NOT a full-viewport scrolling landing page. It is a max-900px document c
   .dot.supporter{background:var(--brand-positive);} .dot.neutral{background:var(--brand-yellow);} .dot.skeptic{background:var(--brand-negative);} .dot.champion{background:var(--brand-primary);}
   .stake .who{font-weight:600;font-size:.95rem;margin:.5rem 0 .4rem;}
   .stake .need{border-left:3px solid var(--brand-accent);padding-left:.7rem;font-size:.88rem;text-wrap:pretty;}
-  .stake .gap{font-size:.75rem;color:var(--brand-muted);margin-top:.5rem;}
   .tier-label{font-family:var(--mono);font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--brand-muted);margin:1rem 0 .6rem;}
   .stake.role{border-style:dashed;background:transparent;}
   .stake .fillname{color:var(--brand-muted);font-style:italic;font-weight:400;}
-  .suggested{font-family:var(--mono);font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:.08rem .35rem;border-radius:var(--brand-radius-pill);background:var(--brand-border-soft);color:var(--brand-muted);vertical-align:middle;}
 
   /* pushback Q&A */
   .qa{border:1px solid var(--brand-border);border-radius:var(--brand-radius);padding:1.1rem 1.25rem;margin-bottom:.75rem;background:var(--brand-surface);}
@@ -107,7 +105,7 @@ This is NOT a full-viewport scrolling landing page. It is a max-900px document c
 
   .intel>*,.grid-2>*,.committee>*,.proof>*,.case-stats>*,.step>*{min-width:0;}
   @media (max-width:768px){.grid-2,.committee,.proof,.case-stats,.intel{grid-template-columns:1fr;}.step{grid-template-columns:1fr;gap:.25rem;}.nav{display:none;}}
-  @media (max-width:520px){.case-table td.n{white-space:normal;}.suggested{display:none;}}
+  @media (max-width:520px){.case-table td.n{white-space:normal;}}
   @media (max-width:375px){.room{padding:1.5rem 16px;}}
   @media print{.nav{display:none;}details.section{border-color:#ccc;}details.section[open] summary::before,details.section summary::before{content:"";}.verdict,.role-badge{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}*{transition:none!important;}}
@@ -162,7 +160,7 @@ This is NOT a full-viewport scrolling landing page. It is a max-900px document c
     </div>
     <p class="tier-label">Roles to loop in</p>
     <div class="committee">
-      <div class="stake role"><span class="role-badge">[seat]</span><div class="who"><span class="fillname">Name: ____</span></div><div class="need">[what they'll care about + the line that lands]</div><div class="gap">Possible: [find_person suggestion] <span class="suggested">you confirm</span></div></div>
+      <div class="stake role"><span class="role-badge">[seat]</span><div class="who"><span class="fillname">Name: ____</span></div><div class="need">[what they'll care about + the line that lands]</div></div>
     </div>
   </details>
 

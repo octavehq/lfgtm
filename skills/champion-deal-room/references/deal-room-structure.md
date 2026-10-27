@@ -76,7 +76,7 @@ Density: ≤6 numbers total, each with a one-line basis.
 | Role badge | The seat, whichever the ICP says decides a deal like this (e.g. finance, IT, security, procurement, legal, ops) |
 | What they'll care about | Their dominant concern, in their language |
 | The line that lands | The framing for that seat, from its Motion ICP cell, backed by Job 2 |
-| Suggested contact | OPTIONAL: a `find_person` result marked "possible, you confirm" (a `.suggested` tag). Never asserted as on the deal. |
+| Suggested contact | OPTIONAL: a `find_person` result listed in the delivery message to the rep, marked "you confirm". It stays off the page, where the seat keeps its blank name. |
 
 Cap: any confirmed stakeholders other than the champion (often none early) + up to 4 roles to loop in.
 
@@ -93,7 +93,7 @@ Cap: any confirmed stakeholders other than the champion (often none early) + up 
 | The question | In the skeptical colleague's voice | ≤4 Q→A |
 | The answer | Tight, concrete, with a proof anchor where possible | ≤3 lines each |
 
-Grounding: real call objections first, then library objection entities linked to the cell. One Q→A handles the named competitor using real differentiation, not a teardown. No manufactured objections.
+Grounding: real call objections first, then library objection entities linked to the cell. One Q→A handles the named competitor using real differentiation, not a teardown. No manufactured objections. Each card names the concern in the committee's terms, never who coached it to us or which prep call it came from (rule 22).
 
 ---
 
@@ -142,10 +142,12 @@ Set the steps by the deal's setting ([Reading Calls and Deals](../../shared/info
 
 - [ ] Champion is a real, confirmed person.
 - [ ] Committee Tier 1 names ONLY people from real deal signals (call / CRM / email). No `find_person` guess asserted as a confirmed stakeholder.
-- [ ] Tier 2 roles have blank names (or `find_person` suggestions clearly tagged "possible, you confirm").
+- [ ] Tier 2 roles have blank names on the page. A `find_person` suggestion goes in the delivery message to the rep, marked "you confirm", never on the page (rule 22).
 - [ ] Every value number is real or a labeled reference outcome / estimate with its basis inline. No reference company's number shown as this account's projection.
 - [ ] Every objection traces to a real call moment or a library objection entity.
 - [ ] Every proof metric/quote traces to a real entity.
+- [ ] Every capability, security, data-handling or results statement traces to a product, proof point or reference record; one heard only on a call is dropped or sent to the rep as a question (rule 21).
+- [ ] No internal source shows on the page: no coaching provenance ("anticipating the room", who briefed us), no seller-side call labels or dates, no CRM amounts or deal notes (rule 22).
 - [ ] No stakeholder is quoted beyond what the source data supports.
 - [ ] No personal fact (health, family, personal life) from a call or CRM note appears anywhere; the count left out goes in the delivery message to the rep, not in the document.
 - [ ] The path forward matches the stage: no data, transcript or pilot ask after a first enterprise meeting.
