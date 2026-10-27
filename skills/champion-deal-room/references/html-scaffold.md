@@ -126,7 +126,7 @@ This is the document-mode scaffold, used when the rep asks for a working documen
   <div class="intel">
     <div class="card"><div class="label">Compelling event</div><div class="value">[trigger]</div></div>
     <div class="card"><div class="label">Champion</div><div class="value">[name]</div></div>
-    <div class="card"><div class="label">Committee</div><div class="value">[N seats]</div></div>
+    <div class="card"><div class="label">Committee</div><div class="value">[N people to engage now]</div></div>
     <div class="card"><div class="label">The case</div><div class="value">[headline number]</div></div>
   </div>
 
@@ -152,12 +152,12 @@ This is the document-mode scaffold, used when the rep asks for a working documen
     <!-- Tier 1, OMIT ENTIRELY if the only confirmed person is the champion (common early): -->
     <p class="tier-label">Confirmed, from your deal</p>
     <div class="committee">
-      <div class="stake"><span class="role-badge">[seat]</span><div class="who">[name, title]</div><div class="need">[what they need + how to frame it]</div></div>
+      <div class="stake"><span class="role-badge">[role]</span><div class="who">[name, title]</div><div class="need">[what they need + how to frame it]</div></div>
       <!-- only real deal-signal people OTHER than the champion (call/CRM/email); no stance tag, the committee reads this page -->
     </div>
     <p class="tier-label">Roles to loop in</p>
     <div class="committee">
-      <div class="stake role"><span class="role-badge">[seat]</span><div class="who"><span class="fillname">Name: ____</span></div><div class="need">[what they'll care about + the line that lands]</div></div>
+      <div class="stake role"><span class="role-badge">[role]</span><div class="who"><span class="fillname">Name: ____</span></div><div class="need">[what they'll care about + the line that lands]</div></div>
     </div>
   </details>
 
