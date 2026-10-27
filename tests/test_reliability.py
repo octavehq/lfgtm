@@ -181,6 +181,14 @@ print('201' if method=='POST' else '200',end='')
         path.write_text("<!DOCTYPE html><style>:root{--mono:'Geist Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}code{font-family:var(--mono)}</style><p>x</p>")
         self.assertEqual(lint.lint(path,policy),([],[]))
 
+    def test_lint_allows_google_fonts_unless_embedded(self):
+        path=self.root/'a.html';policy=dict(lint.DEFAULT)
+        path.write_text('<!DOCTYPE html><link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"><p>x</p>')
+        self.assertEqual(lint.lint(path,policy),([],[]))
+        policy['assets']='embedded';self.assertTrue(lint.lint(path,policy)[0])
+        path.write_text('<!DOCTYPE html><link href="https://cdn.example.com/a.css" rel="stylesheet"><p>x</p>')
+        policy['assets']='bundled';self.assertTrue(lint.lint(path,policy)[0])
+
     def test_lint_rejects_private_links_and_missing_resource(self):
         path=self.root/'a.html';path.write_text('<!DOCTYPE html><a href="https://app.octavehq.com/entity/abc">source</a><img src="missing.png">')
         policy=dict(lint.DEFAULT);policy['audience']='restricted_external'

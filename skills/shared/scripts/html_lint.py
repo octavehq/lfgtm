@@ -14,6 +14,7 @@ DEFAULT = {'audience': 'internal', 'readiness': 'ready_for_review', 'assets': 'b
 ENUMS = {'audience': {'internal', 'restricted_external', 'public'},
          'readiness': {'seller_draft', 'ready_for_review', 'buyer_ready', 'published_verified'},
          'assets': {'embedded', 'bundled', 'hosted'}}
+WEB_FONT_HOSTS = {'fonts.googleapis.com', 'fonts.gstatic.com'}  # the one external dependency presentation-principles allow
 MONO_FALLBACK = ('ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace')
 WORDS = 'delve robust comprehensive leverage seamless pivotal meticulous utilize holistic synergy tapestry paradigm'.split()
 
@@ -143,6 +144,8 @@ def lint(path, policy):
         if uri.startswith('#') or parsed.scheme == 'data':
             continue
         if parsed.scheme in {'http', 'https'} or uri.startswith('//'):
+            if policy['assets'] != 'embedded' and parsed.hostname in WEB_FONT_HOSTS:
+                continue
             if policy['assets'] != 'hosted' or parsed.hostname not in policy['remoteHosts']:
                 errors.append(f'Undeclared remote asset: {uri}')
         elif parsed.scheme or uri.startswith('/'):
