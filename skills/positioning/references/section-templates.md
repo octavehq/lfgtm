@@ -11,7 +11,7 @@ All templates use the CSS classes defined in the main SKILL.md and extended in [
 The foundational framework. Three stacked layers — Market context at the top, Minimum Viable Positioning in the middle, and Value Propositions by persona at the bottom.
 
 ```html
-<details class="section" open id="section-message-framework">
+<details class="pos-section" open id="section-message-framework">
   <summary>
     <div>
       <p class="section-number">Section 01</p>
@@ -137,7 +137,7 @@ The foundational framework. Three stacked layers — Market context at the top, 
 Positioning statements with highlighted keywords. Primary anchor (the core "We are X for Y" statement), secondary anchors (supporting claims), and examples of combining them.
 
 ```html
-<details class="section" open id="section-positioning-anchors">
+<details class="pos-section" open id="section-positioning-anchors">
   <summary>
     <div>
       <p class="section-number">Section 02</p>
@@ -194,15 +194,15 @@ Positioning statements with highlighted keywords. Primary anchor (the core "We a
         <h3 style="font-size: 1rem; color: var(--text-secondary); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">Secondary Anchors</h3>
         <p class="text-secondary" style="font-size: 0.85rem; margin-bottom: 1rem;">These add specificity. Stack them to narrow your positioning for a segment.</p>
         <div class="card" style="margin-bottom: 0.75rem;">
-          <span class="badge" style="background: rgba(168, 85, 247, 0.15); color: #a78bfa;">Company Type</span>
+          <span class="badge badge-neutral">Company Type</span>
           <p style="margin-top: 0.5rem;">[Firmographic qualifier — e.g., "Series A-C B2B SaaS"]</p>
         </div>
         <div class="card" style="margin-bottom: 0.75rem;">
-          <span class="badge" style="background: rgba(236, 72, 153, 0.15); color: #f472b6;">Departmental Buyer</span>
+          <span class="badge badge-neutral">Departmental Buyer</span>
           <p style="margin-top: 0.5rem;">[Persona qualifier — e.g., "Head of Growth"]</p>
         </div>
         <div class="card">
-          <span class="badge" style="background: rgba(34, 211, 238, 0.15); color: #22d3ee;">Differentiator</span>
+          <span class="badge badge-neutral">Differentiator</span>
           <p style="margin-top: 0.5rem;">[Proof qualifier — e.g., "grounded in your specific ICP knowledge"]</p>
         </div>
       </div>
@@ -248,7 +248,7 @@ Positioning statements with highlighted keywords. Primary anchor (the core "We a
 Tactical strategy table — the grid that maps target company, buyer, use case, competitive alternatives, problems, capabilities, and differentiation.
 
 ```html
-<details class="section" open id="section-positioning-strategy">
+<details class="pos-section" open id="section-positioning-strategy">
   <summary>
     <div>
       <p class="section-number">Section 03</p>
@@ -268,7 +268,7 @@ Tactical strategy table — the grid that maps target company, buyer, use case, 
           <p style="margin-top: 0.5rem; font-size: 0.85rem;">[e.g., "Series A-C B2B SaaS, $10M+ ARR"]</p>
         </div>
         <div>
-          <span class="badge" style="background: rgba(168, 85, 247, 0.15); color: #a78bfa;">Target Department</span>
+          <span class="badge badge-neutral">Target Department</span>
           <p style="margin-top: 0.5rem; font-size: 0.85rem;">[e.g., "Primary: Head of Growth / Secondary: RevOps Lead"]</p>
         </div>
         <div>
@@ -335,7 +335,7 @@ Tactical strategy table — the grid that maps target company, buyer, use case, 
 Translate the selected offering’s message for the actual committee. Choose the primary audience from the buyer decision, not a fixed User + Champion rule.
 
 ```html
-<details class="section" open id="section-persona-messaging">
+<details class="pos-section" open id="section-persona-messaging">
   <summary>
     <div>
       <p class="section-number">Section 04</p>
@@ -371,7 +371,7 @@ Translate the selected offering’s message for the actual committee. Choose the
       </div>
 
       <!-- Persona Row: User -->
-      <div class="pm-row persona-user" style="border-left: 3px solid #34d399;">
+      <div class="pm-row persona-user">
         <div class="pm-label">
           <span class="persona-dot"></span>
           <div>
@@ -386,7 +386,7 @@ Translate the selected offering’s message for the actual committee. Choose the
       </div>
 
       <!-- Persona Row: Champion -->
-      <div class="pm-row persona-champion" style="border-left: 3px solid #60a5fa;">
+      <div class="pm-row persona-champion">
         <div class="pm-label">
           <span class="persona-dot"></span>
           <div>
@@ -406,7 +406,7 @@ Translate the selected offering’s message for the actual committee. Choose the
       </div>
 
       <!-- Persona Row: Decision Maker -->
-      <div class="pm-row persona-decision" style="border-left: 3px solid #f59e0b;">
+      <div class="pm-row persona-decision">
         <div class="pm-label">
           <span class="persona-dot"></span>
           <div>
@@ -421,7 +421,7 @@ Translate the selected offering’s message for the actual committee. Choose the
       </div>
 
       <!-- Persona Row: Financial Buyer -->
-      <div class="pm-row persona-financial" style="border-left: 3px solid #f87171;">
+      <div class="pm-row persona-financial">
         <div class="pm-label">
           <span class="persona-dot"></span>
           <div>
@@ -436,7 +436,7 @@ Translate the selected offering’s message for the actual committee. Choose the
       </div>
 
       <!-- Persona Row: Technical Influencer -->
-      <div class="pm-row persona-technical" style="border-left: 3px solid #a78bfa;">
+      <div class="pm-row persona-technical">
         <div class="pm-label">
           <span class="persona-dot"></span>
           <div>
@@ -462,7 +462,7 @@ Translate the selected offering’s message for the actual committee. Choose the
 Four-column funnel showing how messaging shifts as buyer awareness increases. Split into "Creating Demand" (left) and "Capturing Demand" (right).
 
 ```html
-<details class="section" open id="section-awareness-funnel">
+<details class="pos-section" open id="section-awareness-funnel">
   <summary>
     <div>
       <p class="section-number">Section 05</p>
@@ -475,10 +475,10 @@ Four-column funnel showing how messaging shifts as buyer awareness increases. Sp
     <!-- Demand Type Labels -->
     <div class="grid-2" style="margin-bottom: 0.5rem;">
       <div style="text-align: center;">
-        <span class="badge" style="background: rgba(248, 113, 113, 0.15); color: var(--error); font-size: 0.75rem;">Creating Demand</span>
+        <span class="badge badge-error" style="font-size: 0.75rem;">Creating Demand</span>
       </div>
       <div style="text-align: center;">
-        <span class="badge" style="background: rgba(52, 211, 153, 0.15); color: var(--success); font-size: 0.75rem;">Capturing Demand</span>
+        <span class="badge badge-success" style="font-size: 0.75rem;">Capturing Demand</span>
       </div>
     </div>
 
@@ -560,7 +560,7 @@ Four-column funnel showing how messaging shifts as buyer awareness increases. Sp
 "The Current Way" vs "The New Way" — a split-view comparison for each use case. Shows the overarching problem, moment of progress, limitations, and how the product creates a better path.
 
 ```html
-<details class="section" open id="section-use-case-canvas">
+<details class="pos-section" open id="section-use-case-canvas">
   <summary>
     <div>
       <p class="section-number">Section 06</p>
@@ -579,7 +579,7 @@ Four-column funnel showing how messaging shifts as buyer awareness increases. Sp
             <p style="font-weight: 600; font-size: 1.1rem; margin-top: 0.25rem;">[Use case name — e.g., "Hyper-personalized outbound sales"]</p>
           </div>
           <div>
-            <span class="badge" style="background: rgba(168, 85, 247, 0.15); color: #a78bfa;">Target Customer</span>
+            <span class="badge badge-neutral">Target Customer</span>
             <p style="font-size: 0.85rem; margin-top: 0.25rem;">[Primary persona for this use case]</p>
           </div>
         </div>
@@ -652,7 +652,7 @@ Four-column funnel showing how messaging shifts as buyer awareness increases. Sp
 Horizontal customer journey showing phases, activities, stakeholders, and touchpoints for each use case.
 
 ```html
-<details class="section" open id="section-lifecycle">
+<details class="pos-section" open id="section-lifecycle">
   <summary>
     <div>
       <p class="section-number">Section 07</p>
@@ -683,8 +683,8 @@ Horizontal customer journey showing phases, activities, stakeholders, and touchp
               <span class="badge badge-primary" style="font-size: 0.65rem;">[Tool/Feature]</span>
             </div>
             <div class="phase-stakeholders">
-              <span class="persona-dot" style="background: #60a5fa;" title="Champion"></span>
-              <span class="persona-dot" style="background: #34d399;" title="User"></span>
+              <span class="persona-dot persona-dot-champion" title="Champion"></span>
+              <span class="persona-dot persona-dot-user" title="User"></span>
             </div>
           </div>
         </div>
@@ -700,7 +700,7 @@ Horizontal customer journey showing phases, activities, stakeholders, and touchp
               <span class="badge badge-primary" style="font-size: 0.65rem;">[Tool]</span>
             </div>
             <div class="phase-stakeholders">
-              <span class="persona-dot" style="background: #34d399;"></span>
+              <span class="persona-dot persona-dot-user" title="User"></span>
             </div>
           </div>
         </div>
@@ -723,7 +723,7 @@ Horizontal customer journey showing phases, activities, stakeholders, and touchp
 Website implementation guide — what goes on the homepage (primary) vs. what goes on secondary pages (expanded). Uses the "We are a..." / "That helps..." / "Dealing with..." / "Solved by..." template.
 
 ```html
-<details class="section" open id="section-homepage">
+<details class="pos-section" open id="section-homepage">
   <summary>
     <div>
       <p class="section-number">Section 08</p>
@@ -777,7 +777,7 @@ Website implementation guide — what goes on the homepage (primary) vs. what go
       <!-- Secondary: Expanded Messaging -->
       <div>
         <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
-          <span class="badge" style="background: rgba(168, 85, 247, 0.15); color: #a78bfa;">Other Pages</span>
+          <span class="badge badge-neutral">Other Pages</span>
           <span class="text-muted" style="font-size: 0.8rem;">Save extras for additional pages & in-app messaging</span>
         </div>
 

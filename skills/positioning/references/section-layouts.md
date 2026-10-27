@@ -90,11 +90,11 @@ Three horizontal bands forming a "house" — Market layer at the top, MVP in the
   line-height: 1.4;
 }
 /* Persona color left border on VP rows */
-.vp-row.persona-user { border-left: 3px solid #34d399; }
-.vp-row.persona-champion { border-left: 3px solid #60a5fa; }
-.vp-row.persona-decision { border-left: 3px solid #f59e0b; }
-.vp-row.persona-financial { border-left: 3px solid #f87171; }
-.vp-row.persona-technical { border-left: 3px solid #a78bfa; }
+.vp-row.persona-user { border-left: 3px solid var(--persona-user); }
+.vp-row.persona-champion { border-left: 3px solid var(--persona-champion); }
+.vp-row.persona-decision { border-left: 3px solid var(--persona-decision); }
+.vp-row.persona-financial { border-left: 3px solid var(--persona-financial); }
+.vp-row.persona-technical { border-left: 3px solid var(--persona-technical); }
 
 @media (max-width: 768px) {
   .vp-grid {
@@ -256,10 +256,10 @@ Four columns with a left-to-right color gradient indicating awareness progressio
 .funnel-cell.funnel-stage-4 { opacity: 1.0; }
 
 /* Stage header background colors */
-.funnel-header.funnel-stage-1 { background: rgba(251, 191, 36, 0.1); color: var(--warning); }
-.funnel-header.funnel-stage-2 { background: rgba(248, 113, 113, 0.1); color: var(--error); }
-.funnel-header.funnel-stage-3 { background: rgba(59, 130, 246, 0.1); color: var(--brand-primary); }
-.funnel-header.funnel-stage-4 { background: rgba(52, 211, 153, 0.1); color: var(--success); }
+.funnel-header.funnel-stage-1 { background: color-mix(in srgb, var(--warning) 10%, transparent); color: var(--warning); }
+.funnel-header.funnel-stage-2 { background: color-mix(in srgb, var(--error) 10%, transparent); color: var(--error); }
+.funnel-header.funnel-stage-3 { background: color-mix(in srgb, var(--brand-primary) 10%, transparent); color: var(--brand-primary); }
+.funnel-header.funnel-stage-4 { background: color-mix(in srgb, var(--success) 10%, transparent); color: var(--success); }
 
 .funnel-row-label {
   font-family: var(--font-display);
@@ -312,14 +312,14 @@ Two-column layout: "The Current Way" (left, red-tinted) and "The New Way" (right
 .canvas-current {
   border-radius: var(--radius-lg);
   padding: 1.25rem;
-  background: rgba(248, 113, 113, 0.04);
-  border: 1px solid rgba(248, 113, 113, 0.15);
+  background: color-mix(in srgb, var(--error) 4%, transparent);
+  border: 1px solid color-mix(in srgb, var(--error) 15%, transparent);
 }
 .canvas-new {
   border-radius: var(--radius-lg);
   padding: 1.25rem;
-  background: rgba(59, 130, 246, 0.04);
-  border: 1px solid rgba(59, 130, 246, 0.15);
+  background: color-mix(in srgb, var(--brand-primary) 4%, transparent);
+  border: 1px solid color-mix(in srgb, var(--brand-primary) 15%, transparent);
 }
 .canvas-label {
   font-family: var(--font-display);
