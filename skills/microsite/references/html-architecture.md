@@ -1,5 +1,7 @@
 # HTML Architecture
 
+Document mode: the scrolling landing page, used when the user asks for a long-form page or a renderOnly handoff exceeds the screen budget. The default rendering is [story mode](../../shared/formats/story-mode.md) with the [visual kit](../../shared/formats/visual-kit.md); the head, share metadata, brand tokens and no-JavaScript rules below apply to both.
+
 ```html
 <!DOCTYPE html>
 <html lang="en">
