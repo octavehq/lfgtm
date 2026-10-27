@@ -19,7 +19,7 @@
 - **Self-contained HTML**, inline CSS (except Google Fonts / Typekit link)
 - **Print-friendly** — CSS charts print well since they're just styled divs. Include `@media print` rules to hide navigation, flatten tabs to labeled blocks, set `print-color-adjust: exact`, and `page-break-inside: avoid` on cards.
 - **Responsive**: `@media (max-width: 768px)` collapses grids to single column, hides sidebar nav; then the 520px and 375px rules of [presentation principle 9k](../../shared/presentation-principles.md) (the H2H columns stack, the objection table scrolls inside its own wrapper)
-- **Robust text**: cards, bar labels and table cells follow presentation principles 9i and 9j (no fixed heights or `overflow: hidden` on text, `min-width: 0` on grid children, use-case cards in a row share one height)
+- **Robust text**: cards, bar labels and table cells follow presentation principles 9i and 9j (no fixed heights or `overflow: hidden` on text, `min-width: 0` on grid children, use-case cards in a row share one height); bar labels wrap instead of truncating (see the bar chart CSS below)
 - **Contrast**: the bright `--chart-win` / `--chart-loss` are fills; any number, rate or label set in a win/loss color uses the `-ink` variant, and badges on a bright fill use dark text (presentation principle 23)
 - **Headings**: `.section-title` is one sentence that states the section's finding, with no muted second line ([editorial rule 8c](../../shared/editorial-rules.md)); `.section-num` and `.dim-label` stay as labels
 
@@ -184,6 +184,16 @@ CSS `conic-gradient` donut chart. Set `--win-pct` as inline style variable.
   </div>
   <span class="bar-value">69% (20/29)</span>
 </div>
+```
+Bar labels wrap and are never cut off: no `white-space: nowrap`, `text-overflow: ellipsis` or `overflow: hidden` on `.bar-label`, at any width. Below 520px the label takes its own full-width line above the track and value, so "Mid-Market / Services" or "No persona tag" reads in full at 375px.
+```css
+.bar-row { display: grid; grid-template-columns: minmax(0, 11rem) minmax(0, 1fr) auto; gap: var(--chart-bar-gap) 12px; align-items: center; }
+.bar-label { min-width: 0; overflow-wrap: anywhere; line-height: 1.3; }
+.bar-value { white-space: nowrap; font-variant-numeric: tabular-nums; }
+@media (max-width: 520px) {
+  .bar-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .bar-label { grid-column: 1 / -1; }
+}
 ```
 
 **Tab System** (`.tab-bar` > `button` + `.tab-panel`):

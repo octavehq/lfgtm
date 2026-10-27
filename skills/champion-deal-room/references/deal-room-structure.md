@@ -170,6 +170,7 @@ Six screens merge 3 into 1 when the case has no quotable buyer words; eight add 
 - [ ] A concern that praises the offering's reach is framed in Job 2 as scope, and becomes a Job 4 objection only when it carries a condition that could stop the purchase.
 - [ ] No section reads as generic positioning. Each carries a fact a champion could repeat to move someone.
 - [ ] Fill-in slots (blank names, missing inputs, the specific ask) are visible and honest, not faked.
+- [ ] Each proof card answers the metric the buyer asked about, or says it measures something adjacent ([information principles](../../shared/information-principles.md#claims-against-the-data) rule 27).
 
 ## Value and completion
 
