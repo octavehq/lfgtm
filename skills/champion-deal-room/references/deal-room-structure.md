@@ -107,7 +107,7 @@ Grounding: real call objections first, then library objection entities linked to
 | Outcome | The result as a number or concrete before→after | 1 line |
 | Quote | One line, attributed | ≤2 lines |
 
-Grounding: `reference` and `proof_point` entities (see [entity-model.md](../../shared/entity-model.md)) plus any reference named on the call. Prefer same-industry and similar-size. Real metrics and quotes only. This also lowers the champion's personal risk, so lead with the most relevant.
+Grounding: `reference` and `proof_point` entities (see [entity-model.md](../../shared/entity-model.md)) plus any reference named on the call, used only as its record states it: a figure or story the seller told that the record doesn't support stays out ([rule 21](../../shared/information-principles.md#reading-calls-and-deals)). Prefer same-industry and similar-size. Real metrics and quotes only. This also lowers the champion's personal risk, so lead with the most relevant.
 
 ---
 

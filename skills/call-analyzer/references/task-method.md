@@ -21,7 +21,7 @@ actual configured qualification result exists; identify its scope/source.
 
 Before scoring, write down the setting and apply the
 [Reading Calls and Deals](../../shared/information-principles.md#reading-calls-and-deals)
-rules (16 to 20): size of the sale, which meeting it was, stage on that date,
+rules (16 to 21): size of the sale, which meeting it was, stage on that date,
 earlier calls, who was in the room and what was shown. Every score, risk and
 next step is judged against what a meeting in that setting can achieve.
 
@@ -68,6 +68,9 @@ a better specific response/question, supporting Motion/proof, and next use.
 A pain the buyer named that the seller never addressed ranks at least second
 among the recommendations. A delivery habit (pacing, filler words, slide count)
 is a recommendation only when the buyer's reaction shows it cost something.
+Check every number, customer story or promise the seller made
+against its proof point or reference record (rule 21); an unsupported one is
+a recommendation with the recorded figure to use instead.
 Never recommend asking an enterprise buyer for their data, transcripts or a
 pilot after a first meeting; the next step follows the champion's internal path.
 Leave sensitive personal facts said on the call out of the analysis and any
@@ -79,7 +82,8 @@ unanswered product questions, and assumptions. Preserve the buyer's agreed
 sequence. Do not add every omitted message to the follow-up.
 
 If follow-up drafting serves the user's objective, use relevant approved
-capability/proof facts. Load [evidence-and-inputs.md](../../shared/evidence-and-inputs.md) for material
+capability/proof facts, never a seller claim from the call that the record
+doesn't support (rule 21). Load [evidence-and-inputs.md](../../shared/evidence-and-inputs.md) for material
 unanswered integration, pricing, POC, or implementation questions. Ask the
 operator, incorporate/source answers, and update the draft. Unknown answers
 become an agreed working placeholder or a task to obtain the answer, never
