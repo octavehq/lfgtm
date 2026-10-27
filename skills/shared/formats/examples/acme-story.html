@@ -853,11 +853,18 @@ html.vk-js .is-in .vk-tiles i.is-on { animation: vk-lit 0.9s var(--vk-ease) both
     moved();
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     const t = e.target;
-    if (t && (t.isContentEditable || /^(input|textarea|select|button)$/i.test(t.tagName))) return;
+    if (t && (t.isContentEditable || /^(input|textarea|select|button|summary|a)$/i.test(t.tagName))) return;
     const i = indexInView();
     const k = e.key;
-    if (k === 'ArrowDown' || k === 'ArrowRight' || k === 'PageDown' || k === ' ') go(i + 1);
-    else if (k === 'ArrowUp' || k === 'ArrowLeft' || k === 'PageUp') go(i - 1);
+    const down = k === 'ArrowDown' || k === 'PageDown' || (k === ' ' && !e.shiftKey);
+    const up = k === 'ArrowUp' || k === 'PageUp' || (k === ' ' && e.shiftKey);
+    // A screen taller than the viewport (zoom, short or narrow windows) scrolls
+    // natively until its edge is in view, so no content is skipped.
+    const r = screens[i].getBoundingClientRect();
+    if (down && r.bottom > innerHeight + 2) return;
+    if (up && r.top < -2) return;
+    if (down || k === 'ArrowRight') go(i + 1);
+    else if (up || k === 'ArrowLeft') go(i - 1);
     else if (k === 'Home') go(0);
     else if (k === 'End') go(screens.length - 1);
     else if (/^[1-9]$/.test(k)) go(Number(k) - 1);
