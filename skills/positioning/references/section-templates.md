@@ -4,6 +4,8 @@ HTML templates for all 8 sections of the Positioning System document. Each templ
 
 All templates use the CSS classes defined in the main SKILL.md and extended in [section-layouts.md](section-layouts.md).
 
+Heading case: section titles, subheadings, card titles and the current way / new way labels take their case from the brand kit (sentence case when the kit says nothing), so write the text in that case and never add `text-transform: uppercase` to them. Uppercase stays only on small label voice (section number tags, table and column headers). Badges never uppercase, because they often carry product and feature names.
+
 ---
 
 ## Section 1: Message Framework
@@ -149,7 +151,7 @@ Positioning statements with highlighted keywords. Primary anchor (the core "We a
 
     <!-- Primary Anchor Statements -->
     <div style="margin-bottom: 2rem;">
-      <h3 style="font-size: 1rem; color: var(--text-secondary); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">Anchor Statements</h3>
+      <h3 style="font-size: 1rem; color: var(--text-secondary); margin-bottom: 1rem;">Anchor statements</h3>
 
       <div class="anchor-statements">
         <!-- Each statement is a styled line with highlighted key terms -->
@@ -174,7 +176,7 @@ Positioning statements with highlighted keywords. Primary anchor (the core "We a
     <!-- Primary vs Secondary Anchors -->
     <div class="grid-2" style="margin-bottom: 2rem;">
       <div>
-        <h3 style="font-size: 1rem; color: var(--text-secondary); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">Primary Anchors</h3>
+        <h3 style="font-size: 1rem; color: var(--text-secondary); margin-bottom: 1rem;">Primary anchors</h3>
         <p class="text-secondary" style="font-size: 0.85rem; margin-bottom: 1rem;">These define what you are. Use at least one in every message.</p>
         <div class="card" style="margin-bottom: 0.75rem; border-left: 3px solid var(--brand-primary);">
           <span class="badge badge-primary">Product Category</span>
@@ -191,7 +193,7 @@ Positioning statements with highlighted keywords. Primary anchor (the core "We a
       </div>
 
       <div>
-        <h3 style="font-size: 1rem; color: var(--text-secondary); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">Secondary Anchors</h3>
+        <h3 style="font-size: 1rem; color: var(--text-secondary); margin-bottom: 1rem;">Secondary anchors</h3>
         <p class="text-secondary" style="font-size: 0.85rem; margin-bottom: 1rem;">These add specificity. Stack them to narrow your positioning for a segment.</p>
         <div class="card" style="margin-bottom: 0.75rem;">
           <span class="badge badge-neutral">Company Type</span>
@@ -210,7 +212,7 @@ Positioning statements with highlighted keywords. Primary anchor (the core "We a
 
     <!-- Combining Anchors -->
     <div>
-      <h3 style="font-size: 1rem; color: var(--text-secondary); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">Combined Positioning Examples</h3>
+      <h3 style="font-size: 1rem; color: var(--text-secondary); margin-bottom: 1rem;">Combined positioning examples</h3>
       <p class="text-secondary" style="font-size: 0.85rem; margin-bottom: 1rem;">Layer primary + secondary anchors to create positioning tailored to different contexts.</p>
 
       <div class="callout" style="margin-bottom: 1rem;">
@@ -348,12 +350,12 @@ Translate the selected offering’s message for the actual committee. Choose the
     <!-- Messaging Focus Zones -->
     <div class="grid-2" style="margin-bottom: 2rem;">
       <div class="callout" style="border-left-color: var(--success);">
-        <p style="font-weight: 700; color: var(--success); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;">Focus messaging here</p>
+        <p style="font-weight: 700; color: var(--success); font-size: 0.95rem;">Focus messaging here</p>
         <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;">(what the product actually does)</p>
         <p style="font-size: 0.85rem; margin-top: 0.5rem;">[Selected primary audience, their operating job, and why this offering matters.]</p>
       </div>
       <div class="callout" style="border-left-color: var(--warning);">
-        <p style="font-weight: 700; color: var(--warning); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;">Help your champion translate</p>
+        <p style="font-weight: 700; color: var(--warning); font-size: 0.95rem;">Help your champion translate</p>
         <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;">(for the rest of the buying committee)</p>
         <p style="font-size: 0.85rem; margin-top: 0.5rem;">[Other relevant committee roles, their decision criteria, and the evidence they need.]</p>
       </div>
@@ -587,9 +589,9 @@ Four-column funnel showing how messaging shifts as buyer awareness increases. Sp
 
       <!-- Split Canvas -->
       <div class="canvas-split">
-        <!-- The Current Way -->
+        <!-- The current way -->
         <div class="canvas-current">
-          <div class="canvas-label canvas-label-current">The Current Way</div>
+          <div class="canvas-label canvas-label-current">The current way</div>
 
           <div class="canvas-flow">
             <div class="canvas-cell canvas-problem">
@@ -614,9 +616,9 @@ Four-column funnel showing how messaging shifts as buyer awareness increases. Sp
           </div>
         </div>
 
-        <!-- The New Way -->
+        <!-- The new way -->
         <div class="canvas-new">
-          <div class="canvas-label canvas-label-new">The New Way</div>
+          <div class="canvas-label canvas-label-new">The new way</div>
 
           <div class="canvas-flow">
             <div class="canvas-cell canvas-capability">

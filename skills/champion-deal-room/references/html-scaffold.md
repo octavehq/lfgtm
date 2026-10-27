@@ -37,7 +37,7 @@ This is NOT a full-viewport scrolling landing page. It is a max-900px document c
   /* masthead + verdict */
   .masthead{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding-bottom:1rem;border-bottom:1px solid var(--brand-border);}
   .masthead .ms-logo svg{height:26px;width:auto;display:block;}
-  .masthead .prepared{font-family:var(--mono);font-size:.7rem;letter-spacing:.02em;color:var(--brand-muted);text-transform:uppercase;}
+  .masthead .prepared{font-family:var(--mono);font-size:.7rem;letter-spacing:.02em;color:var(--brand-muted);}
   .masthead .prepared b{color:var(--brand-ink);}
   .verdict{background:var(--brand-band);color:#fff;border-radius:var(--brand-radius-section);padding:1.5rem 1.75rem;margin:1.5rem 0;}
   .verdict h1{font-family:var(--brand-font-heading);font-weight:500;font-size:clamp(1.4rem,3vw,1.9rem);line-height:1.2;margin-bottom:.6rem;text-wrap:balance;}
@@ -93,7 +93,7 @@ This is NOT a full-viewport scrolling landing page. It is a max-900px document c
 
   /* proof cards */
   .proof{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:.9rem;}
-  .proof .co{font-family:var(--mono);font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--brand-primary);margin-bottom:.5rem;}
+  .proof .co{font-family:var(--mono);font-size:.72rem;font-weight:700;letter-spacing:.02em;color:var(--brand-primary);margin-bottom:.5rem;}
   .proof .outcome{font-family:var(--brand-font-heading);font-weight:500;font-size:.98rem;text-wrap:pretty;}
   .proof .quote{font-size:.82rem;color:var(--brand-muted);font-style:italic;margin-top:.6rem;}
   .proof .attr{font-family:var(--mono);font-size:.62rem;color:var(--brand-muted);margin-top:.4rem;}

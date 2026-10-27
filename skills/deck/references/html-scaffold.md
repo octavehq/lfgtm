@@ -108,8 +108,7 @@ The full contents of [`viewport-base.css`](viewport-base.css) are **mandatory** 
       padding: 10px 28px;
       border-radius: var(--radius-pill);
       font-size: 16px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
+      letter-spacing: 0.02em; /* no uppercase: pills often carry a product name, which keeps its own case */
       font-weight: 500;
       color: var(--brand-500);
       background: var(--shadow-brand-md);

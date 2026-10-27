@@ -93,7 +93,7 @@
     .persona-technical .persona-dot, .persona-dot-technical { background: var(--persona-technical); }
 
     /* === Badges === */
-    .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: var(--radius-pill); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }
+    .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: var(--radius-pill); font-size: 0.75rem; font-weight: 600; } /* no uppercase: badges carry product and feature names in their own case */
     .badge-primary { background: color-mix(in srgb, var(--brand-primary) 15%, transparent); color: var(--brand-primary); }
     .badge-neutral { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-secondary); }
     .badge-success { background: color-mix(in srgb, var(--success) 15%, transparent); color: var(--success); }

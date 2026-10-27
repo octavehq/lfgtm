@@ -300,7 +300,7 @@ Four columns with a left-to-right color gradient indicating awareness progressio
 
 ## Section 6: Use Case Canvas — Split-View Comparison
 
-Two-column layout: "The Current Way" (left, red-tinted) and "The New Way" (right, blue/green-tinted). Each side flows left to right through steps.
+Two-column layout: "The current way" (left, red-tinted) and "The new way" (right, blue/green-tinted). Each side flows left to right through steps.
 
 ```css
 /* === Use Case Canvas === */
@@ -326,8 +326,6 @@ Two-column layout: "The Current Way" (left, red-tinted) and "The New Way" (right
   font-size: 1rem;
   font-weight: 700;
   margin-bottom: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 .canvas-label-current { color: var(--error); }
 .canvas-label-new { color: var(--brand-primary); }

@@ -344,7 +344,7 @@
         {
           "version": "1.2.0",
           "date": "2026-10-26",
-          "notes": "Champion deal rooms lay out the path to yes as the champion's own internal route and keep personal details out of a document that travels inside the buyer's company. Proof cards use a reference only as its record states it. Deal rooms drop product and security claims with no record behind them, show no internal sources such as who coached an objection, and keep search-only names off the page.",
+          "notes": "Champion deal rooms lay out the path to yes as the champion's own internal route and keep personal details out of a document that travels inside the buyer's company. Proof cards use a reference only as its record states it. Deal rooms drop product and security claims with no record behind them, show no internal sources such as who coached an objection, and keep search-only names off the page. Reference names and the prepared-for line no longer force uppercase, so company names keep their own case.",
           "review": false
         },
         {
@@ -440,7 +440,7 @@
         {
           "version": "1.1.0",
           "date": "2026-10-26",
-          "notes": "Deck slides now use one-sentence headlines, and the pre-ship checks catch text cut off inside fixed-size cards.",
+          "notes": "Deck slides now use one-sentence headlines, and the pre-ship checks catch text cut off inside fixed-size cards. Pill tags no longer force uppercase, so product names keep their own case.",
           "review": false
         },
         {
@@ -976,7 +976,7 @@
         {
           "version": "1.2.0",
           "date": "2026-10-26",
-          "notes": "Positioning documents no longer clip their value-prop grid on phones and show no stray disclosure markers. Template colours now come from the brand kit, a class that clashed with the kit stylesheet is renamed, and older name-based brand kits are found.",
+          "notes": "Positioning documents no longer clip their value-prop grid on phones and show no stray disclosure markers. Template colours now come from the brand kit, a class that clashed with the kit stylesheet is renamed, and older name-based brand kits are found. Headings, subheadings and the current way / new way labels take their case from the brand kit instead of forced uppercase, and badges keep product names in their own case.",
           "review": false
         },
         {
