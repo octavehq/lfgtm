@@ -48,8 +48,20 @@ for remediable conditions instead of narrowing ICP to hide execution gaps.
 
 Propose a before/after criterion set and a small holdout: known-fit wins,
 known-fit losses, genuine nonfit accounts, underrepresented segments, and
-unknown-evidence cases. Define expected distinctions before inspecting
-revised results. Use the existing qualification-validation workflow and
+unknown-evidence cases. Draw the holdout from a period that ends before the
+diagnostic window that produced the hypotheses (for a window of Apr to Oct,
+accounts that closed before Apr), and never reuse an account that served as
+evidence for a criterion. When no earlier period has enough closed deals,
+say the check is a fixture check rather than a blind test, and keep its
+result out of the weight decision. Define expected distinctions before
+inspecting revised results.
+
+Set weights from how a signal holds up across segments. A signal whose
+direction reverses in a sub-segment (it lifts wins in one segment and
+lowers them in another), or that is flagged as a difference to watch, cannot
+take the top weight or a must-have role: keep it at a lower weight scoped to
+the segments where it holds, state the reversal beside it, and propose the
+test that would settle it. Use the existing qualification-validation workflow and
 current configured agents/tools when available; do not invent a scoring
 endpoint. Test answer-level sourcing, unknown handling, true-disqualifier
 semantics, false rejections, and changed rankings.

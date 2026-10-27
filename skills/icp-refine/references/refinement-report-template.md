@@ -18,6 +18,6 @@ For each proposed criterion: source/rationale, observable field or proxy, eviden
 
 ## Validation and application
 
-Diagnostic versus held-out cases; routed/qualified outcomes; thresholds and unknown rate; subgroup/shared-agent regressions; sample limits. Show exact proposed changes, protected fields and verification/recovery state. Apply requested tested scope only after supported readback; never convert a report recommendation directly into an unverified batch write.
+Diagnostic versus held-out cases, with the holdout drawn from a period before the diagnostic window (or labelled a fixture check when it is not); each criterion's weight beside its segment results, with any sub-segment reversal named; routed/qualified outcomes; thresholds and unknown rate; subgroup/shared-agent regressions; sample limits. Show exact proposed changes, protected fields and verification/recovery state. Apply requested tested scope only after supported readback; never convert a report recommendation directly into an unverified batch write.
 
 Use [the task method](task-method.md) for execution.
