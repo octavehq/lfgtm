@@ -157,6 +157,7 @@ node <skill-dir>/../shared/scripts/render-gate.js <deck.html> \
 Fix everything it reports before opening a screenshot. Do not substitute a `scrollHeight` check: on a slide with `overflow: hidden` it reads 0 while content is visibly clipped.
 
 - [ ] **One idea per slide.** No slide requires processing two unrelated concepts.
+- [ ] **No editor chrome in the delivered file.** The deck that is shared, forwarded or published shows no "Edit" toggle, "Download HTML" button or other authoring control on any slide; editing lives only in a working copy the rep asked for.
 - [ ] **16:9 viewport.** Content fits without horizontal or vertical scroll at standard presentation aspect ratio.
 - [ ] **Type legibility.** Body text >= 1.2rem equivalent. Headlines significantly larger. Nothing illegible at projection distance.
 - [ ] **Action titles.** Every slide headline states a takeaway, not a topic label. Exception: entity deep-dive slides use the entity name as focal heading with a claim subtitle below.

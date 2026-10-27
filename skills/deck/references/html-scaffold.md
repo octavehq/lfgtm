@@ -352,9 +352,12 @@ The full contents of [`viewport-base.css`](viewport-base.css) are **mandatory** 
   <!-- Presentation chrome lives OUTSIDE the stage so it isn't scaled -->
   <div class="deck-controls" id="deckControls"></div>
 
-  <!-- Inline editing affordance (included by default — see SKILL.md Step 6) -->
-  <div class="edit-hotzone"></div>
-  <button class="edit-toggle" id="editToggle" title="Edit mode (E)">✏️</button>
+  <!-- Editing chrome is opt-in, for the rep's working copy only. To add it, put data-deck-edit on <html> and add:
+       <div class="edit-hotzone"></div>
+       <button class="edit-toggle" id="editToggle" title="Edit mode (E)">Edit</button>
+       <button data-export-html>Download HTML</button>
+       The file that is shared, forwarded or published never carries data-deck-edit, and the controller strips the
+       chrome from any file without it. -->
 
   <script>
     // Replace this insertion marker with the complete assets/presentation.js file.
@@ -388,7 +391,7 @@ Check for these before shipping a deck. Each has bitten a real deck.
 
 ## Executable controller
 
-Inline [presentation.js](../assets/presentation.js) into the script slot. Set a unique `data-content-version` on `<html>` to enable version-scoped text persistence. Mark only text leaves `data-editable`. Add a `data-export-html` button for a clean HTML download. Test the downloaded file.
+Inline [presentation.js](../assets/presentation.js) into the script slot. Set a unique `data-content-version` on `<html>` to enable version-scoped text persistence. Mark only text leaves `data-editable`. The deck you deliver, share or publish has no editor chrome: no "Edit" toggle, no "Download HTML" button, no `data-deck-edit` attribute. Editing is opt-in for a working copy the rep asks for: add `data-deck-edit` to `<html>` plus the toggle and a `data-export-html` button, and the download it produces is the clean, shareable file. Test that file, and check the delivered deck at 1440px shows no editor buttons.
 
 ```css
 @media(max-width:720px){html,body{height:auto;overflow:auto}#deckViewport,#deckStage{position:static!important;width:100%!important;height:auto!important;transform:none!important}.slide{position:relative!important;display:block!important;visibility:visible!important;opacity:1!important;width:100%!important;height:auto!important;min-height:0!important;overflow:visible!important;pointer-events:auto!important}.slide-inner{width:auto!important;height:auto!important;padding:24px!important;font-size:16px!important}.slide p,.slide li{font-size:16px!important}.grid-2,.grid-3{grid-template-columns:1fr!important}#deckControls{display:none}}
