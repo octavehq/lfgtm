@@ -79,7 +79,7 @@ Skill-specific blueprints (design system CSS, document structure) add the most s
 
 9j. **Card rows share one height.** Cards in a row stretch to the tallest (grid rows, or flex with the default stretch), and a card's action link sits at the bottom (`display: flex; flex-direction: column` on the card, `margin-top: auto` on the link), so links line up across the row.
 
-9k. **Small screens get their own rules.** At about 520px, timelines and side-by-side summaries stack and decorative tags hide. At about 375px, nothing scrolls the page sideways (a wide table scrolls inside its own container), side gutters are 16px and tap targets are at least 44px.
+9k. **Small screens get their own rules.** At about 520px, timelines and side-by-side summaries stack and decorative tags hide. At about 375px, nothing scrolls the page sideways, side gutters are 16px and tap targets are at least 44px. A table wider than the screen never clips: below 520px it either stacks into one card per row, each cell labelled with its column header (`td::before { content: attr(data-label) }`), or scrolls inside its own box with a visible cue (an edge fade or a "Scroll for more" hint) and its first column pinned. A comparison table whose last column is the point (the "with us" column) stacks, so that column is never the one off-screen.
 
 9l. **Disclosure rows show no stray markers.** A styled `<summary>` hides the native marker (`list-style: none` and `summary::-webkit-details-marker { display: none }`) so no triangle appears beside the custom icon, open or closed.
 
@@ -172,7 +172,7 @@ Self-contained visual/presentation audit. Run every check against the generated 
 - [ ] **No text-on-visual collisions.** Overlay text (titles, labels) does not overlap labels, endpoints, or elements in underlying visuals (SVGs, diagrams, charts).
 - [ ] **No clipped text.** No fixed height or `overflow: hidden` on a container that holds text; flex and grid children with text have `min-width: 0`. The render gate reports text cut off by its container as `clipped-text`.
 - [ ] **Equal-height card rows.** Cards in a row share one height and their action links align at the bottom.
-- [ ] **Small screens.** At ~520px timelines and side-by-side summaries stack and decorative tags hide; at ~375px no horizontal page scroll (the render gate reports `page-scroll-x`), 16px gutters, tap targets at least 44px.
+- [ ] **Small screens.** At ~520px timelines and side-by-side summaries stack and decorative tags hide; at ~375px no horizontal page scroll (the render gate reports `page-scroll-x`), no table clipped at its right edge (it stacks into labelled cards below 520px, or scrolls in its box with a visible cue), 16px gutters, tap targets at least 44px.
 - [ ] **No stray disclosure markers.** Styled `<summary>` rows hide the native marker, open and closed.
 - [ ] **Reasonable length.** The document doesn't feel padded. Every section earns its space.
 - [ ] **First-glance clarity.** Each section is scannable in ~3 seconds. A reader unfamiliar with the content should immediately understand what each section is about and what matters most. If a section requires study to parse, it needs clearer hierarchy or chunking.
