@@ -6,6 +6,8 @@ Resolve whether the user wants a seller working draft, a completed buyer proposa
 
 Read the CRM opportunity, relevant calls, approved offer/implementation resources, and available agreements first. Extract confirmed scope, stakeholders, evaluation criteria, proposed versus agreed commitments, and next decision. Request only remaining inputs, for example: “The opportunity and call confirm the package and pilot scope. Please supply the approved price/term, feasible rollout milestones, and delivery owner; I will incorporate them and rerun the review.” CRM/call access does not imply that commercials or telemetry are present.
 
+Fit the proposal to the deal's setting per [Reading Calls and Deals](../../shared/information-principles.md#reading-calls-and-deals) rules 16 to 21: propose a pilot, a POC or a request for the buyer's data only when the stage and the buyer's own asks support it. As a customer-facing document it leaves out both kinds of personal detail rule 19 names.
+
 Track unanswered inputs across turns. Insert operator answers, update dependent sections and figures, check consistency with existing agreements, and rerender/review. Do not invent prices, contractual terms, dates, staffing commitments, or POC results. Show sourced standard phases as proposed until agreed; state dependencies and acceptance criteria.
 
 For a POC/success plan, define the baseline, measurement method, success threshold, in-scope users/data/workflows, test period, measurement/approval owners, and the decision after the POC. Collect missing definitions through targeted questions. Future “measured result” and “final acceptance” fields may intentionally remain open with owner and timing. These are planning fields, not accidental unfinished seller inputs.

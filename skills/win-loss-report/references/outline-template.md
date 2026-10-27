@@ -2,7 +2,7 @@
 
 Use one normalized metric model and these four sections:
 
-1. Cohort and outcomes: close-date window, outcome cutoff, wins/losses/no-decision definitions, coverage and summary.
+1. Cohort and outcomes: close-date window, outcome cutoff, wins/losses/no-decision definitions, coverage, the bulk-close-date and ownership checks, and summary.
 2. Drivers and counterevidence: buyer explanations, observed associations, source scope and uncertainties.
 3. Comparisons: competitor/segment/persona tabs with unit IDs, counts, rates and overlap notes.
 4. Interventions to test: evidence, competing explanation, next experiment, owner and success measure; source/method appendix.

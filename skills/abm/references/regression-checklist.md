@@ -8,18 +8,18 @@ The account plan is a tight, account-level **plan** organized as six jobs (fit &
 
 ## Groundedness (highest priority)
 
-- [ ] **No invented people.** Every name, title, employer, tenure, and LinkedIn URL in the buying committee traces to a real `find_person`/`enrich_person` result. Zero synthesized profiles or slugs. *(2026-07-08, Coinbase — a prior run fabricated a 4-person committee with fake LinkedIn URLs like `in/jeremy-ciso` and the review pipeline rubber-stamped it. Verify names against an actual `find_person` call, not the generator's self-reported source list.)*
+- [ ] **No invented people.** Every name, title, employer, tenure, and LinkedIn URL in the buying committee traces to a real `find_person`/`enrich_person` result. Zero synthesized profiles or slugs. *(2026-07-08, account plan review: a prior run fabricated a 4-person committee with fake LinkedIn URLs like `in/jeremy-ciso` and the review pipeline rubber-stamped it. Verify names against an actual `find_person` call, not the generator's self-reported source list.)*
 - [ ] **Honest gaps.** Unfilled buying roles are named as gaps ("no economic buyer identified yet"), never papered over with a plausible invention. `.unconfirmed` tag on anyone not tool-confirmed.
-- [ ] **No dummy pipeline as real.** Seed/dummy CRM deal values (provider "generic", `seed-*` ids) are never rendered as real pipeline. Engagement history comes from real calls/emails/CRM activity only. *(2026-07-08, Coinbase)*
+- [ ] **No dummy pipeline as real.** Seed/dummy CRM deal values (provider "generic", `seed-*` ids) are never rendered as real pipeline. Engagement history comes from real calls/emails/CRM activity only. *(2026-07-08, account plan review)*
 
 ## Section structure
 
 - [ ] **Six jobs, in order.** Fit & timing → what's driving them / to explore → buying committee → how to position per persona → engagement plan → what could go wrong. No stray extra sections.
-- [ ] **Headers are conclusion-carrying plain English.** A short claim ("One champion engaged; no economic buyer yet"), not a bare label ("Buying committee") and not a cute name ("The Take"). *(2026-07-08, Coinbase)*
+- [ ] **Headers are conclusion-carrying plain English.** A short claim ("One champion engaged; no economic buyer yet"), not a bare label ("Buying committee") and not a cute name ("The Take"). *(2026-07-08, account plan review)*
 - [ ] **Persona is the spine.** The persona set and role labels are consistent across the committee (4), positioning (5), and engagement plan (6). No persona named one way in one section and another elsewhere.
 - [ ] **Section 3 is pains/triggers, not a signals dump.** Library definitions are distinct from account occurrences; Known requires dated account evidence or attributed confirmation, honest about what's unknown. No manufactured certainty.
 - [ ] **Section 5 is grounded in the motion cell.** Per-persona concerns / status quo / lead-with / proof come from `find_motion_icp`, not generic invention. Persona selector works and all panels print.
-- [ ] **Section 5 personas are selected by relevance to THIS account**, from the library's actual personas, not a standing eng/CISO/GRC default. They should visibly differ when the account/segment differs (e.g. Privacy/DPO for regulated health/finance, Procurement for enterprise/late-stage, VP of IT for lean mid-market). *(2026-07-09, COUNTRY Financial — positioning defaulted to the same eng/CISO/GRC triad as the Coinbase run even though a finance-specific Privacy/DPO persona existed and the plan flagged the privacy seat as an open gap.)*
+- [ ] **Section 5 personas are selected by relevance to THIS account**, from the library's actual personas, not a standing eng/CISO/GRC default. They should visibly differ when the account/segment differs (e.g. Privacy/DPO for regulated health/finance, Procurement for enterprise/late-stage, VP of IT for lean mid-market). *(2026-07-09, account plan for an insurance prospect: positioning defaulted to the same eng/CISO/GRC triad as the 2026-07-08 run even though a finance-specific Privacy/DPO persona existed and the plan flagged the privacy seat as an open gap.)*
 - [ ] **Section 6 is quick.** Entry point + ≤6 sequenced steps + 1-2 real sample emails. Not a 37-step project plan. Sample emails are real and specific, not lorem.
 
 ## Tightness & language

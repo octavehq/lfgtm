@@ -2,7 +2,7 @@
 
 Implements [../../shared/formats/html-document.md](../../shared/formats/html-document.md) (scroll-based reading flow, sticky nav, card-based containers, print flattening) and [../../shared/presentation-principles.md](../../shared/presentation-principles.md) (universal visual rules) for this skill's specific case: a dense, self-contained working document in the meeting-prep battle-plan style: sticky sidebar nav dots, collapsible `details` sections (open by default, forced open on print), and a real card vocabulary. Styled with the workspace company's brand kit (inline `tokens.css` `:root` + the brand's Google Fonts). No external requests beyond Google Fonts. The head carries the social share block (rules in [../../shared/social-meta.md](../../shared/social-meta.md)); `assets/og.png` is the one permitted sibling file.
 
-This is NOT a full-viewport scrolling landing page. It is a max-900px document column with information density. Reproduce this structure and vocabulary.
+This is the document-mode scaffold, used when the rep asks for a working document with fill-in worksheets or for print. The default rendering is story mode ([story-mode.md](../../shared/formats/story-mode.md) with the [visual kit](../../shared/formats/visual-kit.md) and the screen plan in [deal-room-structure.md](deal-room-structure.md)). In document mode this is NOT a full-viewport scrolling landing page. It is a max-900px document column with information density. Reproduce this structure and vocabulary.
 
 ```html
 <!DOCTYPE html>
@@ -20,6 +20,7 @@ This is NOT a full-viewport scrolling landing page. It is a max-900px document c
 <link href="https://fonts.googleapis.com/css2?family=[fonts]&display=swap" rel="stylesheet">
 <style>
   :root { /* inline the workspace brand tokens.css :root here */ }
+  :root{--mono:var(--brand-font-mono),ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
   html{scroll-behavior:smooth;}
   body{font-family:var(--brand-font-body);background:var(--brand-bg);color:var(--brand-ink);line-height:1.55;-webkit-font-smoothing:antialiased;}
@@ -36,7 +37,7 @@ This is NOT a full-viewport scrolling landing page. It is a max-900px document c
   /* masthead + verdict */
   .masthead{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding-bottom:1rem;border-bottom:1px solid var(--brand-border);}
   .masthead .ms-logo svg{height:26px;width:auto;display:block;}
-  .masthead .prepared{font-family:var(--brand-font-mono);font-size:.7rem;letter-spacing:.02em;color:var(--brand-muted);text-transform:uppercase;}
+  .masthead .prepared{font-family:var(--mono);font-size:.7rem;letter-spacing:.02em;color:var(--brand-muted);}
   .masthead .prepared b{color:var(--brand-ink);}
   .verdict{background:var(--brand-band);color:#fff;border-radius:var(--brand-radius-section);padding:1.5rem 1.75rem;margin:1.5rem 0;}
   .verdict h1{font-family:var(--brand-font-heading);font-weight:500;font-size:clamp(1.4rem,3vw,1.9rem);line-height:1.2;margin-bottom:.6rem;text-wrap:balance;}
@@ -45,7 +46,7 @@ This is NOT a full-viewport scrolling landing page. It is a max-900px document c
   /* deal-intel stat strip */
   .intel{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.75rem;margin-bottom:1.5rem;}
   .intel .card{background:var(--brand-surface);border:1px solid var(--brand-border);border-radius:var(--brand-radius);padding:1rem;text-align:center;}
-  .intel .label{font-family:var(--brand-font-mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;color:var(--brand-muted);margin-bottom:.3rem;}
+  .intel .label{font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;color:var(--brand-muted);margin-bottom:.3rem;}
   .intel .value{font-family:var(--brand-font-heading);font-weight:500;font-size:1.05rem;}
 
   /* collapsible sections */
@@ -54,7 +55,7 @@ This is NOT a full-viewport scrolling landing page. It is a max-900px document c
   details.section summary::-webkit-details-marker{display:none;}
   details.section summary::before{content:"\25B6";font-size:.6em;color:var(--brand-primary);transition:transform .2s ease;}
   details.section[open] summary::before{transform:rotate(90deg);}
-  .eyebrow{font-family:var(--brand-font-mono);font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--brand-primary);}
+  .eyebrow{font-family:var(--mono);font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--brand-primary);}
 
   /* generic card + grids */
   .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
@@ -64,8 +65,8 @@ This is NOT a full-viewport scrolling landing page. It is a max-900px document c
   .case-table{width:100%;border-collapse:collapse;font-size:.9rem;margin-bottom:1rem;}
   .case-table td{padding:.6rem .5rem;border-bottom:1px solid var(--brand-border);}
   .case-table td.n{font-family:var(--brand-font-heading);font-weight:500;text-align:right;white-space:nowrap;}
-  .case-table .basis{display:block;font-family:var(--brand-font-mono);font-size:.62rem;color:var(--brand-muted);text-transform:uppercase;letter-spacing:.03em;}
-  .est{font-family:var(--brand-font-mono);font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:.08rem .35rem;border-radius:var(--brand-radius-pill);background:var(--brand-border-soft);color:var(--brand-muted);vertical-align:middle;}
+  .case-table .basis{display:block;font-family:var(--mono);font-size:.62rem;color:var(--brand-muted);text-transform:uppercase;letter-spacing:.03em;}
+  .est{font-family:var(--mono);font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:.08rem .35rem;border-radius:var(--brand-radius-pill);background:var(--brand-border-soft);color:var(--brand-muted);vertical-align:middle;}
   .case-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.75rem;}
   .case-stats .big{font-family:var(--brand-font-heading);font-weight:500;font-size:1.7rem;color:var(--brand-primary);}
   .case-stats .lab{font-size:.8rem;color:var(--brand-muted);}
@@ -74,17 +75,12 @@ This is NOT a full-viewport scrolling landing page. It is a max-900px document c
   .committee{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:.9rem;}
   .stake{background:var(--brand-surface);border:1px solid var(--brand-border);border-radius:var(--brand-radius);padding:1.1rem 1.25rem;}
   .stake.champion{border:2px solid var(--brand-primary);}
-  .role-badge{display:inline-block;font-family:var(--brand-font-mono);font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#fff;background:var(--brand-primary);padding:.2rem .55rem;border-radius:var(--brand-radius-pill);}
-  .pos{display:inline-flex;align-items:center;gap:.35rem;font-size:.7rem;color:var(--brand-muted);margin-left:.4rem;}
-  .pos .dot{width:9px;height:9px;border-radius:50%;}
-  .dot.supporter{background:var(--brand-positive);} .dot.neutral{background:var(--brand-yellow);} .dot.skeptic{background:var(--brand-negative);} .dot.champion{background:var(--brand-primary);}
+  .role-badge{display:inline-block;font-family:var(--mono);font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#fff;background:var(--brand-primary);padding:.2rem .55rem;border-radius:var(--brand-radius-pill);}
   .stake .who{font-weight:600;font-size:.95rem;margin:.5rem 0 .4rem;}
   .stake .need{border-left:3px solid var(--brand-accent);padding-left:.7rem;font-size:.88rem;text-wrap:pretty;}
-  .stake .gap{font-size:.75rem;color:var(--brand-muted);margin-top:.5rem;}
-  .tier-label{font-family:var(--brand-font-mono);font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--brand-muted);margin:1rem 0 .6rem;}
+  .tier-label{font-family:var(--mono);font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--brand-muted);margin:1rem 0 .6rem;}
   .stake.role{border-style:dashed;background:transparent;}
   .stake .fillname{color:var(--brand-muted);font-style:italic;font-weight:400;}
-  .suggested{font-family:var(--brand-font-mono);font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:.08rem .35rem;border-radius:var(--brand-radius-pill);background:var(--brand-border-soft);color:var(--brand-muted);vertical-align:middle;}
 
   /* pushback Q&A */
   .qa{border:1px solid var(--brand-border);border-radius:var(--brand-radius);padding:1.1rem 1.25rem;margin-bottom:.75rem;background:var(--brand-surface);}
@@ -94,17 +90,20 @@ This is NOT a full-viewport scrolling landing page. It is a max-900px document c
 
   /* proof cards */
   .proof{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:.9rem;}
-  .proof .co{font-family:var(--brand-font-mono);font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--brand-primary);margin-bottom:.5rem;}
+  .proof .co{font-family:var(--mono);font-size:.72rem;font-weight:700;letter-spacing:.02em;color:var(--brand-primary);margin-bottom:.5rem;}
   .proof .outcome{font-family:var(--brand-font-heading);font-weight:500;font-size:.98rem;text-wrap:pretty;}
   .proof .quote{font-size:.82rem;color:var(--brand-muted);font-style:italic;margin-top:.6rem;}
-  .proof .attr{font-family:var(--brand-font-mono);font-size:.62rem;color:var(--brand-muted);margin-top:.4rem;}
+  .proof .attr{font-family:var(--mono);font-size:.62rem;color:var(--brand-muted);margin-top:.4rem;}
 
   /* path timeline + cost of waiting */
   .step{display:grid;grid-template-columns:110px 1fr;gap:1rem;padding:.8rem 0;border-bottom:1px solid var(--brand-border);}
-  .step .when{font-family:var(--brand-font-mono);font-size:.78rem;color:var(--brand-primary);font-weight:700;}
+  .step .when{font-family:var(--mono);font-size:.78rem;color:var(--brand-primary);font-weight:700;}
   .cost-wait{margin-top:1rem;border-left:3px solid var(--brand-negative);padding:.75rem 1rem;background:var(--brand-surface);font-size:.9rem;}
 
+  .intel>*,.grid-2>*,.committee>*,.proof>*,.case-stats>*,.step>*{min-width:0;}
   @media (max-width:768px){.grid-2,.committee,.proof,.case-stats,.intel{grid-template-columns:1fr;}.step{grid-template-columns:1fr;gap:.25rem;}.nav{display:none;}}
+  @media (max-width:520px){.case-table td.n{white-space:normal;}}
+  @media (max-width:375px){.room{padding:1.5rem 16px;}}
   @media print{.nav{display:none;}details.section{border-color:#ccc;}details.section[open] summary::before,details.section summary::before{content:"";}.verdict,.role-badge{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}*{transition:none!important;}}
 </style>
@@ -153,12 +152,12 @@ This is NOT a full-viewport scrolling landing page. It is a max-900px document c
     <!-- Tier 1, OMIT ENTIRELY if the only confirmed person is the champion (common early): -->
     <p class="tier-label">Confirmed, from your deal</p>
     <div class="committee">
-      <div class="stake"><span class="role-badge">[seat]</span><span class="pos"><span class="dot supporter"></span>[position]</span><div class="who">[name, title]</div><div class="need">[what they need + how to frame it]</div></div>
-      <!-- only real deal-signal people OTHER than the champion (call/CRM/email) -->
+      <div class="stake"><span class="role-badge">[seat]</span><div class="who">[name, title]</div><div class="need">[what they need + how to frame it]</div></div>
+      <!-- only real deal-signal people OTHER than the champion (call/CRM/email); no stance tag, the committee reads this page -->
     </div>
     <p class="tier-label">Roles to loop in</p>
     <div class="committee">
-      <div class="stake role"><span class="role-badge">[seat]</span><div class="who"><span class="fillname">Name: ____</span></div><div class="need">[what they'll care about + the line that lands]</div><div class="gap">Possible: [find_person suggestion] <span class="suggested">you confirm</span></div></div>
+      <div class="stake role"><span class="role-badge">[seat]</span><div class="who"><span class="fillname">Name: ____</span></div><div class="need">[what they'll care about + the line that lands]</div></div>
     </div>
   </details>
 
@@ -177,7 +176,7 @@ This is NOT a full-viewport scrolling landing page. It is a max-900px document c
   <!-- Job 6 -->
   <details class="section" open id="path">
     <summary>The path forward</summary>
-    <div class="step"><div class="when">[step 1, low-risk]</div><div>[who does what]</div></div>
+    <div class="step"><div class="when">[step 1, the champion's next internal move]</div><div>[who does what]</div></div>
     <div class="cost-wait">[Cost of waiting, tied to the compelling event.]</div>
   </details>
 
@@ -189,5 +188,7 @@ This is NOT a full-viewport scrolling landing page. It is a max-900px document c
 </body>
 </html>
 ```
+
+Text containers grow with their copy and the 520px and 375px rules follow [presentation principles 9i and 9k](../../shared/presentation-principles.md). `.verdict` and `.role-badge` set white text on a brand fill, so check that pair for contrast (principle 23) and switch to `--brand-ink` text when the brand color is light.
 
 **Section order is fixed:** masthead → verdict → intel strip → case-for-change → positioning-value → committee → objections → proof → path. Do not add sections or a top nav bar.

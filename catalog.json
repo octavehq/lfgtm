@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "skills": {
     "abm": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -11,6 +11,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Account plans now follow the champion's internal path after a first enterprise meeting, keep personal details out, and hold up at phone width. Regression notes no longer name real accounts. The scaffold accepts older name-based brand kits.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",
@@ -44,7 +50,7 @@
       ]
     },
     "ads": {
-      "version": "1.0.4",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -53,6 +59,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-26",
+          "notes": "Ad creative built from call language now leaves out anything personal a buyer said and reports how many details were dropped. Headline and description fields hold only copy the platform can serve, with caveats and working notes kept in the source card. Campaign tables stack into cards or scroll with a visible cue on phones instead of clipping.",
+          "review": false
+        },
         {
           "version": "1.0.4",
           "date": "2026-10-20",
@@ -86,7 +98,7 @@
       ]
     },
     "ads-resonance": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -95,6 +107,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-26",
+          "notes": "The resonance report now states each section's finding in its heading and reads cleanly on a phone.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -122,7 +140,7 @@
       ]
     },
     "asset-manager": {
-      "version": "1.2.0",
+      "version": "1.3.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -131,6 +149,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.0",
+          "date": "2026-10-26",
+          "notes": "Shared guidance: read calls and deals in their setting, keep personal details out, one-sentence headings, and render checks for clipped text, sideways scroll and colours the contrast check can't read. Drafted copy needs a record for every claim, and buyer-facing pages show no internal sources. Absence claims name what was searched, headlines agree with their own data, and estimates stay labeled.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-13",
@@ -170,7 +194,7 @@
       ]
     },
     "audit": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -179,6 +203,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-26",
+          "notes": "Shared guidance: read calls and deals in their setting, keep personal details out, one-sentence headings, and render checks for clipped text, sideways scroll and colours the contrast check can't read. Drafted copy needs a record for every claim, and buyer-facing pages show no internal sources. Absence claims name what was searched, headlines agree with their own data, and estimates stay labeled.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -206,7 +236,7 @@
       ]
     },
     "battlecard-doc": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -215,6 +245,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Battlecards read deal calls in their setting, keep personal details out, and no longer clip comparison rows or win-rate labels.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",
@@ -248,7 +284,7 @@
       ]
     },
     "call-analyzer": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -257,6 +293,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Call scores now judge each conversation against the meeting it was, so a strong first enterprise meeting without a dated next step is no longer marked down. It also flags a seller's number or customer story the record doesn't back, keeps quotation marks for exact words, and coaches talk time when the buyer got little room to speak. Follow-up drafts no longer add a capability, security or results claim without a record behind it.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",
@@ -290,7 +332,7 @@
       ]
     },
     "champion-deal-room": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -299,6 +341,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Champion deal rooms lay out the path to yes as the champion's own internal route and keep personal details out of a document that travels inside the buyer's company. Proof cards use a reference only as its record states it. Deal rooms drop product and security claims with no record behind them, show no internal sources such as who coached an objection, and keep search-only names off the page. Reference names and the prepared-for line no longer force uppercase, so company names keep their own case. The room renders by default as seven story screens, one job each, with the plan on the last; the fill-in worksheet layout stays available on request. Proof cards answer the metric the buyer asked about, or say they measure something adjacent. A screen count the user asks for replaces the default, the opening screen always pairs its headline with a visual, and the closing strip shows the buyer's own decision steps instead of CRM stages. On a screen taller than the window, the arrow, Page Down and Space keys scroll through it before moving on, and each screen carries one visual with a single hero visual per page. Deal rooms keep to five to eight screens, lead with the buyer's own figure or a verified record instead of a vendor-reported range, keep counts and names the same on every screen, and no longer show a supporter or skeptic tag beside a name the committee will read.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",
@@ -332,7 +380,7 @@
       ]
     },
     "deal-coach": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -341,6 +389,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Coaching plans now show your workspace's own sales methodology, and they leave the methodology badge off when none is on file. Goals follow the grounded priorities up to five, talk tracks use only proof the record supports, colours and fonts come from your brand kit, the current stage reads clearly in the stage strip, and a deal with no CRM opportunity gets a one-line note in place of an empty card. Talk tracks check their own capability and results claims against the record, and mark unbacked ones to confirm with product. Coaching pages preview the workspace's own next stages instead of fixed stage names.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",
@@ -374,7 +428,7 @@
       ]
     },
     "deck": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -383,6 +437,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-26",
+          "notes": "Deck slides now use one-sentence headlines, and the pre-ship checks catch text cut off inside fixed-size cards. Pill tags no longer force uppercase, so product names keep their own case. A buyer-facing deck shared as a link and read without a presenter renders as story screens; presented and exported decks keep the slide format. A screen count the user asks for replaces the default, the opening screen always pairs its headline with a visual, and the closing strip shows the buyer's own decision steps instead of CRM stages. On a screen taller than the window, the arrow, Page Down and Space keys scroll through it before moving on, and each screen carries one visual with a single hero visual per page. Deep-dive slides name the entity above a one-sentence claim headline. Link-shared decks keep to five to eight screens with a buyer or verified hero number. Delivered decks no longer carry Edit or Download HTML buttons; editing is an opt-in working copy.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -410,7 +470,7 @@
       ]
     },
     "digest": {
-      "version": "1.1.4",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -419,6 +479,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Digests keep personal details out, open the evidence section with its quote count, and offer the follow-up prompt as a copy-ready card. Weekly won and lost counts come from a full read of the deals that closed in the window, so a loss with no call that week is still counted.",
+          "review": false
+        },
         {
           "version": "1.1.4",
           "date": "2026-10-12",
@@ -458,7 +524,7 @@
       ]
     },
     "generate": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -467,6 +533,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Generated follow-ups match the meeting they follow and never repeat personal details from a call. A figure or customer story the seller told on the call goes into the follow-up only as the record states it. Follow-ups no longer add a capability, security or results claim without a record; the question goes to you instead.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",
@@ -500,7 +572,7 @@
       ]
     },
     "get-brand-components": {
-      "version": "1.3.2",
+      "version": "1.4.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -509,6 +581,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.4.0",
+          "date": "2026-10-26",
+          "notes": "Brand kits now define a mono token with a complete fallback and never put a logo on a white plate. A capture example no longer names a real company. Skills that use a kit fall back to an older name-based kit folder when its manifest domain matches. The page miner reads the site's main stylesheet first and keeps reading until it has the fonts and colour variables, finds the full header logo behind a labelled home link, and cleans inline styles off icons so the gallery accepts them. The gallery headline shrinks on phones and the before and after table keeps its two columns at 375px.",
+          "review": false
+        },
         {
           "version": "1.3.2",
           "date": "2026-10-13",
@@ -554,7 +632,7 @@
       ]
     },
     "icp-refine": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -563,6 +641,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "ICP refinement now reads won and lost outcomes straight from the deal records and no longer counts a normal early-stage stall against fit. Proposed criteria are tested on accounts from a period before the window that produced them, and a signal that reverses in a sub-segment no longer gets the top weight.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",
@@ -596,7 +680,7 @@
       ]
     },
     "insights": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -605,6 +689,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Insights counts concerns that praise the product's reach as buying signals, links every theme to its source call, and keeps personal details out.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",
@@ -638,7 +728,7 @@
       ]
     },
     "library": {
-      "version": "1.0.4",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -649,6 +739,12 @@
         "get_entity_schema"
       ],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-26",
+          "notes": "Shared guidance: read calls and deals in their setting, keep personal details out, one-sentence headings, and render checks for clipped text, sideways scroll and colours the contrast check can't read. Drafted copy needs a record for every claim, and buyer-facing pages show no internal sources. Absence claims name what was searched, headlines agree with their own data, and estimates stay labeled.",
+          "review": false
+        },
         {
           "version": "1.0.4",
           "date": "2026-10-12",
@@ -682,7 +778,7 @@
       ]
     },
     "meeting-prep": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -691,6 +787,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Leads with lookalike deals (the closest won and lost deals and what happened on their calls, with counts and bases), charts what each attendee is likely to raise, recommends real library content, structures the pitch around the workspace's own framework only when one exists, and ends on one to three next best actions (move, why now, strategy source, follow-through). Adds copy-ready keep-going prompts and a Markdown delivery for chat and agent hosts. Meeting prep's keep-going prompts are now copy-ready cards with a single Copy prompt button, and personal details stay out of the page and its prompts. Each prep starts from the meeting's own invite (time, place, organizer and every invited guest), says what was searched when there is none, and fits its asks to the meeting's setting. A tie that changes how the room should be run is flagged once, internally. Prose agrees with the page's tables, the comparables table stacks into cards on phones, and each section has a word budget. The Copy prompt button still copies inside sandboxed viewers.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",
@@ -724,7 +826,7 @@
       ]
     },
     "microsite": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -733,6 +835,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-26",
+          "notes": "Account microsites built from calls use a call to action that fits the deal's stage and leave personal details out. Microsites drop claims with no record behind them, show no internal sources, and name only people on record. Account and persona pages render by default as five to eight story screens with one signature visual that explains the mechanism; the long scrolling page stays available on request. A screen count the user asks for replaces the default, the opening screen always pairs its headline with a visual, and the closing strip shows the buyer's own decision steps instead of CRM stages. On a screen taller than the window, the arrow, Page Down and Space keys scroll through it before moving on, and each screen carries one visual with a single hero visual per page. Microsites keep to five to eight screens, lead with the buyer's own figure or a verified record with its source on screen, and keep counts and names the same on every screen.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -760,7 +868,7 @@
       ]
     },
     "one-pager": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -769,6 +877,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Demo follow-up one-pagers propose a next step that fits the meeting and leave personal details from the call off the page. Proof on the page comes from the proof record, never from an unsupported claim made on the call. One-pagers drop claims with no record behind them, show no internal sources, and name only people on record. A web leave-behind renders as story screens with one signature visual; the physical page keeps its print layout. A screen count the user asks for replaces the default, the opening screen always pairs its headline with a visual, and the closing strip shows the buyer's own decision steps instead of CRM stages. On a screen taller than the window, the arrow, Page Down and Space keys scroll through it before moving on, and each screen carries one visual with a single hero visual per page. A web leave-behind is at most three story screens, or one scrolling page with a single signature visual. The hero number is the buyer's own figure or a verified record with its source on screen, and every count and name agrees across screens.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",
@@ -802,7 +916,7 @@
       ]
     },
     "pipeline": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -811,6 +925,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Deal plans now read each deal in its setting, so a first enterprise meeting leads to the champion's next internal step instead of an early data or pilot ask. Draft wording repeats a proof point or customer story only as the record states it.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",
@@ -844,7 +964,7 @@
       ]
     },
     "positioning": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -853,6 +973,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Positioning documents no longer clip their value-prop grid on phones and show no stray disclosure markers. Template colours now come from the brand kit, a class that clashed with the kit stylesheet is renamed, and older name-based brand kits are found. Headings, subheadings and the current way / new way labels take their case from the brand kit instead of forced uppercase, and badges keep product names in their own case. Every audience the request names gets its own place, a no-feedback or no-proof line names what was searched, and estimates keep their label everywhere they appear.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",
@@ -886,7 +1012,7 @@
       ]
     },
     "product-launch": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -895,6 +1021,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-26",
+          "notes": "Shared guidance: read calls and deals in their setting, keep personal details out, one-sentence headings, and render checks for clipped text, sideways scroll and colours the contrast check can't read. Drafted copy needs a record for every claim, and buyer-facing pages show no internal sources. Absence claims name what was searched, headlines agree with their own data, and estimates stay labeled.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -922,7 +1054,7 @@
       ]
     },
     "proposal": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -931,6 +1063,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Proposals only suggest a pilot or data request when the deal's stage supports it, keep personal details out, and follow the small-screen rules. Regression notes no longer name real accounts. Proposals drop claims with no record behind them, show no internal sources or CRM amounts, and name only people on record.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",
@@ -964,7 +1102,7 @@
       ]
     },
     "prospector": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -973,6 +1111,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-26",
+          "notes": "Shared guidance: read calls and deals in their setting, keep personal details out, one-sentence headings, and render checks for clipped text, sideways scroll and colours the contrast check can't read. Drafted copy needs a record for every claim, and buyer-facing pages show no internal sources. Absence claims name what was searched, headlines agree with their own data, and estimates stay labeled.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -1000,7 +1144,7 @@
       ]
     },
     "public-changelog": {
-      "version": "1.0.1",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1009,6 +1153,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-26",
+          "notes": "Shared guidance: read calls and deals in their setting, keep personal details out, one-sentence headings, and render checks for clipped text, sideways scroll and colours the contrast check can't read. Drafted copy needs a record for every claim, and buyer-facing pages show no internal sources. Absence claims name what was searched, headlines agree with their own data, and estimates stay labeled.",
+          "review": false
+        },
         {
           "version": "1.0.1",
           "date": "2026-10-06",
@@ -1024,7 +1174,7 @@
       ]
     },
     "qual-doctor": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1033,6 +1183,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-26",
+          "notes": "Shared guidance: read calls and deals in their setting, keep personal details out, one-sentence headings, and render checks for clipped text, sideways scroll and colours the contrast check can't read. Drafted copy needs a record for every claim, and buyer-facing pages show no internal sources. Absence claims name what was searched, headlines agree with their own data, and estimates stay labeled.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -1060,7 +1216,7 @@
       ]
     },
     "research": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1069,6 +1225,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Call and demo prep now proposes a next step sized to the meeting and the deal, with personal details kept out of the brief. Prep also checks the seller's earlier claims against the proof records.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",
@@ -1102,7 +1264,7 @@
       ]
     },
     "signals": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1111,6 +1273,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-26",
+          "notes": "Signals no longer flags a first enterprise meeting without a dated next step as a risk, and keeps personal details out of the briefing. Every briefing sweeps today's meetings and the follow-ups promised for today. A meeting is named only as its invite or participants describe it.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -1138,7 +1306,7 @@
       ]
     },
     "train": {
-      "version": "1.0.3",
+      "version": "1.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1147,6 +1315,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-26",
+          "notes": "The onboarding primer teaches the workspace's own sales methodology on the persona slide and fits phone screens without clipping. The capability comparison table stacks into labelled cards on phones, so the workspace's own column is never cut off.",
+          "review": false
+        },
         {
           "version": "1.0.3",
           "date": "2026-10-12",
@@ -1174,7 +1348,7 @@
       ]
     },
     "win-loss-report": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1183,6 +1357,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-26",
+          "notes": "Win/loss reports group losses by the reasons your CRM recorded, link every driver to its quote, and keep win and loss figures readable. Every report now checks for bulk cleanup close dates and splits win rate by deal ownership, and drops stage findings that follow from what the stage means. Headlines now hold for every number under them, a win or loss driver must beat the baseline rate, and bar labels wrap on phones instead of being cut off.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-20",

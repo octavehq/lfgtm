@@ -64,8 +64,8 @@ The full contents of [`viewport-base.css`](viewport-base.css) are **mandatory** 
      * .pill              | Orienting tag / category label          | Title slide only
      * .feature-list/item | Vertical bullet stack with border       | Content slides (3-5 points)
      * .bullet-list/item  | Colored-dot bullet stack                | Deep-dive slides (scannable)
-     * .entity-name       | Large focal heading for entities        | Deep-dive slides
-     * .entity-subtitle   | Colored subtitle below entity name      | Deep-dive slides
+     * .entity-name       | Bold colored kicker naming the entity   | Deep-dive slides
+     * .entity-claim      | One-sentence claim headline             | Deep-dive slides
      * .deck-nav          | Persistent top bar (all sections)       | Multi-section decks
      * .section-nav/num/label | Section number + label              | Every slide in a section
      * .section-bar       | Thin left-edge color stripe             | Every slide in a section
@@ -108,8 +108,7 @@ The full contents of [`viewport-base.css`](viewport-base.css) are **mandatory** 
       padding: 10px 28px;
       border-radius: var(--radius-pill);
       font-size: 16px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
+      letter-spacing: 0.02em; /* no uppercase: pills often carry a product name, which keeps its own case */
       font-weight: 500;
       color: var(--brand-500);
       background: var(--shadow-brand-md);
@@ -259,21 +258,23 @@ The full contents of [`viewport-base.css`](viewport-base.css) are **mandatory** 
 
     /* === Entity Components (deep-dive slides) === */
 
-    /* Entity name — large bold focal heading for deep-dive slides.
+    /* Entity name as a kicker above a one-sentence claim headline.
        Use when: a slide is about a specific company, account, or product.
-       The entity name IS the visual focal point; the action title becomes
-       the subtitle below. */
+       The kicker names the entity; the headline states the slide's point
+       as one sentence (editorial rule 8c), with no second line under it. */
     .entity-name {
-      font-size: 96px;
+      font-size: 30px;
       font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1.05;
-      font-family: var(--font-display);
+      letter-spacing: 0.01em;
+      line-height: 1.2;
     }
-    .entity-subtitle {
-      font-size: 32px;
-      font-weight: 600;
-      margin-top: 10px;
+    .entity-claim {
+      font-size: 60px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-top: 12px;
+      font-family: var(--font-display);
     }
 
     /* === Bullet List (scannable deep-dive content) === */
@@ -351,9 +352,12 @@ The full contents of [`viewport-base.css`](viewport-base.css) are **mandatory** 
   <!-- Presentation chrome lives OUTSIDE the stage so it isn't scaled -->
   <div class="deck-controls" id="deckControls"></div>
 
-  <!-- Inline editing affordance (included by default — see SKILL.md Step 6) -->
-  <div class="edit-hotzone"></div>
-  <button class="edit-toggle" id="editToggle" title="Edit mode (E)">✏️</button>
+  <!-- Editing chrome is opt-in, for the rep's working copy only. To add it, put data-deck-edit on <html> and add:
+       <div class="edit-hotzone"></div>
+       <button class="edit-toggle" id="editToggle" title="Edit mode (E)">Edit</button>
+       <button data-export-html>Download HTML</button>
+       The file that is shared, forwarded or published never carries data-deck-edit, and the controller strips the
+       chrome from any file without it. -->
 
   <script>
     // Replace this insertion marker with the complete assets/presentation.js file.
@@ -380,13 +384,14 @@ This only applies to **decks** (slides). The document-style skills (one-pager, p
 Check for these before shipping a deck. Each has bitten a real deck.
 
 1. **Background specificity.** `viewport-base.css` sets `.slide{background:var(--slide-bg)}` and is pasted after the preset CSS, so at equal specificity it wins over a themed slide background. Theme slide backgrounds with a higher-specificity selector (`.slide.gradient`, `.slide.dark`), or gradient/dark bands silently render as flat `--slide-bg`.
-2. **Equal-height card rows.** In a `.grid-2`/`.grid-3` card row, the tallest card sets the row height, and shorter siblings get a dead band of bottom padding. Balance the copy across cards to similar length, or vertically center the card content instead of top-aligning it.
+2. **Equal-height card rows.** In a `.grid-2`/`.grid-3` card row, the tallest card sets the row height, and shorter siblings get a dead band of bottom padding. Balance the copy across cards to similar length, or vertically center the card content instead of top-aligning it. A card that carries a link or footer pins it to the bottom ([presentation principles 9j](../../shared/presentation-principles.md)), and grid or flex children holding text get `min-width: 0`.
 3. **Stat numbers with arrows or symbols.** In a `.big-number`, put spaces around arrows (`6mo -> 3wk`), set `white-space:nowrap`, and size the number for its column so it doesn't wrap or cramp. A lone symbol reads as a glyph, not a metric, so give it a worded value.
 4. **Brandmark vs eyebrow.** A top-left logo collides with a top-left `.pill` or section label on content slides. Put the brandmark top-right when slide content is left-aligned.
+5. **Text clipped by a fixed box.** The canvas is fixed, so a card with `overflow: hidden` (`.metric-card`) or a percentage height (staircase tiers) cuts off text that runs long, with no scrollbar to show it. Check that every text element sits fully inside its card and slide at 1920×1080 and in the 720px linear layout; when copy does not fit, shorten it or split the slide rather than shrinking type.
 
 ## Executable controller
 
-Inline [presentation.js](../assets/presentation.js) into the script slot. Set a unique `data-content-version` on `<html>` to enable version-scoped text persistence. Mark only text leaves `data-editable`. Add a `data-export-html` button for a clean HTML download. Test the downloaded file.
+Inline [presentation.js](../assets/presentation.js) into the script slot. Set a unique `data-content-version` on `<html>` to enable version-scoped text persistence. Mark only text leaves `data-editable`. The deck you deliver, share or publish has no editor chrome: no "Edit" toggle, no "Download HTML" button, no `data-deck-edit` attribute. Editing is opt-in for a working copy the rep asks for: add `data-deck-edit` to `<html>` plus the toggle and a `data-export-html` button, and the download it produces is the clean, shareable file. Test that file, and check the delivered deck at 1440px shows no editor buttons.
 
 ```css
 @media(max-width:720px){html,body{height:auto;overflow:auto}#deckViewport,#deckStage{position:static!important;width:100%!important;height:auto!important;transform:none!important}.slide{position:relative!important;display:block!important;visibility:visible!important;opacity:1!important;width:100%!important;height:auto!important;min-height:0!important;overflow:visible!important;pointer-events:auto!important}.slide-inner{width:auto!important;height:auto!important;padding:24px!important;font-size:16px!important}.slide p,.slide li{font-size:16px!important}.grid-2,.grid-3{grid-template-columns:1fr!important}#deckControls{display:none}}

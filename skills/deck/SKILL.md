@@ -9,7 +9,7 @@ description: Octave-powered presentation builder that researches, structures, an
 
 Read [the task method](references/task-method.md) before selecting context, claims, or output. It is the execution method for this skill. Supporting templates supply structure and styling; populate them from the task method and current evidence, not their illustrative figures or assertions.
 
-Select the actual decision narrative. QBR/renewal/value reviews use goals versus results and an auditable claim ledger; a pitch may use problem/solution/proof/ask. Use the complete presentation controller; check the actual requested HTML/PDF/PPTX export before reporting it ready.
+Select the actual decision narrative. QBR/renewal/value reviews use goals versus results and an auditable claim ledger; a pitch may use problem/solution/proof/ask. A buyer-facing deck shared as a link and read without a presenter renders in [story mode](../shared/formats/story-mode.md) by default (five to eight screens on the story arc unless the user asks for a count, the visual kit inlined); a deck to be presented, projected or exported to PDF or PPTX uses the slide format below. Use the complete presentation controller for slides; check the actual requested HTML/PDF/PPTX export before reporting it ready.
 
 Use [GTM context](../shared/gtm-context.md) for strategic tasks and [evidence and inputs](../shared/evidence-and-inputs.md) for material claims and missing facts. A narrow list/get or a render-only handoff does not require unrelated research. Read [host runtime](../shared/host-runtime.md) for available tools, portable resource paths, routing, and review fallback.
 
@@ -25,6 +25,7 @@ Resolve current tool schemas before execution; use returned IDs and pagination. 
 
 - [pptx conversion](references/pptx-conversion.md)
 
+- [story mode](../shared/formats/story-mode.md) and the [visual kit](../shared/formats/visual-kit.md) (buyer-facing deck read as a link)
 - [animation patterns](references/animation-patterns.md)
 - [export guide](references/export-guide.md)
 - [html scaffold](references/html-scaffold.md)

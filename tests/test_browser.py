@@ -51,7 +51,7 @@ class BrowserChecks(unittest.TestCase):
     def test_deck_navigation_edit_export_mobile(self):
         script=(ROOT/'skills/deck/assets/presentation.js').read_text()
         css='@media(min-width:721px){.slide{display:none}.slide.active{display:block}}'
-        path=self.root/'deck.html';path.write_text(f'''<!doctype html><html data-content-version="fixture-1"><style>{css}</style><div id="deckStage"><section class="slide"><p data-editable>First</p></section><section class="slide"><p>Second</p></section></div><div id="deckControls"></div><button id="editToggle">Edit</button><button data-export-html>Export</button><script>{script}</script></html>''')
+        path=self.root/'deck.html';path.write_text(f'''<!doctype html><html data-content-version="fixture-1" data-deck-edit><style>{css}</style><div id="deckStage"><section class="slide"><p data-editable>First</p></section><section class="slide"><p>Second</p></section></div><div id="deckControls"></div><button id="editToggle">Edit</button><button data-export-html>Export</button><script>{script}</script></html>''')
         self.page.goto(path.as_uri());self.page.get_by_text('Next',exact=True).click()
         self.assertEqual(self.page.locator('.slide.active').inner_text(),'Second')
         self.page.get_by_text('Previous',exact=True).click();self.page.get_by_text('Edit',exact=True).click()
@@ -60,11 +60,15 @@ class BrowserChecks(unittest.TestCase):
         export=self.root/'export.html';info.value.save_as(export)
         self.assertIn('Revised',export.read_text())
         self.page.goto(export.as_uri());self.assertEqual(self.page.locator('[contenteditable]').count(),0)
+        self.assertEqual(self.page.locator('#editToggle,[data-export-html],html[data-deck-edit]').count(),0)  # the export is the shareable file
         self.page.get_by_text('Next',exact=True).click()
         self.assertEqual(self.page.locator('.slide.active').inner_text(),'Second')
         self.page.set_viewport_size({'width':375,'height':812})
         self.page.wait_for_function('document.querySelectorAll(\'.slide[aria-hidden="false"]\').length === 2')
         self.assertEqual(self.page.locator('.slide[aria-hidden="false"]').count(),2)
+        shared=self.root/'shared.html';shared.write_text(path.read_text().replace(' data-deck-edit',''))
+        self.page.goto(shared.as_uri());self.page.keyboard.press('e')
+        self.assertEqual(self.page.locator('#editToggle,[data-export-html],[contenteditable=true]').count(),0)  # no editor chrome without opt-in
 
     def test_reveal_failure_and_reduced_motion_preserve_content(self):
         script=(ROOT/'skills/microsite/assets/reveal.js').read_text()
@@ -83,6 +87,30 @@ class BrowserChecks(unittest.TestCase):
         result=subprocess.run(command,capture_output=True,text=True)
         self.assertEqual(result.returncode,1,result.stderr+result.stdout)
         self.assertIn('asset-load',result.stdout)
+
+    def test_shared_render_gate_contrast_clipping_and_sideways_scroll(self):
+        path=self.root/'gate.html';head='<!doctype html><html><style>body{margin:0;padding:16px;color:#111;background:white;font-family:Arial}</style>'
+        def gate(body,viewport='800x600'):
+            path.write_text(head+body+'</html>')
+            result=subprocess.run(['node',str(ROOT/'skills/shared/scripts/render-gate.js'),str(path),'--viewports',viewport,'--json'],capture_output=True,text=True)
+            self.assertIn(result.returncode,(0,1),result.stderr);return json.loads(result.stdout)
+        checks=lambda report:[p['check'] for p in report['problems']]
+        mixed='<div style="background:color-mix(in srgb,#fff 90%,#eee);padding:8px"><p{}>Text on a mixed fill</p></div>'
+        self.assertEqual(checks(gate(mixed.format(''))),[])
+        self.assertEqual(checks(gate(mixed.format(' style="color:#fafafa"'))),['low-contrast'])
+        unknown=gate('<div style="background:oklch(0.97 0.01 250);padding:8px"><p style="color:#fafafa">Unknown fill</p></div>')
+        self.assertEqual((checks(unknown),unknown['contrastSkipped']),([],1))
+        for fill in ('#000','#f00','#ffcc00'):
+            band='<div style="background:%s;padding:8px"><p style="color:{}">Text on an opaque fill with no blue</p></div>'%fill
+            self.assertEqual(checks(gate(band.format('#fff'))),[] if fill!='#ffcc00' else ['low-contrast'])
+        self.assertEqual(checks(gate('<div style="background:#000;padding:8px"><p style="color:#222">Dark on black</p></div>')),['low-contrast'])
+        self.assertEqual(checks(gate('<div style="background:rgba(0,0,0,0.1);padding:8px"><p style="color:#fff">White on a faint tint over white</p></div>')),['low-contrast'])
+        self.assertIn('clipped-text',checks(gate('<p style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:120px">A single line that is much too long for its box</p>')))
+        deliberate='<div style="max-height:0;overflow:hidden"><p>Collapsed body</p></div><div style="width:200px;overflow:hidden"><div style="display:flex;width:600px"><p style="width:200px;flex:none">One</p><p style="width:200px;flex:none">Two</p></div></div><div style="overflow-x:auto;width:200px"><p style="white-space:nowrap">A wide row that scrolls inside its own container</p></div>'
+        self.assertEqual(checks(gate(deliberate,'375x812')),[])
+        self.assertIn('page-scroll-x',checks(gate('<div style="width:600px"><p>Fixed wide block</p></div>','375x812')))
+        entrance='<style>@keyframes in{from{transform:translateX(60px);opacity:0}}@keyframes spin{to{transform:rotate(1turn)}}</style><p style="animation:in 20s ease both">A headline that slides in from the right</p><i style="display:block;width:8px;height:8px;animation:spin 3s linear infinite"></i>'
+        self.assertEqual(checks(gate(entrance,'375x812')),[])
 
     def test_renderer_blocks_fit_and_og_capture_size(self):
         kit=self.root/'kit';kit.mkdir()

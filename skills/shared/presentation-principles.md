@@ -15,10 +15,11 @@ This file is one of three independent review dimensions:
 - `slide-deck.md`: paginated slide presentations (deck, coaching)
 - `one-pager.md`: single-page leave-behinds (one-pager, proposal condensed)
 - `microsite.md`: landing pages (microsite)
+- `story-mode.md`: full-viewport screens for buyer-facing pages, at most 3 for a one-pager and 5 to 8 for champion-deal-room, microsite and deck, built on `visual-kit.md`
 
 Skill-specific blueprints (design system CSS, document structure) add the most specific layer on top.
 
-**Floor vs. craft.** Rules like "no emoji," "no text walls," "token-based colors," and "semantic HTML" are floor rules: violations are always wrong. Principles like "first-glance clarity," "annotate key data points," and "editorial feel" are craft standards: they improve output when applied naturally but shouldn't be forced. If applying a principle makes the output feel over-designed or mechanical, skip it.
+**Floor vs. craft.** Rules like "no emoji," "no text walls," "token-based colors," and "semantic HTML" are floor rules: violations are always wrong. Principles like "first-glance clarity," "annotate key data points," and "one hero motif per page" are craft standards: they are the bar the output is judged against once the floor holds, and a page that clears the floor with nothing above it reads as a report from a tool. Apply them where the content gives them something to explain; if a principle only adds effect, skip it.
 
 ## Text & Typography
 
@@ -26,17 +27,21 @@ Skill-specific blueprints (design system CSS, document structure) add the most s
 
 2. **Type hierarchy must be clear and consistent.** Headings, subheadings, body text, labels, and captions each have a distinct visual role. The reader should instantly understand what level of information they're looking at. Hierarchy is built through size, weight, color, and spacing working together: if everything carries the same visual weight, nothing stands out and the eye has nowhere to land.
 
-3. **Headings are large and confident.** Don't shrink headings to conserve space. Generous heading sizes with comfortable line-height communicate professionalism.
+3. **Headings are large and confident.** Don't shrink headings to conserve space. A hero or display headline aims for three lines at its hero size, which is about 16 words at story and cover sizes; when it runs longer, cut words and never shrink the type to fit. Generous heading sizes with comfortable line-height communicate professionalism. Heading case follows the brand kit (sentence case when the kit says nothing): write headings, titles and card titles in that case and never force them to uppercase with CSS.
 
-4. **Labels use uppercase + letterspacing.** Section labels, stat labels, category markers, and other structural signposts use the label voice: uppercase, letterspaced, smaller size. This differentiates them from body content.
+4. **Labels use uppercase + letterspacing.** Section labels, stat labels, category markers, and other structural signposts use the label voice: uppercase, letterspaced, smaller size. This differentiates them from body content. The label voice never applies to headings or to product, company or person names (in badges, pills or tags they keep their own case).
 
 4b. **No orphan words.** Prevent single short words stranding alone on a final line, especially in headings, introductory sentences, and card descriptions. Use `text-wrap: pretty` on body text and `text-wrap: balance` on headings as a CSS floor. For critical copy, verify visually that no short word hangs alone.
+
+4c. **Headings are one run of text.** No two-tone heading component (a heading with a muted second line or span); the format invites setup-and-payoff copy ([editorial rule 8c](editorial-rules.md)). Supporting copy goes in the lede or body below.
+
+4d. **Mono stacks carry a full fallback.** Any monospace stack ends with `ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`, after the brand's mono face when there is one, so a missing face never drops to a proportional font.
 
 ## Layout & Spacing
 
 5. **Order by importance within every section.** Most impactful item first. Never chronological, never alphabetical. Position communicates priority.
 
-6. **Cut rather than expand.** When the output feels long, fewer items with sharper content beats more sections or subsections. Restraint is the product.
+6. **Cut rather than expand.** When the output feels long, fewer items with sharper content beats more sections or subsections. Fewer, sharper items read as judgment.
 
 7. **Generous whitespace.** Sections need breathing room: comfortable padding between major blocks. Content packed edge-to-edge looks rushed. Airy layouts look professional.
 
@@ -70,17 +75,33 @@ Skill-specific blueprints (design system CSS, document structure) add the most s
 
 9h. **No text-on-visual collisions.** When placing text over a visual element (SVG, illustration, diagram, chart), verify that the text box doesn't overlap any labels, endpoints, or interactive elements in the visual. Use the coordinate system of the layout to check clearances. If a heading sits on top of a diagram label at approximately the same position, one of them must move.
 
-## Visual Restraint
+9i. **Text containers grow with their text.** No fixed heights and no `overflow: hidden` on containers that hold text: cards grow, and long copy is fitted by shortening it. Flex and grid children that hold text get `min-width: 0` so long words wrap inside the column instead of widening it.
+
+9j. **Card rows share one height.** Cards in a row stretch to the tallest (grid rows, or flex with the default stretch), and a card's action link sits at the bottom (`display: flex; flex-direction: column` on the card, `margin-top: auto` on the link), so links line up across the row.
+
+9k. **Small screens get their own rules.** At about 520px, timelines and side-by-side summaries stack and decorative tags hide. At about 375px, nothing scrolls the page sideways, side gutters are 16px and tap targets are at least 44px. A table wider than the screen never clips: below 520px it either stacks into one card per row, each cell labelled with its column header (`td::before { content: attr(data-label) }`), or scrolls inside its own box with a visible cue (an edge fade or a "Scroll for more" hint) and its first column pinned. A comparison table whose last column is the point (the "with us" column) stacks, so that column is never the one off-screen.
+
+9l. **Disclosure rows show no stray markers.** A styled `<summary>` hides the native marker (`list-style: none` and `summary::-webkit-details-marker { display: none }`) so no triangle appears beside the custom icon, open or closed.
+
+## Visual floor and craft bar
+
+Both the floor rules and the craft bar apply to every output.
 
 10. **Editorial, not dashboard.** Clean typography, generous whitespace, reading-first layout. The reader should feel like they're getting a brief from a sharp analyst, not a report from a software tool.
 
 11. **No emoji.** Zero emoji characters anywhere in the document.
 
-12. **No decorative imagery.** No generic icons, stock illustrations, or background images used for decoration. Every visual element must reinforce the message: it adds information, clarifies a concept, or anchors the intended emotion. If it doesn't strengthen the reader's understanding, it's noise. Cut it.
+12. **Every visual explains.** No generic icons, stock illustrations or background images. A visual earns its place by showing the mechanism (how data moves, what connects to what) or the data (how many, which ones, when); if it could be deleted without the reader losing a fact, cut it. The [visual kit](formats/visual-kit.md) holds the components that pass this test.
 
 12b. **No raw metadata as UI elements.** Research and enrichment data (deal range, strategy type, market names, investment criteria) must be woven into prose or used to inform the narrative. Never surface enrichment data as standalone chips, badges, tags, or pill-shaped metadata labels. If the reader would ask "why am I seeing this as a label?" it belongs in a sentence, not a UI element.
 
-13. **Restraint in effects.** Avoid stacking visual effects. One or two signature treatments (a subtle glow, a scroll-reveal) are enough. More than that becomes noise.
+13. **One signature visual per screen, one hero motif per page.** Each screen or section carries at most one visual, and it explains that screen's claim. One of them is the hero motif: the visual that carries the page's mechanism or headline data at full size, placed where the claim is made. No other visual repeats or competes with it (a second mechanism diagram, a second full-size flow); the rest are support (a stat, a split, a strip, a plan, a map of the people involved). A page with no visual at all reads as cards and bullets.
+
+13b. **Story and buyer pages are budgeted in screens.** Plan a story page or a buyer-facing page in screens, using the skill's budget in [story mode](formats/story-mode.md) principle 2 (at most 3 for a one-pager, 5 to 8 for champion-deal-room, microsite and deck). Internal prep documents (meeting prep, research briefs, account plans) follow the word and section budgets their own skill sets, and this screen count does not cut them. A page that runs past its budget is cut by merging or dropping sections, never by shrinking type or padding.
+
+13c. **Type is scaled for impact.** The claim on each screen or section sits in display type (2.2rem to 5rem, balanced, the brand's display weight) with one lede under it, and body text lives inside components. A heading that could be mistaken for body text has failed; so has a wall of 16px prose under a 24px heading.
+
+13d. **Motion explains.** A bar grows to its length, a dot travels the path it describes, a number counts to its value, each once as its screen enters, and nothing starts hidden. The one exception is an ambient loop that carries no information of its own, such as the kit's slow orbit ring and its flow dots once the path is drawn: it stays slow and low in contrast and stops under `prefers-reduced-motion`. Effects that decorate (floating, pulsing, parallax, stacked glows) are cut; one or two treatments per page, both of them meaningful.
 
 ## Data Visualization
 
@@ -94,6 +115,8 @@ Skill-specific blueprints (design system CSS, document structure) add the most s
     Don't default to charts when a sentence would be clearer. Don't default to prose when a single stat would hit harder.
 
 15. **One chart, one message.** Each visualization makes exactly one point, stated in its title. If a chart supports two arguments, either pick the stronger one or split it into two charts. Multi-message charts confuse; the reader doesn't know what to take away.
+
+15b. **Quadrants keep their labels inside the boxes.** In a 2x2, each label sits inside its own box and nothing is drawn with arrows. Mark the item's current box, and state as text the condition under which it moves or drops ("Drops here if the budget owner declines").
 
 ## Self-Contained Output
 
@@ -115,7 +138,7 @@ Skill-specific blueprints (design system CSS, document structure) add the most s
 
 22. **Accent color is semantic, not decorative.** The primary accent is reserved for elements that carry meaning: active states, callouts, stat values, interactive affordances. Never used as a decorative fill or ornamental border. In charts and data visualizations, use accent color to highlight the key data point that supports the headline: don't make every bar the same color when one bar IS the story. Use callouts or arrows to annotate the key data point when the takeaway isn't self-evident from the visual alone.
 
-23. **Sufficient contrast.** Text meets WCAG AA contrast ratios against its background. Accent colors used as text must be legible on their surface.
+23. **Sufficient contrast.** Text meets WCAG AA contrast ratios against its background. Accent colors used as text must be legible on their surface. Define text and surface tokens as checked pairs (4.5:1 for body text, 3:1 at 18px and up); when an accent fails as text, use its darker variant for text and keep the bright one for fills. A contrast self-check computes ratios only on fills it can resolve: text whose nearest fill it cannot compute (`color-mix()`, `oklch()`, a gradient or image) is skipped until an opaque fill it can read sits under the text, and then checked by eye. The [render gate](scripts/render-gate.js) works this way.
 
 ---
 
@@ -128,7 +151,10 @@ Self-contained visual/presentation audit. Run every check against the generated 
 - [ ] **No text walls.** No single `<p>` exceeds ~2 sentences. Scan for any `<p>` containing 3+ period-space-capital sequences. Multi-sentence content uses wrapper `<div>` with child `<p>` tags.
 - [ ] **Type hierarchy.** At least 3 distinct type levels visible (heading, subheading, body). Each is visually differentiated by size, weight, or family.
 - [ ] **Headings are large.** Main headings are at least `1.5rem` (ideally `2rem+`). Not shrunk to fit.
-- [ ] **Labels use label voice.** Structural labels (section markers, stat labels, category headings) use uppercase + letterspacing, distinct from body text.
+- [ ] **Hero headlines run three lines or fewer.** Each hero or display headline wraps to at most three lines at its rendered size, about 16 words; a longer one is cut, never shrunk (the source lint warns past 16 words).
+- [ ] **Labels use label voice.** Structural labels (section markers, stat labels, table headers) use uppercase + letterspacing, distinct from body text.
+- [ ] **Single-run headings.** No heading carries a muted second line or span (editorial rule 8c).
+- [ ] **Full mono fallback.** Every monospace stack ends `ui-monospace, SFMono-Regular, Menlo, Consolas, monospace` (the source lint flags short stacks).
 - [ ] **No orphan words.** Headings use `text-wrap: balance`, body text uses `text-wrap: pretty`. No single short word stranding alone on a final line in headings or short text blocks.
 
 ### Layout & Spacing
@@ -144,21 +170,30 @@ Self-contained visual/presentation audit. Run every check against the generated 
 - [ ] **Vertical alignment across sections.** Repeated section layouts start content at the same vertical position. No content jumping between sections.
 - [ ] **Whitespace is structural.** Gaps follow a consistent scale. No unexplained voids larger than the next gap size up in the scale.
 - [ ] **No text-on-visual collisions.** Overlay text (titles, labels) does not overlap labels, endpoints, or elements in underlying visuals (SVGs, diagrams, charts).
+- [ ] **No clipped text.** No fixed height or `overflow: hidden` on a container that holds text; flex and grid children with text have `min-width: 0`. The render gate reports text cut off by its container as `clipped-text`.
+- [ ] **Equal-height card rows.** Cards in a row share one height and their action links align at the bottom.
+- [ ] **Small screens.** At ~520px timelines and side-by-side summaries stack and decorative tags hide; at ~375px no horizontal page scroll (the render gate reports `page-scroll-x`), no table clipped at its right edge (it stacks into labelled cards below 520px, or scrolls in its box with a visible cue), 16px gutters, tap targets at least 44px.
+- [ ] **No stray disclosure markers.** Styled `<summary>` rows hide the native marker, open and closed.
 - [ ] **Reasonable length.** The document doesn't feel padded. Every section earns its space.
 - [ ] **First-glance clarity.** Each section is scannable in ~3 seconds. A reader unfamiliar with the content should immediately understand what each section is about and what matters most. If a section requires study to parse, it needs clearer hierarchy or chunking.
 
-### Visual Restraint
+### Visual floor and craft bar
 
 - [ ] **No emoji.** Zero emoji characters anywhere in reader-facing text.
-- [ ] **No decorative imagery.** No generic icons or illustrations used for decoration.
+- [ ] **Every visual explains.** No generic icons or illustrations; each visual shows a mechanism or data and says in a caption or label what its units are.
 - [ ] **No raw metadata UI.** No enrichment/research data displayed as standalone chips, badges, tags, or pill labels. All personalized data is woven into prose.
 - [ ] **Editorial feel.** The output reads as a market brief, not a software dashboard.
-- [ ] **Effects are minimal.** No more than 2-3 signature visual treatments. No stacked gradients, glows, shadows competing for attention.
+- [ ] **One visual per screen, one hero motif.** No screen or section carries two visuals; exactly one full-size visual carries the mechanism or the headline data, placed with the claim, and nothing else repeats it.
+- [ ] **Screen budget held.** A buyer-facing page holds its skill's screen budget (at most 3 for a one-pager, 5 to 8 for the others); an internal document is three to five screens' worth of sections. Nothing was shrunk to fit.
+- [ ] **Type scaled for impact.** Each screen or section opens in display type with one lede; body text sits inside components, never as runs of paragraphs under a heading.
+- [ ] **Motion explains.** Every animation plays once as its screen enters and shows a length, a path or a value, except slow ambient loops that carry no information (the kit's orbit ring and flow dots); nothing starts hidden; `prefers-reduced-motion` stops it all.
+- [ ] **Effects are minimal.** No more than two signature treatments. No stacked gradients, glows, shadows competing for attention.
 
 ### Data Visualization (where applicable)
 
 - [ ] **Visualization matches the story.** Charts, stats, and tables use the right format for the insight type. No bar charts where a single stat callout would hit harder. No prose where a chart would be clearer.
 - [ ] **One chart, one message.** Each visualization makes one point, stated in its title. No multi-message charts.
+- [ ] **Quadrants readable.** 2x2 labels sit inside their boxes, no arrows, the current box is marked and the move or drop condition is written as text.
 - [ ] **Key data annotated.** Accent color or callouts highlight the data point that supports the headline. Not every bar the same color.
 
 ### Self-Contained & Print
@@ -179,9 +214,10 @@ Self-contained visual/presentation audit. Run every check against the generated 
 
 - [ ] **Token-based colors.** All colors trace to CSS custom properties (`:root` variables). No hardcoded hex/rgb outside of `@media print` or `box-shadow` blacks.
 - [ ] **Accent is semantic.** Primary accent used only for meaningful elements (active states, callouts, stats, interactive affordances), not decorative fills.
-- [ ] **Contrast.** Body text legible against its background. Accent text legible on its surface. No low-contrast text on dark backgrounds.
+- [ ] **Contrast.** Body text legible against its background. Accent text legible on its surface. No low-contrast text on dark backgrounds. Text the render gate skipped (it reports how many) was checked by eye on its real fill.
 
 ### Brand & Logo
 
 - [ ] **Logo is the workspace company's, verified on the pixels.** Every logo in the chrome (header, cover, footer, dark bands) is the workspace company's own mark, confirmed by rendering the actual image, not by trusting the manifest/filename. A white/`onDark` logo is invisible on a light preview and cached kits can carry a stray customer logo, so the dark-band logo must be checked on a dark surface specifically. A customer/partner mark on the chrome is contamination. See [brand-kit-usage.md](brand-kit-usage.md) → Logo integrity.
+- [ ] **No forced logo chip.** A logo made for light backgrounds sits directly on a light page with no white chip forced behind it; on a dark surface it uses the kit's on-dark variant, checked on the pixels.
 - [ ] **Logo inlined.** Logo is a data URI / inline SVG, not a local file path or hotlink, so the file is self-contained.

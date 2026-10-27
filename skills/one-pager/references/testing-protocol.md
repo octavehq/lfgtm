@@ -55,7 +55,7 @@ Pick targets that vary on the dimensions that matter:
 
 | Dimension | Why it matters | Example variation |
 |---|---|---|
-| **Brand personality** | A dark-navy brand vs a light-minimal brand stress-tests color/contrast rules | Crexi (dark hero) vs a healthcare SaaS (light, airy) |
+| **Brand personality** | A dark-navy brand vs a light-minimal brand stress-tests color/contrast rules | A commercial real-estate brand with a dark hero vs a healthcare SaaS (light, airy) |
 | **Industry/vertical** | Different verticals surface different jargon and proof-point patterns | CRE vs fintech vs developer tools |
 | **Occasion** | Demo follow-up vs intro vs renewal changes tone and section emphasis | `--for demo-followup` vs `--for intro` |
 | **Data richness** | A target with full Octave intel vs one with sparse data tests fallback paths | Well-known account vs cold prospect |

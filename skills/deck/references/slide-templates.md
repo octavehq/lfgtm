@@ -13,6 +13,8 @@ Use these templates for each slide type in the outline. Mix types for visual var
 >
 > **Cards must have depth.** Every `.card` and `.metric-card` uses `box-shadow` from the scaffold to lift off the slide background. A card with only a faint border on the same-colored background doesn't register as a distinct container. Shadows create the physical separation.
 
+> **Slide titles are one sentence.** A content slide's headline states the slide's point as one sentence ("Three of the five pilots hit their adoption target"). Never pair a headline with a muted second line that completes it ([editorial rules 8c](../../shared/editorial-rules.md)). A 2×2 or quadrant slide follows [presentation principles 15b](../../shared/presentation-principles.md): labels inside their boxes, no arrows, and the condition that moves an item written as text.
+
 **Title Slide (first slide — note `active visible`):**
 
 > **Pill tags are optional.** Only include the `<span class="pill">` if the category or context genuinely helps orient the viewer (e.g., a product name or audience the viewer doesn't already know). Don't pill information the audience already has (the event name, the date, "Q2 Update"). If the context matters, make it the subtitle. If it doesn't, cut it.
@@ -141,13 +143,13 @@ Use these templates for each slide type in the outline. Mix types for visual var
 
 **Deep Dive Slide (entity-level detail — bullet format):**
 
-> **Entity name as focal heading, claim as subtitle.** When a deep-dive slide focuses on a specific entity (company, product, account), the entity name IS the visual focal point — large, bold, the first thing the eye lands on. The action-title claim lives as a colored subtitle directly below. This makes entity identification immediate while still delivering the insight.
+> **Entity name as the kicker, claim as the headline.** When a deep-dive slide focuses on a specific entity (company, product, account), the entity name sits in a bold, section-colored kicker above the headline so the viewer knows at once what the slide is about. The headline is the claim, one sentence that states the slide's point ([editorial rules 8c](../../shared/editorial-rules.md)), with no colored line under it.
 
 > **Bullet format over prose.** Deep-dive slides use scannable bullet lists, not prose paragraphs or two-column sidebar layouts. Bullets can be processed in 5 seconds at projection speed. Use the `.bullet-list` / `.bullet-item` components from the scaffold with colored dots matching the section color.
 
 > **Fixed-position nav and consistent template.** The section nav (number + label) appears at the same absolute position on every slide within a section. Every deep-dive slide in a section uses the same layout template — same `.slide-body`, same content structure. The viewer recognizes the pattern and focuses on content differences, not layout changes.
 
-> **Three font sizes only.** Entity name, subtitle, and bullet text. That's it. No sidebar headings, no stat callouts, no caption text competing for attention.
+> **Three font sizes only.** Kicker, headline, and bullet text. That's it. No sidebar headings, no stat callouts, no caption text competing for attention.
 
 ```html
 <section class="slide" data-slide="N">
@@ -166,8 +168,8 @@ Use these templates for each slide type in the outline. Mix types for visual var
   <!-- Content -->
   <div class="slide-body">
     <div>
-      <h2 class="entity-name">[Entity Name]</h2>
-      <p class="entity-subtitle" style="color:var(--section-color);">[Why they're X]</p>
+      <p class="entity-name" style="color:var(--section-color);">[Entity Name]</p>
+      <h2 class="entity-claim">[The claim about this entity, one sentence]</h2>
     </div>
     <div class="bullet-list">
       <div class="bullet-item" style="--dot:var(--section-color);">[Key point 1]</div>

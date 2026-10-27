@@ -2,7 +2,7 @@
 
 Single-page or very short documents designed to be handed off, emailed, or printed. Everything the reader needs on one surface. Dense but scannable.
 
-**Skills that produce this format:** one-pager, proposal (condensed mode)
+**Skills that produce this format:** one-pager (physical page), proposal (condensed mode). A web leave-behind from the one-pager skill renders in [story mode](story-mode.md) instead.
 
 These principles supplement the universal visual rules in `presentation-principles.md` (one directory up). The universal principles are the floor; these add format-specific requirements.
 

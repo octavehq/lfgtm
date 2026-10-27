@@ -9,7 +9,7 @@ description: Personalized ABM microsite builder that generates self-contained HT
 
 Read [the task method](references/task-method.md) before selecting context, claims, or output. It is the execution method for this skill. Supporting templates supply structure and styling; populate them from the task method and current evidence, not their illustrative figures or assertions.
 
-Select named account versus persona/segment/industry. A renderOnly handoff preserves approved findings, hierarchy, brand and distribution and skips strategy intake. Public marketing and recipient-restricted sales content require the corresponding host/access route. Base content and CTAs must work without JavaScript.
+Select named account versus persona/segment/industry. A renderOnly handoff preserves approved findings, hierarchy, brand and distribution and skips strategy intake. Public marketing and recipient-restricted sales content require the corresponding host/access route. Base content and CTAs must work without JavaScript. An account or persona page renders in [story mode](../shared/formats/story-mode.md) by default (the angle's sections mapped to five to eight screens, or the count the user asks for); the scrolling landing page in the html architecture reference is document mode, used when the user asks for a long-form page or a renderOnly handoff carries more sections than the screen budget.
 
 Use [GTM context](../shared/gtm-context.md) for strategic tasks and [evidence and inputs](../shared/evidence-and-inputs.md) for material claims and missing facts. A narrow list/get or a render-only handoff does not require unrelated research. Read [host runtime](../shared/host-runtime.md) for available tools, portable resource paths, routing, and review fallback.
 
@@ -23,7 +23,8 @@ Resolve current tool schemas before execution; use returned IDs and pagination. 
 
 ## References by task
 
-- [html architecture](references/html-architecture.md)
+- [story mode](../shared/formats/story-mode.md) and the [visual kit](../shared/formats/visual-kit.md) (default rendering)
+- [html architecture](references/html-architecture.md) (document mode)
 - [microsite outline template](references/microsite-outline-template.md)
 - [octave tool reference](references/octave-tool-reference.md)
 - [page sections by angle](references/page-sections-by-angle.md)

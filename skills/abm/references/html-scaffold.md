@@ -1,8 +1,8 @@
 # Account Plan — HTML Scaffold
 
-The proven, self-contained scaffold for the six-job account plan (locked from the Coinbase v2 build). Reproduce this structure and card vocabulary. Content specifics come from `account-plan-template.md`; brand tokens come from the workspace company's cached kit.
+The proven, self-contained scaffold for the six-job account plan (locked from an approved v2 build). Reproduce this structure and card vocabulary. Content specifics come from `account-plan-template.md`; brand tokens come from the workspace company's cached kit.
 
-**Rules:** self-contained (inline CSS/JS, only Google Fonts external). No em-dashes or en-dashes. The `:root` brand block is inlined from `~/.octave/brands/<workspace-slug>/tokens.css` plus `skills/get-brand-components/assets/kit_base.css`; the semantic + component CSS below is the reusable scaffold. Six sections in order, conclusion-carrying headers, sidebar nav dots, persona selector in section 5, print flattening. The head carries the social share block (rules in [../../shared/social-meta.md](../../shared/social-meta.md)); `assets/og.png` is the one permitted sibling file.
+**Rules:** self-contained (inline CSS/JS, only Google Fonts external). No em-dashes or en-dashes. The `:root` brand block is inlined from the resolved kit's `tokens.css` (the workspace path, or the legacy `~/.octave/brands/<name>/` fallback in [brand kit usage](../../shared/brand-kit-usage.md)) plus `skills/get-brand-components/assets/kit_base.css`; the semantic + component CSS below is the reusable scaffold. Six sections in order, conclusion-carrying headers (one sentence each, no muted second line), sidebar nav dots, persona selector in section 5, print flattening. The `overflow: hidden` uses below clip rounded corners, decorative layers and the nav dots' hidden labels on containers that grow; never add one, or a fixed height, to a card that holds text ([presentation principles](../../shared/presentation-principles.md) 9i, 9k). The head carries the social share block (rules in [../../shared/social-meta.md](../../shared/social-meta.md)); `assets/og.png` is the one permitted sibling file.
 
 ## `<head>` + `<style>`
 
@@ -25,7 +25,7 @@ The proven, self-contained scaffold for the six-job account plan (locked from th
   --brand-primary:#4f87b8; --brand-accent:#6cafd9; --brand-band:#111;
   --brand-border:#d8d8d8; --brand-border-soft:#e6e6e6;
   --brand-positive:#a3b98a; --brand-negative:#e16464; --brand-yellow:#f2c861; --brand-purple:#816189; --brand-teal:#68adad;
-  --brand-font-heading:"[kit heading]",Arial,sans-serif; --brand-font-body:"[kit body]",Arial,sans-serif; --brand-font-mono:"[kit mono]",ui-monospace,monospace;
+  --brand-font-heading:"[kit heading]",Arial,sans-serif; --brand-font-body:"[kit body]",Arial,sans-serif; --brand-font-mono:"[kit mono]",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --brand-radius:10px; --brand-radius-pill:999px; --brand-radius-section:20px;
   --brand-glow:radial-gradient(60% 80% at 50% 0%,rgba(79,135,184,.20),transparent 70%);
   --brand-grid-line:rgba(255,255,255,.06);
@@ -93,6 +93,7 @@ main{padding:40px 48px 12px;}
 .people{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px;}
 .person{display:flex;gap:14px;align-items:flex-start;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--brand-radius);padding:16px;}
 .avatar{width:46px;height:46px;border-radius:50%;background:var(--brand-primary);color:#fff;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-family:var(--brand-font-heading);font-weight:600;}
+.person>div,.people>*,.grid-2>*,.deal-intel-card{min-width:0;}
 .person .nm{font-weight:600;font-size:.98rem;line-height:1.2;} .person .tt{font-size:.82rem;color:var(--text-muted);margin:2px 0 8px;}
 .role-badge{display:inline-block;padding:.16rem .55rem;border-radius:var(--brand-radius-pill);font-family:var(--brand-font-mono);font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;}
 .role-badge.champion{background:var(--success);color:var(--on-positive-strong);} .role-badge.budget-owner{background:var(--brand-primary);color:#fff;} .role-badge.evaluator{background:var(--brand-teal);color:var(--on-teal);} .role-badge.gatekeeper{background:var(--brand-yellow);color:var(--on-yellow);}
@@ -138,6 +139,7 @@ main{padding:40px 48px 12px;}
 .footer .src{font-size:.76rem;color:rgba(239,239,239,.72);line-height:1.6;max-width:68ch;}
 
 @media (max-width:768px){.grid-2,.people,.risk-grid{grid-template-columns:1fr;}main{padding:32px 24px 8px;}.masthead{padding:28px 24px;}.footer{margin:16px 24px 28px;}.side-nav{display:none;}}
+@media (max-width:520px){body{padding:0;}.doc{border-radius:0;}main{padding:26px 16px 8px;}.masthead{padding:24px 16px;}.masthead .topbar{flex-wrap:wrap;}.footer{margin:16px 16px 24px;}.persona-tabs button{min-height:44px;}}
 @media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important;}}
 @media print{
   body{background:#fff;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact;}

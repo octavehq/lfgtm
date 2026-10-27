@@ -41,7 +41,7 @@ It is built around **five teaching topics**, plus a cover and a completion slide
 
 **Titles are plain teaching titles:** "What we sell", "Who we sell to", "How to sell to each buyer", "Who we compete with", "Proof". Highlight one key noun per title with the brand's emphasis treatment. No dramatic or clickbait phrasings.
 
-**No Octave inside-baseball in reader-facing copy.** Do not surface internal platform vocabulary (Motions, Motion ICP cells, Learning Loop, entities) on the slides. The reader is a rep learning to sell, not an Octave operator. Teach the buyer and the pitch; keep the plumbing invisible. (One allowed exception: naming the Resonate to Elevate to Compel methodology on Slide 3, since that is the seller's own framework.)
+**No Octave inside-baseball in reader-facing copy.** Do not surface internal platform vocabulary (Motions, Motion ICP cells, Learning Loop, entities) on the slides. The reader is a rep learning to sell, not an Octave operator. Teach the buyer and the pitch; keep the plumbing invisible. (One allowed exception: Slide 3 may name the workspace's own sales methodology when one is on file, per [information principles](../../shared/information-principles.md) rule 18.)
 
 ---
 
@@ -77,7 +77,7 @@ The map: who is on the buying committee, and what companies are a fit.
 
 Per-persona positioning as an **interactive tabbed selector**, pulled live from each persona's Motion ICP cell (`find_motion_icp`). Each tab swaps a panel.
 
-**Each persona panel, four parts:** Their world (`operatingLandscape`), What they care about (`painsAndConsequences`), Lead with this (Resonate `Value Propositions`), and a Talk track strip showing Resonate to Elevate to Compel, each stage with its objective and 1 to 2 `Talking Points` from the cell. Caps: their world <=3 lines, pains <=3, lead-with <=3, talk track = 3 stages x <=2 points.
+**Each persona panel, four parts:** Their world (`operatingLandscape`), What they care about (`painsAndConsequences`), Lead with this (Resonate `Value Propositions`), and a Talk track strip of three stages in order, each with its objective and 1 to 2 `Talking Points` from the cell. Label the stages with the workspace's own methodology when one is on file, or with plain stage names (Open, Build the case, Ask) when none is; use the Resonate, Elevate, Compel names only when the workspace uses them or the user asks ([information principles](../../shared/information-principles.md) rule 18). Caps: their world <=3 lines, pains <=3, lead-with <=3, talk track = 3 stages x <=2 points.
 
 **Every featured persona gets a fully populated panel.** If a persona has cells in several segments, use the segments relevant to the rep’s remit; richest narrative is only a documented-content fallback and note the segment context. If a persona genuinely has no ready ICP version, build its panel from the persona entity (their world + pains only), tag it `.unconfirmed`, and do not fabricate a talk track.
 
@@ -102,9 +102,9 @@ Below the tabs, a **watchlist line** naming lesser competitors and, critically, 
 
 Proof organized as a **tabbed set of lenses**, so a rep can grab the right proof for the room. Tabs: **By objection** (e.g. build vs buy), **By buyer** (e.g. technical or skeptical), **By segment** (e.g. security), **By outcome** (the outcomes customers achieved, with scope and limitations). Pull from `list_entities` proof_point + reference, with `get_entity` for the ones featured.
 
-- Each lens shows 2 to 4 proof cards (claim, customer if named, and the result or why-it-matters), or, for the outcome lens, a metric strip (e.g. "6 months to 3 weeks"). A proof card may appear under more than one lens (Descope is both build-vs-buy and technical-buyer); that reuse is the point.
+- Each lens shows 2 to 4 proof cards (claim, customer if named, and the result or why-it-matters), or, for the outcome lens, a metric strip (e.g. "6 months to 3 weeks"). A proof card may appear under more than one lens (one customer story can serve both build-vs-buy and technical-buyer); that reuse is the point.
 - Side-by-side proof cards align their bands via subgrid.
-- A **logo / name row** of nameable customers. **Only list companies that are confirmed customers of the workspace company** (the reference explicitly states the relationship, e.g. "is an Octave customer", or a proof point describes them as a customer). Do NOT treat every `reference` entity as a customer, some are market/company profiles or prospects, not customers. When a company's customer status is not confirmed in the data, omit it. Naming a non-customer as a customer is a groundedness failure (this is what surfaced "WorkSpan" wrongly).
+- A **logo / name row** of nameable customers. **Only list companies that are confirmed customers of the workspace company** (the reference explicitly states the relationship, e.g. "is an Octave customer", or a proof point describes them as a customer). Do NOT treat every `reference` entity as a customer, some are market/company profiles or prospects, not customers. When a company's customer status is not confirmed in the data, omit it. Naming a non-customer as a customer is a groundedness failure.
 - Every company, metric, and quote traces to a real proof point or reference. No invented case studies. Omit a weak lens rather than pad it.
 - **Checkpoints, ~3**, each mapping a lens to a situation ("you are in a security deal with a skeptical buyer, which proof?").
 
@@ -120,14 +120,14 @@ The total first-attempt score out of all checkpoints, a short message keyed to t
 - **One idea per line inside components.** Substance comes from more real cards, tables, and archetypes, not longer paragraphs.
 - **Lead with the buyer's world** in persona panels and archetypes.
 - **Ground every claim.** Real personas, competitors, customers, metrics. Honest gaps beat inventions. Tag unconfirmed with `.unconfirmed`; use labeled pending panels when live data (e.g. competitor deal mentions) is unavailable rather than fabricating.
-- **No internal platform vocabulary** in reader-facing copy (Motions, ICP cells, entities, Learning Loop). Exception: the Resonate to Elevate to Compel methodology name on Slide 3.
+- **No internal platform vocabulary** in reader-facing copy (Motions, ICP cells, entities, Learning Loop). Exception: the workspace's own methodology name on Slide 3.
 - **Every checkpoint is answerable from its slide.** No trivia, no outside knowledge, no gotchas.
 
 ## Validated Formats — Protect These
 
 - **The gated slide lesson** with per-slide checkpoints that unlock Next only when all are answered, a progress-dot rail, and a completion score + review menu.
 - **Customer archetype cards** (problem + why-us + named customer) on Slide 1.
-- **The tabbed per-persona selector** pulling each buyer's their-world / pains / lead-with / R-E-C talk track, with **one checkpoint per persona**.
+- **The tabbed per-persona selector** pulling each buyer's their-world / pains / lead-with / three-stage talk track, with **one checkpoint per persona**.
 - **The tabbed competitor deep-dive** (verdict badge, capability comparison table, you'll-hear/what-to-say, deals-they-came-up-in), plus the honest-gap watchlist.
 - **Proof tabbed by lens** (objection / buyer / segment / outcome).
 
@@ -137,7 +137,7 @@ The total first-attempt score out of all checkpoints, a short message keyed to t
 - [ ] Gate works: Next unlocks only when all checkpoints on the slide are answered; wrong answers still advance; score is first-attempt.
 - [ ] Progress dots reflect position and completion; forward is gated, back is allowed; completion shows score + review menu.
 - [ ] Titles are plain teaching titles; one highlighted noun each; no eyebrow that repeats the title.
-- [ ] No internal platform vocabulary in reader-facing copy (Motions, ICP cells, entities); R-E-C name allowed on Slide 3.
+- [ ] No internal platform vocabulary in reader-facing copy (Motions, ICP cells, entities); the workspace's own methodology name allowed on Slide 3, and no generic methodology presented as theirs.
 - [ ] Slide 1 has 3 customer archetype cards, each mapped to a real named customer, with problem + why-us.
 - [ ] Slide 2 has real segment cards with substance (not just chips) and role badges on the committee; no motions line.
 - [ ] Featured personas <=6; if the library had more, the rep was prompted to narrow (Step 1b).
@@ -149,4 +149,5 @@ The total first-attempt score out of all checkpoints, a short message keyed to t
 - [ ] Every checkpoint is answerable from its own slide; no trivia or outside knowledge.
 - [ ] All interactions work: tab selectors swap panels, checkpoint gating unlocks Next, review menu and restart function.
 - [ ] Every persona, competitor, and proof point traces to a real tool result; unconfirmed tagged.
+- [ ] Every title and heading is one sentence or plain label with no muted second line; no text clips at 375px (slide body scrolls, cards grow) and tabs and checkpoint options are at least 44px tall.
 - [ ] No em-dashes or en-dashes anywhere (commas, periods, or "to").

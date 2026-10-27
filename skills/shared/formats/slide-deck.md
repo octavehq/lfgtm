@@ -2,7 +2,7 @@
 
 Paginated HTML slide presentations designed for screen sharing, projection, or async viewing. One idea per slide, progressive disclosure through slide sequence.
 
-**Skills that produce this format:** deck, coaching (deck mode)
+**Skills that produce this format:** deck (presented, projected or exported), coaching (deck mode), train. A buyer-facing deck read as a link without a presenter uses [story mode](story-mode.md) instead.
 
 These principles supplement the universal visual rules in `presentation-principles.md` (one directory up). The universal principles are the floor; these add format-specific requirements.
 
@@ -80,7 +80,7 @@ These principles supplement the universal visual rules in `presentation-principl
     **Bad:** Card headings at 22px, body at 18px, bullet items at 20px: looks like a document, not a slide.
     **Good:** Card headings at 34px, body at 26px, bullet items at 30px: reads clearly at projection distance.
 
-26. **Subtitle is a message, not a description format.** Deep-dive slide subtitles should carry meaning. "Why they're stuck" tells the audience what to expect. "Never got past setup into actual workflows" is a narrative claim. Both work. "Sendoso overview" is dead weight.
+26. **Subtitle is a message, not a description format.** Deep-dive slide subtitles should carry meaning. "Why they're stuck" tells the audience what to expect. "Never got past setup into actual workflows" is a narrative claim. Both work. "Acme overview" is dead weight.
 
     **Bad:** `<p class="csub">Never got past setup into actual workflows</p>`. This was the v1 approach: narrative claims as subtitles on deep dives. Fine in isolation, but when the user wants a consistent format, it creates inconsistency across slides because each subtitle is a different kind of statement.
     **Good:** `<p class="csub" style="color: var(--arch-bad);">Why they're stuck</p>`. Consistent across all deep dives in the section. The bullets below carry the specifics.
@@ -157,6 +157,7 @@ node <skill-dir>/../shared/scripts/render-gate.js <deck.html> \
 Fix everything it reports before opening a screenshot. Do not substitute a `scrollHeight` check: on a slide with `overflow: hidden` it reads 0 while content is visibly clipped.
 
 - [ ] **One idea per slide.** No slide requires processing two unrelated concepts.
+- [ ] **No editor chrome in the delivered file.** The deck that is shared, forwarded or published shows no "Edit" toggle, "Download HTML" button or other authoring control on any slide; editing lives only in a working copy the rep asked for.
 - [ ] **16:9 viewport.** Content fits without horizontal or vertical scroll at standard presentation aspect ratio.
 - [ ] **Type legibility.** Body text >= 1.2rem equivalent. Headlines significantly larger. Nothing illegible at projection distance.
 - [ ] **Action titles.** Every slide headline states a takeaway, not a topic label. Exception: entity deep-dive slides use the entity name as focal heading with a claim subtitle below.

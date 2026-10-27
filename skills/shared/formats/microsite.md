@@ -2,7 +2,7 @@
 
 Web-native HTML landing pages designed for a specific account or audience. CTA-driven, scroll-based narrative, may be shared via direct link.
 
-**Skills that produce this format:** microsite
+**Skills that produce this format:** microsite (document mode). The default account page renders in [story mode](story-mode.md); this format applies when the user asks for a long-form scrolling page.
 
 These principles supplement the universal visual rules in `presentation-principles.md` (one directory up). The universal principles are the floor; these add format-specific requirements.
 

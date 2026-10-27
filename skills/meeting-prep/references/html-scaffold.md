@@ -889,13 +889,46 @@ Use [meeting-sections.md](meeting-sections.md) as the single content/ID schema. 
 
     /* === Print === */
     @media print {
-      .prep-nav, .brand-header, .brand-footer { display: none; }
+      .prep-nav, .brand-header, .brand-footer, .copy-btn { display: none; }
       .prep-container { max-width: 100%; padding: 1rem; }
       details.prep-section[open] { break-inside: avoid; }
       .card, .table-card { break-inside: avoid; }
       body { color: #111; background: white; font-size: 12px; }
       .meeting-badge { border: 1px solid #111; background: transparent; color: #111; }
       .snapshot-bar { background: #f5f5f5; border: 1px solid #ddd; }
+    }
+
+
+    /* === Lookalikes, expectations, content, actions, prompts === */
+    .lookalike-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-bottom: 0.75rem; }
+    .lookalike-table th, .lookalike-table td { text-align: left; vertical-align: top; padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--border); }
+    .lookalike-table th { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+    .internal-note { font-size: 0.72rem; color: var(--text-muted); border-left: 3px solid var(--warning); padding-left: 0.6rem; margin-bottom: 0.75rem; }
+    .expect-block, .action-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: clamp(1rem, 2vw, 1.5rem); margin-bottom: 0.75rem; }
+    .expect-block h3, .action-card h3 { font-size: 0.95rem; margin: 0 0 0.5rem; color: var(--text-primary); }
+    .ex-row { display: grid; grid-template-columns: 9rem 1fr; gap: 0.6rem; padding: 0.35rem 0; border-top: 1px solid var(--border); font-size: 0.84rem; }
+    .ex-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); padding-top: 0.15rem; }
+    .content-list { list-style: none; padding: 0; margin: 0; }
+    .content-list li { padding: 0.5rem 0; border-bottom: 1px solid var(--border); font-size: 0.84rem; }
+    .keep-going { margin-top: 1.5rem; }
+    .prompt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.6rem; }
+    .prompt-card { display: flex; flex-direction: column; min-width: 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 0.9rem 1rem; }
+    .prompt-card h3 { font-size: 0.9rem; margin: 0 0 0.3rem; color: var(--text-primary); }
+    .prompt-card p { font-size: 0.8rem; color: var(--text-secondary); margin: 0 0 0.6rem; }
+    .prompt-card details { margin-bottom: 0.6rem; }
+    .prompt-card summary { list-style: none; cursor: pointer; font-size: 0.72rem; color: var(--text-muted); }
+    .prompt-card summary::-webkit-details-marker { display: none; }
+    .prompt-text, .prompt-context { background: var(--bg-panel); border-radius: var(--radius-lg); padding: 0.6rem 0.75rem; margin-top: 0.4rem; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.72rem; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .copy-btn { margin-top: auto; align-self: flex-start; min-height: 44px; padding: 0 1rem; border-radius: var(--radius-pill); border: 1px solid var(--border); background: var(--bg-card); color: var(--text-primary); font: 600 0.78rem var(--font-body); cursor: pointer; }
+    .prompt-context { margin-top: 0.75rem; }
+    @media (max-width: 768px) { .ex-row { grid-template-columns: 1fr; } }
+    /* Below 520px each lookalike row becomes a card; every td carries data-label with its column name. */
+    @media (max-width: 520px) {
+      .lookalike-table thead { display: none; }
+      .lookalike-table, .lookalike-table tbody, .lookalike-table tr, .lookalike-table td { display: block; box-sizing: border-box; width: 100%; }
+      .lookalike-table tr { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 0.4rem 0.75rem; margin-bottom: 0.6rem; }
+      .lookalike-table td { border-bottom: 0; padding: 0.3rem 0; min-width: 0; overflow-wrap: anywhere; }
+      .lookalike-table td::before { content: attr(data-label); display: block; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
     }
 
     /* === Responsive === */
@@ -966,42 +999,80 @@ Use [meeting-sections.md](meeting-sections.md) as the single content/ID schema. 
       </div>
     </div>
 
+    <!-- Short version: three lines (the situation, what comparable deals say, the move). -->
+    <div class="card">
+      <p class="sub-section-title">The short version</p>
+      <ul class="response-list">
+        <li><strong>Where this stands.</strong> [one line]</li>
+        <li><strong>What deals like this say.</strong> [one line with count and base, labeled likely]</li>
+        <li><strong>The move.</strong> [one line]</li>
+      </ul>
+    </div>
+
+    <details class="prep-section" open id="lookalikes">
+      <summary>1. Deals like this: what worked, what didn't</summary>
+      <p class="internal-note">Internal only. Other customers' names stay out of anything said to the buyer.</p>
+      <!-- Intro line says how the set was chosen and its size. .lookalike-table: deal, outcome, what matched, what happened on their calls; every td carries data-label with its column name so rows stack into cards on phones. Contrast line with counts and base. Never a customer name in rep-facing wording. -->
+    </details>
+
     <details class="prep-section" open id="context">
-      <summary>1. Context</summary>
-      <!-- Company fit and limits; actual attendees, suggested roles, opportunity and latest commitments. Label account facts and hypotheses separately. Populate from meeting-sections.md and current evidence. -->
+      <summary>2. Context</summary>
+      <!-- The meeting from its invite (time, place, organizer, every invited guest) or what was searched when none was found; company fit and limits; opportunity and latest commitments; any tie that changes how the room is run, once. Label account facts and hypotheses separately. -->
     </details>
 
     <details class="prep-section" open id="goals">
-      <summary>2. Goals</summary>
-      <!-- Positioning directive and grounded recognition goals with supporting evidence, disconfirming probe and conditional advancement. Populate from meeting-sections.md and current evidence. -->
+      <summary>3. Goals</summary>
+      <!-- Positioning directive and grounded recognition goals with evidence, disconfirming probe and conditional advancement. -->
     </details>
 
     <details class="prep-section" open id="competitive">
-      <summary>3. Competitive</summary>
-      <!-- Actual alternative, buyer criteria, supported differences, concessions and facts to verify. Populate from meeting-sections.md and current evidence. -->
+      <summary>4. Competitive</summary>
+      <!-- Actual alternative, buyer criteria, supported differences, concessions, facts to verify, lookalike counts against this competitor. -->
+    </details>
+
+    <details class="prep-section" open id="expect">
+      <summary>5. What to expect, persona by persona</summary>
+      <!-- One .expect-block per invited guest who will speak or decide, at most five: persona and role, what they said, what the persona typically raises (tag .slot-tag.potential-fit "likely"), the answer that worked, the question to ask. -->
+    </details>
+
+    <details class="prep-section" open id="content">
+      <summary>6. Content to use</summary>
+      <!-- .content-list: real narratives, slides, proof, each with why it fits and its source. Only items seen in the library or resources. -->
     </details>
 
     <details class="prep-section" open id="say-ask">
-      <summary>4. What to Say & Ask</summary>
-      <!-- Opening, argument, applicable proof, grounding and branching questions, next-decision ask. Separate spoken wording from rationale. Populate from meeting-sections.md and current evidence. -->
+      <summary>7. What to say &amp; ask</summary>
+      <!-- Opening, argument, proof, questions, next-decision ask. Structured as the workspace's pitch framework steps only when one exists. -->
     </details>
 
-    <details class="prep-section" open id="objections">
-      <summary>5. Objections</summary>
-      <!-- Observed concern or labeled anticipation, distinguishing question, supported response, proof and unresolved limits. Populate from meeting-sections.md and current evidence. -->
+    <details class="prep-section" open id="next-action">
+      <summary>8. Next best action</summary>
+      <!-- One to three .action-card blocks (move, why now, strategy source, follow-through), or an honest zero. Ends with the meeting success condition. -->
     </details>
 
-    <details class="prep-section" open id="takeaway">
-      <summary>6. Takeaway</summary>
-      <!-- Primary move, observable meeting success condition, and next action with owner. Populate from meeting-sections.md and current evidence. -->
-    </details>
+    <section class="keep-going" id="keep-going">
+      <h2>Keep going</h2>
+      <p class="section-intro">Asset: [asset id or URL, or "not published; deal [id], [domain], [date]"]. Copy a prompt and paste it into any assistant with the Octave tools connected.</p>
+      <div class="prompt-grid">
+        <!-- One card per prompt (three to five). -->
+        <div class="prompt-card">
+          <h3>[Prompt title]</h3>
+          <p>[One line on what it produces]</p>
+          <details><summary>Show prompt</summary><div class="prompt-text">[Task: what to produce, anything specific to this card]</div></details>
+          <button type="button" class="copy-btn">Copy prompt</button>
+        </div>
+      </div>
+      <div class="prompt-context" id="prompt-context">[Shared context, written once: "Use the Octave tools you have to read [Workspace]'s records." Account and domain, deal id and stage, meeting date, attendees and roles, asset id, key facts, fetch the asset or rebuild it from the deal, start with ask_octave.]</div>
+    </section>
+
+    <p class="section-intro" id="sources"><!-- Sources: dates and kinds of source, and what was not checked. --></p>
 
   </main>
 
   <script>
     // Generate nav dots from section IDs
     const nav = document.getElementById('prep-nav');
-    const sectionIds = ['context', 'goals', 'competitive', 'say-ask', 'objections', 'takeaway'];
+    const sectionIds = ['lookalikes', 'context', 'goals', 'competitive', 'expect', 'content', 'say-ask', 'next-action'];
     sectionIds.forEach(id => {
       const a = document.createElement('a');
       a.href = '#' + id;
@@ -1041,6 +1112,20 @@ Use [meeting-sections.md](meeting-sections.md) as the single content/ID schema. 
         ? '<span class="toggle-icon">&#9650;</span> Collapse all'
         : '<span class="toggle-icon">&#9660;</span> Expand all';
     }
+
+    // Copy prompt: the card's task, then the shared context block
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const task = btn.closest('.prompt-card').querySelector('.prompt-text').textContent.trim();
+        const ctx = document.getElementById('prompt-context').textContent.trim();
+        const text = task + '\n\n' + ctx;
+        const done = () => { btn.textContent = 'Copied'; setTimeout(() => { btn.textContent = 'Copy prompt'; }, 1600); };
+        const fallback = () => { const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); done(); };
+        // A sandboxed frame can reject the Clipboard API; fall back to the textarea copy.
+        if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(text).then(done, fallback); }
+        else { fallback(); }
+      });
+    });
 
     function switchTab(btn, containerId) {
       const container = document.getElementById(containerId);

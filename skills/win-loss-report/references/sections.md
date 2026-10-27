@@ -26,7 +26,11 @@ The numbers at a glance. Three tiers of information:
   - Each competitor: green (wins) + red (losses) bars with both volume and win rate
   - Sorted by total deal volume
 
+- **Cohort checks**: one compact line each for the bulk-close-date check and the ownership split from the [task method](task-method.md), with counts, stated even when nothing stands out.
+
 Every percentage must state what it's a percentage OF. "69% win rate (20 of 29 deals)" not just "69%."
+
+Each section title and chart title holds for every bar and figure under it; when one band falls outside a claimed range, the title names it ([rule 24](../../shared/information-principles.md#claims-against-the-data)).
 
 ---
 
@@ -49,6 +53,7 @@ Two tabs, same structure mirrored. The reader flips between tabs to see the cont
 **What to Keep Doing**
 - 3-5 items in a compact action list (`.action-list` > `.action-item`), each showing a rank number, the pattern text, and a frequency line ("Appeared in N of M wins")
 - Framing: "When we win, it's because..."
+- A pattern appears here only when deals with it win above the baseline win rate; a count of wins alone ("Appeared in N of M wins") doesn't make a driver, so the frequency line also gives the win rate with and without the pattern ([rule 25](../../shared/information-principles.md#claims-against-the-data))
 - Sorted by frequency/impact
 - No evidence quotes or blockquotes — keep it compact
 
@@ -67,6 +72,7 @@ Two tabs, same structure mirrored. The reader flips between tabs to see the cont
 **What to Stop Doing / Changes to Make**
 - 3-5 items in a compact action list with rank number, the loss pattern, frequency, and the specific change to make (messaging, positioning, enablement, materials — not generic advice)
 - Framing: "When we lose, it's because..." -> "To fix this..."
+- A pattern appears here only when its loss rate is above the baseline loss rate, shown beside it (rule 25)
 - No evidence quotes or blockquotes — keep it compact
 - These absorb what would have been a standalone "Recommendations" section
 - **Optional "Intervention to test:" callout**: for a loss pattern or competitor grouping with a clear turning point, add one sharp line under the action item, "Intervention to test: [X]." One sentence, no elaboration. Example: "Intervention to test: we had addressed price earlier with a TCO story." Use it where the evidence supports a single clean condition, not on every item, it's a callout, not a new required field.
@@ -90,6 +96,7 @@ Two tabs, same structure mirrored. The reader flips between tabs to see the cont
   - Frequency: "N deals (X lost, Y won)"
   - Which personas/segments raise it most
   - Recommended counter / response
+- An objection presented as costing deals has a loss rate above the baseline loss rate, shown beside it ([rule 25](../../shared/information-principles.md#claims-against-the-data)).
 - Rank intervention priority using affected volume, incremental association versus a comparable baseline, uncertainty and plausible actionability. A high rate in a tiny sample does not automatically rank first.
 
 ---
@@ -130,7 +137,8 @@ What fed this report:
 - Segments represented
 - Competitors represented
 - Personas represented
-- Data completeness notes (e.g., "No conversation data for 12 deals — metrics only")
+- Data completeness notes (e.g., "No conversation data for 12 deals, metrics only")
+- Evidence list, when the report quotes calls: opens with the quote count, then the numbered quotes the other sections link to
 - Generation date and branding footer
 
 ---

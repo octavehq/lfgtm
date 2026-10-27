@@ -1,4 +1,6 @@
-/* Inline after the deck DOM. Use data-editable on text-only leaves. */
+/* Inline after the deck DOM. Use data-editable on text-only leaves.
+   Editing is opt-in: only a working copy whose <html> carries data-deck-edit shows the edit toggle, the E key and
+   the HTML download. Without it (every file that is shared or forwarded) the controller removes that chrome. */
 (() => {
   'use strict';
   const slides = [...document.querySelectorAll('.slide')];
@@ -44,7 +46,10 @@
   leaves.forEach(e => e.addEventListener('input', () => {
     try { if (key) localStorage.setItem(key, JSON.stringify(leaves.map(x => x.textContent))); } catch (_) {}
   }));
-  const edit = document.getElementById('editToggle');
+  const editorChrome = '.edit-hotzone,#editToggle,[data-export-html]';
+  const editable = document.documentElement.hasAttribute('data-deck-edit');
+  if (!editable) document.querySelectorAll(editorChrome).forEach(e => e.remove());
+  const edit = editable ? document.getElementById('editToggle') : null;
   function toggleEdit() {
     if (!edit) return;
     editing = !editing;
@@ -55,7 +60,7 @@
   edit?.classList.add('show');
   document.addEventListener('keydown', e => {
     if (e.target.closest('input,textarea,select,button,a,[contenteditable=true]')) return;
-    if (e.key.toLowerCase() === 'e') { toggleEdit(); return; }
+    if (editable && e.key.toLowerCase() === 'e') { toggleEdit(); return; }
     if (mobile()) return;
     const routes = {ArrowRight: current+1, ' ':current+1, PageDown:current+1, ArrowLeft:current-1, PageUp:current-1, Home:0, End:slides.length-1};
     if (e.key in routes) { e.preventDefault(); show(routes[e.key]); }
@@ -69,7 +74,8 @@
   document.querySelector('[data-export-html]')?.addEventListener('click', () => {
     const clone = document.documentElement.cloneNode(true);
     clone.querySelectorAll('[contenteditable]').forEach(e => e.removeAttribute('contenteditable'));
-    clone.querySelectorAll('.edit-hotzone,#editToggle,[data-export-html]').forEach(e => e.remove());
+    clone.querySelectorAll(editorChrome).forEach(e => e.remove());
+    clone.removeAttribute('data-deck-edit');  // the downloaded file is the shareable one
     const blob = new Blob(['<!DOCTYPE html>\n'+clone.outerHTML],{type:'text/html'});
     const url=URL.createObjectURL(blob), a=document.createElement('a'); a.href=url; a.download='presentation.html'; a.click(); setTimeout(()=>URL.revokeObjectURL(url),1000);
   });

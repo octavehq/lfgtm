@@ -1035,18 +1035,129 @@ class ParallelCrawl(unittest.TestCase):
             row = prefetch.ingest_result({"found": True, "finalUrl": "https://acme.com/", "statusCode": 200, "contentUrl": "https://s/h.html"}, pathlib.Path(d), NOOP_LOG, fetch=flaky)
         self.assertTrue(row["ok"]); self.assertEqual(len(calls), 3)
 
-    def test_pick_pages_on_the_zuora_links_skips_listings_and_finds_the_article(self):
-        links = ["https://www.zuora.com/#content", "https://www.zuora.com/", "https://www.zuora.com/solutions/quote-to-cash/",
-                 "https://www.zuora.com/solutions/intelligent-pricing-and-packaging/", "https://www.zuora.com/solutions/saas/",
-                 "https://www.zuora.com/products/billing-software/", "https://www.zuora.com/our-customers/case-studies/",
-                 "https://www.zuora.com/our-customers/case-studies/zoom/", "https://www.zuora.com/resources/events/",
-                 "https://www.zuora.com/resources/filter/content_type/video/", "https://www.zuora.com/resources/",
-                 "https://zuora.com/resource/modern-finance-leader-report/strategic-demands-outpace-technology/",
-                 "https://docs.zuora.com/", "https://www.zuora.com/careers/", "https://www.zuora.com/about/", "https://www.zuora.com/about/team/"]
-        picked = prefetch.pick_pages(links, "https://www.zuora.com/")
-        self.assertEqual(picked, ["https://www.zuora.com/solutions/quote-to-cash/", "https://www.zuora.com/solutions/intelligent-pricing-and-packaging/",
-                                  "https://zuora.com/resource/modern-finance-leader-report/strategic-demands-outpace-technology/",
-                                  "https://www.zuora.com/our-customers/case-studies/", "https://www.zuora.com/about/"])
+    def test_pick_pages_on_the_acmebilling_links_skips_listings_and_finds_the_article(self):
+        links = ["https://www.acmebilling.com/#content", "https://www.acmebilling.com/", "https://www.acmebilling.com/solutions/quote-to-cash/",
+                 "https://www.acmebilling.com/solutions/intelligent-pricing-and-packaging/", "https://www.acmebilling.com/solutions/saas/",
+                 "https://www.acmebilling.com/products/billing-software/", "https://www.acmebilling.com/our-customers/case-studies/",
+                 "https://www.acmebilling.com/our-customers/case-studies/zoom/", "https://www.acmebilling.com/resources/events/",
+                 "https://www.acmebilling.com/resources/filter/content_type/video/", "https://www.acmebilling.com/resources/",
+                 "https://acmebilling.com/resource/modern-finance-leader-report/strategic-demands-outpace-technology/",
+                 "https://docs.acmebilling.com/", "https://www.acmebilling.com/careers/", "https://www.acmebilling.com/about/", "https://www.acmebilling.com/about/team/"]
+        picked = prefetch.pick_pages(links, "https://www.acmebilling.com/")
+        self.assertEqual(picked, ["https://www.acmebilling.com/solutions/quote-to-cash/", "https://www.acmebilling.com/solutions/intelligent-pricing-and-packaging/",
+                                  "https://acmebilling.com/resource/modern-finance-leader-report/strategic-demands-outpace-technology/",
+                                  "https://www.acmebilling.com/our-customers/case-studies/", "https://www.acmebilling.com/about/"])
+
+
+class MinerFourthPass(unittest.TestCase):
+    """A component-split site: the token sheet sits deep in a long link list, the header lockup sits in a /homepage
+    link labelled "Navigate to home", icons carry inline style attributes, and the H1 is a desktop size."""
+
+    def setUp(self):
+        self._http_get = prefetch.http_get
+
+    def tearDown(self):
+        prefetch.http_get = self._http_get
+
+    def test_css_of_page_reaches_the_layout_sheet_past_the_budget(self):
+        names = [f"c{i:02d}.css" for i in range(30)] + ["layout.abc123.css"]
+        links = "".join(f'<link rel="stylesheet" href="https://static.acme.example/css/{n}">' for n in names)
+        tokens = "@font-face{font-family:Acme;src:url(acme.woff2)}:root{" + "".join(f"--color-{i}:#{i:06x};" for i in range(10)) + "}"
+        fetched = []
+        def fake_get(url, **kw):
+            fetched.append(url)
+            return tokens if "layout" in url else ".x{margin:0}"
+        prefetch.http_get = fake_get
+        html = f"<html><head>{links}</head><body></body></html>"
+        seen = set()
+        with tempfile.TemporaryDirectory() as d:
+            text, meta, _ = prefetch.css_of_page(html, "https://www.acme.example/", pathlib.Path(d), NOOP_LOG, seen=seen)
+            self.assertEqual(fetched[0], "https://static.acme.example/css/layout.abc123.css")  # named site-wide sheet first
+            self.assertIn("@font-face", text)
+            self.assertEqual(len(fetched), 6)  # tokens found, so the budget holds
+            again, meta2, _ = prefetch.css_of_page(html, "https://www.acme.example/pricing", pathlib.Path(d), NOOP_LOG, seen=seen)
+        self.assertFalse({m["url"] for m in meta} & {m["url"] for m in meta2})  # a second page never refetches a sheet
+
+    def test_css_of_page_keeps_reading_while_tokens_are_missing(self):
+        links = "".join(f'<link rel="stylesheet" href="/css/c{i:02d}.css">' for i in range(12))
+        fetched = []
+        def fake_get(url, **kw):
+            fetched.append(url)
+            return "@font-face{font-family:A}:root{" + "".join(f"--t{i}:1px;" for i in range(9)) + "}" if url.endswith("c09.css") else ".x{}"
+        prefetch.http_get = fake_get
+        with tempfile.TemporaryDirectory() as d:
+            text, _, _ = prefetch.css_of_page(f"<html><head>{links}</head></html>", "https://acme.example/", pathlib.Path(d), NOOP_LOG)
+        self.assertEqual(len(fetched), 10)  # past the budget of 6, stopping once @font-face and tokens arrive
+        self.assertIn("@font-face", text)
+
+    def test_lift_logos_finds_the_header_lockup_in_a_labelled_home_link(self):
+        mark = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" aria-label="Acme logo">'
+                '<path d="M10 10h80v80h-80z M20 20h60v60h-60z M30 30h40v40h-40z M40 40h20v20h-20z M45 45h10v10h-10z" fill="currentColor"/></svg>')
+        html = ('<html><body><header><a href="https://www.acme.example/homepage" aria-label="Navigate to home">'
+                f'{INLINE_LOGO}</a></header><main></main><footer>{mark}</footer></body></html>')
+        with tempfile.TemporaryDirectory() as d:
+            out, _ = prefetch.lift_logos(html, "https://www.acme.example/", pathlib.Path(d), NOOP_LOG)
+        self.assertEqual([(c["region"], c["viewBox"]) for c in out], [("home-link", "0 0 120 30"), ("footer", "0 0 100 100")])
+
+    def test_home_anchor_rules(self):
+        from bs4 import BeautifulSoup
+        a = lambda markup: BeautifulSoup(markup, "html.parser").a
+        base = "https://www.acme.example/"
+        self.assertTrue(prefetch.is_home_anchor(a('<a href="/">x</a>'), base))
+        self.assertTrue(prefetch.is_home_anchor(a('<a href="https://acme.example/home/">x</a>'), base))
+        self.assertTrue(prefetch.is_home_anchor(a('<a href="/en" aria-label="Acme home">x</a>'), base))
+        self.assertFalse(prefetch.is_home_anchor(a('<a href="/pricing">x</a>'), base))
+        self.assertFalse(prefetch.is_home_anchor(a('<a href="https://other.example/" aria-label="home">x</a>'), base))
+
+    def test_icons_with_inline_styles_are_sanitized_for_the_renderer(self):
+        styled = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-label="Menu">'
+                  '<rect class="bar" x="1" y="7" width="14" height="1" style="fill:#fff;transform:translateY(-3px);opacity:.8" data-x="1"/>'
+                  '<path d="M1 1h4" style="stroke:url(https://evil.example/p)"/></svg>')
+        icons = prefetch.lift_icons(f"<html><body>{styled}</body></html>")
+        self.assertEqual(len(icons), 1)
+        inner = icons[0]["inner"]
+        self.assertNotIn("style=", inner); self.assertNotIn("class=", inner); self.assertNotIn("data-x", inner)
+        self.assertIn('fill="#fff"', inner); self.assertIn('opacity=".8"', inner)
+        self.assertNotIn("transform", inner); self.assertNotIn("evil", inner)
+        kit_validation.svg_root(f'<svg viewBox="{icons[0]["viewBox"]}">{inner}</svg>')
+        with self.assertRaises(ValueError):
+            kit_validation.sanitize_svg_markup('<foreignObject><div/></foreignObject>')
+
+    def test_renderer_accepts_a_legacy_icon_with_a_style_attribute(self):
+        with tempfile.TemporaryDirectory() as d:
+            kit = make_kit(pathlib.Path(d) / "kit")
+            (kit / "icons.json").write_text(json.dumps([{"name": "bar", "viewBox": "0 0 16 16",
+                                                         "inner": '<rect x="1" y="7" width="14" height="1" style="fill:#fff"/>'}]))
+            (kit / "spec.json").write_text(json.dumps({"title": "t", "blocks": [
+                {"type": "features", "items": [{"title": "A", "text": "b", "icon": "bar"}]}]}))
+            out = kit / "out.html"
+            subprocess.run([sys.executable, str(SKILL / "scripts/render_kit.py"), "--kit-dir", str(kit), "--spec", str(kit / "spec.json"), "--out", str(out)],
+                           check=True, capture_output=True)
+            self.assertIn('<rect x="1" y="7" width="14" height="1" fill="#fff"/>', out.read_text())
+
+    @unittest.skipUnless(importlib.util.find_spec("playwright"), "playwright not installed")
+    def test_gallery_headline_and_comparison_hold_at_375(self):
+        for dark in (True, False):
+            with tempfile.TemporaryDirectory() as d:
+                kit = make_kit(pathlib.Path(d) / "kit", extra_tokens={"--brand-h1": "64px"}, dark_band=dark)
+                subprocess.run([sys.executable, str(SKILL / "scripts/render_gallery.py"), str(kit)], check=True, capture_output=True)
+                from playwright.sync_api import sync_playwright
+                with sync_playwright() as p:
+                    b = p.chromium.launch(); pg = b.new_page(viewport={"width": 375, "height": 812})
+                    pg.goto((kit / "components.html").resolve().as_uri())
+                    got = pg.evaluate("""() => {
+                        const h1 = document.querySelector('.hero h1'), hr = h1.getBoundingClientRect();
+                        const row = document.querySelector('.cmp .r:not(.head)');
+                        const bad = row.querySelector('.bad').getBoundingClientRect(), good = row.querySelector('.good').getBoundingClientRect();
+                        return {size: parseFloat(getComputedStyle(h1).fontSize), right: hr.right, h1Scroll: h1.scrollWidth - h1.clientWidth,
+                                pageScroll: document.documentElement.scrollWidth - innerWidth, sameRow: Math.abs(bad.top - good.top) < 1,
+                                goodRight: good.right}; }""")
+                    b.close()
+            self.assertLess(got["size"], 64, got)  # the desktop size shrinks on a phone
+            self.assertLessEqual(got["right"], 375, got); self.assertLessEqual(got["h1Scroll"], 0, got)
+            self.assertLessEqual(got["pageScroll"], 0, got)
+            self.assertTrue(got["sameRow"], got)  # each "before" sits beside its "after"
+            self.assertLessEqual(got["goodRight"], 375, got)
 
 
 if __name__ == "__main__":

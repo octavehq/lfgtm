@@ -86,6 +86,7 @@
       align-items: center;
       gap: 0.5rem;
     }
+    details.brief-section summary::-webkit-details-marker { display: none; }
     details.brief-section summary::before {
       content: "\25B6";
       font-size: 0.7em;
@@ -187,6 +188,7 @@
     /* === Grid Utilities === */
     .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(0.75rem, 1.5vw, 1.25rem); }
     .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(0.75rem, 1.5vw, 1.25rem); }
+    .grid-2 > *, .grid-3 > *, .stakeholder-card > * { min-width: 0; }
 
     /* === Typography === */
     .section-title {
@@ -239,6 +241,10 @@
     @media (max-width: 768px) {
       .grid-2, .grid-3 { grid-template-columns: 1fr; }
       .brief-nav { display: none; }
+    }
+    @media (max-width: 520px) {
+      .timeline { padding-left: 1.25rem; }
+      .timeline-event::before { left: -1.1rem; }
     }
 
     /* === prefers-reduced-motion === */
@@ -310,3 +316,5 @@
 - Optional sidebar for quick reference (on wide screens)
 - Max-width 900px for comfortable reading
 - Print-friendly with `@media print`
+
+**Headings:** a section summary that carries a finding states it in one sentence ("Acme's new CFO is reviewing every tool renewal this quarter"); reference sections such as the snapshot keep a short label. Never pair a heading with a muted second line ([editorial rules 8c](../../shared/editorial-rules.md)). Apply the presentation checks for clipped text and the 520px and 375px widths ([presentation principles 9i to 9l](../../shared/presentation-principles.md)).

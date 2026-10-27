@@ -174,6 +174,36 @@ print('201' if method=='POST' else '200',end='')
         policy['readiness']='buyer_ready';self.assertTrue(lint.lint(path,policy)[0])
         policy['intentionalPlaceholders']=['[PRICE]'];self.assertFalse(lint.lint(path,policy)[0])
 
+    def test_lint_flags_short_monospace_stacks(self):
+        path=self.root/'a.html';policy=dict(lint.DEFAULT)
+        path.write_text("<!DOCTYPE html><style>:root{--mono:'Geist Mono',monospace}</style><p>x</p>")
+        self.assertTrue(any('Monospace stack' in w for w in lint.lint(path,policy)[1]))
+        path.write_text("<!DOCTYPE html><style>:root{--mono:'Geist Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}code{font-family:var(--mono)}</style><p>x</p>")
+        self.assertEqual(lint.lint(path,policy),([],[]))
+
+    def test_lint_warns_on_long_hero_headlines(self):
+        path=self.root/'a.html';policy=dict(lint.DEFAULT)
+        long='one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen'
+        path.write_text(f'<!DOCTYPE html><h1>{long}</h1><h2 class="vk-display">Short <b>claim</b> here</h2><h2>{long}</h2>')
+        warnings=lint.lint(path,policy)[1];self.assertEqual(len(warnings),1);self.assertIn('Headline runs 17 words',warnings[0])
+        path.write_text(f'<!DOCTYPE html><h2 class="vk-display vk-rise">{long}</h2>')
+        self.assertIn('Headline runs 17 words',lint.lint(path,policy)[1][0])
+        path.write_text('<!DOCTYPE html><h1>Twelve words fit <em>easily</em> on three lines at the hero size here</h1>')
+        self.assertEqual(lint.lint(path,policy),([],[]))
+        sixteen='one two three four five six seven eight nine ten eleven twelve thirteen fourteen <em>fifteen</em>, <b>Acme</b>.'
+        path.write_text(f'<!DOCTYPE html><h1>{sixteen}</h1>')
+        self.assertEqual(lint.lint(path,policy),([],[]))
+        path.write_text(f'<!DOCTYPE html><h1>{sixteen}<br>seventeen</h1>')
+        self.assertIn('Headline runs 17 words',lint.lint(path,policy)[1][0])
+
+    def test_lint_allows_google_fonts_unless_embedded(self):
+        path=self.root/'a.html';policy=dict(lint.DEFAULT)
+        path.write_text('<!DOCTYPE html><link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"><p>x</p>')
+        self.assertEqual(lint.lint(path,policy),([],[]))
+        policy['assets']='embedded';self.assertTrue(lint.lint(path,policy)[0])
+        path.write_text('<!DOCTYPE html><link href="https://cdn.example.com/a.css" rel="stylesheet"><p>x</p>')
+        policy['assets']='bundled';self.assertTrue(lint.lint(path,policy)[0])
+
     def test_lint_rejects_private_links_and_missing_resource(self):
         path=self.root/'a.html';path.write_text('<!DOCTYPE html><a href="https://app.octavehq.com/entity/abc">source</a><img src="missing.png">')
         policy=dict(lint.DEFAULT);policy['audience']='restricted_external'

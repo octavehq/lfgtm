@@ -1,5 +1,7 @@
 # Deal Coaching Framework — Resonate, Elevate, Compel
 
+Use this reference only when Resonate/Elevate/Compel is the workspace's methodology on file or the user asked for this framing ([information principles #18](../../shared/information-principles.md#reading-calls-and-deals)). Otherwise coach to the workspace's own steps.
+
 This reference defines three core deal coaching stages. Each stage produces three coaching outputs — **Buyer Mindset**, **Value Propositions**, and **Talking Points** — grounded in the seller's Octave library data.
 
 When coaching, map every element to the seller's actual GTM messaging. Never deliver generic advice — always connect to specific deal context and library content.

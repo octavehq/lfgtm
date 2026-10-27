@@ -57,13 +57,22 @@ A single self-contained HTML file. Inline all CSS and JS; the only external depe
 /* Slide 3 persona panel */
 .block-label { font-family: var(--brand-font-mono); color: var(--brand-primary); text-transform:uppercase; }
 .leadwith { background: var(--brand-surface); border-radius: var(--brand-radius); }
-.rec-strip { display:grid; grid-template-columns:repeat(3,1fr); gap:.65rem; }         /* Resonate / Elevate / Compel */
+.rec-strip { display:grid; grid-template-columns:repeat(3,1fr); gap:.65rem; }         /* three talk-track stages, named by the workspace's methodology */
 .rec-stage { border-top:3px solid var(--brand-accent); border-radius:10px; }
 .pending-note { background: var(--brand-warning-weak); border:1px dashed; }            /* persona with no ready ICP version */
 
 /* Slide 4 competitor deep-dive */
 .comp-verdict { border-radius: var(--brand-radius-pill); font-size:.62rem; }           /* Direct / Adjacent / Build */
 .cap-table { width:100%; border-collapse:collapse; }                                   /* Capability | alternative | selected offering */
+.cap-table-wrap { overflow-x:auto; }
+/* below 520px each capability row becomes a card, and every cell names its column (data-label = the header text),
+   so the selected offering's column is never the one pushed off-screen (presentation principle 9k) */
+@media (max-width:520px) {
+  .cap-table thead { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+  .cap-table, .cap-table tbody, .cap-table tr, .cap-table td, .cap-table th[scope=row] { display:block; }
+  .cap-table tr { border:1px solid var(--brand-border); border-radius:10px; padding:.6rem .8rem; margin-bottom:.6rem; }
+  .cap-table td[data-label]::before { content:attr(data-label); display:block; font-size:.7rem; text-transform:uppercase; letter-spacing:.05em; color:var(--brand-muted); }
+}
 .cap-table .us { background: color-mix(in srgb, var(--brand-primary) 6%, transparent); }
 .hearsay { display:grid; grid-template-columns:1fr 1fr; gap:.7rem; }                    /* You'll hear | What to say */
 .hs-say { background: var(--brand-positive-weak); }
@@ -95,6 +104,8 @@ A single self-contained HTML file. Inline all CSS and JS; the only external depe
 }
 :focus-visible{outline:3px solid var(--brand-primary);outline-offset:3px}
 @media (max-width:760px) { .how-steps, .rec-strip, .hearsay, .proof-grid, .seg-grid, .grid-2, .grid-3 { grid-template-columns:1fr; } }
+@media (max-width:520px) { .topbar { gap:.75rem; padding:0 16px; } .step-label { display:none; } .progress-dots { min-width:0; flex-wrap:wrap; } .slide-inner { padding-left:16px; padding-right:16px; } .tab, .cp-opt, .slide-nav .btn { min-height:44px; } }
+.slide-body > *, .archetype-card, .seg-card, .proof-card { min-width:0; }
 @media (prefers-reduced-motion: reduce) { * { animation:none !important; transition:none !important; } }
 ```
 
@@ -144,7 +155,7 @@ Use `:scope >` selectors when wiring tabsets so the three independent selectors 
 - Show each checkpoint with its explanation immediately below it; wrong answers unlock after the explanation. Every earlier content slide must be answered before jumping ahead. Review links use `data-go="slide-id"`; restart uses `data-restart`.
 - **The revealed explanation stacks vertically**: `.cp-explain.show { display: flex; flex-direction: column; align-items: flex-start; }` so the "Next question" button drops onto its own line **below** the explanation text, left-aligned. Do NOT leave the advance button as an inline element after the text, or it floats to the right and the text wraps under it (a known "wonky" layout bug).
 - **One checkpoint per persona on Slide 3**, so the score reflects knowing every buyer.
-- **Capability tables and hear/say** must trace to the competitor entity descriptions; never invent a row or a checkmark.
+- **Capability tables and hear/say** must trace to the competitor entity descriptions; never invent a row or a checkmark. Each `td` carries `data-label` with its column header (the alternative's name, the selected offering's name) so the table stacks into labelled cards at 375px; check at 375 that the selected offering's column is visible in every row.
 - **Pending panels** (persona with no ICP version, competitor deal mentions with no findings) use the dashed `.pending-note`, never fabricated content.
 - **Logo is dynamic and inlined.** Never hardcode a logo. Resolve it from the workspace company's brand kit (`manifest.json` `logo` block) so it is the correct company's mark, and inline it as a base64 **data URI** so the file is self-contained. Use the onLight variant on the light topbar and the onDark/white variant on the dark cover, completion, and the topbar while those show. Swap the topbar logo `src` between the two in `updateChrome()` based on the current slide's `data-type`. Recolor-to-white via `filter` only as a fallback when the kit ships a single logo.
 - **Self-contained:** inline CSS + JS and the logo (data URI); only Google Fonts (or kit `@font-face`) external. No frameworks, no network calls.

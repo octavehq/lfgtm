@@ -1,5 +1,7 @@
 # Page Sections by Angle
 
+Each angle's sections map onto the story arc in [story-mode.md](../../shared/formats/story-mode.md), which is the default rendering: the hero is the opening screen with the signature visual, the challenge or gap is the number or the split, the solution or what's possible is the mechanism (`.vk-flow` or `.vk-orbit`), social proof is `.vk-stat-row` or `.vk-quotes`, and the CTA is the ask with a strip of the buyer's own decision steps (never CRM stage names). A how-it-works step list becomes `.vk-gantt`. Five to eight screens unless the user asks for a count; the angle's content rules hold on screens as on sections.
+
 **Pain-Point Led:**
 
 1. **Hero** — "Built for [Company]" + "[Company], here's how [industry] leaders are solving [pain point]"

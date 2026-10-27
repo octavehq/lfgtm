@@ -35,6 +35,13 @@ buyer explicitly accepted/resolved; remains open; insufficient exchange.
 Report response-attempt rate over eligible objections and observed-resolution
 rate over assessable exchanges separately, with counts and unknowns.
 
+Read each exchange in its setting before labeling it, per
+[Reading Calls and Deals](../../shared/information-principles.md#reading-calls-and-deals)
+rules 16 to 21. For themes, a concern that praises the product's reach is
+counted apart from objections, a first enterprise meeting without a dated next
+step is not an unresolved exchange, and personal facts stay out of every theme,
+quote and recommendation.
+
 Before declaring a library gap, load [gtm-context.md](../../shared/gtm-context.md) and hydrate
 the relevant offering, persona/segment, objection, and Motion ICP narrative.
 Create a match row: theme/evidence → entity/cell/field → existing guidance →
@@ -43,4 +50,4 @@ Do not call content missing when it was not retrieved. Repeated seller use
 of existing guidance plus buyer rejection is a conflict to investigate,
 not evidence that the guidance works or should automatically be deleted.
 
-To orient a scoped question, use [Ask Octave first](../../shared/octave-research-toolkit.md#ask-octave-first-for-questions-that-span-records): ask `ask_octave` how the topic, persona, competitor, or account connects across findings, deals, and library entities, and use its evidence to choose filters and examples. It does not replace the retrieval, deduplication, and counting above: counts and trends in the output come from the filtered event and finding retrieval, never from a graph answer. If the tool is unavailable, start from the findings retrieval and say so.
+To orient a scoped question, use [Ask Octave first](../../shared/octave-research-toolkit.md#ask-octave-first-for-questions-that-span-records): ask `ask_octave` how the topic, persona, competitor, or account connects across findings, deals, and library entities, and use its evidence to choose filters and examples. It does not replace the retrieval, deduplication, and counting above: counts and trends in the output come from the filtered event and finding retrieval, never from a graph answer, and a claim from its answer is checked with a narrow read before it shapes a visible line. If the tool is unavailable, start from the findings retrieval and say so.

@@ -14,6 +14,9 @@ DEFAULT = {'audience': 'internal', 'readiness': 'ready_for_review', 'assets': 'b
 ENUMS = {'audience': {'internal', 'restricted_external', 'public'},
          'readiness': {'seller_draft', 'ready_for_review', 'buyer_ready', 'published_verified'},
          'assets': {'embedded', 'bundled', 'hosted'}}
+WEB_FONT_HOSTS = {'fonts.googleapis.com', 'fonts.gstatic.com'}  # the one external dependency presentation-principles allow
+MONO_FALLBACK = ('ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace')
+HEADLINE_WORDS = 16  # about three lines at story and cover hero sizes (presentation principle 3)
 WORDS = 'delve robust comprehensive leverage seamless pivotal meticulous utilize holistic synergy tapestry paradigm'.split()
 
 
@@ -29,6 +32,8 @@ class Document(HTMLParser):
         self.doctype = False
         self.ids = set()
         self.inert_links = 0
+        self.open_heads = []  # [depth, words] for an h1 or .vk-display being read
+        self.headlines = []
 
     def handle_decl(self, decl):
         if decl.lower() == 'doctype html':
@@ -40,8 +45,13 @@ class Document(HTMLParser):
             self.ids.add(a['id'])
         if tag == 'a' and not a.get('href') and (a.get('role') == 'button' or 'btn' in a.get('class', '')):
             self.inert_links += 1
+        if tag == 'br':
+            for head in self.open_heads:
+                head[1].append(' ')
         if tag not in {'meta', 'link', 'img', 'br', 'hr', 'input', 'source', 'wbr'}:
             self.tags.append(tag)
+            if tag == 'h1' or 'vk-display' in (a.get('class') or '').split():
+                self.open_heads.append([len(self.tags), []])
         if a.get('style'):
             self.css.append(a['style'])
         if tag == 'meta':
@@ -65,9 +75,16 @@ class Document(HTMLParser):
 
     def handle_endtag(self, tag):
         if tag in self.tags:
+            depth = len(self.tags) - self.tags[::-1].index(tag)
+            while self.open_heads and self.open_heads[-1][0] >= depth:
+                # Joined without a separator so punctuation after an inline tag
+                # stays on its word; a <br> adds its own space.
+                self.headlines.append(''.join(self.open_heads.pop()[1]).split())
             self.tags = self.tags[:len(self.tags) - 1 - self.tags[::-1].index(tag)]
 
     def handle_data(self, data):
+        for head in self.open_heads:
+            head[1].append(data)
         if 'style' in self.tags:
             self.css.append(data)
         elif not any(t in self.tags for t in ('script', 'template')):
@@ -113,6 +130,10 @@ def lint(path, policy):
             warnings.append(f'Review authored wording: {word}; preserve customer terminology')
     if re.search('[—–]', authored):
         warnings.append('Review dash usage in authored prose; range punctuation and exact quotes are allowed')
+    for words in doc.headlines:
+        if len(words) > HEADLINE_WORDS:
+            warnings.append(f'Headline runs {len(words)} words ("{" ".join(words[:6])} ..."); aim for three lines at the hero size, '
+                            f'about {HEADLINE_WORDS} words, and cut words rather than shrink the type')
     placeholders = set(re.findall(r'\[(?:TBD|TODO|NEEDS[^\]]*|INSERT[^\]]*|PRICE|AMOUNT|DATE|OWNER|CTA[^\]]*)\]|\{\{[^}]+\}\}', text, re.I))
     unresolved = placeholders - set(policy['intentionalPlaceholders'])
     if unresolved:
@@ -124,6 +145,17 @@ def lint(path, policy):
         if re.search(r'\b(?:evt|ex|crmo|op|pe|sg|uu|oj|rr|wa)_[A-Za-z0-9]{8,}\b', text):
             errors.append('External artifact exposes raw workspace record IDs')
     css = re.sub(r'/\*.*?\*/', '', '\n'.join(doc.css), flags=re.S)
+    short_stacks = set()
+    for value in re.findall(r'(?:font-family|font|--[\w-]+)\s*:\s*([^;{}]+)', css, re.I):
+        lowered = value.lower()
+        if not re.search(r'(?<![\w-])monospace\b|\bmenlo\b|\bconsolas\b|sfmono-regular|ui-monospace', lowered):
+            continue
+        missing = [f for f in MONO_FALLBACK[:-1] if f.lower() not in lowered]
+        if missing or not re.search(r'(?<![\w-])monospace[\s)]*(?:!important)?\s*$', lowered):
+            short_stacks.update(missing or ['monospace last'])
+    if short_stacks:
+        warnings.append('Monospace stack lacks a full fallback (' + ', '.join(sorted(short_stacks)) +
+                        '); end it with ' + ', '.join(MONO_FALLBACK))
     doc.resources.extend(m[0] or m[1] for m in re.findall(r'''url\(\s*["']?([^\s)'";]+)|@import\s+["']([^"']+)''', css, re.I))
     root = path.parent.resolve()
     for uri in set(doc.resources):
@@ -131,6 +163,8 @@ def lint(path, policy):
         if uri.startswith('#') or parsed.scheme == 'data':
             continue
         if parsed.scheme in {'http', 'https'} or uri.startswith('//'):
+            if policy['assets'] != 'embedded' and parsed.hostname in WEB_FONT_HOSTS:
+                continue
             if policy['assets'] != 'hosted' or parsed.hostname not in policy['remoteHosts']:
                 errors.append(f'Undeclared remote asset: {uri}')
         elif parsed.scheme or uri.startswith('/'):

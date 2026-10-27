@@ -105,7 +105,7 @@ QUALIFICATION CHECKLIST
 □ Identified decision maker(s)
 □ Understood timeline
 □ Budget discussion initiated
-□ Next step agreed
+□ Next step agreed (in a first enterprise meeting, who the champion takes it to next)
 
 ---
 

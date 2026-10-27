@@ -1,6 +1,6 @@
 # Coaching Microsite — HTML Scaffold
 
-Self-contained, single HTML file. The only external dependency is Google Fonts (Inter + a mono face); the brand display font and the workspace-company logo are embedded as data URIs. This scaffold reproduces the approved format. Styled with the workspace company's brand tokens (example below uses the Octave kit); swap the `:root` tokens and `@font-face` for the resolved kit.
+Self-contained, single HTML file. The only external dependency is the kit's Google Fonts link, when it has one; the kit's own font files and the workspace-company logo are embedded as data URIs. This scaffold reproduces the approved format. Every colour comes from the resolved brand kit ([brand-kit-usage.md](../../shared/brand-kit-usage.md)): inline the kit's `tokens.css` `:root` and its `@font-face` rules, and the scaffold's own roles below derive from those tokens with `var()` and `color-mix()`, so the CSS carries no colour literal of its own and `check_adherence.py` runs clean against the kit.
 
 ## Head + fonts
 
@@ -10,43 +10,47 @@ Self-contained, single HTML file. The only external dependency is Google Fonts (
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Deal Coaching: [Company] · Resonate → Elevate → Compel</title>
+<title>Deal Coaching: [Company]</title>
 <meta property="og:title" content="Deal Coaching: [Company]">
 <meta property="og:description" content="[1-2 sentence summary a stranger understands]">
 <meta property="og:image" content="assets/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- The kit's render.webfonts URL; drop this link and both preconnects when the kit has none. -->
+<link href="https://fonts.googleapis.com/css2?family=[kit fonts]&display=swap" rel="stylesheet">
 <style>
-  /* Brand display face, embedded as a data URI (commercial fonts are not on Google Fonts).
-     Weight 300 for display, 400 for sub-display. Base64 the kit's font files. */
-  @font-face { font-family: 'Alliance No 2'; src: url(data:font/otf;base64,<LIGHT>) format('opentype'); font-weight: 300; font-style: normal; font-display: swap; }
-  @font-face { font-family: 'Alliance No 2'; src: url(data:font/ttf;base64,<REGULAR>) format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
-  /* ...tokens + component CSS below... */
+  /* The kit's font files from manifest.render.fonts, base64-embedded, one rule per weight. */
+  @font-face { font-family: '[Kit Heading Face]'; src: url(data:font/woff2;base64,<FILE>) format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+  /* ...kit tokens, scaffold roles and component CSS below... */
 </style>
 </head>
 ```
 
 ## CSS (component system)
 
-Paste this whole block into `<style>` after the `@font-face` rules. Replace the `:root` token values with the resolved brand kit's `tokens.css`.
+Paste this whole block into `<style>` after the `@font-face` rules. The first `:root` is the resolved kit's `tokens.css`, pasted as is. The second maps the scaffold's roles onto kit tokens; leave it unchanged.
 
 ```css
+:root { /* inline the workspace brand tokens.css :root here */ }
 :root {
-  --brand-bg: #ffffff; --brand-bg-alt: #ebece8; --brand-surface: #eff0f7; --brand-surface-dark: #1b1a35;
-  --brand-ink: #0c0f2d; --brand-muted: #6e6788; --brand-faint: #526077;
-  --brand-on-dark: #ffffff; --brand-on-dark-muted: rgba(255,255,255,0.62);
-  --brand-primary: #4a3aff; --brand-primary-hover: #3527d8; --brand-accent: #582ecc; --brand-accent-light: #a081f5;
-  --brand-highlight: #a384f6; --brand-lavender: #cbc4e3; --brand-border: #eceef2; --brand-border-soft: #dfdff4;
-  --brand-primary-weak: #eef0ff; --brand-accent-weak: #f2eefc; --brand-border-dark: #3e3955;
-  --brand-positive: #027a48; --brand-positive-weak: #ecfdf3; --brand-warning: #dc6803; --brand-warning-weak: #fffaeb;
-  --brand-negative: #b42318; --brand-negative-weak: #fef3f2;
-  --brand-band: linear-gradient(135deg, #0a0828, #2e1973 45%, #582ecc 78%, #a081f5 108%); --brand-band-dark: #080724;
-  --emph: #582ecc; --emph-dark: #a384f6;
-  --font-display: 'Alliance No 2', system-ui, Arial, sans-serif; --font-body: 'Inter', -apple-system, sans-serif; --font-mono: 'Geist Mono', monospace;
-  --radius-sm: 8px; --radius: 12px; --radius-md: 16px; --radius-lg: 20px; --radius-pill: 96px;
-  --shadow-sm: 0 1px 2px rgba(20,20,43,0.06); --shadow: 1px 1px 12px rgba(20,20,43,0.08); --shadow-lg: 0 8px 24px rgba(10,8,40,0.12);
+  /* Scaffold roles, derived only from kit tokens. Text roles stay at full kit ink so contrast holds. */
+  --dc-ink-2: var(--brand-body-ink, var(--brand-ink));
+  --dc-on-dark-2: color-mix(in srgb, var(--brand-on-dark) 80%, transparent);
+  --dc-border-soft: var(--brand-border-soft, var(--brand-border));
+  --dc-border-dark: var(--brand-border-dark, color-mix(in srgb, var(--brand-on-dark) 22%, transparent));
+  --dc-primary-weak: color-mix(in srgb, var(--brand-primary) 10%, var(--brand-bg));
+  --dc-accent: var(--brand-accent, var(--brand-primary));
+  --dc-positive: var(--brand-positive, var(--brand-primary));
+  --dc-positive-weak: color-mix(in srgb, var(--dc-positive) 8%, var(--brand-bg));
+  --dc-warning: var(--brand-warning, var(--dc-accent));
+  --dc-negative: var(--brand-negative, var(--brand-ink));
+  --dc-negative-weak: color-mix(in srgb, var(--dc-negative) 8%, var(--brand-bg));
+  --emph: var(--brand-emph-ink-light, var(--brand-primary)); --emph-dark: var(--brand-emph-ink-dark, var(--brand-on-dark));
+  --font-display: var(--brand-font-heading); --font-body: var(--brand-font-body);
+  --font-mono: var(--brand-font-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --radius-sm: var(--brand-radius-sm, 8px); --radius: var(--brand-radius, 12px); --radius-md: var(--brand-radius-card, 16px); --radius-pill: var(--brand-radius-pill, 999px);
+  --shadow-sm: var(--brand-shadow-sm, none);
   --gap: 1rem; --gap-lg: 2rem;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -57,7 +61,7 @@ em, .emph { color: var(--emph); font-style: normal; }
 
 /* sidebar nav dots */
 .dots { position: fixed; top: 50%; right: clamp(0.5rem, 2vw, 1.75rem); transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.6rem; z-index: 100; }
-.dots a { position: relative; width: 9px; height: 9px; border-radius: 50%; background: var(--brand-lavender); transition: all 0.25s ease; }
+.dots a { position: relative; width: 9px; height: 9px; border-radius: 50%; background: var(--brand-border); transition: all 0.25s ease; }
 .dots a.active { background: var(--brand-primary); transform: scale(1.45); }
 .dots a span { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); white-space: nowrap; font-size: 0.68rem; color: var(--brand-muted); background: var(--brand-bg); padding: 2px 8px; border-radius: var(--radius-pill); box-shadow: var(--shadow-sm); opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
 .dots a:hover span, .dots a:focus-visible span { opacity: 1; }
@@ -72,23 +76,25 @@ a:focus-visible, button:focus-visible, summary:focus-visible, details.path > sum
 .hero-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 .brand-mark { font-family: var(--font-display); font-weight: 300; font-size: 1.35rem; letter-spacing: 0.5px; color: var(--brand-on-dark); }
 .brand-logo { height: 32px; width: auto; display: block; }
-.method-badge { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.04em; color: var(--brand-on-dark-muted); border: 1px solid var(--brand-border-dark); border-radius: var(--radius-pill); padding: 0.35rem 0.85rem; }
-.eyebrow { font-size: 0.78rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; color: var(--brand-on-dark-muted); }
+.method-badge { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.04em; color: var(--dc-on-dark-2); border: 1px solid var(--dc-border-dark); border-radius: var(--radius-pill); padding: 0.35rem 0.85rem; }
+.eyebrow { font-size: 0.78rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; color: var(--dc-on-dark-2); }
 .hero h1 { font-family: var(--font-display); font-weight: 300; font-size: clamp(2.4rem, 6vw, 4rem); line-height: 1.02; letter-spacing: -1.24px; text-wrap: balance; }
 .hero h1 em { color: var(--emph-dark); }
 .hero-meta { display: flex; flex-wrap: wrap; gap: 0.5rem 0.75rem; }
-.chip { font-size: 0.8rem; color: var(--brand-on-dark); background: rgba(255,255,255,0.08); border: 1px solid var(--brand-border-dark); border-radius: var(--radius-pill); padding: 0.3rem 0.8rem; }
+.chip { font-size: 0.8rem; color: var(--brand-on-dark); background: rgba(255,255,255,0.08); border: 1px solid var(--dc-border-dark); border-radius: var(--radius-pill); padding: 0.3rem 0.8rem; }
 .chip b { font-weight: 500; color: var(--emph-dark); }
 
 /* stage rail */
-.rail { display: flex; align-items: stretch; margin-top: 0.25rem; border: 1px solid var(--brand-border-dark); border-radius: var(--radius); overflow: hidden; }
-.rail-step { flex: 1; padding: 0.7rem 0.9rem; display: flex; flex-direction: column; gap: 0.15rem; border-right: 1px solid var(--brand-border-dark); }
+.rail { display: flex; align-items: stretch; margin-top: 0.25rem; border: 1px solid var(--dc-border-dark); border-radius: var(--radius); overflow: hidden; }
+.rail-step { flex: 1; min-width: 0; padding: 0.7rem 0.9rem; display: flex; flex-direction: column; gap: 0.15rem; border-right: 1px solid var(--dc-border-dark); }
 .rail-step:last-child { border-right: 0; }
 .rail-step .s-name { font-family: var(--font-display); font-weight: 400; font-size: 1rem; }
-.rail-step .s-obj { font-size: 0.72rem; color: var(--brand-on-dark-muted); }
-.rail-step.current { background: rgba(164,132,246,0.16); }
-.rail-step.current .s-name { color: var(--emph-dark); }
-.rail-step.done .s-name::after { content: " \2713"; color: var(--brand-accent-light); font-size: 0.8em; }
+.rail-step .s-obj { font-size: 0.72rem; color: var(--dc-on-dark-2); }
+.rail-step.current { background: color-mix(in srgb, var(--brand-on-dark) 14%, transparent); box-shadow: inset 0 3px 0 var(--emph-dark); }
+/* the current stage reads at full on-dark ink; colour alone never marks it, so a pale emphasis hue cannot dim it */
+.rail-step.current .s-name { color: var(--brand-on-dark); font-weight: 500; }
+.rail-step.current .s-obj { color: var(--brand-on-dark); }
+.rail-step.done .s-name::after { content: " \2713"; color: var(--emph-dark); font-size: 0.8em; }
 
 /* sections */
 main { padding: clamp(2rem, 4vw, 3rem) 0 4rem; }
@@ -99,40 +105,40 @@ section, .sec { scroll-margin-top: 1.5rem; }
 .sec-num { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; color: var(--brand-primary); font-weight: 500; }
 .sec h2 { font-family: var(--font-display); font-weight: 300; font-size: clamp(1.5rem, 3vw, 2.1rem); line-height: 1.12; letter-spacing: -0.5px; margin-top: 0.15rem; text-wrap: balance; }
 .sec h2 em { color: var(--emph); }
-.lead { color: var(--brand-faint); font-size: 1.02rem; margin-top: 0.4rem; max-width: 62ch; text-wrap: pretty; }
+.lead { color: var(--dc-ink-2); font-size: 1.02rem; margin-top: 0.4rem; max-width: 62ch; text-wrap: pretty; }
 
 /* verdict */
-.verdict { background: var(--brand-surface); border: 1px solid var(--brand-border-soft); border-radius: var(--radius-md); padding: clamp(1.25rem, 2.5vw, 1.75rem); display: flex; flex-direction: column; gap: 0.9rem; }
+.verdict { background: var(--brand-surface); border: 1px solid var(--dc-border-soft); border-radius: var(--radius-md); padding: clamp(1.25rem, 2.5vw, 1.75rem); display: flex; flex-direction: column; gap: 0.9rem; }
 .verdict .headline { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.15rem, 2.2vw, 1.45rem); line-height: 1.28; text-wrap: pretty; }
 .verdict .headline em { color: var(--emph); }
-.verdict-move { display: flex; gap: 0.7rem; align-items: flex-start; font-size: 0.95rem; color: var(--brand-faint); }
-.verdict-move .tag { flex-shrink: 0; font-size: 0.66rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--brand-primary); background: var(--brand-primary-weak); border-radius: var(--radius-pill); padding: 0.22rem 0.6rem; margin-top: 0.1rem; }
+.verdict-move { display: flex; gap: 0.7rem; align-items: flex-start; font-size: 0.95rem; color: var(--dc-ink-2); }
+.verdict-move .tag { flex-shrink: 0; font-size: 0.66rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--brand-primary); background: var(--dc-primary-weak); border-radius: var(--radius-pill); padding: 0.22rem 0.6rem; margin-top: 0.1rem; }
 
 /* cards + utilities */
-.card { background: var(--brand-surface); border: 1px solid var(--brand-border-soft); border-radius: var(--radius); padding: clamp(1rem, 2vw, 1.35rem); }
+.card { background: var(--brand-surface); border: 1px solid var(--dc-border-soft); border-radius: var(--radius); padding: clamp(1rem, 2vw, 1.35rem); }
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); }
 .label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--brand-muted); }
 
-/* Job 1 stage read + placeholder */
-.stand { display: grid; grid-template-columns: 1.1fr 1fr; gap: var(--gap); align-items: stretch; }
+/* Job 1 stage read + no-CRM note */
+.stand { display: grid; grid-template-columns: 1fr; gap: var(--gap); align-items: stretch; }
+.stand.has-deal { grid-template-columns: 1.1fr 1fr; } /* second column: the CRM opportunity card */
+.stand > * { min-width: 0; }
 .stand .read { display: flex; flex-direction: column; gap: 0.75rem; }
-.conf { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--brand-faint); }
-.conf .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--brand-warning); }
+.conf { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--dc-ink-2); }
+.conf .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--dc-warning); }
 .evi { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; }
 .evi li { display: grid; grid-template-columns: 92px 1fr; gap: 0.6rem; font-size: 0.88rem; align-items: baseline; }
 .evi .w { font-family: var(--font-mono); font-size: 0.72rem; color: var(--brand-muted); text-transform: uppercase; letter-spacing: 0.04em; }
-.placeholder { border: 1.5px dashed var(--brand-border-dark); border-radius: var(--radius); background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(110,103,136,0.03) 10px, rgba(110,103,136,0.03) 20px); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1.5rem 1.25rem; gap: 0.35rem; }
-.placeholder .ph-title { font-family: var(--font-display); font-weight: 400; font-size: 1.05rem; color: var(--brand-faint); }
-.placeholder .ph-sub { font-size: 0.8rem; color: var(--brand-muted); max-width: 32ch; }
+.no-crm { grid-column: 1 / -1; font-size: 0.85rem; color: var(--dc-ink-2); }
 
 /* stage gloss */
-.stage-gloss { border: 1px solid var(--brand-border-soft); border-left: 3px solid var(--brand-accent-light); border-radius: 0 var(--radius) var(--radius) 0; padding: 0.9rem 1.15rem; margin-bottom: 1rem; }
+.stage-gloss { border: 1px solid var(--dc-border-soft); border-left: 3px solid var(--emph-dark); border-radius: 0 var(--radius) var(--radius) 0; padding: 0.9rem 1.15rem; margin-bottom: 1rem; }
 .stage-gloss .label { display: block; margin-bottom: 0.3rem; }
-.stage-gloss p { font-size: 0.92rem; color: var(--brand-faint); text-wrap: pretty; }
+.stage-gloss p { font-size: 0.92rem; color: var(--dc-ink-2); text-wrap: pretty; }
 .stage-gloss p em { color: var(--emph); }
 
 /* Job 2 buyer mindset */
-.mindset { border-left: 3px solid var(--brand-accent); background: var(--brand-surface); border-radius: 0 var(--radius) var(--radius) 0; padding: 1.1rem 1.35rem; }
+.mindset { border-left: 3px solid var(--dc-accent); background: var(--brand-surface); border-radius: 0 var(--radius) var(--radius) 0; padding: 1.1rem 1.35rem; }
 .mindset p { font-size: 0.98rem; color: var(--brand-ink); }
 .mindset p + p { margin-top: 0.6rem; }
 .heard { margin-top: 1.1rem; }
@@ -144,13 +150,13 @@ section, .sec { scroll-margin-top: 1.5rem; }
 /* Job 3 goals + value props + talk tracks */
 .goals { list-style: none; counter-reset: g; display: flex; flex-direction: column; gap: 0.6rem; margin: 0.6rem 0 1.3rem; }
 .goals li { counter-increment: g; display: grid; grid-template-columns: 26px 1fr; gap: 0.7rem; align-items: start; font-size: 0.94rem; }
-.goals li::before { content: counter(g); display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: var(--brand-primary); color: #fff; font-family: var(--font-mono); font-size: 0.72rem; font-weight: 500; margin-top: 0.05rem; }
+.goals li::before { content: counter(g); display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: var(--brand-primary); color: var(--brand-primary-ink); font-family: var(--font-mono); font-size: 0.72rem; font-weight: 500; margin-top: 0.05rem; }
 .goals li em { color: var(--emph); }
 .vp-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; margin: 0.6rem 0 1.3rem; }
 .vp-list li { display: grid; grid-template-columns: 16px 1fr; gap: 0.55rem; font-size: 0.94rem; align-items: start; }
-.vp-list li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--brand-accent); margin-top: 0.55rem; }
+.vp-list li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--dc-accent); margin-top: 0.55rem; }
 .vp-list li em { color: var(--emph); }
-.tt { background: var(--brand-bg); border: 1px solid var(--brand-border-soft); border-left: 3px solid var(--brand-primary); border-radius: 0 var(--radius) var(--radius) 0; padding: 1rem 1.25rem; }
+.tt { background: var(--brand-bg); border: 1px solid var(--dc-border-soft); border-left: 3px solid var(--brand-primary); border-radius: 0 var(--radius) var(--radius) 0; padding: 1rem 1.25rem; }
 .tt + .tt { margin-top: 0.85rem; }
 .tt .tt-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--brand-primary); margin-bottom: 0.35rem; }
 .tt .tt-say { font-size: 0.98rem; line-height: 1.5; }
@@ -158,13 +164,13 @@ section, .sec { scroll-margin-top: 1.5rem; }
 .tt .tt-note { font-size: 0.82rem; color: var(--brand-muted); margin-top: 0.5rem; }
 
 /* Job 4 readiness + forward-stage collapsibles */
-.ready { border: 1px solid var(--brand-border-soft); border-left: 3px solid var(--brand-positive); background: var(--brand-positive-weak); border-radius: 0 var(--radius) var(--radius) 0; padding: 1rem 1.25rem; margin-bottom: 1.1rem; }
-.ready .label { color: var(--brand-positive); display: block; margin-bottom: 0.55rem; }
+.ready { border: 1px solid var(--dc-border-soft); border-left: 3px solid var(--dc-positive); background: var(--dc-positive-weak); border-radius: 0 var(--radius) var(--radius) 0; padding: 1rem 1.25rem; margin-bottom: 1.1rem; }
+.ready .label { color: var(--dc-positive); display: block; margin-bottom: 0.55rem; }
 .ready ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
 .ready ul li { display: grid; grid-template-columns: 18px 1fr; gap: 0.55rem; font-size: 0.92rem; align-items: start; }
-.ready ul li::before { content: "\2713"; color: var(--brand-positive); font-weight: 600; }
+.ready ul li::before { content: "\2713"; color: var(--dc-positive); font-weight: 600; }
 .ready ul li em { color: var(--emph); }
-details.path { border: 1px solid var(--brand-border-soft); border-radius: var(--radius); margin-top: 0.85rem; overflow: hidden; background: var(--brand-bg); }
+details.path { border: 1px solid var(--dc-border-soft); border-radius: var(--radius); margin-top: 0.85rem; overflow: hidden; background: var(--brand-bg); }
 details.path > summary { cursor: pointer; list-style: none; padding: 0.95rem 1.15rem; display: flex; align-items: center; gap: 0.75rem; }
 details.path > summary::-webkit-details-marker { display: none; }
 details.path > summary::before { content: "\25B6"; font-size: 0.62em; color: var(--brand-primary); transition: transform 0.2s ease; }
@@ -180,32 +186,33 @@ details.path .p-body { padding: 0 1.15rem 1.15rem; display: flex; flex-direction
 
 /* Job 5 risk list (scales to any number of risks) */
 .risk-list { display: flex; flex-direction: column; gap: var(--gap); }
-.risk-pair { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--brand-border-soft); border-radius: var(--radius); overflow: hidden; }
-.risk-pair .r-risk { padding: 0.9rem 1.15rem; border-left: 3px solid var(--brand-negative); background: var(--brand-negative-weak); }
-.risk-pair .r-counter { padding: 0.9rem 1.15rem; border-left: 3px solid var(--brand-positive); background: var(--brand-positive-weak); }
+.risk-pair { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--dc-border-soft); border-radius: var(--radius); overflow: hidden; }
+.risk-pair > * { min-width: 0; }
+.risk-pair .r-risk { padding: 0.9rem 1.15rem; border-left: 3px solid var(--dc-negative); background: var(--dc-negative-weak); }
+.risk-pair .r-counter { padding: 0.9rem 1.15rem; border-left: 3px solid var(--dc-positive); background: var(--dc-positive-weak); }
 .risk-pair .label { margin-bottom: 0.3rem; }
-.risk-pair .r-risk .label { color: var(--brand-negative); }
-.risk-pair .r-counter .label { color: var(--brand-positive); }
+.risk-pair .r-risk .label { color: var(--dc-negative); }
+.risk-pair .r-counter .label { color: var(--dc-positive); }
 .risk-pair p { font-size: 0.9rem; }
 .risk-pair p em { color: var(--emph); }
 
 /* Job 6 quiz + rubric */
 .quiz { display: flex; flex-direction: column; gap: 1.1rem; margin-top: 0.5rem; }
-.q { background: var(--brand-surface); border: 1px solid var(--brand-border-soft); border-radius: var(--radius); padding: 1.1rem 1.25rem; }
+.q { background: var(--brand-surface); border: 1px solid var(--dc-border-soft); border-radius: var(--radius); padding: 1.1rem 1.25rem; }
 .q .q-text { font-weight: 500; font-size: 0.98rem; margin-bottom: 0.75rem; }
-.q .opt { display: block; width: 100%; text-align: left; font: inherit; font-size: 0.9rem; color: var(--brand-ink); background: var(--brand-bg); border: 1px solid var(--brand-border-soft); border-radius: var(--radius-sm); padding: 0.6rem 0.85rem; margin-bottom: 0.5rem; cursor: pointer; transition: border-color 0.15s ease, background 0.15s ease; }
+.q .opt { display: block; width: 100%; text-align: left; font: inherit; font-size: 0.9rem; color: var(--brand-ink); background: var(--brand-bg); border: 1px solid var(--dc-border-soft); border-radius: var(--radius-sm); padding: 0.6rem 0.85rem; margin-bottom: 0.5rem; cursor: pointer; transition: border-color 0.15s ease, background 0.15s ease; }
 .q .opt:hover { border-color: var(--brand-primary); }
-.q .opt.correct { border-color: var(--brand-positive); background: var(--brand-positive-weak); }
-.q .opt.wrong { border-color: var(--brand-negative); background: var(--brand-negative-weak); }
+.q .opt.correct { border-color: var(--dc-positive); background: var(--dc-positive-weak); }
+.q .opt.wrong { border-color: var(--dc-negative); background: var(--dc-negative-weak); }
 .q .opt:disabled { cursor: default; }
-.q .q-answer { font-size: 0.85rem; color: var(--brand-faint); margin-top: 0.4rem;  }
+.q .q-answer { font-size: 0.85rem; color: var(--dc-ink-2); margin-top: 0.4rem;  }
 .q .q-answer.show { display: block; }
 .q .q-answer em { color: var(--emph); }
 .rubric { display: flex; flex-direction: column; gap: 0.5rem; }
 .rubric-row { display: grid; grid-template-columns: 150px 1fr; gap: 1rem; padding: 0.7rem 0; border-bottom: 1px solid var(--brand-border); align-items: baseline; }
 .rubric-row:last-child { border-bottom: 0; }
 .rubric-row .crit { font-weight: 500; font-size: 0.9rem; }
-.rubric-row .good { font-size: 0.9rem; color: var(--brand-faint); }
+.rubric-row .good { font-size: 0.9rem; color: var(--dc-ink-2); }
 .rubric-row .good em { color: var(--emph); }
 
 footer { border-top: 1px solid var(--brand-border); padding: 1.75rem 0 2.5rem; color: var(--brand-muted); font-size: 0.8rem; display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; justify-content: space-between; }
@@ -215,7 +222,7 @@ footer .src { max-width: 60ch; }
   .dots { display: none; }
   .grid-2, .stand, .risk-pair { grid-template-columns: 1fr; }
   .rail { flex-direction: column; }
-  .rail-step { border-right: 0; border-bottom: 1px solid var(--brand-border-dark); }
+  .rail-step { border-right: 0; border-bottom: 1px solid var(--dc-border-dark); }
   .rail-step:last-child { border-bottom: 0; }
   .evi li { grid-template-columns: 78px 1fr; }
   .rubric-row { grid-template-columns: 1fr; gap: 0.2rem; }
@@ -223,7 +230,7 @@ footer .src { max-width: 60ch; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
 @media print {
   .dots { display: none; }
-  .hero { background: var(--brand-band-dark) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .hero { background: var(--brand-surface-dark) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .card, .risk-pair, .tt, .q, details.path, .verdict, .rubric-row { break-inside: avoid; }
   details.path .p-body { display: flex !important; }
   body { color: #111; }
@@ -246,7 +253,8 @@ footer .src { max-width: 60ch; }
 <header class="hero"><div class="wrap">
   <div class="hero-top">
     <img class="brand-logo" src="data:image/png;base64,<LOGO>" alt="[Workspace Company]" width="133" height="32">
-    <span class="method-badge">Resonate → Elevate → Compel</span>
+    <!-- Only when the workspace has a methodology on file or the user asked for one: its own stage names. Otherwise omit the badge. -->
+    <span class="method-badge">[Stage 1] → [Stage 2] → [Stage 3]</span>
   </div>
   <div>
     <p class="eyebrow">Deal coaching plan</p>
@@ -257,18 +265,19 @@ footer .src { max-width: 60ch; }
     <span class="chip">Persona: <b>[Persona]</b></span>
     <span class="chip">Segment: <b>[Segment]</b></span>
   </div>
+  <!-- Same condition as the badge: the workspace's own stages and objectives, or no rail. -->
   <div class="rail" role="list" aria-label="Methodology stages">
-    <div class="rail-step current" role="listitem"><span class="s-name">Resonate</span><span class="s-obj">Drive awareness</span></div>
-    <div class="rail-step" role="listitem"><span class="s-name">Elevate</span><span class="s-obj">Drive urgency</span></div>
-    <div class="rail-step" role="listitem"><span class="s-name">Compel</span><span class="s-obj">Drive action</span></div>
+    <div class="rail-step current" role="listitem" aria-current="step"><span class="s-name">[Stage 1]</span><span class="s-obj">[Objective]</span></div>
+    <div class="rail-step" role="listitem"><span class="s-name">[Stage 2]</span><span class="s-obj">[Objective]</span></div>
+    <div class="rail-step" role="listitem"><span class="s-name">[Stage 3]</span><span class="s-obj">[Objective]</span></div>
   </div>
 </div></header>
 
 <main class="wrap">
-  <section class="sec" id="stands">   <!-- Job 1: gloss + verdict + stand(read + placeholder) --></section>
+  <section class="sec" id="stands">   <!-- Job 1: gloss + verdict + div.stand(read). With a CRM opportunity: div.stand.has-deal(read + deal card). Without: p.no-crm, one line, and no deal-record card --></section>
   <section class="sec" id="head">     <!-- Job 2: mindset + heard-list --></section>
   <section class="sec" id="say">      <!-- Job 3: goals + vp-list + 3 tt --></section>
-  <section class="sec" id="path">     <!-- Job 4: ready + details.path (Elevate, Compel) --></section>
+  <section class="sec" id="path">     <!-- Job 4: ready + details.path (one per stage ahead) --></section>
   <section class="sec" id="exposed">  <!-- Job 5: risk-list of N risk-pair --></section>
   <section class="sec" id="practice"> <!-- Job 6: quiz + rubric --></section>
 </main>

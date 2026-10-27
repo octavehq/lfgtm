@@ -8,6 +8,8 @@
   ```css
   --chart-win: #4ade80;    /* green — derive from brand if possible */
   --chart-loss: #f87171;   /* red — derive from brand if possible */
+  --chart-win-ink: #15803d;  /* text-safe win color on light surfaces */
+  --chart-loss-ink: #b91c1c; /* text-safe loss color on light surfaces */
   --chart-neutral: var(--muted);
   --chart-bar-height: 28px;
   --chart-bar-radius: 4px;
@@ -16,7 +18,10 @@
 - **All font sizes use `clamp()`** — responsive to viewport
 - **Self-contained HTML**, inline CSS (except Google Fonts / Typekit link)
 - **Print-friendly** — CSS charts print well since they're just styled divs. Include `@media print` rules to hide navigation, flatten tabs to labeled blocks, set `print-color-adjust: exact`, and `page-break-inside: avoid` on cards.
-- **Responsive** — `@media (max-width: 768px)` collapses grids to single column, hides sidebar nav
+- **Responsive**: `@media (max-width: 768px)` collapses grids to single column, hides sidebar nav; then the 520px and 375px rules of [presentation principle 9k](../../shared/presentation-principles.md) (the H2H columns stack, the objection table scrolls inside its own wrapper)
+- **Robust text**: cards, bar labels and table cells follow presentation principles 9i and 9j (no fixed heights or `overflow: hidden` on text, `min-width: 0` on grid children, use-case cards in a row share one height); bar labels wrap instead of truncating (see the bar chart CSS below)
+- **Contrast**: the bright `--chart-win` / `--chart-loss` are fills; any number, rate or label set in a win/loss color uses the `-ink` variant, and badges on a bright fill use dark text (presentation principle 23)
+- **Headings**: `.section-title` is one sentence that states the section's finding, with no muted second line ([editorial rule 8c](../../shared/editorial-rules.md)); `.section-num` and `.dim-label` stay as labels
 
 ```html
 <!DOCTYPE html>
@@ -150,7 +155,7 @@ Prominent labels above each bar chart dimension (e.g., "WIN RATE BY SEGMENT", "W
 Large number + label + optional trend badge. Use in grid layouts. 3 cards: Deals Won, Deals Lost, Calls Analyzed. Every metric shows BOTH volume and rate.
 ```html
 <div class="metric-card">
-  <div class="metric-value" style="color: var(--chart-win);">12</div>
+  <div class="metric-value" style="color: var(--chart-win-ink);">12</div>
   <div class="metric-label">Deals Won</div>
   <div class="metric-sublabel">34% of closed deals</div>
 </div>
@@ -179,6 +184,16 @@ CSS `conic-gradient` donut chart. Set `--win-pct` as inline style variable.
   </div>
   <span class="bar-value">69% (20/29)</span>
 </div>
+```
+Bar labels wrap and are never cut off: no `white-space: nowrap`, `text-overflow: ellipsis` or `overflow: hidden` on `.bar-label`, at any width. Below 520px the label takes its own full-width line above the track and value, so "Mid-Market / Services" or "No persona tag" reads in full at 375px.
+```css
+.bar-row { display: grid; grid-template-columns: minmax(0, 11rem) minmax(0, 1fr) auto; gap: var(--chart-bar-gap) 12px; align-items: center; }
+.bar-label { min-width: 0; overflow-wrap: anywhere; line-height: 1.3; }
+.bar-value { white-space: nowrap; font-variant-numeric: tabular-nums; }
+@media (max-width: 520px) {
+  .bar-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .bar-label { grid-column: 1 / -1; }
+}
 ```
 
 **Tab System** (`.tab-bar` > `button` + `.tab-panel`):
@@ -306,7 +321,7 @@ Table format for objections, sorted by loss correlation (highest loss rate first
 .obj-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
 .obj-table th { text-align: left; font-weight: 700; padding: 8px 10px; border-bottom: 2px solid var(--border); color: var(--muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; }
 .obj-table td { padding: 10px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
-.loss-rate-badge { font-weight: 700; color: var(--chart-loss); }
+.loss-rate-badge { font-weight: 700; color: var(--chart-loss-ink); }
 ```
 
 **Head-to-Head Aggregate Patterns** (`.h2h-group` > `.h2h-patterns`):
@@ -347,14 +362,14 @@ Aggregate win/loss pattern columns per grouping (competitor, segment, or persona
 .h2h-pattern-col.lost { border-left: 3px solid var(--chart-loss); }
 .h2h-pattern-header { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
 .h2h-badge { font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
-.h2h-badge.won { background: var(--chart-win); color: #fff; }
-.h2h-badge.lost { background: var(--chart-loss); color: #fff; }
+.h2h-badge.won { background: var(--chart-win); color: #052e16; }
+.h2h-badge.lost { background: var(--chart-loss); color: #450a0a; }
 .h2h-pattern-list { font-size: 0.82rem; padding-left: 18px; margin: 0; }
 .h2h-pattern-list li { margin-bottom: 6px; line-height: 1.45; }
 ```
 
 **Data Source List** (`.data-sources`):
-Clean list with labels and values for the report's data provenance.
+Clean list with labels and values for the report's data provenance. When the report quotes calls, an evidence list follows it: one opening sentence with the count ("14 quotes from 9 calls back this report"), then each numbered quote with its deal, outcome and date. The `[n]` markers in use-case evidence lines and H2H bullets link to these entries.
 
 **Trend Indicators**:
 `.trend-up` (green + up arrow), `.trend-down` (red + down arrow), `.trend-flat` (muted).
@@ -365,6 +380,6 @@ Small pills used to attribute segments and personas to use cases, patterns, obje
 .tag { font-size: .72rem; font-weight: 600; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--border); }
 .tag.segment { border-color: var(--accent); color: var(--accent); }
 .tag.segment::before { content: "Segment: "; }
-.tag.persona { border-color: #8a68f2; color: #8a68f2; }
+.tag.persona { border-color: #6b46e0; color: #6b46e0; }
 .tag.persona::before { content: "Persona: "; }
 ```

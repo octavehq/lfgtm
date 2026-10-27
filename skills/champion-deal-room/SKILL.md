@@ -9,7 +9,7 @@ description: A buyer-facing deal room a rep hands to a champion so they can run 
 
 Read [the task method](references/task-method.md) before selecting context, claims, or output. It is the execution method for this skill. Supporting templates supply structure and styling; populate them from the task method and current evidence, not their illustrative figures or assertions.
 
-This is buyer-facing enablement for the buyer’s internal committee. Keep seller-only strategy and restricted evidence outside it. Preserve the six reader jobs; worksheets can retain intentional future fields. Incorporate supplied answers and recheck the value model.
+This is buyer-facing enablement for the buyer’s internal committee. Keep seller-only strategy and restricted evidence outside it. Preserve the six reader jobs; worksheets can retain intentional future fields. Incorporate supplied answers and recheck the value model. Render the room in [story mode](../shared/formats/story-mode.md) by default (seven screens by default within a budget of five to eight, unless the rep asks for another count; the screen plan is in the structure reference); use the document-mode scaffold when the rep asks for a working document with fill-in worksheets or for print.
 
 Use [GTM context](../shared/gtm-context.md) for strategic tasks and [evidence and inputs](../shared/evidence-and-inputs.md) for material claims and missing facts. A narrow list/get or a render-only handoff does not require unrelated research. Read [host runtime](../shared/host-runtime.md) for available tools, portable resource paths, routing, and review fallback.
 
@@ -23,8 +23,9 @@ Resolve current tool schemas before execution; use returned IDs and pagination. 
 
 ## References by task
 
-- [deal room structure](references/deal-room-structure.md)
-- [html scaffold](references/html-scaffold.md)
+- [deal room structure](references/deal-room-structure.md), including the screen plan
+- [story mode](../shared/formats/story-mode.md) and the [visual kit](../shared/formats/visual-kit.md) (default rendering)
+- [html scaffold](references/html-scaffold.md) (document mode, on request)
 
 Read only the reference for the selected mode, then the format/layout references when rendering. Do not repeat intake or change approved claims when routing to a renderer.
 

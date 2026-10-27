@@ -39,6 +39,7 @@ The invocation depends only on the output's shape, and the format doc for that s
 | Scrolling document | none | `nav,.toc,.sticky-nav` | [html-document.md](formats/html-document.md) |
 | Microsite | none | `nav,.sticky-nav,.cta-bar` | [microsite.md](formats/microsite.md) |
 | One-pager | none | none | [one-pager.md](formats/one-pager.md) |
+| Story page | `.vk-screen` (carries `data-pane`) | `.vk-bar,.vk-keys,[data-chrome]` | [story-mode.md](formats/story-mode.md) |
 
 ```bash
 node <skill-dir>/../shared/scripts/render-gate.js <path-to-file> \
@@ -86,6 +87,8 @@ The reviewer subagents own language and visual quality; **content accuracy is th
 - **Preserve source meaning.** Use [evidence and inputs](evidence-and-inputs.md). Keep uncertainty, scope, counterevidence, quote fidelity, and buyer/seller/strategy attribution through final edits. Recheck load-bearing claims after changes.
 - **News and "recently..." claims carry a date and a source link.** Anything time-sensitive needs to trace back to `deep_web_research` or `scrape_website` output, not to model memory.
 - **Internal entity deep-links are context-dependent, not universally wrong.** A link like `app.octavehq.com/entity/{oId}` is correct in internal or seller-facing assets (briefs, call prep, meeting prep). In customer-facing assets (deck, one-pager, microsite, proposal), that same link is a DEFECT: flag it as internal-tooling leakage and strip it.
+- **Calls and deals read in their setting, private details out.** When the output judges calls or deals, check it against [Reading Calls and Deals](information-principles.md#reading-calls-and-deals) rules 16 to 22 and [their checklist](information-principles.md#reading-calls-and-deals-where-the-output-judges-calls-emails-or-deals).
+- **Claims hold against their own data.** Check [Claims Against the Data](information-principles.md#claims-against-the-data): an absence claim names the records searched (rule 23), each headline holds for every number under it (rule 24), each win or loss driver beats the baseline in its direction (rule 25), an estimate keeps its label at every appearance (rule 26), and proof answers the metric the buyer asked about or is marked adjacent (rule 27).
 - **No hallucinated proof points, fake logos, paraphrases passed off as verbatim quotes, or capabilities not present in the product data.** If a quote can't be matched to source text verbatim, it's a paraphrase: label it as one or cut it.
 
 ### Presentation Reviewer
@@ -109,8 +112,9 @@ Task tool:
 - `html-document.md`: abm, battlecard-doc, champion-deal-room, deal-coach, meeting-prep, positioning, proposal, research (HTML mode), win-loss-report
 - `slide-deck.md`: deck, train
 - `magazine.md`: digest (magazine mode), any skill producing a swipe-magazine leave-behind
-- `one-pager.md`: one-pager
-- `microsite.md`: microsite
+- `one-pager.md`: one-pager (print or physical page)
+- `microsite.md`: microsite (document mode)
+- `story-mode.md`: champion-deal-room, one-pager, deck and microsite when the output is a buyer-facing story page (their default); pass `visual-kit.md` with it
 
 Adjust the skill-specific blueprint paths for the skill being reviewed. Some skills may have more or fewer blueprints, so pass all that are relevant.
 

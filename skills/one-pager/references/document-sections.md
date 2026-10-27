@@ -1,5 +1,17 @@
 # Document Sections
 
+The sections below are the content contract for both renderings. A physical page lays them out as the print-first document in [html-architecture.md](html-architecture.md). A web leave-behind renders them in [story mode](../../shared/formats/story-mode.md) with the [visual kit](../../shared/formats/visual-kit.md) in at most 3 screens, or as a single scrolling page that carries one signature visual. A one-pager is read in under a minute, so the budget holds even when the evidence could fill more; a count the user asks for replaces it.
+
+| Screen | Sections | Component |
+|---|---|---|
+| 1 | Header, The Problem Today and the proof number: the lede is the headline, prepared-for in the kicker, the number and its basis beside it | `.vk-tiles` when the problem is a share of a known set, else `.vk-stat` |
+| 2 | How [Product] Helps and Why [Your Company], with the remaining proof or the quote under it | `.vk-flow`, `.vk-orbit` or `.vk-split` (one of them, the page's signature visual) |
+| 3 | Next Step, with where the buyer's decision stands (their own steps, never CRM stage names) and the two action lines | `.vk-stages` and `.vk-btn` |
+
+On a single scrolling page the same three blocks run in order, and only block 2 carries a visual.
+
+Each section's rules (one-sentence ledes, bullets over prose, real proof only) hold on the screens as they do on the page.
+
 **Header:**
 ```html
 <header class="section header">
@@ -88,7 +100,7 @@ This section's format is validated — big transformation numbers ("$14M → $3M
 </section>
 ```
 
-Customer logos (nice-to-have, not required): if the reference customer entity has a logo or known domain, show a small mark next to the attribution. Resolution order: (1) logo stored on the Octave reference/proof-point entity, (2) `get_external_brand_logo` for the customer's domain, (3) Google favicon lookup (`https://www.google.com/s2/favicons?domain=<domain>&sz=64`). Only include it if the resolved image is a real, recognizable mark — a generic globe/blank favicon is worse than no logo. Omit silently on failure.
+Customer logos (nice-to-have, not required): if the reference customer entity has a logo or known domain, show a small mark next to the attribution. Resolution order: (1) logo stored on the Octave reference/proof-point entity, (2) `get_external_brand_logo` for the customer's domain, (3) Google favicon lookup (`https://www.google.com/s2/favicons?domain=<domain>&sz=64`). Show the mark on the page surface as delivered, with no forced white chip on a light page, and check it stays visible on a dark preset. Only include it if the resolved image is a real, recognizable mark; a generic globe/blank favicon is worse than no logo. Omit silently on failure.
 
 **Next Steps:**
 ```html

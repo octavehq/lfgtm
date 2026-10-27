@@ -9,7 +9,7 @@ description: Personalized one-pager / leave-behind generator rendered as self-co
 
 Read [the task method](references/task-method.md) before selecting context, claims, or output. It is the execution method for this skill. Supporting templates supply structure and styling; populate them from the task method and current evidence, not their illustrative figures or assertions.
 
-Resolve physical one-page Letter/A4 versus a web leave-behind. A physical page must remain one page at readable type (at least 11pt body); verify PDF page count. Preserve the inherited sender brand and use approved applicable qualitative proof when numeric evidence is absent.
+Resolve physical one-page Letter/A4 versus a web leave-behind. A physical page must remain one page at readable type (at least 11pt body); verify PDF page count. A web leave-behind renders in [story mode](../shared/formats/story-mode.md) by default, at most 3 screens or a single scrolling page with one signature visual unless the user asks for another count (mapped in the document sections reference); the physical page keeps the print-first document layout. Preserve the inherited sender brand and use approved applicable qualitative proof when numeric evidence is absent.
 
 Use [GTM context](../shared/gtm-context.md) for strategic tasks and [evidence and inputs](../shared/evidence-and-inputs.md) for material claims and missing facts. A narrow list/get or a render-only handoff does not require unrelated research. Read [host runtime](../shared/host-runtime.md) for available tools, portable resource paths, routing, and review fallback.
 
@@ -23,8 +23,9 @@ Resolve current tool schemas before execution; use returned IDs and pagination. 
 
 ## References by task
 
-- [document sections](references/document-sections.md)
-- [html architecture](references/html-architecture.md)
+- [document sections](references/document-sections.md), with the screen plan for the web leave-behind
+- [story mode](../shared/formats/story-mode.md) and the [visual kit](../shared/formats/visual-kit.md) (web leave-behind)
+- [html architecture](references/html-architecture.md) (physical page and document mode)
 - [outline template](references/outline-template.md)
 - [regression checklist](references/regression-checklist.md)
 - [testing protocol](references/testing-protocol.md)

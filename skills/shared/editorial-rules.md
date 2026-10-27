@@ -43,6 +43,8 @@ Universal language, presentation, and writing quality rules for all Octave-gener
 
 8b. **Eyebrow/kicker must not restate its heading.** A section eyebrow (the small kicker above the H2) and the heading itself must not be paraphrases of each other. "INVESTMENT & NEXT STEPS" above a heading "Investment & next steps" is the worst case; "IMPLEMENTATION" above "How it goes" is the same failure, softer. Pick one of two fixes: (a) make the eyebrow a **number-only** section marker ("06") and let the heading carry the meaning, or (b) keep a terse category eyebrow only if the heading is a genuinely distinct claim (rule 8), not a synonym. If eyebrow and heading would read as synonyms, cut the eyebrow to a number. Default to number-only eyebrows, matching the showcase house style.
 
+8c. **One sentence per heading, with no muted second line.** Every heading, card title and lede is a single sentence that states the finding or the action. Avoid "two-tone" heading templates (a heading followed by a lighter or muted second line or span), because that layout produces a setup and a payoff by design: "The test was offered early. It was gone by the end.", a reversal ("It's not X. It's Y.") or a mirrored pair ("This X. That Y."). Put the consequence in the body. A heading that joins two findings with "and" or a comma is two headings; keep the one that matters.
+
 9. **No redundant content across sections.** If one section covers a finding, don't repeat it elsewhere. Each section earns its space independently.
 
 10. **Order by importance within every section.** Most impactful item first. Never chronological or alphabetical.
@@ -295,6 +297,7 @@ Self-contained editorial audit. Run every check against the generated file. Fix 
 - [ ] Every headline states a finding, not a topic, including chart titles and stat labels
 - Test: can the reader agree or disagree? Yes = claim (correct). No = label (violation).
 - [ ] No command-pair headlines: no title, hero line or section heading made of two or more short parallel imperatives ("Verb the noun. Verb the noun."). Detection: split each headline on periods; two or more fragments that each start with a verb and run under ~5 words is a violation. Rewrite as one sentence that states the finding.
+- [ ] One sentence per heading (rule 8c). Every heading, card title and lede is one sentence; no two-tone heading (a muted second line or `<span>` under or beside the main text); no two clipped sentences where the second answers, reverses or mirrors the first. Detection: read each heading and lede alone; flag a period inside a heading, and any muted span or line break inside an `h1`-`h3`.
 - [ ] No section eyebrow/kicker paraphrases its own heading (rule 8b). Detection: for each section, read the eyebrow and the H2 as a pair. If they're synonyms ("INVESTMENT & NEXT STEPS" / "Investment & next steps"), cut the eyebrow to a number or make the heading a distinct claim. Default to number-only eyebrows.
 
 **3c. Implications / Recommendations**

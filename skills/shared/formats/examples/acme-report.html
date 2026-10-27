@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Q3 win review</title>
+<meta property="og:title" content="Q3 win review">
+<meta property="og:description" content="Internal review of the 42 deals Northwind worked to a decision in Q3 2026: where the 31 losses happened, what the 11 wins share, and the Q4 plan.">
+<meta name="twitter:card" content="summary_large_image">
+<!--
+  Exemplar for document mode with the shared visual kit
+  (shared/formats/visual-kit.md). Every company, person, number and
+  quote is invented. "Northwind" is the workspace company reading its
+  own internal report; "Acme Logistics" is one of its accounts.
+  Replace the :root block with the real brand kit's tokens.css :root and
+  paste visual-kit.css and visual-kit.js where marked.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* === brand kit tokens (an invented kit for the exemplar) === */
+:root {
+  --brand-bg: #f7f6f2;
+  --brand-surface: #ffffff;
+  --brand-ink: #17161d;
+  --brand-muted: #5e5b6e;
+  --brand-border: rgba(23, 22, 29, 0.13);
+  --brand-primary: #1d5bff;
+  --brand-primary-ink: #ffffff;
+  --brand-band: #0b0d1f;
+  --brand-on-dark: #ffffff;
+  --brand-faint: rgba(255, 255, 255, 0.74);
+  --brand-border-dark: rgba(255, 255, 255, 0.16);
+  --brand-positive: #0f9d6c;
+  --brand-negative: #c43d1e;
+  --brand-font-heading: 'Manrope', system-ui, sans-serif;
+  --brand-font-body: 'Manrope', system-ui, sans-serif;
+  --brand-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --brand-weight-h1: 300;
+  --brand-weight-heading: 500;
+  --brand-radius: 14px;
+  --brand-radius-pill: 999px;
+  --brand-radius-section: 18px;
+}
+
+
+/* === visual-kit.css (shared/formats/visual-kit.css, inlined in full) === */
+/* ============================================================
+   Visual kit: shared components for story-mode and document-mode
+   HTML outputs (shared/formats/visual-kit.md).
+
+   Consumption contract: paste this file's FULL contents verbatim into
+   the <style> block, after the brand kit's :root tokens. Every rule
+   reads a --vk-* token, and every --vk-* token resolves from the
+   brand kit (--brand-*), then from a style preset, then from a
+   neutral default. Never re-derive these rules by hand.
+
+   Floor rules this file enforces for every component:
+     - content is in the DOM and visible with no JavaScript
+     - motion starts only after the JS confirms it can (html.vk-js)
+       and the screen is on screen (.is-in); nothing starts hidden
+     - prefers-reduced-motion removes all motion
+     - print flattens dark surfaces to light and hides chrome
+     - no fixed heights or overflow: hidden on text containers
+   ============================================================ */
+
+:root {
+  /* colour */
+  --vk-bg: var(--brand-bg, var(--bg, #f6f5f1));
+  --vk-surface: var(--brand-surface, var(--bg-elevated, #ffffff));
+  --vk-ink: var(--brand-ink, var(--text-primary, #14131a));
+  --vk-muted: var(--brand-muted, var(--text-secondary, #5f5c72));
+  --vk-border: var(--brand-border, var(--border, rgba(20, 19, 26, 0.14)));
+  --vk-primary: var(--brand-primary, #4f46e5);
+  --vk-primary-ink: var(--brand-primary-ink, #ffffff);
+  --vk-band: var(--brand-band, #0f1020);
+  --vk-on-dark: var(--brand-on-dark, #ffffff);
+  --vk-faint: var(--brand-faint, rgba(255, 255, 255, 0.72));
+  --vk-border-dark: var(--brand-border-dark, rgba(255, 255, 255, 0.16));
+  --vk-positive: var(--brand-positive, #0e9f6e);
+  --vk-negative: var(--brand-negative, #c2410c);
+  --vk-glow: var(--brand-glow, none);
+  /* type */
+  --vk-font-heading: var(--brand-font-heading, var(--font-display, system-ui, sans-serif));
+  --vk-font-body: var(--brand-font-body, var(--font-body, system-ui, sans-serif));
+  --vk-font-mono: var(--brand-font-mono, var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace));
+  --vk-display-weight: var(--brand-weight-h1, 300);
+  --vk-heading-weight: var(--brand-weight-heading, 500);
+  --vk-tracking: var(--brand-tracking-heading, -0.02em);
+  /* shape and motion */
+  --vk-radius: var(--brand-radius, 14px);
+  --vk-radius-pill: var(--brand-radius-pill, 999px);
+  --vk-ease: var(--brand-ease, cubic-bezier(0.2, 0.7, 0.2, 1));
+  --vk-dur: 0.6s;
+  /* layout */
+  --vk-gutter: clamp(16px, 6vw, 96px);
+  --vk-bar-h: 64px;
+  --vk-keys-h: 56px;
+  --vk-measure: 58ch;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font-family: var(--vk-font-body);
+  color: var(--vk-ink);
+  background: var(--vk-bg);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+body.vk-story { scroll-behavior: smooth; }
+html:has(body.vk-story) { scroll-snap-type: y proximity; scroll-padding-top: 0; }
+@media (max-height: 640px) { html:has(body.vk-story) { scroll-snap-type: none; } }
+
+/* ---------- surfaces ---------- */
+.is-dark {
+  background: var(--vk-band);
+  color: var(--vk-on-dark);
+  --vk-ink: var(--vk-on-dark);
+  --vk-muted: var(--vk-faint);
+  --vk-border: var(--vk-border-dark);
+  --vk-surface: rgba(255, 255, 255, 0.05);
+}
+
+/* ---------- story shell ---------- */
+.vk-skip {
+  position: absolute; left: 16px; top: -48px; z-index: 300;
+  padding: 10px 14px; background: var(--vk-ink); color: var(--vk-bg);
+  border-radius: var(--vk-radius-pill); text-decoration: none;
+}
+.vk-skip:focus { top: 12px; }
+
+.vk-bar {
+  position: fixed; inset: 0 0 auto 0; z-index: 200;
+  height: var(--vk-bar-h);
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  padding: 0 var(--vk-gutter);
+  color: var(--vk-bar-ink, var(--vk-ink));
+  pointer-events: none;
+}
+.vk-bar > * { pointer-events: auto; }
+.vk-bar-brand { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.vk-bar-brand img, .vk-bar-brand svg { display: block; height: 24px; width: auto; }
+.vk-bar-brand .vk-bar-title {
+  font: 500 0.74rem/1 var(--vk-font-mono); letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--vk-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  border-left: 1px solid var(--vk-border); padding-left: 14px;
+}
+.vk-bar-chapter { display: flex; align-items: center; gap: 14px; }
+.vk-bar-label { font: 500 0.74rem/1 var(--vk-font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--vk-muted); white-space: nowrap; }
+.vk-pips { display: flex; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.vk-pips li { position: relative; width: 26px; height: 3px; border-radius: 2px; background: var(--vk-border); transition: background 0.3s var(--vk-ease); }
+.vk-pips li.is-on { background: var(--vk-primary); }
+.vk-pips li a { position: absolute; inset: -20px -3px; } /* a 43px-tall tap target around the 3px pip */
+.vk-pips li:has(a:focus-visible) { outline: 2px solid var(--vk-primary); outline-offset: 4px; }
+
+.vk-keys {
+  position: fixed; inset: auto 0 0 0; z-index: 200;
+  height: var(--vk-keys-h);
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  font: 400 0.74rem/1 var(--vk-font-mono); letter-spacing: 0.04em;
+  color: var(--vk-muted); pointer-events: none;
+}
+.vk-keys kbd {
+  font: inherit; padding: 4px 7px; border-radius: 6px;
+  border: 1px solid var(--vk-border); background: var(--vk-surface); color: var(--vk-ink);
+}
+html:not(.vk-js) .vk-keys, html:not(.vk-js) .vk-pips { display: none; }
+/* the hint has done its job once the reader moves */
+body.vk-moved .vk-keys { opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0s linear 0.4s; }
+/* narrow and touch screens: no key hint (nothing to press), a shorter bar */
+@media (max-width: 760px), (hover: none) {
+  :root { --vk-keys-h: 0px; }
+  .vk-keys { display: none; }
+}
+@media (max-width: 640px) {
+  :root { --vk-bar-h: 52px; }
+  .vk-bar { gap: 12px; }
+  .vk-bar-title, .vk-bar-label { display: none; }
+  .vk-pips { gap: 4px; }
+  .vk-pips li { width: 14px; }
+}
+/* the chrome takes its ink from the screen under it (the runtime sets body.vk-on-dark) */
+body.vk-on-dark .vk-bar, body.vk-on-dark .vk-keys {
+  color: var(--vk-on-dark);
+  --vk-ink: var(--vk-on-dark); --vk-muted: var(--vk-faint); --vk-border: var(--vk-border-dark); --vk-surface: rgba(255, 255, 255, 0.08);
+}
+
+/* each screen is one idea; it fills the viewport and grows past it when
+   the copy needs more, so nothing is ever cut off */
+.vk-screens { display: block; }
+.vk-screen {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid; align-content: center;
+  padding: calc(var(--vk-bar-h) + 24px) var(--vk-gutter) calc(var(--vk-keys-h) + 24px);
+  scroll-snap-align: start;
+  overflow: clip;
+}
+.vk-screen > * { min-width: 0; }
+.vk-screen.is-dark::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 72px 72px;
+  -webkit-mask-image: radial-gradient(ellipse at 50% 40%, #000 20%, transparent 78%);
+  mask-image: radial-gradient(ellipse at 50% 40%, #000 20%, transparent 78%);
+}
+.vk-screen.is-dark::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background: var(--vk-glow);
+}
+.vk-screen > * { position: relative; z-index: 1; }
+.vk-screen > .vk-ghost { z-index: 0; }
+.vk-screen-inner { width: 100%; max-width: 1240px; margin: 0 auto; }
+.vk-screen-inner.is-two {
+  display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: clamp(32px, 5vw, 80px); align-items: center;
+}
+.vk-screen-inner.is-two > * { min-width: 0; }
+@media (max-width: 860px) { .vk-screen-inner.is-two { grid-template-columns: 1fr; } }
+
+/* ---------- type scale ---------- */
+.vk-kicker {
+  display: block; margin: 0 0 18px;
+  font: 500 0.76rem/1.3 var(--vk-font-mono); letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--vk-primary);
+}
+.is-dark .vk-kicker { color: var(--vk-faint); }
+.vk-display {
+  margin: 0; font-family: var(--vk-font-heading); font-weight: var(--vk-display-weight);
+  font-size: clamp(2.2rem, 5.2vw, 5rem); line-height: 1.04; letter-spacing: var(--vk-tracking);
+  text-wrap: balance; max-width: 18ch;
+}
+.vk-display.is-wide { max-width: 26ch; font-size: clamp(2rem, 4.6vw, 4.4rem); }
+/* beside a visual, the headline gives up size rather than lines */
+.is-two .vk-display { font-size: clamp(2rem, 3.8vw, 3.7rem); max-width: 16ch; }
+.vk-title {
+  margin: 0; font-family: var(--vk-font-heading); font-weight: var(--vk-heading-weight);
+  font-size: clamp(1.6rem, 3.2vw, 2.6rem); line-height: 1.12; letter-spacing: var(--vk-tracking);
+  text-wrap: balance; max-width: 24ch;
+}
+.vk-em { color: var(--brand-emph-ink-light, var(--vk-primary)); }
+.is-dark .vk-em { color: var(--brand-emph-ink-dark, var(--vk-on-dark)); }
+.vk-lede {
+  margin: 22px 0 0; font-size: clamp(1.05rem, 1.5vw, 1.4rem); line-height: 1.45;
+  color: var(--vk-muted); max-width: var(--vk-measure); text-wrap: pretty;
+}
+.vk-body { font-size: 1rem; line-height: 1.55; max-width: var(--vk-measure); text-wrap: pretty; }
+.vk-body p { margin: 0 0 0.8em; }
+.vk-cap { margin: 14px 0 0; font-size: 0.82rem; line-height: 1.4; color: var(--vk-muted); max-width: 48ch; text-wrap: pretty; }
+.vk-list { margin: 18px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.vk-list li { position: relative; padding-left: 20px; font-size: 1.02rem; line-height: 1.45; text-wrap: pretty; }
+.vk-list li::before { content: ""; position: absolute; left: 0; top: 0.62em; width: 8px; height: 8px; border-radius: 50%; background: var(--vk-primary); }
+.is-dark .vk-list li::before { background: var(--vk-faint); }
+
+/* ghost numeral: an SVG so it can bleed off the edge without touching
+   the text checks, and is read by no one (aria-hidden) */
+.vk-ghost {
+  position: absolute; right: -2vw; bottom: -4vh; z-index: 0;
+  width: clamp(200px, 32vw, 520px); height: auto; pointer-events: none; overflow: visible;
+}
+.vk-ghost text {
+  font-family: var(--vk-font-heading); font-weight: var(--vk-display-weight); font-size: 190px;
+  fill: none; stroke: var(--vk-ink); stroke-width: 1.2; opacity: 0.16;
+}
+
+/* ---------- buttons ---------- */
+.vk-btn {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 44px;
+  padding: 12px 22px; border-radius: var(--brand-btn-radius, var(--vk-radius-pill));
+  background: var(--brand-btn-bg, var(--vk-primary)); color: var(--brand-btn-ink, var(--vk-primary-ink));
+  font: var(--brand-btn-weight, 600) 1rem/1 var(--vk-font-body); text-decoration: none;
+  border: 1.5px solid var(--brand-btn-border, transparent);
+}
+.vk-btn.is-ghost { background: transparent; color: var(--vk-ink); border-color: var(--vk-border); }
+.vk-btn:focus-visible, .vk-pips a:focus-visible { outline: 3px solid var(--vk-primary); outline-offset: 3px; }
+.vk-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+
+/* ---------- card-grid hero (.vk-tiles) ----------
+   Many muted tiles, a few lit: "of all these, these are the ones".
+   Each tile stands for a real unit the caption names. */
+.vk-tiles {
+  --cols: 4;
+  display: grid; grid-template-columns: repeat(var(--cols), 1fr); gap: 12px; align-items: end;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 12%, #000 86%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0, #000 12%, #000 86%, transparent 100%);
+  padding: 20px 0;
+}
+.vk-tiles i {
+  display: flex; flex-direction: column; justify-content: flex-end; gap: 7px;
+  height: var(--h, 72px); padding: 12px 11px; border-radius: var(--vk-radius);
+  background: var(--vk-surface); border: 1px solid var(--vk-border);
+}
+.vk-tiles i::before, .vk-tiles i::after { content: ""; display: block; height: 4px; border-radius: 3px; background: var(--vk-border); }
+.vk-tiles i::after { width: 60%; }
+.vk-tiles i.is-on { background: var(--vk-primary); border-color: var(--vk-primary); box-shadow: 0 12px 32px -10px var(--vk-primary); }
+.vk-tiles i.is-on::before, .vk-tiles i.is-on::after { background: rgba(255, 255, 255, 0.75); }
+@media (max-height: 840px) { .vk-tiles { gap: 8px; } .vk-tiles i { height: calc(var(--h, 72px) * 0.78); padding: 9px; } }
+@media (max-width: 860px) { .vk-tiles i { height: calc(var(--h, 72px) * 0.6); padding: 8px; } }
+
+/* ---------- orbit / graph motif (.vk-orbit) ----------
+   A hub with the things that connect to it on rings. The hub is the
+   mechanism; nodes are named in the SVG and repeated in a legend. */
+.vk-orbit { display: block; width: 100%; max-width: 560px; height: auto; margin: 0 auto; overflow: visible; }
+.vk-orbit .ring { fill: none; stroke: var(--vk-border); stroke-width: 1.2; }
+.vk-orbit .ring.is-dashed { stroke-dasharray: 3 6; }
+.vk-orbit .hub { fill: var(--vk-primary); }
+.vk-orbit .hub-halo { fill: var(--vk-primary); opacity: 0.14; }
+.vk-orbit .node { fill: var(--vk-bg); stroke: var(--vk-primary); stroke-width: 2; }
+.is-dark .vk-orbit .node { fill: var(--vk-band); stroke: var(--vk-on-dark); }
+.vk-orbit text { font: 500 13px var(--vk-font-body); fill: var(--vk-ink); }
+.vk-orbit .hub-label { font: 600 13px var(--vk-font-body); fill: var(--vk-primary-ink); text-anchor: middle; }
+.vk-orbit .spoke { stroke: var(--vk-border); stroke-width: 1; }
+.vk-orbit .spin { transform-box: fill-box; transform-origin: center; }
+html.vk-js .is-in .vk-orbit .spin { animation: vk-spin 48s linear infinite; }
+@keyframes vk-spin { to { transform: rotate(360deg); } }
+
+/* ---------- signal flow (.vk-flow) ----------
+   Sources on the left, a channel of paths, destinations on the right.
+   Dots travel the paths: data moves from here to there. */
+.vk-flow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1fr); gap: 16px; align-items: center; }
+.vk-flow > * { min-width: 0; }
+.vk-flow-col { display: grid; gap: 10px; }
+.vk-flow-node {
+  padding: 10px 14px; border-radius: var(--vk-radius); background: var(--vk-surface); border: 1px solid var(--vk-border);
+  display: grid; gap: 2px;
+}
+.vk-flow-node b { font-weight: 600; font-size: 0.98rem; }
+.vk-flow-node small { font-size: 0.78rem; color: var(--vk-muted); }
+.vk-flow-node.is-hub { background: var(--vk-primary); color: var(--vk-primary-ink); border-color: var(--vk-primary); text-align: center; padding: 18px 16px; }
+.vk-flow-node.is-hub small { color: var(--vk-primary-ink); opacity: 0.8; }
+.vk-flow-paths { display: block; width: 100%; height: auto; overflow: visible; }
+.vk-flow-paths path { fill: none; stroke: var(--vk-border); stroke-width: 1.5; }
+.vk-flow-paths .dot { fill: none; stroke: var(--vk-primary); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 3 97; }
+.is-dark .vk-flow-paths .dot { stroke: var(--vk-on-dark); }
+html.vk-js .is-in .vk-flow-paths .dot { animation: vk-travel 2.6s linear infinite; animation-delay: var(--d, 0s); }
+@keyframes vk-travel { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 0; } }
+@media (max-width: 720px) {
+  .vk-flow { grid-template-columns: 1fr; gap: 22px; }
+  .vk-flow-paths { display: none; }
+  /* with the paths gone, each column says what it is */
+  .vk-flow-col[aria-label]::before { content: attr(aria-label); font: 500 0.7rem/1.3 var(--vk-font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--vk-muted); }
+}
+
+/* ---------- before / after split (.vk-split) ---------- */
+.vk-split { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.vk-split > * { min-width: 0; }
+.vk-split-panel {
+  display: flex; flex-direction: column; gap: 10px;
+  padding: clamp(20px, 3vw, 36px); border-radius: var(--vk-radius);
+  background: var(--vk-surface); border: 1px solid var(--vk-border);
+}
+.vk-split-panel .vk-kicker { margin-bottom: 4px; }
+.vk-split-panel h3 { margin: 0; font-family: var(--vk-font-heading); font-weight: var(--vk-heading-weight); font-size: clamp(1.25rem, 2vw, 1.7rem); line-height: 1.15; text-wrap: balance; }
+.vk-split-panel .vk-list { margin-top: 8px; }
+.vk-split-panel.is-dark { background: var(--vk-band); border-color: var(--vk-band); }
+@media (max-width: 720px) { .vk-split { grid-template-columns: 1fr; } }
+
+/* ---------- plan timeline (.vk-gantt) ----------
+   Rows are steps, the track is time. Bars sit on real day columns. */
+.vk-gantt { --days: 30; --label-w: 260px; display: grid; gap: 8px; }
+.vk-gantt-head, .vk-gantt-row { display: grid; grid-template-columns: var(--label-w) minmax(0, 1fr); gap: 16px; align-items: center; }
+.vk-gantt-head { color: var(--vk-muted); font: 500 0.72rem/1 var(--vk-font-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+.vk-gantt-ticks { display: grid; grid-template-columns: repeat(var(--days), 1fr); }
+.vk-gantt-ticks span { grid-column: var(--at) / span 1; white-space: nowrap; }
+.vk-gantt-label { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 0.96rem; min-width: 0; }
+.vk-gantt-label span { min-width: 0; text-wrap: pretty; }
+.vk-gantt-track { position: relative; display: grid; grid-template-columns: repeat(var(--days), 1fr); height: 30px; border-radius: var(--vk-radius-pill); background: var(--vk-surface); border: 1px solid var(--vk-border); }
+.vk-gantt-track i { grid-column: var(--s) / var(--e); grid-row: 1; margin: 5px 0; border-radius: var(--vk-radius-pill); background: var(--vk-primary); transform-origin: left center; }
+.vk-gantt-track i.is-joint { background: var(--vk-positive); }
+.vk-gantt-track i.is-buyer { background: var(--vk-ink); }
+html.vk-js .is-in .vk-gantt-track i { animation: vk-grow 0.9s var(--vk-ease) both; animation-delay: var(--d, 0s); }
+@keyframes vk-grow { from { transform: scaleX(0); } }
+.vk-tag { display: inline-block; flex: none; padding: 3px 8px; border-radius: 6px; font: 600 0.66rem/1.2 var(--vk-font-mono); letter-spacing: 0.05em; text-transform: uppercase; background: var(--vk-surface); border: 1px solid var(--vk-border); color: var(--vk-muted); }
+.vk-legend { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 14px; font-size: 0.82rem; color: var(--vk-muted); }
+.vk-legend span { display: inline-flex; align-items: center; gap: 8px; }
+.vk-legend i { width: 18px; height: 8px; border-radius: 4px; background: var(--vk-primary); }
+.vk-legend i.is-joint { background: var(--vk-positive); }
+.vk-legend i.is-buyer { background: var(--vk-ink); }
+@media (max-width: 640px) {
+  .vk-gantt-head, .vk-gantt-row { grid-template-columns: 1fr; gap: 6px; }
+  .vk-gantt-head .vk-gantt-label { display: none; }
+  .vk-gantt-row { padding-top: 6px; }
+  .vk-gantt-ticks span:nth-child(even) { display: none; }
+}
+
+/* ---------- stage strip (.vk-stages) ----------
+   Where the deal stands and what moves it. The note under the strip
+   states the condition in words. */
+.vk-stages { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 8px; margin: 0; padding: 0; list-style: none; counter-reset: stage; }
+.vk-stages li { position: relative; padding: 14px 0 0; font-size: 0.92rem; line-height: 1.3; color: var(--vk-muted); min-width: 0; text-wrap: pretty; }
+.vk-stages li::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 4px; border-radius: 2px; background: var(--vk-border); }
+.vk-stages li.is-done::before { background: var(--vk-primary); opacity: 0.5; }
+.vk-stages li.is-now { color: var(--vk-ink); font-weight: 600; }
+.vk-stages li.is-now::before { background: var(--vk-primary); }
+.vk-stages li small { display: block; font: 500 0.66rem/1.4 var(--vk-font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--vk-muted); margin-bottom: 2px; }
+.vk-stages-note { margin: 16px 0 0; font-size: 0.92rem; color: var(--vk-muted); max-width: 60ch; text-wrap: pretty; }
+.vk-stages-note b { color: var(--vk-ink); font-weight: 600; }
+@media (max-width: 640px) {
+  .vk-stages { grid-auto-flow: row; grid-auto-columns: auto; gap: 6px; }
+  .vk-stages li { padding: 0 0 0 18px; }
+  .vk-stages li::before { top: 0; bottom: 0; left: 0; right: auto; width: 4px; height: auto; }
+}
+
+/* ---------- big stat (.vk-stat) ----------
+   One number carries the screen. The label says what it counts and the
+   basis says where it comes from. */
+.vk-stat { display: grid; gap: 6px; }
+.vk-stat-n {
+  font-family: var(--vk-font-heading); font-weight: var(--brand-stat-weight, var(--vk-display-weight));
+  font-size: clamp(5rem, 16vw, 15rem); line-height: 0.95; letter-spacing: var(--vk-tracking);
+  color: var(--brand-stat-ink, var(--vk-ink)); font-variant-numeric: tabular-nums;
+}
+.vk-stat-n small { font-size: 0.42em; vertical-align: top; margin-left: 0.04em; color: var(--vk-primary); }
+.is-dark .vk-stat-n small { color: var(--vk-faint); }
+.vk-stat-label { font-family: var(--vk-font-heading); font-weight: var(--vk-heading-weight); font-size: clamp(1.2rem, 2.4vw, 1.9rem); line-height: 1.2; max-width: 22ch; text-wrap: balance; }
+.vk-stat-basis { font-size: 0.86rem; color: var(--vk-muted); max-width: 52ch; text-wrap: pretty; }
+.vk-stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+.vk-stat-row .vk-stat { padding: 22px 24px; border-radius: var(--vk-radius); background: var(--vk-surface); border: 1px solid var(--vk-border); }
+.vk-stat-row .vk-stat-n { font-size: clamp(2.4rem, 4vw, 3.6rem); }
+.vk-stat-row .vk-stat-label { font-size: 1.02rem; }
+
+/* ---------- evidence ---------- */
+.vk-quote { margin: 0; padding: 0 0 0 18px; border-left: 3px solid var(--vk-primary); font-size: 1.08rem; line-height: 1.5; text-wrap: pretty; }
+.vk-quote footer { margin-top: 8px; font: 500 0.72rem/1.4 var(--vk-font-mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--vk-muted); }
+.vk-quotes { display: grid; gap: 22px; }
+
+/* ---------- document mode ---------- */
+.vk-doc { max-width: 1040px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 48px) 64px; }
+.vk-doc-nav {
+  position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  padding: 14px 0; margin-bottom: 8px; background: var(--vk-bg); border-bottom: 1px solid var(--vk-border);
+}
+.vk-doc-nav .vk-bar-brand img, .vk-doc-nav .vk-bar-brand svg { height: 22px; }
+.vk-doc-nav ul { display: flex; gap: 18px; margin: 0; padding: 0; list-style: none; flex-wrap: wrap; }
+.vk-doc-nav a { font-size: 0.86rem; color: var(--vk-muted); text-decoration: none; }
+.vk-doc-nav a[aria-current="true"], .vk-doc-nav a:hover { color: var(--vk-ink); }
+.vk-doc-hero { padding: clamp(40px, 7vw, 96px) 0 clamp(32px, 4vw, 56px); }
+.vk-doc-hero .vk-display { font-size: clamp(2.2rem, 5vw, 4.4rem); max-width: 20ch; }
+.vk-section { padding: clamp(36px, 5vw, 64px) 0; border-top: 1px solid var(--vk-border); }
+.vk-section > * { min-width: 0; }
+.vk-section .vk-title { margin-bottom: 18px; }
+.vk-section .vk-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); align-items: start; }
+.vk-section .vk-grid > * { min-width: 0; }
+@media (max-width: 760px) { .vk-section .vk-grid { grid-template-columns: 1fr; } .vk-doc-nav ul { display: none; } }
+.vk-band { margin: 0 calc(-1 * clamp(16px, 4vw, 48px)); padding: clamp(36px, 5vw, 64px) clamp(16px, 4vw, 48px); border-radius: var(--brand-radius-section, 0); }
+.vk-footer { padding-top: 24px; border-top: 1px solid var(--vk-border); font-size: 0.8rem; color: var(--vk-muted); display: flex; flex-wrap: wrap; gap: 8px 24px; }
+
+/* ---------- loader ----------
+   A 2px line that sweeps once while fonts settle. It covers nothing. */
+.vk-loader { position: fixed; left: 0; top: 0; z-index: 300; height: 2px; width: 0; background: var(--vk-primary); transition: width 1.1s var(--vk-ease), opacity 0.4s ease 0.2s; pointer-events: none; }
+html.vk-js .vk-loader { width: 62%; }
+html.vk-js .vk-loader.is-done { width: 100%; opacity: 0; }
+
+/* ---------- motion ----------
+   Elements are visible by default. With JS, a screen gets .is-in as it
+   enters the viewport and its .vk-rise children play once from the
+   invisible start to the resting state they already had. */
+html.vk-js .is-in .vk-rise { animation: vk-rise var(--vk-dur) var(--vk-ease) both; animation-delay: var(--d, 0s); }
+@keyframes vk-rise { from { opacity: 0; transform: translateY(14px); } }
+html.vk-js .is-in .vk-tiles i.is-on { animation: vk-lit 0.9s var(--vk-ease) both; animation-delay: var(--d, 0.4s); }
+@keyframes vk-lit { from { background: var(--vk-surface); box-shadow: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  html:has(body.vk-story) { scroll-snap-type: none; }
+  body.vk-story { scroll-behavior: auto; }
+  .vk-rise, .vk-tiles i, .vk-gantt-track i, .vk-orbit .spin, .vk-flow-paths .dot, .vk-loader, .vk-pips li {
+    animation: none !important; transition: none !important;
+  }
+  html.vk-js .vk-loader { display: none; }
+}
+
+/* ---------- print ----------
+   Dark screens print light, chrome goes, each screen is one page. */
+@media print {
+  .vk-bar, .vk-keys, .vk-loader, .vk-skip, .vk-doc-nav { display: none !important; }
+  body, .is-dark, .vk-screen.is-dark {
+    background: #fff !important; color: #111 !important;
+    --vk-ink: #111; --vk-muted: #555; --vk-border: #ccc; --vk-surface: #fff; --vk-on-dark: #111; --vk-faint: #555; --vk-glow: none;
+  }
+  .vk-screen { min-height: 0; padding: 36px 24px; break-after: page; }
+  .vk-screen.is-dark::before, .vk-screen.is-dark::after { display: none; }
+  .vk-ghost { display: none; }
+  .vk-split-panel, .vk-stat, .vk-flow-node, .vk-gantt-row { break-inside: avoid; }
+  .vk-tiles i.is-on, .vk-gantt-track i, .vk-btn, .vk-flow-node.is-hub { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .vk-rise, .vk-tiles i, .vk-gantt-track i { animation: none !important; opacity: 1 !important; transform: none !important; }
+}
+
+/* === page-specific === */
+.logo { display: flex; align-items: center; gap: 9px; font: 600 1rem/1 var(--vk-font-heading); color: inherit; text-decoration: none; }
+.logo svg { width: 20px; height: 20px; }
+.stage-counts { margin-top: 8px; }
+.stage-counts li b { display: block; font-family: var(--vk-font-heading); font-weight: var(--vk-heading-weight); font-size: 1.6rem; line-height: 1.1; color: var(--vk-ink); margin-bottom: 2px; }
+.stage-counts li.is-now b { color: var(--vk-negative); }
+.stage-counts li.is-now::before { background: var(--vk-negative); }
+.loss-bars { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.loss-bars li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 14px; align-items: center; font-size: 0.95rem; }
+.loss-bars li > span { min-width: 0; text-wrap: pretty; }
+.loss-bars li i { grid-column: 1 / -1; display: block; height: 8px; border-radius: 4px; background: var(--vk-border); position: relative; }
+.loss-bars li i::after { content: ""; position: absolute; inset: 0 auto 0 0; width: var(--w); border-radius: 4px; background: var(--vk-negative); }
+.loss-bars li.is-lead i::after { background: var(--vk-primary); }
+.loss-bars b { font-variant-numeric: tabular-nums; font-weight: 600; }
+.prompts { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.prompt { display: flex; flex-direction: column; gap: 8px; padding: 18px 20px; border-radius: var(--vk-radius); background: var(--vk-surface); border: 1px solid var(--vk-border); min-width: 0; }
+.prompt h3 { margin: 0; font-size: 1rem; font-weight: 600; }
+.prompt p { margin: 0; font-size: 0.88rem; color: var(--vk-muted); text-wrap: pretty; }
+.prompt button { margin-top: auto; align-self: flex-start; min-height: 40px; padding: 8px 16px; border-radius: var(--vk-radius-pill); border: 1px solid var(--vk-border); background: var(--vk-bg); color: var(--vk-ink); font: 600 0.86rem/1 var(--vk-font-body); cursor: pointer; }
+.prompt button:focus-visible { outline: 3px solid var(--vk-primary); outline-offset: 3px; }
+.prompt .text { font-size: 0.82rem; color: var(--vk-muted); }
+.prompt .text summary { cursor: pointer; list-style: none; }
+.prompt .text summary::-webkit-details-marker { display: none; }
+.prompt .text p { margin-top: 8px; }
+@media print { .prompt button { display: none; } .prompt .text summary { display: none; } .prompt .text p { display: block; } }
+</style>
+</head>
+<body>
+<div class="vk-loader" aria-hidden="true"></div>
+<div class="vk-doc">
+
+  <nav class="vk-doc-nav" aria-label="Sections">
+    <div class="vk-bar-brand">
+      <a class="logo" href="#top" aria-label="Northwind, back to the top">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 16V8l8 8V8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Northwind
+      </a>
+      <span class="vk-bar-title">Q3 2026 win review · internal</span>
+    </div>
+    <ul>
+      <li><a href="#outcomes">Outcomes</a></li>
+      <li><a href="#losses">Losses</a></li>
+      <li><a href="#wins">Wins</a></li>
+      <li><a href="#plan">Q4 plan</a></li>
+      <li><a href="#next">Keep going</a></li>
+    </ul>
+  </nav>
+
+  <header class="vk-doc-hero" id="top">
+    <span class="vk-kicker vk-rise">Internal · 42 deals closed in Q3 2026 · written 11 October 2026</span>
+    <h1 class="vk-display vk-rise" style="--d:.08s">We won 11 of 42 Q3 deals; nine of the 11 raised pricing before the demo.</h1>
+    <p class="vk-lede vk-rise" style="--d:.16s">Most losses ended in Proof, where the buyer never named an owner for the pilot. The wins share a sequence rather than a segment, so the Q4 plan changes the order of the playbook and nothing about who we call.</p>
+  </header>
+
+  <section class="vk-section" id="outcomes">
+    <span class="vk-kicker">Outcomes</span>
+    <h2 class="vk-title">Worked deals win one in four, and the three enterprise wins carried 61% of the bookings.</h2>
+    <div class="vk-stat-row">
+      <div class="vk-stat"><span class="vk-stat-n"><span data-vk-count="26">26</span><small>%</small></span><span class="vk-stat-label">win rate on worked deals</span><span class="vk-stat-basis">11 won of 42 closed; unworked pipeline swept in the September cleanup is excluded</span></div>
+      <div class="vk-stat"><span class="vk-stat-n" data-vk-count="11">11</span><span class="vk-stat-label">deals won</span><span class="vk-stat-basis">$1.42M booked; 3 enterprise deals account for $870k</span></div>
+      <div class="vk-stat"><span class="vk-stat-n" data-vk-count="31">31</span><span class="vk-stat-label">deals lost</span><span class="vk-stat-basis">19 to no decision, 8 to an internal build, 4 to a named competitor</span></div>
+      <div class="vk-stat"><span class="vk-stat-n" data-vk-count="188">188</span><span class="vk-stat-label">calls read</span><span class="vk-stat-basis">on 38 of the 42 deals; 4 deals had no recorded call</span></div>
+    </div>
+    <p class="vk-cap">Win rate is won divided by won plus lost, one row per opportunity, from the CRM export of 8 October. The 95% interval on the headline is 15% to 40%.</p>
+  </section>
+
+  <section class="vk-section" id="losses">
+    <span class="vk-kicker">Where losses happened</span>
+    <h2 class="vk-title">Twelve of the 31 losses ended in Proof, and in nine of them nobody on the buyer side owned the pilot.</h2>
+    <div class="vk-grid">
+      <div>
+        <ol class="vk-stages stage-counts" aria-label="Losses by the stage they ended in">
+          <li><small>Discovery</small><b>4</b>lost</li>
+          <li><small>Evaluation</small><b>7</b>lost</li>
+          <li class="is-now" aria-current="true"><small>Proof</small><b>12</b>lost</li>
+          <li><small>Security review</small><b>6</b>lost</li>
+          <li><small>Commercials</small><b>2</b>lost</li>
+        </ol>
+        <p class="vk-stages-note">A deal leaves Proof as a loss when the pilot ends without a result the buyer can show internally. <b>Nine of the twelve</b> had no named buyer owner when the pilot started.</p>
+      </div>
+      <div>
+        <ul class="loss-bars" aria-label="Stated reasons for the 31 losses">
+          <li><span>No decision, the project lost its sponsor</span><b>19</b><i style="--w:61%"></i></li>
+          <li><span>Chose an internal build</span><b>8</b><i style="--w:26%"></i></li>
+          <li><span>Chose a named competitor</span><b>4</b><i style="--w:13%"></i></li>
+        </ul>
+        <p class="vk-cap">Reasons as recorded on the opportunity, checked against the last call on each deal; 3 reasons were corrected from the call.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="vk-section" id="wins">
+    <span class="vk-kicker">What the wins share</span>
+    <h2 class="vk-title">Nine of the eleven wins put the pricing conversation before the demo, and the buyer set the scope of the pilot in the same call.</h2>
+    <div class="vk-grid">
+      <div class="vk-quotes">
+        <blockquote class="vk-quote">"Tell me what the full rollout costs before you show me anything, so I know what I am sizing the pilot against."<footer>VP Operations, Acme Logistics · call of 12 August</footer></blockquote>
+        <blockquote class="vk-quote">"We put the pilot in the budget line the day after your pricing call; the demo was for my team, not for me."<footer>Director of RevOps, an industrial distributor · call of 3 September</footer></blockquote>
+      </div>
+      <div class="vk-body">
+        <p>In the two wins that ran the usual order, demo first and pricing in the third meeting, the deal took 41 and 48 days longer than the median win of 52 days.</p>
+        <p>Across the 31 losses, 24 never had a pricing conversation on a recorded call. The eight internal-build losses all asked for a price in writing after the demo and got it two weeks later.</p>
+        <p>Deal size, segment and the rep's tenure do not separate wins from losses in this quarter's set; the sequence does.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="vk-section" id="plan">
+    <span class="vk-kicker">Q4 plan</span>
+    <h2 class="vk-title">Four changes, each with an owner, move the playbook to the sequence the wins already follow.</h2>
+    <div class="vk-gantt" style="--days:12; --label-w: 300px;" role="table" aria-label="Q4 plan by week">
+      <div class="vk-gantt-head" role="row">
+        <div class="vk-gantt-label" role="columnheader">Change</div>
+        <div class="vk-gantt-ticks" role="columnheader" aria-label="Weeks 1 to 12"><span style="--at:1">Week 1</span><span style="--at:4">Week 4</span><span style="--at:8">Week 8</span><span style="--at:11">Week 12</span></div>
+      </div>
+      <div class="vk-gantt-row" role="row">
+        <div class="vk-gantt-label" role="cell"><span>Pricing conversation moves before the demo in the playbook</span><span class="vk-tag">Enablement</span></div>
+        <div class="vk-gantt-track" role="cell" aria-label="Weeks 1 to 2"><i style="--s:1;--e:3"></i></div>
+      </div>
+      <div class="vk-gantt-row" role="row">
+        <div class="vk-gantt-label" role="cell"><span>Named buyer owner required before a pilot starts</span><span class="vk-tag">Sales managers</span></div>
+        <div class="vk-gantt-track" role="cell" aria-label="Weeks 1 to 12"><i class="is-buyer" style="--s:1;--e:13;--d:.1s"></i></div>
+      </div>
+      <div class="vk-gantt-row" role="row">
+        <div class="vk-gantt-label" role="cell"><span>Security packet sent at Evaluation, not after Proof</span><span class="vk-tag">RevOps</span></div>
+        <div class="vk-gantt-track" role="cell" aria-label="Weeks 2 to 4"><i style="--s:2;--e:5;--d:.2s"></i></div>
+      </div>
+      <div class="vk-gantt-row" role="row">
+        <div class="vk-gantt-label" role="cell"><span>Rerun this review on Q4 deals</span><span class="vk-tag">RevOps</span></div>
+        <div class="vk-gantt-track" role="cell" aria-label="Week 12"><i class="is-joint" style="--s:12;--e:13;--d:.3s"></i></div>
+      </div>
+    </div>
+    <div class="vk-legend"><span><i></i>Enablement and RevOps</span><span><i class="is-buyer"></i>Sales managers, every deal</span><span><i class="is-joint"></i>Measurement</span></div>
+  </section>
+
+  <section class="vk-section" id="next">
+    <span class="vk-kicker">Keep going</span>
+    <h2 class="vk-title">Three questions this review raises can be answered from the same records.</h2>
+    <div class="prompts">
+      <div class="prompt">
+        <h3>Which open deals are in Proof with no buyer owner</h3>
+        <p>A list of current pilots with the owner field and the last call that mentions one.</p>
+        <button type="button" data-copy="pilot-owner">Copy prompt</button>
+        <details class="text" id="pilot-owner"><summary>Show prompt</summary><p>List every open deal in the Proof stage, whether a buyer-side pilot owner is named, and the most recent call that mentions one. Use the Octave tools you have to read Northwind's records: the Q3 2026 win review, deals in Proof as of today, and their calls.</p></details>
+      </div>
+      <div class="prompt">
+        <h3>How long the eight internal-build losses waited for a price</h3>
+        <p>Days between the price request and the written quote, per deal.</p>
+        <button type="button" data-copy="price-wait">Copy prompt</button>
+        <details class="text" id="price-wait"><summary>Show prompt</summary><p>For the eight Q3 deals lost to an internal build, find the call or email where the buyer asked for a price and the date the quote was sent, and report the days between. Use the Octave tools you have to read Northwind's records: the Q3 2026 win review, the eight deals marked lost to internal build, and their calls and threads.</p></details>
+      </div>
+      <div class="prompt">
+        <h3>Whether the two slow wins would have moved with earlier pricing</h3>
+        <p>A read of both deals' calls for the moment pricing first came up and what changed after.</p>
+        <button type="button" data-copy="slow-wins">Copy prompt</button>
+        <details class="text" id="slow-wins"><summary>Show prompt</summary><p>Read the calls on the two Q3 wins that ran demo first and pricing third, mark when pricing first came up, and describe what changed in the buyer's language afterwards. Use the Octave tools you have to read Northwind's records: the Q3 2026 win review and the two wins it names as the slow ones.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <footer class="vk-footer">
+    <span>Northwind internal · not for circulation outside the sales organisation</span>
+    <span>Data: CRM export of 8 October 2026, 188 calls recorded 1 July to 30 September</span>
+    <span>Written 11 October 2026</span>
+  </footer>
+</div>
+
+<script>
+/* === visual-kit.js (shared/formats/visual-kit.js, inlined in full) === */
+/* Visual kit runtime (shared/formats/visual-kit.md). Inline at the end of <body>.
+   Everything here is enhancement: the page reads the same with this script
+   removed. It adds html.vk-js (which arms motion), marks the screen in view
+   with .is-in, keeps the chapter progress current, steps screens from the
+   keyboard, counts stat numerals up to the value already in the DOM, and
+   finishes the loader line once fonts settle. */
+(() => {
+  const root = document.documentElement;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const screens = [...document.querySelectorAll('.vk-screen')];
+  const printing = matchMedia('print').matches;
+  if (printing) return;
+  root.classList.add('vk-js');
+
+  // loader: a sweep that ends when fonts are ready or 1.6 s pass, whichever first
+  const loader = document.querySelector('.vk-loader');
+  if (loader) {
+    const done = () => loader.classList.add('is-done');
+    (document.fonts ? document.fonts.ready : Promise.resolve()).then(done, done);
+    setTimeout(done, 1600);
+  }
+
+  // in-view marking: a screen is "in" once its top crosses 85% of the viewport.
+  // Screens already in view at load are marked before the observer runs, so the
+  // first screen never flashes.
+  const markIn = (el) => el.classList.add('is-in');
+  const inView = (el) => el.getBoundingClientRect().top < innerHeight * 0.85;
+  const targets = screens.length ? screens : [...document.querySelectorAll('.vk-section, .vk-doc-hero')];
+  targets.filter(inView).forEach(markIn);
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) { markIn(e.target); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -15% 0px', threshold: 0.01 });
+    targets.forEach((t) => { if (!t.classList.contains('is-in')) io.observe(t); });
+  } else {
+    targets.forEach(markIn);
+  }
+  // a missed callback delays decoration, never hides content
+  setTimeout(() => targets.forEach(markIn), 5000);
+  addEventListener('beforeprint', () => targets.forEach(markIn));
+
+  // stat count-up: the DOM already holds the final text; animate towards it and
+  // put the exact original string back at the end
+  if (!reduced) {
+    document.querySelectorAll('[data-vk-count]').forEach((el) => {
+      const final = el.textContent;
+      const target = parseFloat(el.dataset.vkCount);
+      if (!isFinite(target)) return;
+      const decimals = (String(el.dataset.vkCount).split('.')[1] || '').length;
+      const prefix = final.match(/^[^\d-]*/)[0];
+      const suffix = final.match(/[^\d.,]*$/)[0];
+      const run = () => {
+        const t0 = performance.now(), dur = 1100;
+        const tick = (now) => {
+          const p = Math.min(1, (now - t0) / dur), ease = 1 - Math.pow(1 - p, 3);
+          el.textContent = prefix + (target * ease).toFixed(decimals) + suffix;
+          if (p < 1) requestAnimationFrame(tick); else el.textContent = final;
+        };
+        requestAnimationFrame(tick);
+      };
+      const host = el.closest('.vk-screen, .vk-section, .vk-doc-hero');
+      if (!host || host.classList.contains('is-in')) run();
+      else new MutationObserver((m, o) => { if (host.classList.contains('is-in')) { o.disconnect(); run(); } })
+        .observe(host, { attributes: true, attributeFilter: ['class'] });
+    });
+  }
+
+  if (!screens.length) return;
+
+  // chapter progress
+  const pips = document.querySelector('.vk-pips');
+  const current = document.querySelector('[data-vk-current]');
+  const total = document.querySelector('[data-vk-total]');
+  if (total) total.textContent = String(screens.length);
+  if (pips && !pips.children.length) {
+    screens.forEach((s, i) => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = '#' + (s.id || (s.id = 'screen-' + (i + 1)));
+      a.setAttribute('aria-label', 'Go to screen ' + (i + 1));
+      li.appendChild(a); pips.appendChild(li);
+    });
+  }
+  const pipItems = pips ? [...pips.children] : [];
+  let active = -1;
+  const indexInView = () => {
+    const mid = innerHeight * 0.5;
+    let best = 0, bestD = Infinity;
+    screens.forEach((s, i) => {
+      const r = s.getBoundingClientRect();
+      const d = r.top <= mid && r.bottom > mid ? 0 : Math.min(Math.abs(r.top - mid), Math.abs(r.bottom - mid));
+      if (d < bestD) { bestD = d; best = i; }
+    });
+    return best;
+  };
+  const setActive = (i) => {
+    if (i === active) return;
+    active = i;
+    pipItems.forEach((p, k) => p.classList.toggle('is-on', k <= i));
+    if (current) current.textContent = String(i + 1);
+    const dark = screens[i].classList.contains('is-dark');
+    document.body.classList.toggle('vk-on-dark', dark);
+  };
+  const moved = () => document.body.classList.add('vk-moved');
+  setTimeout(moved, 9000);
+  let raf = 0;
+  const onScroll = () => { if (scrollY > 40) moved(); if (!raf) raf = requestAnimationFrame(() => { raf = 0; setActive(indexInView()); }); };
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll);
+  setActive(indexInView());
+
+  // keyboard stepping; scrolling and the pips still work on their own
+  const go = (i) => {
+    i = Math.max(0, Math.min(screens.length - 1, i));
+    screens[i].scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+  };
+  addEventListener('keydown', (e) => {
+    moved();
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const t = e.target;
+    if (t && (t.isContentEditable || /^(input|textarea|select|button|summary|a)$/i.test(t.tagName))) return;
+    const i = indexInView();
+    const k = e.key;
+    const down = k === 'ArrowDown' || k === 'PageDown' || (k === ' ' && !e.shiftKey);
+    const up = k === 'ArrowUp' || k === 'PageUp' || (k === ' ' && e.shiftKey);
+    // A screen taller than the viewport (zoom, short or narrow windows) scrolls
+    // natively until its edge is in view, so no content is skipped.
+    const r = screens[i].getBoundingClientRect();
+    if (down && r.bottom > innerHeight + 2) return;
+    if (up && r.top < -2) return;
+    if (down || k === 'ArrowRight') go(i + 1);
+    else if (up || k === 'ArrowLeft') go(i - 1);
+    else if (k === 'Home') go(0);
+    else if (k === 'End') go(screens.length - 1);
+    else if (/^[1-9]$/.test(k)) go(Number(k) - 1);
+    else return;
+    e.preventDefault();
+  });
+})();
+</script>
+<script>
+document.querySelectorAll('[data-copy]').forEach((b) => {
+  b.addEventListener('click', async () => {
+    const text = document.getElementById(b.dataset.copy).querySelector('p').textContent;
+    try { await navigator.clipboard.writeText(text); b.textContent = 'Copied'; }
+    catch (_) { document.getElementById(b.dataset.copy).open = true; b.textContent = 'Select the text below'; }
+    setTimeout(() => { b.textContent = 'Copy prompt'; }, 2200);
+  });
+});
+</script>
+</body>
+</html>
