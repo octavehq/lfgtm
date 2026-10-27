@@ -35,7 +35,7 @@ These principles supplement the universal visual rules in `presentation-principl
 
 9. **Chrome stays out of the content box.** The fixed bar (brand, page title, "Screen n of N", pips) and the key hint carry `data-chrome`; screens reserve their height. A screen that grows past the viewport at 1280x800 is over budget: cut copy or split it.
 
-10. **Every number has a basis on the screen that shows it.** Period, denominator and source sit under the stat in `.vk-stat-basis` or in the caption of the visual, in the same words the skill's evidence rules require.
+10. **Every number has a basis on the screen that shows it.** Period, denominator and source sit under the stat in `.vk-stat-basis` or in the caption of the visual, in the same words the skill's evidence rules require. The hero number (screen 1 or the one-number screen) is the buyer's own figure or a verified record, never a vendor-reported range presented as fact, and its caption names the source ([information principle 26](../information-principles.md#claims-against-the-data)). Counts and names agree on every screen: the seats, steps or teams counted on one screen are the same number on every other ([information principle 24](../information-principles.md#claims-against-the-data)).
 
 11. **The ask is a screen, with the path.** The last screen states the next step as one sentence with a date, a primary button and a contact line, and a strip with the condition that moves to the next step written as text. On a buyer-facing page the strip shows the buyer's own decision path or the mutual plan steps in the buyer's words ("Security review", "Board sign-off"), never CRM stage names or amounts ([information principle 22](../information-principles.md)). Only internal pages may show CRM stages.
 
@@ -105,6 +105,8 @@ node <skill-dir>/../shared/scripts/render-gate.js <story.html> \
 - [ ] **One idea per screen.** Each screen has one headline (one sentence, at most 16 words) and one visual or one support block.
 - [ ] **One visual per screen, one hero motif.** No screen carries two visuals; exactly one component explains the mechanism or the data at full size, on the opening or mechanism screen, and no later screen repeats it or adds a second mechanism.
 - [ ] **Every visual is captioned or labelled.** Tiles, flows, orbits and plans say what their units are; every stat shows its basis.
+- [ ] **The hero number is the buyer's or verified, with its source on screen.** No vendor-reported range or multiplier as the hero; the caption names whose figure it is.
+- [ ] **The screens agree with each other.** Every count, name and figure that appears on two screens is identical on both (seats, steps, teams, amounts).
 - [ ] **The last strip speaks the buyer's words.** On a buyer-facing page the strip shows the buyer's decision path or mutual plan steps, with no CRM stage name or amount.
 - [ ] **Headlines stay one sentence whatever the kit prefers.** No two-sentence or two-line headline carried over from a brand kit's copy style.
 - [ ] **Surfaces alternate** and the kit paints the dark screens (no hand-written gradients).
