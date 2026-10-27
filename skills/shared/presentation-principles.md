@@ -19,7 +19,7 @@ This file is one of three independent review dimensions:
 
 Skill-specific blueprints (design system CSS, document structure) add the most specific layer on top.
 
-**Floor vs. craft.** Rules like "no emoji," "no text walls," "token-based colors," and "semantic HTML" are floor rules: violations are always wrong. Principles like "first-glance clarity," "annotate key data points," and "one signature visual" are craft standards: they are the bar the output is judged against once the floor holds, and a page that clears the floor with nothing above it reads as a report from a tool. Apply them where the content gives them something to explain; if a principle only adds effect, skip it.
+**Floor vs. craft.** Rules like "no emoji," "no text walls," "token-based colors," and "semantic HTML" are floor rules: violations are always wrong. Principles like "first-glance clarity," "annotate key data points," and "one hero motif per page" are craft standards: they are the bar the output is judged against once the floor holds, and a page that clears the floor with nothing above it reads as a report from a tool. Apply them where the content gives them something to explain; if a principle only adds effect, skip it.
 
 ## Text & Typography
 
@@ -95,13 +95,13 @@ The floor keeps a page from being wrong; the bar keeps it from being forgettable
 
 12b. **No raw metadata as UI elements.** Research and enrichment data (deal range, strategy type, market names, investment criteria) must be woven into prose or used to inform the narrative. Never surface enrichment data as standalone chips, badges, tags, or pill-shaped metadata labels. If the reader would ask "why am I seeing this as a label?" it belongs in a sentence, not a UI element.
 
-13. **One signature visual per page.** Each output has one visual that carries its mechanism or its headline data at full size, placed where the claim is made. Everything else is support (a stat, a split, a strip, a plan). Two competing signature visuals cancel each other, and none at all leaves the page as cards and bullets.
+13. **One signature visual per screen, one hero motif per page.** Each screen or section carries at most one visual, and it explains that screen's claim. One of them is the hero motif: the visual that carries the page's mechanism or headline data at full size, placed where the claim is made. No other visual repeats or competes with it (a second mechanism diagram, a second full-size flow); the rest are support (a stat, a split, a strip, a plan, a map of the people involved). A page with no visual at all reads as cards and bullets.
 
 13b. **Length is budgeted in screens.** Plan a buyer-facing page as six to eight screens ([story mode](formats/story-mode.md)) and an internal document as three to five screens' worth of sections. A page that runs past its budget is cut by merging or dropping sections, never by shrinking type or padding.
 
 13c. **Type is scaled for impact.** The claim on each screen or section sits in display type (2.2rem to 5rem, balanced, the brand's display weight) with one lede under it, and body text lives inside components. A heading that could be mistaken for body text has failed; so has a wall of 16px prose under a 24px heading.
 
-13d. **Motion explains.** A bar grows to its length, a dot travels the path it describes, a number counts to its value, each once as its screen enters, and nothing starts hidden. Effects that decorate (floating, pulsing, parallax, stacked glows) are cut; one or two treatments per page, both of them meaningful.
+13d. **Motion explains.** A bar grows to its length, a dot travels the path it describes, a number counts to its value, each once as its screen enters, and nothing starts hidden. The one exception is an ambient loop that carries no information of its own, such as the kit's slow orbit ring and its flow dots once the path is drawn: it stays slow and low in contrast and stops under `prefers-reduced-motion`. Effects that decorate (floating, pulsing, parallax, stacked glows) are cut; one or two treatments per page, both of them meaningful.
 
 ## Data Visualization
 
@@ -183,10 +183,10 @@ Self-contained visual/presentation audit. Run every check against the generated 
 - [ ] **Every visual explains.** No generic icons or illustrations; each visual shows a mechanism or data and says in a caption or label what its units are.
 - [ ] **No raw metadata UI.** No enrichment/research data displayed as standalone chips, badges, tags, or pill labels. All personalized data is woven into prose.
 - [ ] **Editorial feel.** The output reads as a market brief, not a software dashboard.
-- [ ] **One signature visual.** Exactly one full-size visual carries the mechanism or the headline data, placed with the claim; the rest are support components.
+- [ ] **One visual per screen, one hero motif.** No screen or section carries two visuals; exactly one full-size visual carries the mechanism or the headline data, placed with the claim, and nothing else repeats it.
 - [ ] **Screen budget held.** A buyer-facing page is six to eight screens; an internal document is three to five screens' worth of sections. Nothing was shrunk to fit.
 - [ ] **Type scaled for impact.** Each screen or section opens in display type with one lede; body text sits inside components, never as runs of paragraphs under a heading.
-- [ ] **Motion explains.** Every animation plays once as its screen enters and shows a length, a path or a value; nothing starts hidden; `prefers-reduced-motion` stops it all.
+- [ ] **Motion explains.** Every animation plays once as its screen enters and shows a length, a path or a value, except slow ambient loops that carry no information (the kit's orbit ring and flow dots); nothing starts hidden; `prefers-reduced-motion` stops it all.
 - [ ] **Effects are minimal.** No more than two signature treatments. No stacked gradients, glows, shadows competing for attention.
 
 ### Data Visualization (where applicable)

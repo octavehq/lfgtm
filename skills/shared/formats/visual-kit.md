@@ -153,7 +153,7 @@ A 2px line at the top that sweeps while fonts settle and finishes when `document
 ## Motion rules
 
 - Motion explains or it goes: bars grow to their length, dots travel the path they describe, lit tiles light after the rest, a number counts to its value. Nothing bounces, floats or pulses for its own sake.
-- Everything plays once, from `.is-in`, with `--d` staggers under 2 seconds. The two continuous animations (the orbit ring, the flow dots) are slow, low-contrast and stop under reduced motion.
+- Every entrance plays once, from `.is-in`, with `--d` staggers under 2 seconds. The orbit ring and the flow dots are the only loops: ambient motion that adds no information, slow, low in contrast, and stopped under reduced motion ([presentation principle 13d](../presentation-principles.md)).
 - No canvas or shader effects. The kit is CSS and SVG so the render gate, the print path and reduced motion all see the same page.
 
 ## Checks

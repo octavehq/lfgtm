@@ -1,6 +1,6 @@
 # Format: Story mode
 
-A buyer-facing page told as six to eight full-viewport screens, one idea each, stepped with the keyboard or scrolled. Huge, confident type carries the claim on every screen and one signature visual explains the mechanism. It replaces the long scrolling report for anything a buyer or champion opens on their own.
+A buyer-facing page told as six to eight full-viewport screens, one idea each, stepped with the keyboard or scrolled. Huge, confident type carries the claim on every screen and one hero motif explains the mechanism. It replaces the long scrolling report for anything a buyer or champion opens on their own.
 
 **Skills that produce this format:** champion-deal-room, one-pager (web leave-behind), deck (async, link-shared), microsite. It is the default for their buyer-facing outputs; document mode ([html-document.md](html-document.md)) stays available on request and stays the default for internal reports.
 
@@ -16,11 +16,11 @@ These principles supplement the universal visual rules in `presentation-principl
 
 4. **Type carries the screen.** The headline uses `.vk-display`: 2.2rem to 5rem, the brand's display weight (light unless the kit says otherwise), balanced wrapping, at most 16 words. A lede of one or two sentences sits under it in `.vk-lede`. Body text appears only inside a component (a split panel, a plan row, a stat basis), never as paragraphs under the headline.
 
-5. **One signature visual that explains.** Each page has one visual that shows the mechanism or the data (a signal flow, an orbit, a card grid, a plan timeline) and that visual sits on the opening or mechanism screen. Screen 1 always pairs its headline with a kit visual of the mechanism or the data, the signature visual or a smaller one; a two-column opening never leaves its second column empty or decorative. Other screens use the smaller components (stat, split, stages) or nothing. A visual that could be removed without the reader losing a fact is decoration and goes.
+5. **One signature visual per screen, one hero motif per page.** Each screen carries at most one visual. The hero motif shows the page's mechanism or data at full size (a signal flow, an orbit, a card grid, a plan timeline) and sits on the opening or mechanism screen; no later screen repeats it or adds a second mechanism. Screen 1 always pairs its headline with a kit visual of the mechanism or the data, the signature visual or a smaller one; a two-column opening never leaves its second column empty or decorative. Other screens use the smaller components (stat, split, stages), a map of the people involved, or nothing. A visual that could be removed without the reader losing a fact is decoration and goes.
 
 6. **Surfaces alternate.** Dark band and light page alternate screen to screen; the opening and the ask are dark. The grid texture and glow belong to dark screens only and come from the kit, never from a hand-written gradient.
 
-7. **Motion explains.** Bars grow to their length, dots travel the path they describe, lit tiles light after the rest, a number counts to its value, and everything plays once as the screen enters. Nothing starts hidden: the page reads the same with scripts off, in print and in a full-page capture taken without scrolling.
+7. **Motion explains.** Bars grow to their length, dots travel the path they describe, lit tiles light after the rest, a number counts to its value, and each plays once as the screen enters. The only loops are ambient ones that carry no information (the orbit ring's slow turn, the flow dots once the path is drawn), and they stop under reduced motion. Nothing starts hidden: the page reads the same with scripts off, in print and in a full-page capture taken without scrolling.
 
 8. **Presenter keys with a scroll fallback.** Arrow keys, Page Up and Down, Space, Home, End and the digits step screens. Scrolling, the pips in the bar and the skip link reach every screen without the keys. The key hint fades after the first move and never shows on touch screens.
 
@@ -30,9 +30,9 @@ These principles supplement the universal visual rules in `presentation-principl
 
 11. **The ask is a screen, with the path.** The last screen states the next step as one sentence with a date, a primary button and a contact line, and a strip with the condition that moves to the next step written as text. On a buyer-facing page the strip shows the buyer's own decision path or the mutual plan steps in the buyer's words ("Security review", "Board sign-off"), never CRM stage names or amounts ([information principle 22](../information-principles.md)). Only internal pages may show CRM stages.
 
-13. **Editorial rules win over a brand kit's copy preferences.** A kit governs visuals only. When a kit prefers two-sentence or two-line headlines, the headline stays one sentence in one run of text ([editorial rule 8c](../editorial-rules.md), [brand-kit-usage.md](../brand-kit-usage.md)).
+12. **Editorial rules win over a brand kit's copy preferences.** A kit governs visuals only. When a kit prefers two-sentence or two-line headlines, the headline stays one sentence in one run of text ([editorial rule 8c](../editorial-rules.md), [brand-kit-usage.md](../brand-kit-usage.md)).
 
-12. **Share metadata and a single file.** `og:title` and `og:description` describe the page for a stranger; everything is inline except Google Fonts and, when published, the sibling `assets/og.png` ([social-meta.md](../social-meta.md)).
+13. **Share metadata and a single file.** `og:title` and `og:description` describe the page for a stranger; everything is inline except Google Fonts and, when published, the sibling `assets/og.png` ([social-meta.md](../social-meta.md)).
 
 ## Screen plan template
 
@@ -42,9 +42,9 @@ Before writing, fill this table from the skill's section list and the evidence g
 |---|---|---|---|
 | 1 | The opening claim | `.vk-tiles` or the signature visual | dark |
 | 2 | The one number | `.vk-stat` | light |
-| 3 | How it works | `.vk-flow` or `.vk-orbit` | dark |
+| 3 | How it works | `.vk-flow` or `.vk-orbit` (the hero motif) | dark |
 | 4 | What changes first | `.vk-split` | light |
-| 5 | Who reads it, or the proof | `.vk-orbit`, `.vk-quotes` or `.vk-stat-row` | dark |
+| 5 | Who reads it, or the proof | `.vk-quotes`, `.vk-stat-row`, or `.vk-orbit` mapping the readers when screen 3 used `.vk-flow` | dark |
 | 6 | The plan | `.vk-gantt` | light |
 | 7 | The ask | `.vk-stages` (buyer's path) + buttons | dark |
 
@@ -94,7 +94,7 @@ node <skill-dir>/../shared/scripts/render-gate.js <story.html> \
 - [ ] **Screen count matches the request.** Count the `.vk-screen` elements: the count the user asked for, else six to eight; the arc runs opening, number, mechanism, change, proof or readers, plan, ask.
 - [ ] **Screen 1 carries a visual.** The opening headline sits beside or above a kit visual that explains the mechanism or the data; no empty or decorative half.
 - [ ] **One idea per screen.** Each screen has one headline (one sentence, at most 16 words) and one visual or one support block.
-- [ ] **One signature visual.** Exactly one component explains the mechanism or the data at full size, on the opening or mechanism screen; every other visual is a stat, a split, a strip or a plan.
+- [ ] **One visual per screen, one hero motif.** No screen carries two visuals; exactly one component explains the mechanism or the data at full size, on the opening or mechanism screen, and no later screen repeats it or adds a second mechanism.
 - [ ] **Every visual is captioned or labelled.** Tiles, flows, orbits and plans say what their units are; every stat shows its basis.
 - [ ] **The last strip speaks the buyer's words.** On a buyer-facing page the strip shows the buyer's decision path or mutual plan steps, with no CRM stage name or amount.
 - [ ] **Headlines stay one sentence whatever the kit prefers.** No two-sentence or two-line headline carried over from a brand kit's copy style.
