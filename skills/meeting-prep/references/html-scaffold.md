@@ -921,7 +921,15 @@ Use [meeting-sections.md](meeting-sections.md) as the single content/ID schema. 
     .prompt-text, .prompt-context { background: var(--bg-panel); border-radius: var(--radius-lg); padding: 0.6rem 0.75rem; margin-top: 0.4rem; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.72rem; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
     .copy-btn { margin-top: auto; align-self: flex-start; min-height: 44px; padding: 0 1rem; border-radius: var(--radius-pill); border: 1px solid var(--border); background: var(--bg-card); color: var(--text-primary); font: 600 0.78rem var(--font-body); cursor: pointer; }
     .prompt-context { margin-top: 0.75rem; }
-    @media (max-width: 768px) { .ex-row { grid-template-columns: 1fr; } .lookalike-table { display: block; overflow-x: auto; } }
+    @media (max-width: 768px) { .ex-row { grid-template-columns: 1fr; } }
+    /* Below 520px each lookalike row becomes a card; every td carries data-label with its column name. */
+    @media (max-width: 520px) {
+      .lookalike-table thead { display: none; }
+      .lookalike-table, .lookalike-table tbody, .lookalike-table tr, .lookalike-table td { display: block; box-sizing: border-box; width: 100%; }
+      .lookalike-table tr { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 0.4rem 0.75rem; margin-bottom: 0.6rem; }
+      .lookalike-table td { border-bottom: 0; padding: 0.3rem 0; min-width: 0; overflow-wrap: anywhere; }
+      .lookalike-table td::before { content: attr(data-label); display: block; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+    }
 
     /* === Responsive === */
     @media (max-width: 768px) {
@@ -1004,12 +1012,12 @@ Use [meeting-sections.md](meeting-sections.md) as the single content/ID schema. 
     <details class="prep-section" open id="lookalikes">
       <summary>1. Deals like this: what worked, what didn't</summary>
       <p class="internal-note">Internal only. Other customers' names stay out of anything said to the buyer.</p>
-      <!-- Intro line says how the set was chosen and its size. .lookalike-table: deal, outcome, what matched, what happened on their calls. Contrast line with counts and base. Never a customer name in rep-facing wording. -->
+      <!-- Intro line says how the set was chosen and its size. .lookalike-table: deal, outcome, what matched, what happened on their calls; every td carries data-label with its column name so rows stack into cards on phones. Contrast line with counts and base. Never a customer name in rep-facing wording. -->
     </details>
 
     <details class="prep-section" open id="context">
       <summary>2. Context</summary>
-      <!-- Company fit and limits; actual attendees, suggested roles, opportunity and latest commitments. Label account facts and hypotheses separately. -->
+      <!-- The meeting from its invite (time, place, organizer, every invited guest) or what was searched when none was found; company fit and limits; opportunity and latest commitments; any tie that changes how the room is run, once. Label account facts and hypotheses separately. -->
     </details>
 
     <details class="prep-section" open id="goals">
@@ -1024,7 +1032,7 @@ Use [meeting-sections.md](meeting-sections.md) as the single content/ID schema. 
 
     <details class="prep-section" open id="expect">
       <summary>5. What to expect, persona by persona</summary>
-      <!-- One .expect-block per attendee: persona and role, what they said, what the persona typically raises (tag .slot-tag.potential-fit "likely"), the answer that worked, the question to ask. -->
+      <!-- One .expect-block per invited guest who will speak or decide, at most five: persona and role, what they said, what the persona typically raises (tag .slot-tag.potential-fit "likely"), the answer that worked, the question to ask. -->
     </details>
 
     <details class="prep-section" open id="content">
