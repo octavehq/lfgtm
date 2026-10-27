@@ -64,8 +64,8 @@ The full contents of [`viewport-base.css`](viewport-base.css) are **mandatory** 
      * .pill              | Orienting tag / category label          | Title slide only
      * .feature-list/item | Vertical bullet stack with border       | Content slides (3-5 points)
      * .bullet-list/item  | Colored-dot bullet stack                | Deep-dive slides (scannable)
-     * .entity-name       | Large focal heading for entities        | Deep-dive slides
-     * .entity-subtitle   | Colored subtitle below entity name      | Deep-dive slides
+     * .entity-name       | Bold colored kicker naming the entity   | Deep-dive slides
+     * .entity-claim      | One-sentence claim headline             | Deep-dive slides
      * .deck-nav          | Persistent top bar (all sections)       | Multi-section decks
      * .section-nav/num/label | Section number + label              | Every slide in a section
      * .section-bar       | Thin left-edge color stripe             | Every slide in a section
@@ -258,21 +258,23 @@ The full contents of [`viewport-base.css`](viewport-base.css) are **mandatory** 
 
     /* === Entity Components (deep-dive slides) === */
 
-    /* Entity name — large bold focal heading for deep-dive slides.
+    /* Entity name as a kicker above a one-sentence claim headline.
        Use when: a slide is about a specific company, account, or product.
-       The entity name IS the visual focal point; the action title becomes
-       the subtitle below. */
+       The kicker names the entity; the headline states the slide's point
+       as one sentence (editorial rule 8c), with no second line under it. */
     .entity-name {
-      font-size: 96px;
+      font-size: 30px;
       font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1.05;
-      font-family: var(--font-display);
+      letter-spacing: 0.01em;
+      line-height: 1.2;
     }
-    .entity-subtitle {
-      font-size: 32px;
-      font-weight: 600;
-      margin-top: 10px;
+    .entity-claim {
+      font-size: 60px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-top: 12px;
+      font-family: var(--font-display);
     }
 
     /* === Bullet List (scannable deep-dive content) === */
