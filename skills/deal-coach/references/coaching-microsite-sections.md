@@ -42,8 +42,8 @@ The concrete aims for the current stage, then how to hit them. This is the meat.
 
 How the rep knows it is time to advance, and what to prove at each stage ahead. Keeps the reader oriented on the arc without jumping ahead.
 
-- **Readiness (`.ready`):** a "You're ready for [next stage] when" card, 4 concrete tells (from the next stage's Buyer Mindset). Green-tinted, check bullets.
-- **Forward stages (`details.path`, collapsed):** one collapsible per stage ahead (Elevate, then Compel). Each = the stage Buyer Mindset (short) + a "Prove these" list of 3. Collapsed by default because they are previews of later work; they show where the deal evolves and what is NOT yet in play.
+- **Readiness (`.ready`):** a "You're ready for [next stage] when" card, 4 concrete tells (from the next stage's buyer mindset or definition). Green-tinted, check bullets.
+- **Forward stages (`details.path`, collapsed):** one collapsible per stage ahead, using the workspace's own stages (the methodology's next steps when one is on file, else the next CRM stages). Each = the stage's buyer mindset or definition (short) + a "Prove these" list of 3. Collapsed by default because they are previews of later work; they show where the deal evolves and what is NOT yet in play.
 
 ## Job 5 — Top risks
 
