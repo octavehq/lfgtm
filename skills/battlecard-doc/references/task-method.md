@@ -27,7 +27,7 @@ Read the account's calls in their setting per
 [Reading Calls and Deals](../../shared/information-principles.md#reading-calls-and-deals)
 (a concern praising the product's reach is a scoping cue and stays
 out of the objections), link each deal-specific point to its call or
-record, and keep health, family or personal-life details out of the card;
+record, and keep health, family-event or personal-life details out of the card;
 report the count left out in the delivery message.
 
 For each important buyer criterion record: priority and source; our
