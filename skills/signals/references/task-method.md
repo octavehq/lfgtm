@@ -22,7 +22,7 @@ their deadline is today:
 - Today's meetings: call `list_events` with an explicit `startDate` at the
   start of today and an `endDate` at the end of the next business day (the
   default window looks back and returns no future meetings), then add the
-  next step and date on each roster opportunity and the scheduled activities
+  next step and date on each roster opportunity and any scheduled activities
   `get_deal` returns. Each meeting today with an external participant
   becomes a signal with what it is for, who attends and what the seller
   needs ready. When synced events stop before today, the scope strip says
