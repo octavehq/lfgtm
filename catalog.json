@@ -789,8 +789,8 @@
       "changelog": [
         {
           "version": "1.2.0",
-          "date": "2026-10-23",
-          "notes": "Leads with lookalike deals (the closest won and lost deals and what happened on their calls, with counts and bases), charts what each attendee is likely to raise, recommends real library content, structures the pitch around the workspace's own framework only when one exists, and ends on one to three next best actions (move, why now, strategy source, follow-through). Adds copy-ready keep-going prompts and a Markdown delivery for chat and agent hosts. Meeting prep's keep-going prompts are now copy-ready cards with a single Copy prompt button, and personal details stay out of the page and its prompts.",
+          "date": "2026-10-26",
+          "notes": "Leads with lookalike deals (the closest won and lost deals and what happened on their calls, with counts and bases), charts what each attendee is likely to raise, recommends real library content, structures the pitch around the workspace's own framework only when one exists, and ends on one to three next best actions (move, why now, strategy source, follow-through). Adds copy-ready keep-going prompts and a Markdown delivery for chat and agent hosts. Meeting prep's keep-going prompts are now copy-ready cards with a single Copy prompt button, and personal details stay out of the page and its prompts. Each prep starts from the meeting's own invite (time, place, organizer and every invited guest), says what was searched when there is none, and fits its asks to the meeting's setting. A tie that changes how the room should be run is flagged once, internally. Prose agrees with the page's tables, the comparables table stacks into cards on phones, and each section has a word budget.",
           "review": false
         },
         {
