@@ -15,7 +15,7 @@ This file is one of three independent review dimensions:
 - `slide-deck.md`: paginated slide presentations (deck, coaching)
 - `one-pager.md`: single-page leave-behinds (one-pager, proposal condensed)
 - `microsite.md`: landing pages (microsite)
-- `story-mode.md`: six to eight full-viewport screens for buyer-facing pages (champion-deal-room, one-pager web, deck async, microsite), built on `visual-kit.md`
+- `story-mode.md`: full-viewport screens for buyer-facing pages, at most 3 for a one-pager and 5 to 8 for champion-deal-room, microsite and deck, built on `visual-kit.md`
 
 Skill-specific blueprints (design system CSS, document structure) add the most specific layer on top.
 
@@ -97,7 +97,7 @@ Both the floor rules and the craft bar apply to every output.
 
 13. **One signature visual per screen, one hero motif per page.** Each screen or section carries at most one visual, and it explains that screen's claim. One of them is the hero motif: the visual that carries the page's mechanism or headline data at full size, placed where the claim is made. No other visual repeats or competes with it (a second mechanism diagram, a second full-size flow); the rest are support (a stat, a split, a strip, a plan, a map of the people involved). A page with no visual at all reads as cards and bullets.
 
-13b. **Story and buyer pages are budgeted in screens.** Plan a story page or a buyer-facing page as six to eight screens ([story mode](formats/story-mode.md)). Internal prep documents (meeting prep, research briefs, account plans) follow the word and section budgets their own skill sets, and this screen count does not cut them. A page that runs past its budget is cut by merging or dropping sections, never by shrinking type or padding.
+13b. **Story and buyer pages are budgeted in screens.** Plan a story page or a buyer-facing page in screens, using the skill's budget in [story mode](formats/story-mode.md) principle 2 (at most 3 for a one-pager, 5 to 8 for champion-deal-room, microsite and deck). Internal prep documents (meeting prep, research briefs, account plans) follow the word and section budgets their own skill sets, and this screen count does not cut them. A page that runs past its budget is cut by merging or dropping sections, never by shrinking type or padding.
 
 13c. **Type is scaled for impact.** The claim on each screen or section sits in display type (2.2rem to 5rem, balanced, the brand's display weight) with one lede under it, and body text lives inside components. A heading that could be mistaken for body text has failed; so has a wall of 16px prose under a 24px heading.
 
@@ -184,7 +184,7 @@ Self-contained visual/presentation audit. Run every check against the generated 
 - [ ] **No raw metadata UI.** No enrichment/research data displayed as standalone chips, badges, tags, or pill labels. All personalized data is woven into prose.
 - [ ] **Editorial feel.** The output reads as a market brief, not a software dashboard.
 - [ ] **One visual per screen, one hero motif.** No screen or section carries two visuals; exactly one full-size visual carries the mechanism or the headline data, placed with the claim, and nothing else repeats it.
-- [ ] **Screen budget held.** A buyer-facing page is six to eight screens; an internal document is three to five screens' worth of sections. Nothing was shrunk to fit.
+- [ ] **Screen budget held.** A buyer-facing page holds its skill's screen budget (at most 3 for a one-pager, 5 to 8 for the others); an internal document is three to five screens' worth of sections. Nothing was shrunk to fit.
 - [ ] **Type scaled for impact.** Each screen or section opens in display type with one lede; body text sits inside components, never as runs of paragraphs under a heading.
 - [ ] **Motion explains.** Every animation plays once as its screen enters and shows a length, a path or a value, except slow ambient loops that carry no information (the kit's orbit ring and flow dots); nothing starts hidden; `prefers-reduced-motion` stops it all.
 - [ ] **Effects are minimal.** No more than two signature treatments. No stacked gradients, glows, shadows competing for attention.

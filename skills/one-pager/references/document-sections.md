@@ -1,15 +1,14 @@
 # Document Sections
 
-The sections below are the content contract for both renderings. A physical page lays them out as the print-first document in [html-architecture.md](html-architecture.md). A web leave-behind renders them as six screens in [story mode](../../shared/formats/story-mode.md) with the [visual kit](../../shared/formats/visual-kit.md):
+The sections below are the content contract for both renderings. A physical page lays them out as the print-first document in [html-architecture.md](html-architecture.md). A web leave-behind renders them in [story mode](../../shared/formats/story-mode.md) with the [visual kit](../../shared/formats/visual-kit.md) in at most 3 screens, or as a single scrolling page that carries one signature visual. A one-pager is read in under a minute, so the budget holds even when the evidence could fill more; a count the user asks for replaces it.
 
-| Screen | Section | Component |
+| Screen | Sections | Component |
 |---|---|---|
-| 1 | Header and The Problem Today: the lede is the headline, prepared-for in the kicker | `.vk-tiles` when the problem is a share of a known set, else headline and lede alone |
-| 2 | The proof number, with its basis | `.vk-stat` |
-| 3 | How [Product] Helps | `.vk-flow` or `.vk-orbit` |
-| 4 | Why [Your Company], today against with | `.vk-split` |
-| 5 | What Teams Are Seeing: the remaining proof and the quote | `.vk-stat-row` or `.vk-quotes` |
-| 6 | Next Step, with where the buyer's decision stands (their own steps, never CRM stage names) and the two action lines | `.vk-stages` and `.vk-btn` |
+| 1 | Header, The Problem Today and the proof number: the lede is the headline, prepared-for in the kicker, the number and its basis beside it | `.vk-tiles` when the problem is a share of a known set, else `.vk-stat` |
+| 2 | How [Product] Helps and Why [Your Company], with the remaining proof or the quote under it | `.vk-flow`, `.vk-orbit` or `.vk-split` (one of them, the page's signature visual) |
+| 3 | Next Step, with where the buyer's decision stands (their own steps, never CRM stage names) and the two action lines | `.vk-stages` and `.vk-btn` |
+
+On a single scrolling page the same three blocks run in order, and only block 2 carries a visual.
 
 Each section's rules (one-sentence ledes, bullets over prose, real proof only) hold on the screens as they do on the page.
 

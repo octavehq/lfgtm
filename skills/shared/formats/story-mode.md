@@ -1,6 +1,6 @@
 # Format: Story mode
 
-A buyer-facing page told as six to eight full-viewport screens, one idea each, stepped with the keyboard or scrolled. Huge, confident type carries the claim on every screen and one hero motif explains the mechanism. It replaces the long scrolling report for anything a buyer or champion opens on their own.
+A buyer-facing page told as a short run of full-viewport screens, one idea each, stepped with the keyboard or scrolled. Huge, confident type carries the claim on every screen and one hero motif explains the mechanism. It replaces the long scrolling report for anything a buyer or champion opens on their own.
 
 **Skills that produce this format:** champion-deal-room, one-pager (web leave-behind), deck (async, link-shared), microsite. It is the default for their buyer-facing outputs; document mode ([html-document.md](html-document.md)) stays available on request and stays the default for internal reports.
 
@@ -10,7 +10,16 @@ These principles supplement the universal visual rules in `presentation-principl
 
 1. **One idea per screen.** A screen carries one claim, stated in its headline as one sentence, and one visual or one block of support. When a screen needs a second visual or a second heading, it is two screens.
 
-2. **A screen budget replaces a section count.** Six to eight screens is the default budget. A count the user asks for ("5 slides", "3 screens") replaces it, above or below, and the arc is cut to fit that count. The skill's content rules still decide what earns space; the budget decides how it is cut. Map the skill's sections to screens before writing, and merge or drop until the count fits. Length is measured in screens, never in pixels.
+2. **A screen budget replaces a section count, and the budget depends on the skill.** Each skill has its own budget:
+
+   | Skill | Budget |
+   |---|---|
+   | one-pager (web leave-behind) | At most 3 screens, or a single scrolling page that carries one signature visual |
+   | champion-deal-room | 5 to 8 screens (7 by default) |
+   | microsite | 5 to 8 screens |
+   | deck (read as a link) | 5 to 8 screens |
+
+   A one-pager is read in under a minute, so its budget holds even when the evidence could fill more. A count the user asks for ("5 slides", "3 screens") replaces the budget, above or below, and the arc is cut to fit that count. The skill's content rules still decide what earns space; the budget decides how it is cut. Map the skill's sections to screens before writing, and merge or drop until the count fits. Length is measured in screens, never in pixels.
 
 3. **The arc is fixed.** Opening claim with the signature visual, the one number, the mechanism, the change (today against with), who reads it or the proof, the plan, the ask. A skill reshapes its sections onto this arc rather than inventing a new one.
 
@@ -48,7 +57,7 @@ Before writing, fill this table from the skill's section list and the evidence g
 | 6 | The plan | `.vk-gantt` | light |
 | 7 | The ask | `.vk-stages` (buyer's path) + buttons | dark |
 
-Six screens drop screen 5; eight screens add one proof or one objection screen after 5, never a second mechanism. For a requested count below six, keep the opening, the mechanism and the ask, then add the number and the plan as the count allows.
+Six screens drop screen 5, and five screens also fold the plan into the ask. Eight screens add one proof or one objection screen after 5, never a second mechanism. For a count below five (a one-pager's three screens, or a user's count), keep the opening, the mechanism and the ask: the opening carries the one number in its kicker or visual, the mechanism screen carries the proof, and the ask carries the next step.
 
 ## Scaffold
 
@@ -91,7 +100,7 @@ node <skill-dir>/../shared/scripts/render-gate.js <story.html> \
   --chrome ".vk-bar,.vk-keys,[data-chrome]" --viewports 1440x900,1280x800,375x812
 ```
 
-- [ ] **Screen count matches the request.** Count the `.vk-screen` elements: the count the user asked for, else six to eight; the arc runs opening, number, mechanism, change, proof or readers, plan, ask.
+- [ ] **Screen count matches the skill's budget.** Count the `.vk-screen` elements: the count the user asked for, else the skill's budget in principle 2 (at most 3 for a one-pager, 5 to 8 for champion-deal-room, microsite and deck); the arc runs opening, number, mechanism, change, proof or readers, plan, ask, cut to fit.
 - [ ] **Screen 1 carries a visual.** The opening headline sits beside or above a kit visual that explains the mechanism or the data; no empty or decorative half.
 - [ ] **One idea per screen.** Each screen has one headline (one sentence, at most 16 words) and one visual or one support block.
 - [ ] **One visual per screen, one hero motif.** No screen carries two visuals; exactly one component explains the mechanism or the data at full size, on the opening or mechanism screen, and no later screen repeats it or adds a second mechanism.
