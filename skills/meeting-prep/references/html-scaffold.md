@@ -1120,8 +1120,10 @@ Use [meeting-sections.md](meeting-sections.md) as the single content/ID schema. 
         const ctx = document.getElementById('prompt-context').textContent.trim();
         const text = task + '\n\n' + ctx;
         const done = () => { btn.textContent = 'Copied'; setTimeout(() => { btn.textContent = 'Copy prompt'; }, 1600); };
-        if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(text).then(done); }
-        else { const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); done(); }
+        const fallback = () => { const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); done(); };
+        // A sandboxed frame can reject the Clipboard API; fall back to the textarea copy.
+        if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(text).then(done, fallback); }
+        else { fallback(); }
       });
     });
 
