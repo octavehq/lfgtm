@@ -26,6 +26,8 @@ The numbers at a glance. Three tiers of information:
   - Each competitor: green (wins) + red (losses) bars with both volume and win rate
   - Sorted by total deal volume
 
+- **Cohort checks** — one compact line each for the bulk-close-date check and the ownership split from the [task method](task-method.md), with counts, stated even when nothing stands out.
+
 Every percentage must state what it's a percentage OF. "69% win rate (20 of 29 deals)" not just "69%."
 
 ---
