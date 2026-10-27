@@ -2,7 +2,7 @@
 
 Choose the route from the requested audience. For a named account, use its verified domain, CRM/calls, relevant offering, buyer and motion. For a persona/segment/industry page, use those library entities and representative evidence; do not invent a company domain or call company enrichment/qualification without a real account. Industry framing must connect a sourced industry constraint to the buyer's workflow, offering mechanism, relevant proof, and one action.
 
-When a named-account page draws on calls, read them by [Reading Calls and Deals](../../shared/information-principles.md#reading-calls-and-deals): the CTA matches the stage, so after a first enterprise meeting it never asks for the buyer's data, transcripts or a pilot unless they requested it. Buyer quotes appear only when suitable for the page's audience, and personal facts said on a call or noted in the CRM (health, family, personal life) never appear; tell the operator how many you left out.
+When a named-account page draws on calls, read them by [Reading Calls and Deals](../../shared/information-principles.md#reading-calls-and-deals) rules 16 to 21: the CTA matches the stage, buyer quotes appear only when suitable for the page's audience, and personal facts never appear.
 
 Before publishing, check the page against two rules: every capability, security, data-handling or results statement traces to a product, proof point or reference record, and one with nothing on file is dropped or sent to the rep as a question (rule 21); the page shows no internal sources (coaching provenance, seller-side call labels, CRM amounts) and names only people in a record or on a call (rule 22).
 

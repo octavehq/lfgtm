@@ -14,10 +14,8 @@ scope and external-use status; creative derivation; uncertainty.
 Findings are discovery leads. Retrieve the underlying transcript/email or
 source before presenting a verbatim quote. Keep paraphrase and quote fields
 separate. Named proof and metrics must be applicable to this offer/audience.
-Personal facts a buyer said on a call (health, family, personal life) never
-enter a source card, a headline or any creative, even reworded; skip the
-excerpt, count it, and report the count in the delivery message
-([information principles #19](../../shared/information-principles.md#reading-calls-and-deals)).
+Personal facts from a call never enter a source card, a headline or any
+creative, even reworded ([information principles #19](../../shared/information-principles.md#reading-calls-and-deals)).
 
 Load [evidence-and-inputs.md](../../shared/evidence-and-inputs.md) for material substantiation gaps.
 Ask for specific missing capability, proof/POC, or offer facts; incorporate

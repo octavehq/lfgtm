@@ -38,10 +38,9 @@ Engagement/resonance:
 9–10: substantial engagement plus the strongest commitment the setting allows
 (a dated next step in a late-stage call; after a first enterprise meeting, a
 champion who says who they will take it to next).
-A first enterprise meeting without a dated next step is not mixed. Tally the
-buyer's reactions to named capabilities, with timestamps, before calling
-engagement unclear. A concern that praises the product's reach is a buying
-signal and a scoping cue, not an objection.
+Under rule 16 a first enterprise meeting without a dated next step does not
+score 5–6, and reactions to named capabilities are tallied with timestamps
+before engagement is called unclear.
 Skepticism and detailed objections can be engaged evaluation. Email delay
 needs context; absence of a later reply in an excerpt is unknown.
 
@@ -65,21 +64,15 @@ A legitimate conceded competitor advantage need not lower the score.
 
 For each coaching recommendation show: observed moment, buyer implication,
 a better specific response/question, supporting Motion/proof, and next use.
-A pain the buyer named that the seller never addressed ranks at least second
-among the recommendations. A delivery habit (pacing, filler words, slide count)
+Rules 17, 19 and 21 apply to the recommendations: an unanswered buyer pain
+ranks at least second, an unsupported seller claim becomes a recommendation
+with the recorded figure to use instead, and personal facts stay out of the
+analysis and any draft. A delivery habit (pacing, filler words, slide count)
 is a recommendation only when the buyer's reaction shows it cost something.
 Talk time is one of these: a seller share above about 60% of a complete
 transcript becomes a recommendation when the buyer remarked on the pace or got
 little room (short turns, questions cut off), with the share and that moment
-as evidence. Check every number, customer story or promise the seller made
-against its proof point or reference record (rule 21); an unsupported one is
-a recommendation with the recorded figure to use instead.
-Never recommend asking an enterprise buyer for their data, transcripts or a
-pilot after a first meeting; the next step follows the champion's internal path.
-Leave sensitive personal facts said on the call out of the analysis and any
-draft, and report how many you left out; a relationship or circumstance that
-changes how the deal is run stays in the analysis, once, with what it changes
-(rule 19).
+as evidence.
 Separate explicit commitments (who/what/when, with source) from suggestions,
 unanswered product questions, and assumptions. Preserve the buyer's agreed
 sequence. Do not add every omitted message to the follow-up.

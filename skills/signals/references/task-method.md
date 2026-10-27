@@ -67,13 +67,9 @@ their deadline is today:
   applicability, source age, conflicting evidence, and Motion activity.
 
 Calibrate every risk to the opportunity's setting, per
-[Reading Calls and Deals](../../shared/information-principles.md#reading-calls-and-deals):
-a missing dated next step after a first enterprise meeting is normal and
-raises no signal, a concern praising the product's reach is a buying
-signal, and no action asks an early enterprise buyer for data, transcripts
-or a pilot. Health, family-event or personal-life details never appear in a
-signal or action; report the count left out in the delivery message. A tie
-that changes how the deal is run may appear, once (rule 19).
+[Reading Calls and Deals](../../shared/information-principles.md#reading-calls-and-deals)
+rules 16 to 21: a missing dated next step after a first enterprise meeting
+raises no signal, and personal facts never appear in a signal or action.
 
 Rank by decision consequence, deadline, affected opportunity value/scope,
 evidence quality, and whether a useful action exists. A meeting today or a

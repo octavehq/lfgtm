@@ -92,4 +92,4 @@ Before rendering named companies, people, quotes, or deal information, establish
 
 Internal does not mean unrestricted. Include only details that serve the argument. For external or public output, require explicit confirmation for private CRM and conversation details.
 
-At every privacy level, health, family and personal-life details from calls or the CRM stay out of quotes, receipts and prompts ([information principles](../../shared/information-principles.md) rule 19); report the count left out in the delivery message. Each claim links to its quote, record or report run, and an evidence section or appendix opens with one sentence giving the number of quotes behind the digest (rule 20).
+At every privacy level, personal facts stay out of quotes, receipts and prompts ([information principles](../../shared/information-principles.md) rule 19). Each claim links to its quote, record or report run, and an evidence section or appendix opens with one sentence giving the number of quotes behind the digest (rule 20).

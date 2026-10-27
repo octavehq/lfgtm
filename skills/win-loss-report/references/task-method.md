@@ -60,7 +60,7 @@ Before finishing, read every section title, summary line and chart title
 against the numbers under it: a claimed range or "every band" must hold for
 each bar shown, or the headline names the exception (rule 24).
 
-Group losses by the loss reasons the CRM recorded, quoted as recorded, and by the workspace's own library entities. The product gap / value / readiness / process / competition split below is your reading of buyer exchanges, labeled as such; apply a sales methodology or loss taxonomy only when the workspace has one on file ([rule 18](../../shared/information-principles.md#reading-calls-and-deals)). Every driver, pattern and counter links to the quote or deal behind it, and the evidence list states how many quotes back the report (rule 20). Personal facts from calls or CRM notes (health, family, personal life) stay out of quotes and patterns; report the count left out in the delivery message (rule 19).
+Group losses by the loss reasons the CRM recorded, quoted as recorded, and by the workspace's own library entities. The product gap / value / readiness / process / competition split below is your reading of buyer exchanges, labeled as such; apply a sales methodology or loss taxonomy only when the workspace has one on file ([rule 18](../../shared/information-principles.md#reading-calls-and-deals)). Every driver, pattern and counter links to the quote or deal behind it, and the evidence list states how many quotes back the report (rule 20). Personal facts stay out of quotes and patterns (rule 19).
 
 Prioritize an intervention using excess-loss association, affected volume/
 value, evidence strength, and practical actionability; explain the choice.
