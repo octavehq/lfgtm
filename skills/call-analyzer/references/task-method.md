@@ -68,7 +68,10 @@ a better specific response/question, supporting Motion/proof, and next use.
 A pain the buyer named that the seller never addressed ranks at least second
 among the recommendations. A delivery habit (pacing, filler words, slide count)
 is a recommendation only when the buyer's reaction shows it cost something.
-Check every number, customer story or promise the seller made
+Talk time is one of these: a seller share above about 60% of a complete
+transcript becomes a recommendation when the buyer remarked on the pace or got
+little room (short turns, questions cut off), with the share and that moment
+as evidence. Check every number, customer story or promise the seller made
 against its proof point or reference record (rule 21); an unsupported one is
 a recommendation with the recorded figure to use instead.
 Never recommend asking an enterprise buyer for their data, transcripts or a
