@@ -88,6 +88,7 @@ Provenance line (which calls, which buyer, which Motion ICP cell; note where dea
 - [ ] Personal facts from calls left out and counted in the delivery message; each heard-on-call line and risk traces to a quote or record.
 - [ ] Headers are conclusion-carrying, none theatrical or clickbait.
 - [ ] Zero em/en-dashes (lint passes).
+- [ ] Every capability, security, data-handling or results claim in a talk track or proof line has a record behind it, or carries "confirm with product" (rule 21).
 - [ ] Every named person, quote, competitor, and count traces to a real tool result; deal fields come from the CRM opportunity or are replaced by the one-line no-CRM note, never invented or shown as an empty card.
 - [ ] Job 3 goals number one per grounded priority, at most 5; value props are a clean list, not chips; talk tracks name the account's real pains and map to goals.
 - [ ] Job 5 renders one card per real risk (not forced to two); no invented risk, none dropped for layout.

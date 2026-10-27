@@ -86,7 +86,9 @@ sequence. Do not add every omitted message to the follow-up.
 
 If follow-up drafting serves the user's objective, use relevant approved
 capability/proof facts, never a seller claim from the call that the record
-doesn't support (rule 21). Load [evidence-and-inputs.md](../../shared/evidence-and-inputs.md) for material
+doesn't support (rule 21). A capability, security, data-handling or results
+line the draft adds on its own needs a record too; without one it leaves the
+draft and becomes a question for the operator (rule 21). Load [evidence-and-inputs.md](../../shared/evidence-and-inputs.md) for material
 unanswered integration, pricing, POC, or implementation questions. Ask the
 operator, incorporate/source answers, and update the draft. Unknown answers
 become an agreed working placeholder or a task to obtain the answer, never
