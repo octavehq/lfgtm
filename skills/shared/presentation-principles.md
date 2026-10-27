@@ -97,7 +97,7 @@ The floor keeps a page from being wrong; the bar keeps it from being forgettable
 
 13. **One signature visual per screen, one hero motif per page.** Each screen or section carries at most one visual, and it explains that screen's claim. One of them is the hero motif: the visual that carries the page's mechanism or headline data at full size, placed where the claim is made. No other visual repeats or competes with it (a second mechanism diagram, a second full-size flow); the rest are support (a stat, a split, a strip, a plan, a map of the people involved). A page with no visual at all reads as cards and bullets.
 
-13b. **Length is budgeted in screens.** Plan a buyer-facing page as six to eight screens ([story mode](formats/story-mode.md)) and an internal document as three to five screens' worth of sections. A page that runs past its budget is cut by merging or dropping sections, never by shrinking type or padding.
+13b. **Story and buyer pages are budgeted in screens.** Plan a story page or a buyer-facing page as six to eight screens ([story mode](formats/story-mode.md)). Internal prep documents (meeting prep, research briefs, account plans) follow the word and section budgets their own skill sets, and this screen count does not cut them. A page that runs past its budget is cut by merging or dropping sections, never by shrinking type or padding.
 
 13c. **Type is scaled for impact.** The claim on each screen or section sits in display type (2.2rem to 5rem, balanced, the brand's display weight) with one lede under it, and body text lives inside components. A heading that could be mistaken for body text has failed; so has a wall of 16px prose under a 24px heading.
 
