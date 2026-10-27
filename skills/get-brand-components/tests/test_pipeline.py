@@ -1035,18 +1035,18 @@ class ParallelCrawl(unittest.TestCase):
             row = prefetch.ingest_result({"found": True, "finalUrl": "https://acme.com/", "statusCode": 200, "contentUrl": "https://s/h.html"}, pathlib.Path(d), NOOP_LOG, fetch=flaky)
         self.assertTrue(row["ok"]); self.assertEqual(len(calls), 3)
 
-    def test_pick_pages_on_the_zuora_links_skips_listings_and_finds_the_article(self):
-        links = ["https://www.zuora.com/#content", "https://www.zuora.com/", "https://www.zuora.com/solutions/quote-to-cash/",
-                 "https://www.zuora.com/solutions/intelligent-pricing-and-packaging/", "https://www.zuora.com/solutions/saas/",
-                 "https://www.zuora.com/products/billing-software/", "https://www.zuora.com/our-customers/case-studies/",
-                 "https://www.zuora.com/our-customers/case-studies/zoom/", "https://www.zuora.com/resources/events/",
-                 "https://www.zuora.com/resources/filter/content_type/video/", "https://www.zuora.com/resources/",
-                 "https://zuora.com/resource/modern-finance-leader-report/strategic-demands-outpace-technology/",
-                 "https://docs.zuora.com/", "https://www.zuora.com/careers/", "https://www.zuora.com/about/", "https://www.zuora.com/about/team/"]
-        picked = prefetch.pick_pages(links, "https://www.zuora.com/")
-        self.assertEqual(picked, ["https://www.zuora.com/solutions/quote-to-cash/", "https://www.zuora.com/solutions/intelligent-pricing-and-packaging/",
-                                  "https://zuora.com/resource/modern-finance-leader-report/strategic-demands-outpace-technology/",
-                                  "https://www.zuora.com/our-customers/case-studies/", "https://www.zuora.com/about/"])
+    def test_pick_pages_on_the_acmebilling_links_skips_listings_and_finds_the_article(self):
+        links = ["https://www.acmebilling.com/#content", "https://www.acmebilling.com/", "https://www.acmebilling.com/solutions/quote-to-cash/",
+                 "https://www.acmebilling.com/solutions/intelligent-pricing-and-packaging/", "https://www.acmebilling.com/solutions/saas/",
+                 "https://www.acmebilling.com/products/billing-software/", "https://www.acmebilling.com/our-customers/case-studies/",
+                 "https://www.acmebilling.com/our-customers/case-studies/zoom/", "https://www.acmebilling.com/resources/events/",
+                 "https://www.acmebilling.com/resources/filter/content_type/video/", "https://www.acmebilling.com/resources/",
+                 "https://acmebilling.com/resource/modern-finance-leader-report/strategic-demands-outpace-technology/",
+                 "https://docs.acmebilling.com/", "https://www.acmebilling.com/careers/", "https://www.acmebilling.com/about/", "https://www.acmebilling.com/about/team/"]
+        picked = prefetch.pick_pages(links, "https://www.acmebilling.com/")
+        self.assertEqual(picked, ["https://www.acmebilling.com/solutions/quote-to-cash/", "https://www.acmebilling.com/solutions/intelligent-pricing-and-packaging/",
+                                  "https://acmebilling.com/resource/modern-finance-leader-report/strategic-demands-outpace-technology/",
+                                  "https://www.acmebilling.com/our-customers/case-studies/", "https://www.acmebilling.com/about/"])
 
 
 if __name__ == "__main__":
