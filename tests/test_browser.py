@@ -96,6 +96,11 @@ class BrowserChecks(unittest.TestCase):
         self.assertEqual(checks(gate(mixed.format(' style="color:#fafafa"'))),['low-contrast'])
         unknown=gate('<div style="background:oklch(0.97 0.01 250);padding:8px"><p style="color:#fafafa">Unknown fill</p></div>')
         self.assertEqual((checks(unknown),unknown['contrastSkipped']),([],1))
+        for fill in ('#000','#f00','#ffcc00'):
+            band='<div style="background:%s;padding:8px"><p style="color:{}">Text on an opaque fill with no blue</p></div>'%fill
+            self.assertEqual(checks(gate(band.format('#fff'))),[] if fill!='#ffcc00' else ['low-contrast'])
+        self.assertEqual(checks(gate('<div style="background:#000;padding:8px"><p style="color:#222">Dark on black</p></div>')),['low-contrast'])
+        self.assertEqual(checks(gate('<div style="background:rgba(0,0,0,0.1);padding:8px"><p style="color:#fff">White on a faint tint over white</p></div>')),['low-contrast'])
         self.assertIn('clipped-text',checks(gate('<p style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:120px">A single line that is much too long for its box</p>')))
         deliberate='<div style="max-height:0;overflow:hidden"><p>Collapsed body</p></div><div style="width:200px;overflow:hidden"><div style="display:flex;width:600px"><p style="width:200px;flex:none">One</p><p style="width:200px;flex:none">Two</p></div></div><div style="overflow-x:auto;width:200px"><p style="white-space:nowrap">A wide row that scrolls inside its own container</p></div>'
         self.assertEqual(checks(gate(deliberate,'375x812')),[])

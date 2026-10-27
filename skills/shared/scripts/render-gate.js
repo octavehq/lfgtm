@@ -238,10 +238,14 @@ async function settle(page) {
         // display-p3, or a background image or gradient) returns null, so the
         // element is skipped until an opaque fill it can read sits closer.
         const readable = /^(rgba?\(|color\(srgb\s)/;
+        // Alpha is the fourth component only. Opaque fills come back as
+        // rgb(r, g, b) with no alpha, so the last number is the blue channel.
         const alphaOf = (bg) => {
-          const a = bg.match(/(?:,|\/)\s*([\d.]+%?)\s*\)$/);
-          if (!a) return 1;
-          return a[1].endsWith('%') ? parseFloat(a[1]) / 100 : Number(a[1]);
+          const body = bg.slice(bg.indexOf('(') + 1, bg.lastIndexOf(')'));
+          const parts = body.replace(/^srgb\s+/, '').split(/[\s,/]+/).filter(Boolean);
+          if (parts.length < 4) return 1;
+          const a = parts[3];
+          return a.endsWith('%') ? parseFloat(a) / 100 : Number(a);
         };
         const paintedBg = (el) => {
           let e = el;
