@@ -80,7 +80,7 @@ These principles supplement the universal visual rules in `presentation-principl
     **Bad:** Card headings at 22px, body at 18px, bullet items at 20px: looks like a document, not a slide.
     **Good:** Card headings at 34px, body at 26px, bullet items at 30px: reads clearly at projection distance.
 
-26. **Subtitle is a message, not a description format.** Deep-dive slide subtitles should carry meaning. "Why they're stuck" tells the audience what to expect. "Never got past setup into actual workflows" is a narrative claim. Both work. "Sendoso overview" is dead weight.
+26. **Subtitle is a message, not a description format.** Deep-dive slide subtitles should carry meaning. "Why they're stuck" tells the audience what to expect. "Never got past setup into actual workflows" is a narrative claim. Both work. "Acme overview" is dead weight.
 
     **Bad:** `<p class="csub">Never got past setup into actual workflows</p>`. This was the v1 approach: narrative claims as subtitles on deep dives. Fine in isolation, but when the user wants a consistent format, it creates inconsistency across slides because each subtitle is a different kind of statement.
     **Good:** `<p class="csub" style="color: var(--arch-bad);">Why they're stuck</p>`. Consistent across all deep dives in the section. The bullets below carry the specifics.
