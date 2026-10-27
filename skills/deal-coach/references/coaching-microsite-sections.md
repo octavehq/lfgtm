@@ -21,7 +21,7 @@ The stage read. Answers: what stage is this, how sure are we, and what is the si
 - **Gloss (`.stage-gloss`):** two to three sentences defining the current stage in plain English, so a reader who does not know the methodology understands it. What the stage's job is, and what it is not.
 - **Verdict (`.verdict`):** one headline sentence stating where the deal is stuck, plus one "The move" line. This is the TL;DR.
 - **Stage read (`.card`):** confidence label (honest: "Medium confidence, inferred from call signals, not a CRM record") + an evidence list, at most 4 rows (Agreement / Objection / Competitors / Activity), one line each, drawn from real findings.
-- **Deal-data placeholder (`.placeholder`):** when no live CRM record exists, a dashed panel that openly hands the deal-record fields (stage, amount, close date) back to the seller. Never invent them. One placeholder only.
+- **Deal record:** with a CRM opportunity, a `.card` beside the stage read (`.stand.has-deal`) shows its stage, amount and close date from the record. With none, one line under the stage read (`.no-crm`): "No CRM opportunity on file, so stage, amount and close date are not shown." Never invent the fields, and never render an empty or dashed deal-record card.
 
 ## Job 2 — Where the buyer's head is
 
@@ -70,7 +70,7 @@ Provenance line (which calls, which buyer, which Motion ICP cell; note where dea
 | Section | Cap |
 |---|---|
 | Job 1 evidence rows | ≤ 4, one line each |
-| Job 1 placeholders | 1 |
+| Job 1 deal record | one card from the CRM opportunity, or one `.no-crm` line |
 | Job 2 heard-on-call | ≤ 4, one line each |
 | Job 3 goals | one per grounded priority, at most 5 |
 | Job 3 value props | 3 to 4 |
@@ -88,7 +88,7 @@ Provenance line (which calls, which buyer, which Motion ICP cell; note where dea
 - [ ] Personal facts from calls left out and counted in the delivery message; each heard-on-call line and risk traces to a quote or record.
 - [ ] Headers are conclusion-carrying, none theatrical or clickbait.
 - [ ] Zero em/en-dashes (lint passes).
-- [ ] Every named person, quote, competitor, and count traces to a real tool result; unverified deal data is a placeholder, not invented.
+- [ ] Every named person, quote, competitor, and count traces to a real tool result; deal fields come from the CRM opportunity or are replaced by the one-line no-CRM note, never invented or shown as an empty card.
 - [ ] Job 3 goals number one per grounded priority, at most 5; value props are a clean list, not chips; talk tracks name the account's real pains and map to goals.
 - [ ] Job 5 renders one card per real risk (not forced to two); no invented risk, none dropped for layout.
 - [ ] Responsive at 375px (no horizontal overflow); print flattens (details open, nav hidden, cards avoid breaks); keyboard focus visible.

@@ -90,8 +90,10 @@ a:focus-visible, button:focus-visible, summary:focus-visible, details.path > sum
 .rail-step:last-child { border-right: 0; }
 .rail-step .s-name { font-family: var(--font-display); font-weight: 400; font-size: 1rem; }
 .rail-step .s-obj { font-size: 0.72rem; color: var(--dc-on-dark-2); }
-.rail-step.current { background: color-mix(in srgb, var(--emph-dark) 16%, transparent); }
-.rail-step.current .s-name { color: var(--emph-dark); }
+.rail-step.current { background: color-mix(in srgb, var(--brand-on-dark) 14%, transparent); box-shadow: inset 0 3px 0 var(--emph-dark); }
+/* the current stage reads at full on-dark ink; colour alone never marks it, so a pale emphasis hue cannot dim it */
+.rail-step.current .s-name { color: var(--brand-on-dark); font-weight: 500; }
+.rail-step.current .s-obj { color: var(--brand-on-dark); }
 .rail-step.done .s-name::after { content: " \2713"; color: var(--emph-dark); font-size: 0.8em; }
 
 /* sections */
@@ -117,17 +119,17 @@ section, .sec { scroll-margin-top: 1.5rem; }
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); }
 .label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--brand-muted); }
 
-/* Job 1 stage read + placeholder */
-.stand { display: grid; grid-template-columns: 1.1fr 1fr; gap: var(--gap); align-items: stretch; }
+/* Job 1 stage read + no-CRM note */
+.stand { display: grid; grid-template-columns: 1fr; gap: var(--gap); align-items: stretch; }
+.stand.has-deal { grid-template-columns: 1.1fr 1fr; } /* second column: the CRM opportunity card */
+.stand > * { min-width: 0; }
 .stand .read { display: flex; flex-direction: column; gap: 0.75rem; }
 .conf { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--dc-ink-2); }
 .conf .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--dc-warning); }
 .evi { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; }
 .evi li { display: grid; grid-template-columns: 92px 1fr; gap: 0.6rem; font-size: 0.88rem; align-items: baseline; }
 .evi .w { font-family: var(--font-mono); font-size: 0.72rem; color: var(--brand-muted); text-transform: uppercase; letter-spacing: 0.04em; }
-.placeholder { border: 1.5px dashed var(--dc-border-dark); border-radius: var(--radius); background: repeating-linear-gradient(45deg, transparent, transparent 10px, color-mix(in srgb, var(--brand-muted) 4%, transparent) 10px, color-mix(in srgb, var(--brand-muted) 4%, transparent) 20px); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1.5rem 1.25rem; gap: 0.35rem; }
-.placeholder .ph-title { font-family: var(--font-display); font-weight: 400; font-size: 1.05rem; color: var(--dc-ink-2); }
-.placeholder .ph-sub { font-size: 0.8rem; color: var(--brand-muted); max-width: 32ch; }
+.no-crm { grid-column: 1 / -1; font-size: 0.85rem; color: var(--dc-ink-2); }
 
 /* stage gloss */
 .stage-gloss { border: 1px solid var(--dc-border-soft); border-left: 3px solid var(--emph-dark); border-radius: 0 var(--radius) var(--radius) 0; padding: 0.9rem 1.15rem; margin-bottom: 1rem; }
@@ -265,14 +267,14 @@ footer .src { max-width: 60ch; }
   </div>
   <!-- Same condition as the badge: the workspace's own stages and objectives, or no rail. -->
   <div class="rail" role="list" aria-label="Methodology stages">
-    <div class="rail-step current" role="listitem"><span class="s-name">[Stage 1]</span><span class="s-obj">[Objective]</span></div>
+    <div class="rail-step current" role="listitem" aria-current="step"><span class="s-name">[Stage 1]</span><span class="s-obj">[Objective]</span></div>
     <div class="rail-step" role="listitem"><span class="s-name">[Stage 2]</span><span class="s-obj">[Objective]</span></div>
     <div class="rail-step" role="listitem"><span class="s-name">[Stage 3]</span><span class="s-obj">[Objective]</span></div>
   </div>
 </div></header>
 
 <main class="wrap">
-  <section class="sec" id="stands">   <!-- Job 1: gloss + verdict + stand(read + placeholder) --></section>
+  <section class="sec" id="stands">   <!-- Job 1: gloss + verdict + div.stand(read). With a CRM opportunity: div.stand.has-deal(read + deal card). Without: p.no-crm, one line, and no deal-record card --></section>
   <section class="sec" id="head">     <!-- Job 2: mindset + heard-list --></section>
   <section class="sec" id="say">      <!-- Job 3: goals + vp-list + 3 tt --></section>
   <section class="sec" id="path">     <!-- Job 4: ready + details.path (one per stage ahead) --></section>
