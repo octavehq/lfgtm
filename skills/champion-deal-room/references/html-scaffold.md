@@ -2,7 +2,7 @@
 
 Implements [../../shared/formats/html-document.md](../../shared/formats/html-document.md) (scroll-based reading flow, sticky nav, card-based containers, print flattening) and [../../shared/presentation-principles.md](../../shared/presentation-principles.md) (universal visual rules) for this skill's specific case: a dense, self-contained working document in the meeting-prep battle-plan style: sticky sidebar nav dots, collapsible `details` sections (open by default, forced open on print), and a real card vocabulary. Styled with the workspace company's brand kit (inline `tokens.css` `:root` + the brand's Google Fonts). No external requests beyond Google Fonts. The head carries the social share block (rules in [../../shared/social-meta.md](../../shared/social-meta.md)); `assets/og.png` is the one permitted sibling file.
 
-This is NOT a full-viewport scrolling landing page. It is a max-900px document column with information density. Reproduce this structure and vocabulary.
+This is the document-mode scaffold, used when the rep asks for a working document with fill-in worksheets or for print. The default rendering is story mode ([story-mode.md](../../shared/formats/story-mode.md) with the [visual kit](../../shared/formats/visual-kit.md) and the screen plan in [deal-room-structure.md](deal-room-structure.md)). In document mode this is NOT a full-viewport scrolling landing page. It is a max-900px document column with information density. Reproduce this structure and vocabulary.
 
 ```html
 <!DOCTYPE html>

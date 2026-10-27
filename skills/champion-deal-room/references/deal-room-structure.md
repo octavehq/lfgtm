@@ -6,7 +6,7 @@ Six jobs, one section each, plus a thin masthead and a verdict banner. Each sect
 
 **Density discipline.** Short sentences, one idea per line, fixed card shapes with caps. Numbers, badges, and status dots do the work prose would. No paragraph over 2 sentences. The test for any line: could a champion repeat it in an internal meeting and have it move someone? If it is generic positioning, cut it.
 
-**Layout:** sticky sidebar nav dots (one per section), collapsible `details` sections (open by default, forced open on print). Card vocabulary in [html-scaffold.md](html-scaffold.md).
+**Layout:** story mode by default (the screen plan below, rendered with [story-mode.md](../../shared/formats/story-mode.md) and the [visual kit](../../shared/formats/visual-kit.md)). Document mode on request: sticky sidebar nav dots (one per section), collapsible `details` sections (open by default, forced open on print), card vocabulary in [html-scaffold.md](html-scaffold.md). The six jobs, their caps and the groundedness rules are the same in both.
 
 ---
 
@@ -125,6 +125,22 @@ Grounding: `reference` and `proof_point` entities (see [entity-model.md](../../s
 Set the steps by the deal's setting ([Reading Calls and Deals](../../shared/information-principles.md#reading-calls-and-deals)): sale size, which meetings have happened and the stage today. The steps follow the champion's internal path: what they forward, who they show next, what security and procurement will ask later. After a first enterprise meeting, no step asks the buyer for their data, transcripts or a pilot; a hands-on step waits until a sponsor and an agreement exist. Lead with the lowest-risk move that stage supports. A cheap, reversible first move protects the champion and is the easiest internal yes.
 
 ---
+
+## Screen plan (story mode)
+
+Seven screens, one job each; the masthead becomes the bar and the verdict opens. Every number keeps its basis on the screen that shows it.
+
+| Screen | Job | Idea | Component | Surface |
+|---|---|---|---|---|
+| 1 | Verdict | The state of play in one sentence, prepared for the champion | `.vk-tiles` when the case is a share of a known set, else the lede alone | dark |
+| 2 | Job 2, the number | The one value figure, with its basis and estimate label | `.vk-stat` | light |
+| 3 | Job 1 | The case for change: the problem in their words and the line that travels | `.vk-quote` for the buyer's words, the travelling line as the headline | dark |
+| 4 | Job 2, positioning | What it replaces, today against with | `.vk-split` | light |
+| 5 | Job 3 | Who else to bring in: the seats around the decision | `.vk-orbit` with the seats as nodes; blank names stay blank in the list beside it | dark |
+| 6 | Jobs 4 and 5 | Objections answered and the proof behind the answers | `.vk-quotes` (question, answer, proof anchor) or `.vk-stat-row` for reference outcomes | light |
+| 7 | Job 6 | The path forward: steps, stage, cost of waiting, the first move | `.vk-gantt` or `.vk-stages` with the condition that moves the deal | dark |
+
+Six screens merge 3 into 1 when the case has no quotable buyer words; eight add a second proof screen when there are three reference cards. The compelling event, champion and committee count from the intel strip move into the bar title and screen 1's kicker.
 
 ## Density ledger
 
