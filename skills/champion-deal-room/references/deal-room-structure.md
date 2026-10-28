@@ -59,24 +59,26 @@ Density: ≤6 numbers total, each with a one-line basis.
 
 ## Job 3 — Who else to bring in  (DATA-GATED)
 
-**Section id:** `committee`. The seats beyond the champion that must weigh in, and how to frame it for each. **The document is addressed to the champion, so the champion is never a card here.** Map everyone else. **Two tiers, visibly separate. Do not blur them.**
+**Section id:** `committee`. The people beyond the champion who must weigh in, and how to frame it for each. **The document is addressed to the champion, so the champion is never a card here.** Map everyone else. **Two tiers, visibly separate. Do not blur them.**
 
 **Tier 1 — Confirmed (from your deal), other than the champion.** People who appear in real deal signals: a call participant, a CRM opp contact, an email thread. Only these are named as being on the deal. Omit this tier (and its label) if there are none, which is common early.
 
 | Element | Content |
 |---|---|
-| Role badge + name | Seat + real name/title, from the deal signal |
+| Role badge + name | Role + real name/title, from the deal signal |
 | Position | Not on the page. The committee reads this room, so a stance tag (supporter, neutral, skeptic) beside a name goes in the rep's delivery message only ([rule 22](../../shared/information-principles.md#reading-calls-and-deals)) |
 | What they need | The framing for this person, from their Motion ICP cell |
 
-**Tier 2, roles to loop in.** The seats that decide a deal like this, from the ICP / personas (`persona` entity type, see [entity-model.md](../../shared/entity-model.md)). Shown as roles, **name left blank for the champion to fill.**
+**Tier 2, roles to loop in.** The roles that decide a deal like this, from the ICP / personas (`persona` entity type, see [entity-model.md](../../shared/entity-model.md)). Shown as roles, **name left blank for the champion to fill.**
 
 | Element | Content |
 |---|---|
-| Role badge | The seat, whichever the ICP says decides a deal like this (e.g. finance, IT, security, procurement, legal, ops) |
+| Role badge | The role, whichever the ICP says decides a deal like this (e.g. finance, IT, security, procurement, legal, ops) |
 | What they'll care about | Their dominant concern, in their language |
-| The line that lands | The framing for that seat, from its Motion ICP cell, backed by Job 2 |
-| Suggested contact | OPTIONAL: a `find_person` result listed in the delivery message to the rep, marked "you confirm". It stays off the page, where the seat keeps its blank name. |
+| The line that lands | The framing for that role, from its Motion ICP cell, backed by Job 2 |
+| Suggested contact | OPTIONAL: a `find_person` result listed in the delivery message to the rep, marked "you confirm". It stays off the page, where the role keeps its blank name. |
+
+Split the roles by the deal's stage: people to engage now, then the roles needed later with the step they join, so the champion doesn't chase procurement or legal early ([information principles](../../shared/information-principles.md#reading-calls-and-deals) rule 23). Read the deal's place in the lifecycle first (rule 24): a renewal during onboarding is an adoption story with no approver to find yet.
 
 Cap: any confirmed stakeholders other than the champion (often none early) + up to 4 roles to loop in.
 
@@ -136,7 +138,7 @@ Seven screens, one job each; the masthead becomes the bar and the verdict opens.
 | 2 | Job 2, the number | The one value figure, with its basis and estimate label | `.vk-stat` | light |
 | 3 | Job 1 | The case for change: the problem in their words and the line that travels | `.vk-quote` for the buyer's words, the travelling line as the headline | dark |
 | 4 | Job 2, positioning | What it replaces, today against with | `.vk-split` | light |
-| 5 | Job 3 | Who else to bring in: the seats around the decision | `.vk-orbit` with the seats as nodes; blank names stay blank in the list beside it | dark |
+| 5 | Job 3 | Who else to bring in: the people around the decision | `.vk-orbit` with the people and roles as nodes; blank names stay blank in the list beside it | dark |
 | 6 | Jobs 4 and 5 | Objections answered and the proof behind the answers | `.vk-quotes` (question, answer, proof anchor) or `.vk-stat-row` for reference outcomes | light |
 | 7 | Job 6 | The path forward: steps, where the decision stands, cost of waiting, the first move | `.vk-gantt` or `.vk-stages` with the buyer's own decision steps (never CRM stage names) and the condition that moves to the next one | dark |
 
@@ -170,7 +172,7 @@ The budget is five to eight screens. Six screens merge 3 into 1 when the case ha
 - [ ] A concern that praises the offering's reach is framed in Job 2 as scope, and becomes a Job 4 objection only when it carries a condition that could stop the purchase.
 - [ ] No section reads as generic positioning. Each carries a fact a champion could repeat to move someone.
 - [ ] Fill-in slots (blank names, missing inputs, the specific ask) are visible and honest, not faked.
-- [ ] Each proof card answers the metric the buyer asked about, or says it measures something adjacent ([information principles](../../shared/information-principles.md#claims-against-the-data) rule 27).
+- [ ] Each proof card answers the metric the buyer asked about, or says it measures something adjacent ([information principles](../../shared/information-principles.md#claims-against-the-data) rule 30).
 
 ## Value and completion
 

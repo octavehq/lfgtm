@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "skills": {
     "abm": {
-      "version": "1.2.0",
+      "version": "1.3.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -11,6 +11,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.0",
+          "date": "2026-10-27",
+          "notes": "Account plans count only the roles due at the account's stage as missing, list later roles as needed later, and describe the committee as people instead of seats.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-26",
@@ -50,7 +56,7 @@
       ]
     },
     "ads": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -59,6 +65,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-27",
+          "notes": "Shared guidance: committees say who is missing in plain words and count only the roles due at the deal's stage, renewals during onboarding read as adoption, next actions lead with what to do, and headlines keep a readable width.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-26",
@@ -98,7 +110,7 @@
       ]
     },
     "ads-resonance": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -107,6 +119,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-27",
+          "notes": "Shared guidance: committees say who is missing in plain words and count only the roles due at the deal's stage, renewals during onboarding read as adoption, next actions lead with what to do, and headlines keep a readable width.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-26",
@@ -140,7 +158,7 @@
       ]
     },
     "asset-manager": {
-      "version": "1.3.1",
+      "version": "1.4.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -150,9 +168,15 @@
       "requiredTools": [],
       "changelog": [
         {
-          "version": "1.3.1",
-          "date": "2026-10-27",
+          "version": "1.4.1",
+          "date": "2026-10-28",
           "notes": "A 401 or 403 from the asset service now prints the service's reason (the token expired, was replaced, rotated or revoked, or belongs to a different workspace) instead of only the status code. Other failures still omit the response body.",
+          "review": false
+        },
+        {
+          "version": "1.4.0",
+          "date": "2026-10-27",
+          "notes": "Shared guidance: committees say who is missing in plain words and count only the roles due at the deal's stage, renewals during onboarding read as adoption, next actions lead with what to do, and headlines keep a readable width.",
           "review": false
         },
         {
@@ -200,7 +224,7 @@
       ]
     },
     "audit": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -209,6 +233,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-27",
+          "notes": "Shared guidance: committees say who is missing in plain words and count only the roles due at the deal's stage, renewals during onboarding read as adoption, next actions lead with what to do, and headlines keep a readable width.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-26",
@@ -242,7 +272,7 @@
       ]
     },
     "battlecard-doc": {
-      "version": "1.2.0",
+      "version": "1.3.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -251,6 +281,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.0",
+          "date": "2026-10-27",
+          "notes": "Shared guidance: committees say who is missing in plain words and count only the roles due at the deal's stage, renewals during onboarding read as adoption, next actions lead with what to do, and headlines keep a readable width.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-26",
@@ -290,7 +326,7 @@
       ]
     },
     "call-analyzer": {
-      "version": "1.2.0",
+      "version": "1.3.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -299,6 +335,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.0",
+          "date": "2026-10-27",
+          "notes": "Call analyses count only the committee roles due at the call's stage as missing and lead each recommended action with what to do, then why now, then the evidence.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-26",
@@ -338,7 +380,7 @@
       ]
     },
     "champion-deal-room": {
-      "version": "1.2.0",
+      "version": "1.3.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -347,6 +389,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.0",
+          "date": "2026-10-27",
+          "notes": "Deal rooms split the committee into people to engage now and roles needed later, read a renewal during onboarding as adoption, and never call a committee member a seat.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-26",
@@ -386,7 +434,7 @@
       ]
     },
     "deal-coach": {
-      "version": "1.2.0",
+      "version": "1.3.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -395,6 +443,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.0",
+          "date": "2026-10-27",
+          "notes": "Coaching plans count only the committee roles due at the deal's stage as missing and open each goal with what to do, then why now, then the evidence.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-26",
@@ -434,7 +488,7 @@
       ]
     },
     "deck": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -443,6 +497,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-27",
+          "notes": "Shared guidance: committees say who is missing in plain words and count only the roles due at the deal's stage, renewals during onboarding read as adoption, next actions lead with what to do, and headlines keep a readable width.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-26",
@@ -476,7 +536,7 @@
       ]
     },
     "digest": {
-      "version": "1.2.0",
+      "version": "1.3.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -485,6 +545,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.0",
+          "date": "2026-10-27",
+          "notes": "Shared guidance: committees say who is missing in plain words and count only the roles due at the deal's stage, renewals during onboarding read as adoption, next actions lead with what to do, and headlines keep a readable width.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-26",
@@ -530,7 +596,7 @@
       ]
     },
     "generate": {
-      "version": "1.2.0",
+      "version": "1.3.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -539,6 +605,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.0",
+          "date": "2026-10-27",
+          "notes": "Shared guidance: committees say who is missing in plain words and count only the roles due at the deal's stage, renewals during onboarding read as adoption, next actions lead with what to do, and headlines keep a readable width.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-26",
@@ -578,7 +650,7 @@
       ]
     },
     "get-brand-components": {
-      "version": "1.4.0",
+      "version": "1.5.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -587,6 +659,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.5.0",
+          "date": "2026-10-27",
+          "notes": "Shared guidance: committees say who is missing in plain words and count only the roles due at the deal's stage, renewals during onboarding read as adoption, next actions lead with what to do, and headlines keep a readable width.",
+          "review": false
+        },
         {
           "version": "1.4.0",
           "date": "2026-10-26",
@@ -638,7 +716,7 @@
       ]
     },
     "icp-refine": {
-      "version": "1.2.0",
+      "version": "1.3.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -647,6 +725,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.0",
+          "date": "2026-10-27",
+          "notes": "Shared guidance: committees say who is missing in plain words and count only the roles due at the deal's stage, renewals during onboarding read as adoption, next actions lead with what to do, and headlines keep a readable width.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-26",
@@ -686,7 +770,7 @@
       ]
     },
     "insights": {
-      "version": "1.2.0",
+      "version": "1.3.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -695,6 +779,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.0",
+          "date": "2026-10-27",
+          "notes": "Shared guidance: committees say who is missing in plain words and count only the roles due at the deal's stage, renewals during onboarding read as adoption, next actions lead with what to do, and headlines keep a readable width.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-26",
@@ -734,7 +824,7 @@
       ]
     },
     "library": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -745,6 +835,12 @@
         "get_entity_schema"
       ],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-27",
+          "notes": "Shared guidance: committees say who is missing in plain words and count only the roles due at the deal's stage, renewals during onboarding read as adoption, next actions lead with what to do, and headlines keep a readable width.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-26",
@@ -784,7 +880,7 @@
       ]
     },
     "meeting-prep": {
-      "version": "1.2.0",
+      "version": "1.3.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -793,6 +889,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.0",
+          "date": "2026-10-27",
+          "notes": "Next best actions open with the move and its outcome, then why now and the evidence on separate lines, and a missing person counts only when the role is due at this stage.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-26",
@@ -832,7 +934,7 @@
       ]
     },
     "microsite": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -841,6 +943,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-27",
+          "notes": "Shared guidance: committees say who is missing in plain words and count only the roles due at the deal's stage, renewals during onboarding read as adoption, next actions lead with what to do, and headlines keep a readable width.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-26",
@@ -874,7 +982,7 @@
       ]
     },
     "one-pager": {
-      "version": "1.2.0",
+      "version": "1.3.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -883,6 +991,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.0",
+          "date": "2026-10-27",
+          "notes": "Shared guidance: committees say who is missing in plain words and count only the roles due at the deal's stage, renewals during onboarding read as adoption, next actions lead with what to do, and headlines keep a readable width.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-26",
@@ -922,7 +1036,7 @@
       ]
     },
     "pipeline": {
-      "version": "1.2.0",
+      "version": "1.3.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -931,6 +1045,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.0",
+          "date": "2026-10-27",
+          "notes": "Deal plans count only the roles due at the deal's stage as missing, read a renewal during onboarding as adoption, and lead each next action with what to do, then why now, then the evidence.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-26",
@@ -970,7 +1090,7 @@
       ]
     },
     "positioning": {
-      "version": "1.2.0",
+      "version": "1.3.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -979,6 +1099,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.0",
+          "date": "2026-10-27",
+          "notes": "Shared guidance: committees say who is missing in plain words and count only the roles due at the deal's stage, renewals during onboarding read as adoption, next actions lead with what to do, and headlines keep a readable width.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-26",
@@ -1018,7 +1144,7 @@
       ]
     },
     "product-launch": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1027,6 +1153,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-27",
+          "notes": "Shared guidance: committees say who is missing in plain words and count only the roles due at the deal's stage, renewals during onboarding read as adoption, next actions lead with what to do, and headlines keep a readable width.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-26",
@@ -1060,7 +1192,7 @@
       ]
     },
     "proposal": {
-      "version": "1.2.0",
+      "version": "1.3.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1069,6 +1201,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.0",
+          "date": "2026-10-27",
+          "notes": "Shared guidance: committees say who is missing in plain words and count only the roles due at the deal's stage, renewals during onboarding read as adoption, next actions lead with what to do, and headlines keep a readable width.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-26",
@@ -1108,7 +1246,7 @@
       ]
     },
     "prospector": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1117,6 +1255,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-27",
+          "notes": "Shared guidance: committees say who is missing in plain words and count only the roles due at the deal's stage, renewals during onboarding read as adoption, next actions lead with what to do, and headlines keep a readable width.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-26",
@@ -1150,7 +1294,7 @@
       ]
     },
     "public-changelog": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1159,6 +1303,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-27",
+          "notes": "Shared guidance: committees say who is missing in plain words and count only the roles due at the deal's stage, renewals during onboarding read as adoption, next actions lead with what to do, and headlines keep a readable width.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-26",
@@ -1180,7 +1330,7 @@
       ]
     },
     "qual-doctor": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1189,6 +1339,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-27",
+          "notes": "Shared guidance: committees say who is missing in plain words and count only the roles due at the deal's stage, renewals during onboarding read as adoption, next actions lead with what to do, and headlines keep a readable width.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-26",
@@ -1222,7 +1378,7 @@
       ]
     },
     "research": {
-      "version": "1.2.0",
+      "version": "1.3.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1231,6 +1387,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.0",
+          "date": "2026-10-27",
+          "notes": "Briefs that map the buying committee count only the roles due at this stage as missing and list later roles as needed later.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-26",
@@ -1270,7 +1432,7 @@
       ]
     },
     "signals": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1279,6 +1441,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-27",
+          "notes": "Signals no longer flag a committee role that joins later, a renewal still in onboarding or a closed-won deal as missing people.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-26",
@@ -1312,7 +1480,7 @@
       ]
     },
     "train": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1321,6 +1489,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-10-27",
+          "notes": "Shared guidance: committees say who is missing in plain words and count only the roles due at the deal's stage, renewals during onboarding read as adoption, next actions lead with what to do, and headlines keep a readable width.",
+          "review": false
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-26",
@@ -1354,7 +1528,7 @@
       ]
     },
     "win-loss-report": {
-      "version": "1.2.0",
+      "version": "1.3.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1363,6 +1537,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.0",
+          "date": "2026-10-27",
+          "notes": "Win/loss reports list who took part in won deals and name who was never engaged in lost deals, with the search behind it.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-26",

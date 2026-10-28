@@ -409,7 +409,7 @@ Build Octave-powered HTML presentations with brand styling:
 ### /octave:champion-deal-room
 Internal deal room a rep hands a champion so they can run the buying-committee sell:
 - Quantified business case built from real deal data
-- Stakeholder map with per-seat talking points
+- Committee map (people to engage now and later) with talking points for each
 - Objection handling and a concrete path to yes
 - Self-contained HTML — shareable inside the account
 

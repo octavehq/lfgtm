@@ -57,6 +57,8 @@ Universal language, presentation, and writing quality rules for all Octave-gener
 
 14. **Mark speculation as speculation, everywhere.** Never state inference as fact. Write "Unknown, potential: Datadog," not "Likely: Datadog" or "Competition: Datadog," unless intel confirms it. This applies to every field that gets filled from inference, not just competitors: stakeholders, pains, budget, timeline. If it wasn't confirmed, the label has to say so.
 
+14b. **Say buying committee the way people do.** Never call a committee member a "seat". Write "Acme's buying committee is missing 2 people", "people to engage now", "needed later" and "approvers". The rule covers headings, labels, counts and placeholders wherever a committee appears. A license or pricing seat ("per-seat price") is a different word and stays.
+
 ## AI-ism Kill List
 
 These patterns make content feel machine-generated instead of analyst-written.
@@ -230,6 +232,10 @@ Self-contained editorial audit. Run every check against the generated file. Fix 
   - Meta-references: "Octave internals"
   - Tool/system leakage: function or tool names (e.g. `enrich_company`, `list_events`), version numbers, stream identifiers, tool inventories ("Sources: Octave enrichment")
 - Detection: search text content for each term. These must be reframed as market intelligence language ("conversations reveal," "prospects report," "the pattern shows").
+
+**1f. Committee language**
+- [ ] Zero uses of "seat" or "seats" for a person on a buying committee (rule 14b)
+- Detection: case-insensitive search for `seat` in reader-facing text. Rewrite as people: "missing 2 people", "people to engage now", "needed later", "approvers". License and pricing seats stay.
 
 ### Pass 2: Structure Scan (read every sentence pair)
 
