@@ -24,6 +24,8 @@ Before scoring, write down the setting and apply the
 rules (16 to 21): size of the sale, which meeting it was, stage on that date,
 earlier calls, who was in the room and what was shown. Every score, risk and
 next step is judged against what a meeting in that setting can achieve.
+The buyer committee counts as missing only the roles due at this stage, with
+later roles listed as needed later (rules 23 and 24).
 
 First mark each dimension applicable or N/A for this stage/objective and
 source completeness. For scored dimensions, cite evidence, counterevidence,

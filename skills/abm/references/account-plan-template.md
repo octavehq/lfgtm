@@ -48,7 +48,7 @@ Not a signals dump. What pains probably drive this account and what to dig into.
 ### 4. Buying committee (job: who to engage) — GROUNDEDNESS-CRITICAL
 - For each relevant **persona type** (from the library), call `find_person` and surface **1-2 strong-match real people** — strong match only, real only.
 - **Stakeholder cards** (`grid-2`, meeting-prep pattern): avatar initials, name, title, `role-badge` (champion / budget-owner / evaluator / gatekeeper), one-line disposition (who they are, why they matter), real LinkedIn link if returned. `.unconfirmed` tag on anyone not tool-confirmed.
-- **Coverage-gap line:** which buying roles are still unfilled. Identification is fine here; the "what to do about it" lives in the engagement plan.
+- **Coverage-gap line:** which roles should be engaged now and are not ("Acme's buying committee is missing 2 people"), then the roles needed later with the stage they join ([information principles](../../shared/information-principles.md#reading-calls-and-deals) rule 23). Identification is fine here; the "what to do about it" lives in the engagement plan.
 - Default primary view: up to five people; full mode honors the requested scope with additional supported people in an appendix or an honest shortfall.
 
 ### 5. How to position per persona (job: what to say so it lands) — the Octave-native centerpiece

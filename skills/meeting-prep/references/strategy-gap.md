@@ -20,7 +20,7 @@ Walk these. A gap fires only when you can point to the result that shows it.
 
 - **Unanswered signal.** The buyer voiced a concern, pain or question the strategy has an answer for, and nothing shows it was answered after they said it.
 - **Stage mismatch.** The CRM stage runs ahead of what the buyer has confirmed (the riskier case) or behind it.
-- **Missing person.** The strategy expects a persona at this stage (decision maker, user, technical gate) and nobody matching is on the deal. Real candidates come from the deal's stakeholders and CRM contacts first, `find_person` (an external people search, so the company link is unverified) for outside candidates, or from names the buyer mentioned; never invent a name.
+- **Missing person.** The strategy expects a persona at this stage (decision maker, user, technical gate) and nobody matching is on the deal. Only roles due at this stage, size and motion count; a role that joins later is listed as needed later, and a renewal during onboarding or a closed-won deal has no missing people ([information principles](../../shared/information-principles.md#reading-calls-and-deals) rules 23 and 24). Say it as people: "Acme's buying committee is missing 2 people". Real candidates come from the deal's stakeholders and CRM contacts first, `find_person` (an external people search, so the company link is unverified) for outside candidates, or from names the buyer mentioned; never invent a name.
 - **Competitor exposed.** A competitor or alternative is live and the competitive answer has not run.
 - **Proof gap.** The buyer doubted a claim we can prove and the proof was not shown after the doubt.
 - **Lookalike divergence.** The deals like this one that moved did something this deal has not (a comparison, a person added, a document sent), or the ones that stalled shared a pattern this deal shows. Counts are real counts.
@@ -32,7 +32,7 @@ Score each gap 1 to 3 for impact on the buyer's next decision, confidence in the
 
 ## 6. Anatomy of a move: all four parts, every time
 
-1. **The move.** An imperative, doable today. Names a person only if verified.
+1. **The move.** A verb and the outcome it should get, doable today. Names a person only if verified. The move, why now and the strategy source each get their own line, in that order, so the rep can act from the first line ([information principles](../../shared/information-principles.md#reading-calls-and-deals) rule 25).
 2. **Why now.** The evidence: a dated quote, a stage fact, or a lookalike count with its base. Label lookalike-based reasons "likely".
 3. **Strategy source.** What the seller's strategy says, in plain words ("our answer for marketing operations leads at discovery is to ..."), with the record linked when links are available.
 4. **Follow-through.** The thing the rep can use now: a drafted email (full text, ready to send, built only from verified facts), a named person to add and how to reach them, a document to send and which one, a battlecard to open. If the follow-through is a draft, write it in full, in the rep's voice, using only verified facts; a fact the rep must confirm before sending (a date, a promised sample, a number) is a bracketed placeholder naming what to confirm. Never promise a capability, price or result the library does not support.

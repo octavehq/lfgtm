@@ -70,6 +70,10 @@ Calibrate every risk to the opportunity's setting, per
 [Reading Calls and Deals](../../shared/information-principles.md#reading-calls-and-deals)
 rules 16 to 21: a missing dated next step after a first enterprise meeting
 raises no signal, and personal facts never appear in a signal or action.
+A missing person is a signal only when rule 23 says the role is due at this
+stage, size and motion; later roles are listed as needed later. A renewal
+created at the win and still in onboarding raises no renewal risk or missing
+approver, and a closed-won deal shows no missing people (rule 24).
 
 Rank by decision consequence, deadline, affected opportunity value/scope,
 evidence quality, and whether a useful action exists. A meeting today or a

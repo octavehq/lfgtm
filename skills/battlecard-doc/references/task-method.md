@@ -50,5 +50,5 @@ closed-deal counts, cohort, and limitations; do not infer from anecdotes.
 Read win rates for an alternative or objection from `get_entity_outcome_stats` (with and
 without the entity) before saying anything about them, and show the baseline beside the
 rate: a rate above the baseline means deals with this alternative win more often, not that
-it is hard to beat ([rules 23 and 25](../../shared/information-principles.md#claims-against-the-data)).
+it is hard to beat ([rules 26 and 28](../../shared/information-principles.md#claims-against-the-data)).
 "No closed deals" needs that read plus a deal search, not one empty event query.

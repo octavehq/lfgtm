@@ -15,10 +15,10 @@ CURRENT COVERAGE
 Known Stakeholders:
 • [Name, Title] — [Role: Champion/Evaluator/etc.] — [Status]
 
-Missing Roles:
-⚠ [Economic buyer not identified]
+Buying committee: missing [N] people to engage now
+⚠ [Approver not identified]
 ⚠ [Technical evaluator not engaged]
-⚠ [End users not involved]
+Needed later: [Role] at [stage it joins]
 
 ---
 

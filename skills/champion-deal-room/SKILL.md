@@ -1,6 +1,6 @@
 ---
 name: champion-deal-room
-description: A buyer-facing deal room a rep hands to a champion so they can run the buying-committee sell without you in the room. Quantified business case, stakeholder map with per-seat ammo, objection handling, and a path to yes, rendered as self-contained HTML. Use when user says "champion deal room", "arm my champion", "help my champion sell internally", "internal business case for [deal]", or wants a champion enablement doc. For a customer-facing top-of-funnel page use /octave:microsite; for the formal closing proposal use /octave:proposal.
+description: A buyer-facing deal room a rep hands to a champion so they can run the buying-committee sell without you in the room. Quantified business case, a map of the people to engage now and later with what each needs to hear, objection handling, and a path to yes, rendered as self-contained HTML. Use when user says "champion deal room", "arm my champion", "help my champion sell internally", "internal business case for [deal]", or wants a champion enablement doc. For a customer-facing top-of-funnel page use /octave:microsite; for the formal closing proposal use /octave:proposal.
 ---
 
 # /octave:champion-deal-room - Champion Deal Room
