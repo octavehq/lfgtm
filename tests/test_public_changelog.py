@@ -22,8 +22,18 @@ def paragraph(name):
             'playbook, and drafts the follow-up against it. Reps stop starting from a blank page.')
 
 
-def entry(entry_id, date, title, **extra):
+def legacy(entry_id, date, title, **extra):
+    """A paragraph entry, the shape everything published before fielded entries has."""
     return {'id': entry_id, 'date': date, 'title': title, 'body': paragraph(title), 'availability': 'ga', **extra}
+
+
+def entry(entry_id, date, title, **extra):
+    """A fielded entry, the shape every new entry takes."""
+    return {'id': entry_id, 'date': date, 'title': title, 'novelty': 'net-new', 'availability': 'ga',
+            'description': f'{title} plans the next step of a deal from what the buyer said on the last call. '
+                           'It reads the call, matches the stated pain to a playbook and drafts the follow-up.',
+            'useCase': f'An AE closing a {title} call gets the follow-up drafted before the next meeting.',
+            'problem': f'Reps rebuilt the account story by hand after every {title} call.', **extra}
 
 
 def state(*entries):
@@ -64,8 +74,8 @@ class PublicChangelogTest(unittest.TestCase):
         self.assertEqual(cl.render_lines(s)[:4], ['# Acme Changelog', PAGE['dek'], '## August 2026', '### 2026-08-20 — Deal Plans'])
 
     def test_bootstrap_reproduces_a_page_byte_for_byte(self):
-        s = state(entry('a', '2026-08-20', 'Deal Plans & <Notes>'), entry('b', '2026-08-20', 'Call Notes'),
-                  entry('c', '2026-07-02', 'Win Rooms'))
+        s = state(legacy('a', '2026-08-20', 'Deal Plans & <Notes>'), legacy('b', '2026-08-20', 'Call Notes'),
+                  legacy('c', '2026-07-02', 'Win Rooms'))
         html = cl.render_html(s, cl.build_style())
         rebuilt = cl.state_from_page(html)
         self.assertEqual([e['title'] for e in rebuilt['entries']], ['Deal Plans & <Notes>', 'Call Notes', 'Win Rooms'])
@@ -76,20 +86,22 @@ class PublicChangelogTest(unittest.TestCase):
             cl.state_from_page('<h1>Changelog</h1><p>dek</p><p>stray paragraph</p><p>more</p><footer><div>f</div></footer>')
 
     def test_add_keeps_every_live_line_and_carries_the_style_over(self):
-        s = state(entry('a', '2026-08-20', 'Deal Plans'))
+        s = state(legacy('a', '2026-08-20', 'Deal Plans'))
         live = cl.render_html(s, 'body{color:red}')
         code, output = self.add(s, [entry('n', '2026-09-20', 'Pipeline Watch')], html=live)
         self.assertEqual(code, 0, output)
         html = (self.dir/'bundle/index.html').read_text()
-        self.assertIn('<style>body{color:red}</style>', html)
+        # The live stylesheet is kept, and only gains the fielded-entry rules.
+        self.assertIn('<style>body{color:red}\n/* cl-fields */', html)
         self.assertTrue(set(cl.page_lines(live)) <= set(cl.page_lines(html)))
         written = json.loads((self.dir/'bundle/changelog.json').read_text())
-        self.assertEqual(written['entries'][0], {'id': 'n', 'date': '2026-09-20', 'title': 'Pipeline Watch',
-                                                 'body': paragraph('Pipeline Watch'), 'publishedAt': '2026-09-23'})
+        expected = {k: v for k, v in entry('n', '2026-09-20', 'Pipeline Watch').items() if k != 'availability'}
+        self.assertEqual(written['entries'][0], {**expected, 'publishedAt': '2026-09-23'})
+        self.assertEqual(written['schemaVersion'], 2)
         self.assertEqual(json.loads((self.dir/'bundle.manifest.json').read_text()), ['index.html', 'changelog.json'])
 
     def test_a_live_line_that_would_change_refuses_the_publish(self):
-        s = state(entry('a', '2026-08-20', 'Deal Plans'))
+        s = state(legacy('a', '2026-08-20', 'Deal Plans'))
         live = cl.render_html(s, cl.build_style())
         s['entries'][0]['body'] = paragraph('Deal Plans').replace('blank page', 'empty page')
         code, output = self.add(s, [entry('n', '2026-09-20', 'Pipeline Watch')], html=live)
@@ -98,24 +110,28 @@ class PublicChangelogTest(unittest.TestCase):
         self.assertFalse((self.dir/'bundle').exists())
 
     def test_rewording_a_live_entry_is_refused_and_an_identical_one_is_skipped(self):
-        s = state(entry('a', '2026-08-20', 'Deal Plans'))
-        live = cl.render_html(s, cl.build_style())
-        reworded = entry('a', '2026-08-20', 'Deal Plans')
-        reworded['body'] = reworded['body'].replace('rep', 'seller')
-        code, output = self.add(s, [reworded], html=live)
-        self.assertEqual(code, 1)
-        self.assertIn('already live with different text', output)
-        code, output = self.add(s, [entry('a', '2026-08-20', 'Deal Plans')], html=live)
-        self.assertEqual(code, 0)
-        self.assertIn('Nothing new to publish', output)
+        for make, field in [(legacy, 'body'), (entry, 'problem')]:
+            with self.subTest(shape=make.__name__):
+                s = state(make('a', '2026-08-20', 'Deal Plans'))
+                live = cl.render_html(s, cl.build_style())
+                reworded = make('a', '2026-08-20', 'Deal Plans')
+                reworded[field] = reworded[field].replace('by hand', 'manually').replace('rep', 'seller')
+                code, output = self.add(s, [reworded], html=live)
+                self.assertEqual(code, 1)
+                self.assertIn('already live with different text', output)
+                code, output = self.add(s, [make('a', '2026-08-20', 'Deal Plans')], html=live)
+                self.assertEqual(code, 0)
+                self.assertIn('Nothing new to publish', output)
 
-    def test_only_generally_available_single_paragraph_entries_enter(self):
+    def test_only_generally_available_complete_fielded_entries_enter(self):
         s = state()
         cases = [
             (entry('n', '2026-09-20', 'Gated', availability='beta'), 'generally available'),
-            ({**entry('n', '2026-09-20', 'Short'), 'body': 'Too short.'}, 'character paragraph'),
-            ({**entry('n', '2026-09-20', 'Split'), 'body': paragraph('Split') + '\nSecond line.'}, 'line break'),
-            ({**entry('n', '2026-09-20', 'Bullet'), 'body': '- ' + paragraph('Bullet')}, 'markdown character'),
+            (legacy('n', '2026-09-20', 'Paragraph'), 'is a single paragraph'),
+            ({**entry('n', '2026-09-20', 'Empty'), 'useCase': ''}, 'has no useCase'),
+            ({**entry('n', '2026-09-20', 'Split'), 'description': 'One line.\nSecond line.'}, 'line break'),
+            ({**entry('n', '2026-09-20', 'Bullet'), 'problem': '- a bullet'}, 'markdown character'),
+            ({**entry('n', '2026-09-20', 'Unsure'), 'novelty': 'major'}, 'has no novelty'),
             (entry('n', '2026-02-30', 'Bad date'), 'valid date'),
         ]
         for raw, message in cases:
@@ -128,6 +144,26 @@ class PublicChangelogTest(unittest.TestCase):
         code, output = self.add(state(), [entry('ok', '2026-09-20', 'Fine'), entry('bad', '2026-09-20', 'Gated', availability='gated')])
         self.assertEqual(code, 1)
         self.assertFalse((self.dir/'bundle').exists())
+
+    def test_a_fielded_entry_reads_as_labeled_lines_and_its_badge_is_not_text(self):
+        s = state(entry('a', '2026-08-20', 'Deal Plans'), legacy('b', '2026-07-02', 'Call Notes'))
+        html = cl.render_html(s, cl.build_style())
+        lines = cl.page_lines(html)
+        self.assertEqual(lines, cl.render_lines(s))
+        self.assertEqual(lines[3:7], ['### 2026-08-20 — Deal Plans', entry('a', '', 'Deal Plans')['description'],
+                                      'Use case: ' + entry('a', '', 'Deal Plans')['useCase'],
+                                      'Problem it solves: ' + entry('a', '', 'Deal Plans')['problem']])
+        # The badge is drawn by the stylesheet, so two "New" entries never repeat a line.
+        self.assertIn('data-novelty="net-new"', html)
+        self.assertIn('content: "New"', html)
+        self.assertNotIn('New', [line.strip() for line in lines])
+
+    def test_a_version_1_state_is_read_and_written_back_as_version_2(self):
+        s = state(legacy('a', '2026-08-20', 'Deal Plans'))
+        self.assertEqual(s['schemaVersion'], 1)
+        code, output = self.add(s, [entry('n', '2026-09-20', 'Pipeline Watch')], html=cl.render_html(s, cl.build_style()))
+        self.assertEqual(code, 0, output)
+        self.assertEqual(json.loads((self.dir/'bundle/changelog.json').read_text())['schemaVersion'], 2)
 
     def test_a_duplicate_line_is_refused(self):
         twin = entry('twin', '2026-09-20', 'Deal Plans')

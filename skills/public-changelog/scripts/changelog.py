@@ -16,6 +16,10 @@ byte-identical. The live page is the lock.
                          [--published-at YYYY-MM-DD]
   changelog.py lines     --html index.html [--expect-state changelog.json]
 
+A new entry is fielded (description, use case, problem, novelty); entries
+published as one paragraph before that keep their shape, because converting
+one would change its live lines.
+
 `add` writes DIR/index.html and DIR/changelog.json (the whole bundle) plus
 DIR.manifest.json beside DIR for the public upload. It writes nothing when a
 check fails. Exit 0 = ok, 1 = refused or invalid input.
@@ -29,10 +33,19 @@ from datetime import date as Date, datetime, timezone
 from html.parser import HTMLParser
 from pathlib import Path
 
-SCHEMA_VERSION = 1
-BODY_MIN_CHARS = 200
-BODY_MAX_CHARS = 900
+# Version 2 added the fielded entry; a version 1 state holds only paragraph
+# entries and is read as-is, then written back as version 2.
+SCHEMA_VERSION = 2
+READABLE_SCHEMA_VERSIONS = {1, 2}
 TITLE_MAX_CHARS = 120
+
+# A new entry is fielded: a description, then one labeled line per field. Each
+# label is part of the line the crawl reads, so the wording is permanent.
+FIELD_LABELS = [('useCase', 'Use case:'), ('problem', 'Problem it solves:')]
+TEXT_FIELDS = ['description'] + [key for key, _ in FIELD_LABELS]
+# Shown as a badge drawn by the stylesheet, never as page text: "New" on every
+# other entry would be a repeated line, which the crawl swallows.
+NOVELTY_BADGES = {'net-new': 'New', 'improvement': 'Improvement'}
 # Mirrors the ingestion's delta floor and cap. Additions under the floor are
 # recorded as a sync and fire no extraction, so they reach readers and never
 # reach the library; over the cap the delta is truncated mid-line.
@@ -83,8 +96,8 @@ def load_state(path):
         state = json.loads(Path(path).read_text(encoding='utf-8'))
     except (OSError, ValueError) as error:
         raise Refused(f'Could not read the changelog state at {path}: {error}')
-    if not isinstance(state, dict) or state.get('schemaVersion') != SCHEMA_VERSION:
-        raise Refused(f'{path} is not a schemaVersion {SCHEMA_VERSION} changelog state.')
+    if not isinstance(state, dict) or state.get('schemaVersion') not in READABLE_SCHEMA_VERSIONS:
+        raise Refused(f'{path} is not a changelog state this skill can read (schemaVersion 1 or 2).')
     page = state.get('page')
     if not isinstance(page, dict) or not all(isinstance(page.get(k), str) and page[k].strip() for k in ('title', 'dek', 'footer')):
         raise Refused(f'{path} has no page title, dek and footer.')
@@ -118,6 +131,26 @@ def month_heading(date):
     return f'{MONTH_NAMES[int(month) - 1]} {year}'
 
 
+def is_fielded(entry):
+    """Paragraph entries (everything published before the fielded shape) carry
+    `body`; fielded ones carry `description`. Live paragraph entries are never
+    converted: their lines are the lock."""
+    return 'description' in entry
+
+
+def entry_lines(entry):
+    """The crawl lines one entry yields, after its heading.
+
+      {'body': 'Motion Playbooks let…'}                      -> ['Motion Playbooks let…']
+      {'description': 'X does Y.', 'useCase': 'A rep…',
+       'problem': 'Reps had to…'}                            -> ['X does Y.', 'Use case: A rep…',
+                                                                 'Problem it solves: Reps had to…']
+    """
+    if not is_fielded(entry):
+        return [entry['body']]
+    return [entry['description']] + [f'{label} {entry[key]}' for key, label in FIELD_LABELS]
+
+
 def sorted_entries(state):
     """Newest date first. Python's sort is stable, so entries sharing a date keep
     their stored order and never swap places between renders."""
@@ -134,7 +167,7 @@ def render_lines(state):
         if heading != current:
             current = heading
             lines.append(f'## {heading}')
-        lines += [f'### {entry["date"]} — {entry["title"]}', entry['body']]
+        lines += [f'### {entry["date"]} — {entry["title"]}', *entry_lines(entry)]
     lines.append(page['footer'])
     return lines
 
@@ -154,10 +187,21 @@ def render_html(state, style):
             current = heading
             body += ['<section class="cl-group">',
                      f'<div class="cl-group-head"><h2 class="cl-eyebrow">{escape(heading)}</h2></div>']
-        body += ['<article class="cl-entry">',
-                 f'<h3>{escape(entry["date"])} — {escape(entry["title"])}</h3>',
-                 f'<p>{escape(entry["body"])}</p>',
-                 '</article>']
+        if is_fielded(entry):
+            # The label is a span, not <strong>: markdown converters render
+            # emphasis differently across versions, and a line that changes
+            # shape between two crawls is re-read as new.
+            body += [f'<article class="cl-entry" data-novelty="{escape(entry["novelty"])}">',
+                     f'<h3>{escape(entry["date"])} — {escape(entry["title"])}</h3>',
+                     f'<p>{escape(entry["description"])}</p>',
+                     *[f'<p class="cl-field"><span class="cl-label">{escape(label)}</span> {escape(entry[key])}</p>'
+                       for key, label in FIELD_LABELS],
+                     '</article>']
+        else:
+            body += ['<article class="cl-entry">',
+                     f'<h3>{escape(entry["date"])} — {escape(entry["title"])}</h3>',
+                     f'<p>{escape(entry["body"])}</p>',
+                     '</article>']
     if current is not None:
         body.append('</section>')
     return '\n'.join([
@@ -249,6 +293,26 @@ h1, h2, h3 { font-family: var(--brand-font-heading, var(--brand-font-body, -appl
 }
 """.strip()
 
+# The fielded entry's labels and novelty badge. Kept apart from LAYOUT_CSS so a
+# page whose stylesheet predates the fielded shape gets it appended on its next
+# publish; the stylesheet is not crawled, so appending it moves no line.
+FIELDS_CSS = """
+/* cl-fields */
+.cl-entry .cl-field { margin-top: 12px; }
+.cl-entry .cl-label { font-weight: 600; color: var(--ink); }
+.cl-entry[data-novelty] h3::after { display: inline-block; vertical-align: middle; margin-left: 10px;
+  padding: 3px 10px; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+  line-height: 1.4; border-radius: 100px; border: 1px solid var(--line); color: var(--accent);
+  font-family: var(--brand-font-body, -apple-system, 'Segoe UI', sans-serif); }
+""".strip() + '\n' + '\n'.join(
+    f'.cl-entry[data-novelty="{key}"] h3::after {{ content: "{label}"; }}' for key, label in NOVELTY_BADGES.items())
+
+
+def ensure_fields_css(style):
+    """A carried-over stylesheet, plus the fielded-entry rules if it lacks them."""
+    return style if '/* cl-fields */' in style else f'{style}\n{FIELDS_CSS}'
+
+
 LOGO_MIME = {'.png': 'image/png', '.svg': 'image/svg+xml', '.jpg': 'image/jpeg',
              '.jpeg': 'image/jpeg', '.webp': 'image/webp'}
 
@@ -274,7 +338,7 @@ def build_style(tokens_css=None, logo_light=None, logo_dark=None):
         logos.append(f'--cl-logo-dark: url({data_uri(logo_dark)});')
     if logos:
         parts.append(':root { ' + ' '.join(logos) + ' }')
-    parts.append(LAYOUT_CSS)
+    parts += [LAYOUT_CSS, FIELDS_CSS]
     return '\n'.join(parts)
 
 
@@ -410,9 +474,17 @@ def validate_entering(entries, state):
             errors.append(f'"{entry_id}" appears twice in the pasted entries.')
             continue
         seen.add(entry_id)
+        fielded = 'body' not in raw or any(key in raw for key in TEXT_FIELDS)
+        fields = {key: (raw.get(key) or '').strip() if isinstance(raw.get(key), str) else '' for key in TEXT_FIELDS}
+        novelty = raw.get('novelty')
         if entry_id in existing:
             live = existing[entry_id]
-            if (live['date'], live['title'], live['body']) == (entry_date, title, body):
+            if is_fielded(live):
+                same = fielded and (live['date'], live['title'], live['novelty'], *[live[k] for k in TEXT_FIELDS]) == \
+                    (entry_date, title, novelty, *[fields[k] for k in TEXT_FIELDS])
+            else:
+                same = not fielded and (live['date'], live['title'], live['body']) == (entry_date, title, body)
+            if same:
                 already_live.append(entry_id)
             else:
                 errors.append(f'"{entry_id}" is already live with different text. Published entries are never re-worded (the crawl would read the new wording as a new capability); publish a new entry that supersedes it instead.')
@@ -423,16 +495,21 @@ def validate_entering(entries, state):
             errors.append(f'{label} has no title.')
         elif '\n' in title or len(title) > TITLE_MAX_CHARS:
             errors.append(f'{label}: a title is one line of at most {TITLE_MAX_CHARS} characters.')
-        if not body:
-            errors.append(f'{label} has no public paragraph.')
-        else:
-            if not BODY_MIN_CHARS <= len(body) <= BODY_MAX_CHARS:
-                errors.append(f'{label} has a {len(body)}-character paragraph; it must be {BODY_MIN_CHARS}–{BODY_MAX_CHARS}.')
-            if '\n' in body:
-                errors.append(f'{label} has a paragraph with a line break; one entry is exactly one paragraph.')
-            if LEAD_HAZARD.match(body):
-                errors.append(f'{label} has a paragraph starting with a markdown character (#, -, *, >, |, or "1.").')
-        entering.append({'id': entry_id, 'date': entry_date, 'title': title, 'body': body})
+        if not fielded:
+            errors.append(f'{label} is a single paragraph. New entries are fielded: give it a description, a useCase, a problem and a novelty ("net-new" or "improvement") instead of a body.')
+            continue
+        for key in TEXT_FIELDS:
+            value = fields[key]
+            if not value:
+                errors.append(f'{label} has no {key}.')
+            elif '\n' in value:
+                errors.append(f'{label}: its {key} has a line break; each field is one paragraph.')
+            elif LEAD_HAZARD.match(value):
+                errors.append(f'{label}: its {key} starts with a markdown character (#, -, *, >, |, or "1.").')
+        if novelty not in NOVELTY_BADGES:
+            errors.append(f'{label} has no novelty; it must be "net-new" or "improvement".')
+        entering.append({'id': entry_id, 'date': entry_date, 'title': title, 'novelty': novelty,
+                         **{key: fields[key] for key in TEXT_FIELDS}})
     if errors:
         raise Refused(f'Refusing the whole batch ({len(errors)} problem(s)):\n- ' + '\n- '.join(errors))
     return entering, already_live
@@ -531,6 +608,7 @@ def cmd_add(args):
         style = style_of(current_html)
         if style is None:
             raise Refused('The current page has no <style> block to carry over; pass --tokens to restyle it.')
+        style = ensure_fields_css(style)
 
     if already_live:
         print(f'  Already live, skipped: {", ".join(already_live)}')
@@ -541,7 +619,7 @@ def cmd_add(args):
     published_at = args.published_at or datetime.now(timezone.utc).date().isoformat()
     if not valid_date(published_at):
         raise Refused('--published-at must be YYYY-MM-DD.')
-    next_state = {**state, 'entries': [{**entry, 'publishedAt': published_at} for entry in entering] + state['entries']}
+    next_state = {**state, 'schemaVersion': SCHEMA_VERSION, 'entries': [{**entry, 'publishedAt': published_at} for entry in entering] + state['entries']}
 
     checks, html, added = run_checks(old_lines, next_state, style)
     print()
