@@ -10,7 +10,7 @@ anything it cannot define, so the shape is not a style preference.
 |---|---|---|
 | `title` | The **named capability**: a proper name you would put on a slide, used identically forever | the feature's name |
 | `description` | **3–6 sentences**, more for a feature that does more: what it does (present tense, "X does Y", never "we shipped X"), how it works (specific enough to be non-generic), and who feels it and what changes for them | what it does, how it works, what it impacts |
-| `useCase` | **One concrete scenario** with a role and a moment in it: "An AE an hour before a renewal call opens…", never "helps teams be more efficient" | what it impacts |
+| `useCase` | **One sentence that opens "A <role> can now…"** and names what that person can now do, in a concrete moment: "A solutions engineer can now ask how a renewal quote handles invoice owners and get the answer from the product docs." Never "helps teams be more efficient" | what it impacts |
 | `problem` | **What the user did, or could not do, before** this shipped | why it exists |
 | `novelty` | `"net-new"` (a capability that did not exist) or `"improvement"` (an existing one changed) | not read: drawn as a badge |
 
@@ -57,8 +57,8 @@ The fields fix what an entry says; these keep it from reading like a press relea
 - **Name the capability.** "A significant step towards better GTM infrastructure" reads the same
   with any noun dropped in.
 - **Vary sentence length.** Sentences of equal length are the loudest tell. One can be short.
-- **Don't repeat the description in the other two fields.** The use case is a moment, the problem
-  is the before; neither restates what the feature does.
+- **Don't repeat the description in the other two fields.** The use case is one person's new move,
+  the problem is the before; neither restates what the feature does.
 
 ## Worked example
 
@@ -70,8 +70,8 @@ The fields fix what an entry says; these keep it from reading like a press relea
 > proof points. Reps stop hand-selecting a template per account. A segment's sequences stay on
 > one motion across the team.
 >
-> **Use case:** An SDR launching a five-step sequence into a new segment gets every step arguing
-> the same motion, with that segment's proof points, without picking a template.
+> **Use case:** An SDR can now launch a five-step sequence into a new segment and have every step
+> argue the same motion, with that segment's proof points, without picking a template.
 >
 > **Problem it solves:** Generic multi-step sequences drifted off-message after the first touch,
 > which is where reply rates flattened.
@@ -81,6 +81,6 @@ As entry JSON:
 ```json
 { "date": "2026-08-20", "title": "Motion Playbooks", "novelty": "net-new", "availability": "ga",
   "description": "Motion Playbooks let a sequence agent pick an outreach motion…",
-  "useCase": "An SDR launching a five-step sequence into a new segment…",
+  "useCase": "An SDR can now launch a five-step sequence into a new segment…",
   "problem": "Generic multi-step sequences drifted off-message after the first touch…" }
 ```

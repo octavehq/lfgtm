@@ -56,7 +56,7 @@ fine and is never read.
   "entries": [ { "id": "2026-09-18-motion-playbooks", "date": "2026-09-18",
                  "title": "Motion Playbooks", "availability": "ga", "novelty": "net-new",
                  "description": "Motion Playbooks let a sequence agent…",
-                 "useCase": "An SDR launching a five-step sequence…",
+                 "useCase": "An SDR can now launch a five-step sequence…",
                  "problem": "Generic multi-step sequences drifted off-message…" } ] }
 ```
 

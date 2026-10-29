@@ -32,7 +32,7 @@ def entry(entry_id, date, title, **extra):
     return {'id': entry_id, 'date': date, 'title': title, 'novelty': 'net-new', 'availability': 'ga',
             'description': f'{title} plans the next step of a deal from what the buyer said on the last call. '
                            'It reads the call, matches the stated pain to a playbook and drafts the follow-up.',
-            'useCase': f'An AE closing a {title} call gets the follow-up drafted before the next meeting.',
+            'useCase': f'An AE can now close a {title} call with the follow-up already drafted.',
             'problem': f'Reps rebuilt the account story by hand after every {title} call.', **extra}
 
 
