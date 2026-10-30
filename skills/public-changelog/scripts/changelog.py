@@ -45,9 +45,10 @@ TITLE_MAX_CHARS = 120
 # label is part of the line the crawl reads, so the wording is permanent.
 FIELD_LABELS = [('useCase', 'Use case:'), ('problem', 'Problem it solves:')]
 TEXT_FIELDS = ['description'] + [key for key, _ in FIELD_LABELS]
-# Shown as a badge drawn by the stylesheet, never as page text: "New" on every
-# other entry would be a repeated line, which the crawl swallows.
-NOVELTY_BADGES = {'net-new': 'New', 'improvement': 'Improvement'}
+# Shapes how the description is framed and is kept on the entry, but is never
+# shown: "New" on a changelog says nothing, and as text it would repeat on
+# every other entry, a line the crawl swallows.
+NOVELTY_VALUES = {'net-new', 'improvement'}
 # Mirrors the ingestion's delta floor and cap. Additions under the floor are
 # recorded as a sync and fire no extraction, so they reach readers and never
 # reach the library; over the cap the delta is truncated mid-line.
@@ -241,8 +242,7 @@ def render_html(state, style):
     ])
 
 
-# The layout for a new page: a ledger, dates and New / Improvement badges in a
-# left column, the title and description beside them, the two fields as labeled
+# The layout for a new page: a ledger, dates in a left column, the title and description beside them, the two fields as labeled
 # rows under a dashed rule. It reads the workspace brand kit's --brand-* tokens
 # (inlined ahead of it) and falls back to a neutral palette without one. The
 # stylesheet is not crawled — markdown conversion drops it — so it can be
@@ -308,17 +308,9 @@ h1, h2, h3, p { margin: 0; }
 .cl-title { grid-column: 2; grid-row: 1; font-family: var(--font-heading); font-weight: var(--brand-weight-heading, 400);
   font-size: 26px; line-height: 32px; letter-spacing: -0.02em; color: var(--ink); }
 .cl-desc { grid-column: 2; grid-row: 2; margin-top: 10px; max-width: 60ch; color: var(--body-ink); }
-.cl-entry[data-novelty] h3::after { grid-column: 1; grid-row: 2; align-self: start; justify-self: start;
-  padding: 5px 8px 4px 18px; border-radius: 999px; font: 500 10.5px/1 var(--font-mono);
-  letter-spacing: .04em; text-transform: uppercase; color: var(--accent);
-  background: radial-gradient(circle at 9px 50%, var(--accent) 3px, transparent 3.5px),
-    color-mix(in srgb, var(--accent) 9%, transparent); }
-.cl-entry[data-novelty="improvement"] h3::after { color: var(--muted); box-shadow: inset 0 0 0 1px var(--line);
-  background: radial-gradient(circle at 9px 50%, var(--faint) 3px, transparent 3.5px); }
 .cl-field { grid-column: 2; display: grid; grid-template-columns: 150px 1fr; align-items: baseline;
   margin-top: 18px; padding-top: 16px; border-top: 1px dashed var(--line); font-size: 15px; color: var(--body-ink); }
 .cl-field + .cl-field { margin-top: 0; padding-top: 10px; border-top: 0; }
-.cl-field[data-field="useCase"] { color: var(--ink); }
 /* The label keeps its colon for the crawl; on screen the width clips it. */
 .cl-label { overflow: hidden; white-space: nowrap; font: 500 11.5px/1.6 var(--font-mono); letter-spacing: 0;
   text-transform: uppercase; color: var(--faint); }
@@ -332,29 +324,22 @@ h1, h2, h3, p { margin: 0; }
   .cl-hero h1 { font-size: 40px; }
   .cl-entry { grid-template-columns: auto 1fr; column-gap: 10px; }
   .cl-date { line-height: 22px; }
-  .cl-entry[data-novelty] h3::after { grid-column: 2; grid-row: 1; align-self: center; }
   .cl-title, .cl-desc, .cl-field { grid-column: 1 / -1; }
   .cl-title { grid-row: 2; margin-top: 6px; font-size: 22px; line-height: 28px; }
   .cl-desc { grid-row: 3; }
   .cl-field { grid-template-columns: 1fr; row-gap: 4px; }
   .cl-foot > div { margin-left: 0; }
 }
-""".strip() + '\n' + '\n'.join(
-    f'.cl-entry[data-novelty="{key}"] h3::after {{ content: "{label}"; }}' for key, label in NOVELTY_BADGES.items())
+""".strip()
 
-# The fielded entry's labels and novelty badge for a page whose stylesheet
+# The fielded entry's labels for a page whose stylesheet
 # predates the fielded shape: appended on its next publish, styled for that
 # older layout. The stylesheet is not crawled, so appending it moves no line.
 FIELDS_CSS = """
 /* cl-fields */
 .cl-entry .cl-field { margin-top: 12px; }
 .cl-entry .cl-label { font-weight: 600; color: var(--ink); }
-.cl-entry[data-novelty] h3::after { display: inline-block; vertical-align: middle; margin-left: 10px;
-  padding: 3px 10px; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
-  line-height: 1.4; border-radius: 100px; border: 1px solid var(--line); color: var(--accent);
-  font-family: var(--brand-font-body, -apple-system, 'Segoe UI', sans-serif); }
-""".strip() + '\n' + '\n'.join(
-    f'.cl-entry[data-novelty="{key}"] h3::after {{ content: "{label}"; }}' for key, label in NOVELTY_BADGES.items())
+""".strip()
 
 
 def ensure_fields_css(style):
@@ -575,7 +560,7 @@ def field_problems(label, fields, novelty):
             errors.append(f'{label}: its {key} has a line break; each field is one paragraph.')
         elif LEAD_HAZARD.match(value):
             errors.append(f'{label}: its {key} starts with a markdown character (#, -, *, >, |, or "1.").')
-    if novelty not in NOVELTY_BADGES:
+    if novelty not in NOVELTY_VALUES:
         errors.append(f'{label} has no novelty; it must be "net-new" or "improvement".')
     return errors
 

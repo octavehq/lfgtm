@@ -164,7 +164,7 @@ class PublicChangelogTest(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertFalse((self.dir/'bundle').exists())
 
-    def test_a_fielded_entry_reads_as_labeled_lines_and_its_badge_is_not_text(self):
+    def test_a_fielded_entry_reads_as_labeled_lines_and_its_novelty_is_not_shown(self):
         s = state(entry('a', '2026-08-20', 'Deal Plans'), legacy('b', '2026-07-02', 'Call Notes'))
         html = cl.render_html(s, cl.build_style())
         lines = cl.page_lines(html)
@@ -172,10 +172,9 @@ class PublicChangelogTest(unittest.TestCase):
         self.assertEqual(lines[3:7], ['### 2026-08-20 — Deal Plans', entry('a', '', 'Deal Plans')['description'],
                                       'Use case: ' + entry('a', '', 'Deal Plans')['useCase'],
                                       'Problem it solves: ' + entry('a', '', 'Deal Plans')['problem']])
-        # The badge is drawn by the stylesheet, so two "New" entries never repeat a line.
-        self.assertIn('data-novelty="net-new"', html)
-        self.assertIn('content: "New"', html)
+        # Novelty shapes the wording but is never shown, as text or as a badge.
         self.assertNotIn('New', [line.strip() for line in lines])
+        self.assertNotIn('content: "New"', html)
 
     def test_a_version_1_state_is_read_and_written_back_as_version_2(self):
         s = state(legacy('a', '2026-08-20', 'Deal Plans'))

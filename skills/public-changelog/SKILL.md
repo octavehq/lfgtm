@@ -168,7 +168,7 @@ an attempt to touch a live entry. Read each refusal back in plain words. The com
 
 On an existing page the stylesheet is carried over from the live page. Pass `--tokens` only
 when the user asks to restyle; styling is not crawled, so restyling is safe. A restyle also moves
-an older page onto the current layout (dates and badges in a left column, the two fields as
+an older page onto the current layout (dates in a left column, the two fields as
 labeled rows); without one, the page keeps the look it was published with.
 
 On success it prints the exact lines this publish adds, and, when the paste reshapes or removes
