@@ -9,7 +9,7 @@ anything it cannot define, so the shape is not a style preference.
 | Field | Holds | Becomes |
 |---|---|---|
 | `title` | The **named capability**: a proper name you would put on a slide, used identically forever | the feature's name |
-| `description` | **3–6 sentences**, more for a feature that does more: what it does (present tense, "X does Y", never "we shipped X"), how it works (specific enough to be non-generic), and who feels it and what changes for them | what it does, how it works, what it impacts |
+| `description` | **3–4 sentences**, 4 for a feature that does more: what it does (present tense, "X does Y", never "we shipped X"), how it works (specific enough to be non-generic), and who feels it and what changes for them | what it does, how it works, what it impacts |
 | `useCase` | **One sentence that opens "A <role> can now…"** and names what that person can now do, in a concrete moment: "A solutions engineer can now ask how a renewal quote handles invoice owners and get the answer from the product docs." Never "helps teams be more efficient" | what it impacts |
 | `problem` | **What the user did, or could not do, before** this shipped | why it exists |
 | `novelty` | `"net-new"` (a capability that did not exist) or `"improvement"` (an existing one changed) | not read: drawn as a badge |
