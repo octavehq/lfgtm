@@ -12,12 +12,15 @@ and everything in this skill exists to keep them:
 
 1. **A live line is never re-worded.** Changing an old entry's text makes it read as brand new
    and re-mints suggestions for something that shipped months ago. The only correction is a
-   newer entry that supersedes it.
+   newer entry that supersedes it. The one exception is an entry still live as a paragraph: a
+   reviewer on the staging page can reshape it into fields or remove it, and the paste names
+   exactly those ids.
 2. **Whatever goes on the page teaches the library, and so every rep's messaging.** Only work
    every customer can use today belongs there: no fixes, infrastructure, betas or gated features.
 
 So the page is **rendered by a script from a state file, never written by hand.** You supply a
-title and one paragraph per entry; [changelog.py](scripts/changelog.py) owns the markup, and
+title and the entry's fields (a description, a use case, the problem it solves, and whether it
+is new or an improvement); [changelog.py](scripts/changelog.py) owns the markup, and
 refuses to produce a bundle unless every line already live comes out byte-identical. The live
 page is the lock. It stays readable to someone outside engineering: keep messages plain, never
 show a stack trace, and when something needs an engineer, say so and stop.
@@ -37,7 +40,11 @@ The asset is a `website` asset named `public-changelog-<company-slug>` (lowercas
 | File | Holds |
 |---|---|
 | `index.html` | The rendered page. Its lines are what the crawl diffs. |
-| `changelog.json` | The page title, dek and footer, and every published entry (`id`, `date`, `title`, `body`, `publishedAt`). Public text only. |
+| `changelog.json` | The page title, dek and footer, and every published entry (`id`, `date`, `title`, `novelty`, `description`, `useCase`, `problem`, `publishedAt`; an entry published before fielded entries has `body` in place of the four, and a reshaped one adds `reshapedAt`). `removed` lists the id and `removedAt` of every entry taken off the page, with none of its text. Public text only. |
+
+**Entries published as one paragraph stay that way unless a reviewer decides otherwise.** Every
+new entry is fielded. A paragraph entry changes only when the staging paste lists it under
+`reshape` (its paragraph is replaced by the fields given) or `remove` (it comes off the page).
 
 **The `public-changelog-` prefix is load-bearing.** Only `/sites/public-changelog-…` is open to
 the ingestion crawler, and the path is case-sensitive; a page named anything else publishes
@@ -48,20 +55,40 @@ fine and is never read.
 **From a staging page** (for example Octave's own `/product-changelog` routine), the paste is:
 
 ```json
-{ "schemaVersion": 2, "kind": "changelog-entries", "runId": "2026-09-22",
+{ "schemaVersion": 3, "kind": "changelog-entries", "runId": "2026-09-22",
   "entries": [ { "id": "2026-09-18-motion-playbooks", "date": "2026-09-18",
-                 "title": "Motion Playbooks", "availability": "ga",
-                 "body": "Motion Playbooks let a sequence agent…" } ] }
+                 "title": "Motion Playbooks", "availability": "ga", "novelty": "net-new",
+                 "description": "Motion Playbooks let a sequence agent…",
+                 "useCase": "An SDR can now launch a five-step sequence…",
+                 "problem": "Generic multi-step sequences drifted off-message…" } ] }
 ```
+
+When the reviewer decided entries still live as a paragraph, the paste also carries:
+
+```json
+  "reshape": [ { "id": "2026-07-14-deal-plans", "novelty": "net-new",
+                 "description": "…", "useCase": "An AE can now…", "problem": "…" } ],
+  "remove": [ "2026-06-02-call-notes" ]
+```
+
+A reshape keeps the entry's id, date and title, so its heading stays live; only the paragraph
+under it is replaced. A removal takes the entry's heading and paragraph off the page, plus the
+month heading when nothing else is left under it. All of it goes out in the same publish as the
+new entries. Before step 5, tell the user that Octave reads reshaped fields as new content once,
+so a batch of Core Feature update suggestions follows.
+
+An older staging page copies `schemaVersion: 2` entries with a single `body`. Those are refused
+as new entries; ask for the fields (or re-copy from an updated staging page). One already live
+with identical text is skipped, as always.
 
 Keep every `id` as given. The source system matches ids when it reads the page back, to mark
 its own records as published.
 
 **In plain words** ("add these three for Sept 1–15"): turn each item into the same shape.
-Draft each paragraph with [writing entries](references/writing-entries.md), set `date` to the
+Draft each entry's fields with [writing entries](references/writing-entries.md), set `date` to the
 ship date (ask if you cannot tell), and set `availability: "ga"` **only after the user confirms
 every customer can use it today**. Omit `id`; the script derives one. Show the user each title and
-paragraph and get their approval on the wording **before** rendering. Once live, it is final.
+its fields and get their approval on the wording **before** rendering. Once live, it is final.
 
 ## Run it
 
@@ -127,16 +154,21 @@ an attempt to touch a live entry. Read each refusal back in plain words. The com
 | Refusal | Meaning | Fix |
 |---|---|---|
 | not marked generally available | an entry is gated, beta or unchecked | drop it; it publishes once it is GA |
-| N-character paragraph | outside 200–900 characters | rewrite it (one paragraph, five beats) |
+| is a single paragraph | a `body` was sent for a new entry | rewrite it as fields ([writing entries](references/writing-entries.md)) |
+| has no description / useCase / problem / novelty | a field is missing | fill it in |
+| line break, markdown character | a field is not one plain paragraph | join it into one paragraph; drop the leading character |
 | already live with different text | an id that is live was re-worded | leave it; publish a new superseding entry |
+| reshape or remove … is not live, already fielded, keeps the title | a `reshape` / `remove` id is not a live entry, or a reshape changed its date or title, or targets a fielded entry | re-copy from the staging page; never hand-edit those lists |
+| was removed from the page | a new entry reuses the id of one removed earlier | give it a new id |
 | `✗ history` | a live line would change | stop, an engineer is needed; never edit the state to force it |
-| `✗ delta` under the floor | too little new text to trigger ingestion | add the paragraph, or hold until there is more |
-| `✗ line-uniqueness` | a line repeats an existing one | reword the new entry's title or paragraph |
+| `✗ delta` under the floor | too little new text to trigger ingestion | add the missing fields, or hold until there is more |
+| `✗ line-uniqueness` | a line repeats an existing one | reword the new entry's title or the repeated field |
 
 On an existing page the stylesheet is carried over from the live page. Pass `--tokens` only
 when the user asks to restyle; styling is not crawled, so restyling is safe.
 
-On success it prints the exact lines this publish adds. **Show them to the user and get an
+On success it prints the exact lines this publish adds, and, when the paste reshapes or removes
+entries, the live lines those retire. **Show them to the user and get an
 explicit go before step 5.** This is a permanent public write.
 
 ### 5. Upload
@@ -196,7 +228,8 @@ Mention that Octave re-reads the page on its own schedule; no further step is ne
 
 ## Never
 
-- Hand-edit `index.html` or a live entry in `changelog.json`, or delete a live entry.
+- Hand-edit `index.html` or a live entry in `changelog.json`, or delete a live entry other than
+  through a reviewer's `remove`.
 - Enable asset↔resource sync on this asset. It would register the page a second time, extracted
   without the release-notes handling.
 - Publish a workspace-only log, a staging page, or anything with customer names, deal values or

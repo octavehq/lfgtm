@@ -1294,7 +1294,7 @@
       ]
     },
     "public-changelog": {
-      "version": "1.2.0",
+      "version": "2.0.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1303,6 +1303,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "2.0.0",
+          "date": "2026-10-29",
+          "notes": "New entries are fielded: a description of 3 to 4 sentences, a Use case line (“A <role> can now…”) and a Problem it solves line, with a New or Improvement badge. A single-paragraph entry is refused as new. Entries already live keep their shape and lines unless the staging paste lists them under reshape (the paragraph is replaced by fields) or remove (the entry comes off the page). The 200 to 900 character paragraph limit is gone.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-27",
