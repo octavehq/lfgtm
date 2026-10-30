@@ -193,6 +193,87 @@ class PublicChangelogTest(unittest.TestCase):
         self.assertIn('--brand-primary:#123456', html)
         self.assertIn('--cl-logo-light: url(data:image/png;base64,', html)
 
+    def publish(self, current_state, html, entries=(), reshape=(), remove=()):
+        argv = ['add', '--state', self.write('state.json', current_state),
+                '--entries', self.write('new.json', {'entries': list(entries), 'reshape': list(reshape), 'remove': list(remove)}),
+                '--out', str(self.dir/'bundle'), '--published-at', '2026-10-30', '--html', self.write('live.html', html)]
+        out, err = io.StringIO(), io.StringIO()
+        with redirect_stdout(out), redirect_stderr(err):
+            code = cl.main(argv)
+        return code, out.getvalue() + err.getvalue()
+
+    def fields_for(self, entry_id, title):
+        fielded = entry(entry_id, '', title)
+        return {key: fielded[key] for key in ('id', 'novelty', *cl.TEXT_FIELDS)}
+
+    def test_a_reviewed_reshape_swaps_only_that_paragraph_for_fields(self):
+        s = state(legacy('a', '2026-08-20', 'Deal Plans'), legacy('b', '2026-07-02', 'Call Notes'))
+        live = cl.render_html(s, 'body{color:red}')
+        code, output = self.publish(s, live, reshape=[self.fields_for('a', 'Deal Plans')])
+        self.assertEqual(code, 0, output)
+        lines = cl.page_lines((self.dir/'bundle/index.html').read_text())
+        # The heading stays, the paragraph gives way to the fields, and the other entry is untouched.
+        self.assertIn('### 2026-08-20 — Deal Plans', lines)
+        self.assertIn('Use case: ' + entry('a', '', 'Deal Plans')['useCase'], lines)
+        self.assertEqual(set(cl.page_lines(live)) - set(lines), {paragraph('Deal Plans')})
+        written = json.loads((self.dir/'bundle/changelog.json').read_text())
+        self.assertEqual(written['entries'][0], {**self.fields_for('a', 'Deal Plans'), 'date': '2026-08-20',
+                                                 'title': 'Deal Plans', 'publishedAt': '2026-08-01',
+                                                 'reshapedAt': '2026-10-30'})
+        self.assertEqual(written['entries'][1]['body'], paragraph('Call Notes'))
+
+    def test_a_removed_entry_leaves_the_page_and_keeps_only_its_id_on_record(self):
+        s = state(legacy('a', '2026-08-20', 'Deal Plans'), legacy('b', '2026-07-02', 'Call Notes'))
+        live = cl.render_html(s, cl.build_style())
+        code, output = self.publish(s, live, remove=['b'])
+        self.assertEqual(code, 0, output)
+        self.assertIn('removes 3 line(s) and adds none', output)
+        lines = cl.page_lines((self.dir/'bundle/index.html').read_text())
+        # Its heading, its paragraph and the month heading nothing else sits under all go.
+        self.assertEqual(set(cl.page_lines(live)) - set(lines),
+                         {'## July 2026', '### 2026-07-02 — Call Notes', paragraph('Call Notes')})
+        bundle = (self.dir/'bundle/changelog.json').read_text()
+        self.assertNotIn('Call Notes', bundle)
+        self.assertEqual(json.loads(bundle)['removed'], [{'id': 'b', 'removedAt': '2026-10-30'}])
+        # A removed id cannot come back as a new entry under the same id.
+        code, output = self.publish(json.loads(bundle), (self.dir/'bundle/index.html').read_text(),
+                                    entries=[entry('b', '2026-10-01', 'Call Notes Again')])
+        self.assertEqual(code, 1)
+        self.assertIn('was removed from the page', output)
+
+    def test_new_entries_reshapes_and_removals_go_out_in_one_publish(self):
+        s = state(legacy('a', '2026-08-20', 'Deal Plans'), legacy('b', '2026-07-02', 'Call Notes'))
+        code, output = self.publish(s, cl.render_html(s, cl.build_style()), entries=[entry('n', '2026-10-20', 'Pipeline Watch')],
+                                    reshape=[self.fields_for('a', 'Deal Plans')], remove=['b'])
+        self.assertEqual(code, 0, output)
+        self.assertEqual([e['id'] for e in json.loads((self.dir/'bundle/changelog.json').read_text())['entries']], ['n', 'a'])
+
+    def test_a_reshape_or_removal_of_anything_else_refuses_the_batch(self):
+        s = state(legacy('a', '2026-08-20', 'Deal Plans'), entry('f', '2026-07-02', 'Call Notes'))
+        live = cl.render_html(s, cl.build_style())
+        cases = [
+            ({'reshape': [self.fields_for('missing', 'Win Rooms')]}, 'is not live'),
+            ({'reshape': [self.fields_for('f', 'Call Notes')]}, 'already fielded'),
+            ({'reshape': [{**self.fields_for('a', 'Deal Plans'), 'title': 'Deal Plans 2'}]}, 'keeps the title'),
+            ({'reshape': [{**self.fields_for('a', 'Deal Plans'), 'problem': ''}]}, 'has no problem'),
+            ({'reshape': [self.fields_for('a', 'Deal Plans')], 'remove': ['a']}, 'both reshaped and removed'),
+            ({'remove': ['missing']}, 'is not live'),
+        ]
+        for parts, message in cases:
+            with self.subTest(message=message):
+                code, output = self.publish(s, live, **parts)
+                self.assertEqual(code, 1)
+                self.assertIn(message, output)
+                self.assertFalse((self.dir/'bundle').exists())
+
+    def test_a_reshape_still_refuses_a_change_to_any_other_live_line(self):
+        s = state(legacy('a', '2026-08-20', 'Deal Plans'), legacy('b', '2026-07-02', 'Call Notes'))
+        live = cl.render_html(s, cl.build_style())
+        s['entries'][1]['body'] = paragraph('Call Notes').replace('blank page', 'empty page')
+        code, output = self.publish(s, live, reshape=[self.fields_for('a', 'Deal Plans')])
+        self.assertEqual(code, 1)
+        self.assertIn('✗ history', output)
+
     def test_lines_confirms_a_page_against_its_state(self):
         s = state(entry('a', '2026-08-20', 'Deal Plans'))
         html = self.write('page.html', cl.render_html(s, cl.build_style()))

@@ -16,9 +16,11 @@ byte-identical. The live page is the lock.
                          [--published-at YYYY-MM-DD]
   changelog.py lines     --html index.html [--expect-state changelog.json]
 
-A new entry is fielded (description, use case, problem, novelty); entries
-published as one paragraph before that keep their shape, because converting
-one would change its live lines.
+A new entry is fielded (description, use case, problem, novelty). An entry
+published as one paragraph before that keeps its shape unless the paste lists
+it under `reshape` (its paragraph is replaced by fields) or `remove` (it comes
+off the page). Those are the only live lines a publish may change; every other
+one must survive.
 
 `add` writes DIR/index.html and DIR/changelog.json (the whole bundle) plus
 DIR.manifest.json beside DIR for the public upload. It writes nothing when a
@@ -103,6 +105,8 @@ def load_state(path):
         raise Refused(f'{path} has no page title, dek and footer.')
     if not isinstance(state.get('entries'), list):
         raise Refused(f'{path} has no entries list.')
+    if not isinstance(state.get('removed', []), list):
+        raise Refused(f'{path} has a removed list that is not a list.')
     return state
 
 
@@ -133,8 +137,8 @@ def month_heading(date):
 
 def is_fielded(entry):
     """Paragraph entries (everything published before the fielded shape) carry
-    `body`; fielded ones carry `description`. Live paragraph entries are never
-    converted: their lines are the lock."""
+    `body`; fielded ones carry `description`. A live paragraph entry is only
+    converted when a reviewer approved its reshape on staging."""
     return 'description' in entry
 
 
@@ -439,15 +443,20 @@ def valid_date(value):
 
 
 def read_entries(path):
-    """Accepts {"entries": [...]} (what the staging page copies) or a bare list."""
+    """Returns (entries, reshape, remove). Accepts {"entries": [...], "reshape": [...],
+    "remove": [...]} (what the staging page copies; the last two only when a
+    reviewer decided a live paragraph entry) or a bare list of new entries."""
     try:
         blob = json.loads(Path(path).read_text(encoding='utf-8'))
     except (OSError, ValueError) as error:
         raise Refused(f'Could not read the entries at {path}: {error}')
-    entries = blob.get('entries') if isinstance(blob, dict) else blob
-    if not isinstance(entries, list) or not entries:
+    parts = blob if isinstance(blob, dict) else {'entries': blob}
+    entries, reshape, remove = (parts.get(key, []) for key in ('entries', 'reshape', 'remove'))
+    if not all(isinstance(part, list) for part in (entries, reshape, remove)):
+        raise Refused('The pasted entries are not lists of entries.')
+    if not (entries or reshape or remove):
         raise Refused('The pasted entries contain nothing to publish.')
-    return entries
+    return entries, reshape, remove
 
 
 def validate_entering(entries, state):
@@ -455,6 +464,7 @@ def validate_entering(entries, state):
     a partial publish would hide an attempt to touch a live entry."""
     errors, entering, already_live, seen = [], [], [], set()
     existing = {entry['id']: entry for entry in state['entries']}
+    removed = {gone['id'] for gone in state.get('removed', [])}
     for number, raw in enumerate(entries, 1):
         if not isinstance(raw, dict):
             errors.append(f'Entry {number} is not an object.')
@@ -474,6 +484,9 @@ def validate_entering(entries, state):
             errors.append(f'"{entry_id}" appears twice in the pasted entries.')
             continue
         seen.add(entry_id)
+        if entry_id in removed:
+            errors.append(f'"{entry_id}" was removed from the page; publish it under a new id if it belongs back.')
+            continue
         fielded = 'body' not in raw or any(key in raw for key in TEXT_FIELDS)
         fields = {key: (raw.get(key) or '').strip() if isinstance(raw.get(key), str) else '' for key in TEXT_FIELDS}
         novelty = raw.get('novelty')
@@ -498,21 +511,99 @@ def validate_entering(entries, state):
         if not fielded:
             errors.append(f'{label} is a single paragraph. New entries are fielded: give it a description, a useCase, a problem and a novelty ("net-new" or "improvement") instead of a body.')
             continue
-        for key in TEXT_FIELDS:
-            value = fields[key]
-            if not value:
-                errors.append(f'{label} has no {key}.')
-            elif '\n' in value:
-                errors.append(f'{label}: its {key} has a line break; each field is one paragraph.')
-            elif LEAD_HAZARD.match(value):
-                errors.append(f'{label}: its {key} starts with a markdown character (#, -, *, >, |, or "1.").')
-        if novelty not in NOVELTY_BADGES:
-            errors.append(f'{label} has no novelty; it must be "net-new" or "improvement".')
+        errors += field_problems(label, fields, novelty)
         entering.append({'id': entry_id, 'date': entry_date, 'title': title, 'novelty': novelty,
                          **{key: fields[key] for key in TEXT_FIELDS}})
     if errors:
         raise Refused(f'Refusing the whole batch ({len(errors)} problem(s)):\n- ' + '\n- '.join(errors))
     return entering, already_live
+
+
+def field_problems(label, fields, novelty):
+    """What is wrong with one entry's fields, as refusal lines; [] when they can publish."""
+    errors = []
+    for key in TEXT_FIELDS:
+        value = fields[key]
+        if not value:
+            errors.append(f'{label} has no {key}.')
+        elif '\n' in value:
+            errors.append(f'{label}: its {key} has a line break; each field is one paragraph.')
+        elif LEAD_HAZARD.match(value):
+            errors.append(f'{label}: its {key} starts with a markdown character (#, -, *, >, |, or "1.").')
+    if novelty not in NOVELTY_BADGES:
+        errors.append(f'{label} has no novelty; it must be "net-new" or "improvement".')
+    return errors
+
+
+def validate_live_changes(reshape, remove, state, entering_ids):
+    """Returns (reshaped, removed): the fields each reshaped entry takes in place
+    of its paragraph, keyed by id, and the ids coming off the page. A reshape
+    names a live paragraph entry and keeps its date and title, so its heading
+    survives; a removal names any live entry. Any problem refuses the whole batch.
+
+      validate_live_changes([{'id': 'a', 'description': 'X does Y.', 'useCase': 'A rep can now…',
+                              'problem': 'Reps had to…', 'novelty': 'improvement'}], ['b'], state, set())
+      # -> ({'a': {'novelty': 'improvement', 'description': 'X does Y.', …}}, ['b'])
+    """
+    errors, reshaped, removed = [], {}, []
+    live = {entry['id']: entry for entry in state['entries']}
+    for number, raw in enumerate(reshape, 1):
+        entry_id = raw.get('id') if isinstance(raw, dict) else None
+        current = live.get(entry_id) if isinstance(entry_id, str) else None
+        if current is None:
+            errors.append(f'Reshape {number} ({entry_id!r}) is not live; only an entry already on the page can be reshaped.')
+            continue
+        label = f'"{current["title"]}"'
+        if entry_id in reshaped:
+            errors.append(f'"{entry_id}" is reshaped twice in the pasted entries.')
+            continue
+        if is_fielded(current):
+            errors.append(f'{label} is already fielded; its lines are the lock.')
+            continue
+        for key in ('date', 'title'):
+            if key in raw and raw[key] != current[key]:
+                errors.append(f'{label}: a reshape keeps the {key} ({current[key]!r}); moving or renaming an entry is a new entry.')
+        fields = {key: (raw.get(key) or '').strip() if isinstance(raw.get(key), str) else '' for key in TEXT_FIELDS}
+        novelty = raw.get('novelty')
+        errors += field_problems(label, fields, novelty)
+        reshaped[entry_id] = {'novelty': novelty, **fields}
+    for entry_id in remove:
+        if not isinstance(entry_id, str) or entry_id not in live:
+            errors.append(f'Remove {entry_id!r} is not live; only an entry already on the page can be removed.')
+        elif entry_id in removed:
+            errors.append(f'"{entry_id}" is removed twice in the pasted entries.')
+        elif entry_id in reshaped:
+            errors.append(f'"{live[entry_id]["title"]}" is both reshaped and removed; it can only be one.')
+        else:
+            removed.append(entry_id)
+    for entry_id in entering_ids & (set(reshaped) | set(removed)):
+        errors.append(f'"{entry_id}" is both a new entry and a change to a live one.')
+    if errors:
+        raise Refused(f'Refusing the whole batch ({len(errors)} problem(s)):\n- ' + '\n- '.join(errors))
+    return reshaped, removed
+
+
+def apply_live_changes(state, reshaped, removed, changed_at):
+    """The state after the reviewer's reshapes and removals, and the live lines
+    they retire on purpose: a reshaped entry's paragraph, every line of a removed
+    entry, and a month heading no entry is left under. A removed entry leaves
+    only its id and date on the record, so its text is gone from the bundle."""
+    entries, retiring = [], set()
+    for entry in state['entries']:
+        if entry['id'] in removed:
+            retiring.update([f'### {entry["date"]} — {entry["title"]}', *entry_lines(entry)])
+        elif entry['id'] in reshaped:
+            retiring.add(entry['body'])
+            rest = {key: value for key, value in entry.items() if key not in ('id', 'date', 'title', 'body')}
+            entries.append({'id': entry['id'], 'date': entry['date'], 'title': entry['title'],
+                            **reshaped[entry['id']], **rest, 'reshapedAt': changed_at})
+        else:
+            entries.append(entry)
+    months_left = {month_heading(entry['date']) for entry in entries}
+    retiring.update(f'## {month_heading(entry["date"])}' for entry in state['entries']
+                    if entry['id'] in removed and month_heading(entry['date']) not in months_left)
+    gone = state.get('removed', []) + [{'id': entry_id, 'removedAt': changed_at} for entry_id in removed]
+    return {**state, 'entries': entries, **({'removed': gone} if gone else {})}, retiring
 
 
 # --------------------------------------------------------------------------
@@ -523,7 +614,10 @@ def check(name, ok, detail):
     return {'name': name, 'ok': ok, 'detail': detail}
 
 
-def run_checks(old_lines, state, style):
+def run_checks(old_lines, state, style, retiring=frozenset()):
+    """The publish checks over the next state. `retiring` is the live lines the
+    reviewer's reshapes and removals replace on purpose; every other live line
+    must survive."""
     html = render_html(state, style)
     lines = render_lines(state)
     checks = []
@@ -539,15 +633,20 @@ def run_checks(old_lines, state, style):
                         'the crawl silently swallows repeated lines: ' + ', '.join(repr(d[:60]) for d in dupes[:3])))
 
     old = {line.strip() for line in old_lines if line.strip()}
-    missing = sorted(old - seen)
+    retired = old & {line.strip() for line in retiring}
+    missing = sorted(old - seen - retired)
+    kept = f'all {len(old)} live lines unchanged' if not retired else \
+        f'{len(old) - len(retired)} live lines unchanged, {len(retired)} retired by reshapes and removals'
     checks.append(check('history', not missing,
-                        f'all {len(old)} live lines unchanged' if not missing else
+                        kept if not missing else
                         f'{len(missing)} live line(s) would change or disappear, and the crawl would read the result as new capabilities: '
                         + ', '.join(repr(m[:60]) for m in missing[:3])))
 
     added = [line for line in lines if line.strip() and line.strip() not in old]
     chars = len('\n'.join(added))
-    if chars == 0:
+    if chars == 0 and retired:
+        checks.append(check('delta', True, f'removes {len(retired)} line(s) and adds none'))
+    elif chars == 0:
         checks.append(check('delta', False, 'nothing new to publish'))
     elif chars < DELTA_MIN_CHARS:
         checks.append(check('delta', False, f'only {chars} new characters, under the {DELTA_MIN_CHARS}-character floor below which ingestion fires no extraction'))
@@ -599,7 +698,9 @@ def cmd_add(args):
     state = load_state(args.state)
     current_html = Path(args.html).read_text(encoding='utf-8') if args.html else None
     old_lines = page_lines(current_html) if current_html else []
-    entering, already_live = validate_entering(read_entries(args.entries), state)
+    entries, reshape, remove = read_entries(args.entries)
+    entering, already_live = validate_entering(entries, state)
+    reshaped, removed = validate_live_changes(reshape, remove, state, {entry['id'] for entry in entering})
 
     if args.tokens or args.logo_light or args.logo_dark or not current_html:
         tokens = Path(args.tokens).read_text(encoding='utf-8') if args.tokens else None
@@ -612,16 +713,21 @@ def cmd_add(args):
 
     if already_live:
         print(f'  Already live, skipped: {", ".join(already_live)}')
-    if not entering:
+    if not (entering or reshaped or removed):
         print('\n  Nothing new to publish; the page is already up to date.\n')
         return 0
 
     published_at = args.published_at or datetime.now(timezone.utc).date().isoformat()
     if not valid_date(published_at):
         raise Refused('--published-at must be YYYY-MM-DD.')
-    next_state = {**state, 'schemaVersion': SCHEMA_VERSION, 'entries': [{**entry, 'publishedAt': published_at} for entry in entering] + state['entries']}
+    changed, retiring = apply_live_changes(state, reshaped, removed, published_at)
+    next_state = {**changed, 'schemaVersion': SCHEMA_VERSION, 'entries': [{**entry, 'publishedAt': published_at} for entry in entering] + changed['entries']}
 
-    checks, html, added = run_checks(old_lines, next_state, style)
+    if retiring:
+        print(f'\n  Live lines the reviewer\'s reshapes and removals retire ({len(retiring)}):')
+        for line in sorted(retiring):
+            print(f'    - {line if len(line) <= 110 else line[:110] + "…"}')
+    checks, html, added = run_checks(old_lines, next_state, style, retiring)
     print()
     print_checks(checks)
     print()
