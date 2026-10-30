@@ -12,12 +12,12 @@ anything it cannot define, so the shape is not a style preference.
 | `description` | **3–4 sentences**, 4 for a feature that does more: what it does (present tense, "X does Y", never "we shipped X"), how it works (specific enough to be non-generic), and who feels it and what changes for them | what it does, how it works, what it impacts |
 | `useCase` | **One sentence that opens "A <role> can now…"** and names what that person can now do, in a concrete moment: "A solutions engineer can now ask how a renewal quote handles invoice owners and get the answer from the product docs." Never "helps teams be more efficient" | what it impacts |
 | `problem` | **What the user did, or could not do, before** this shipped | why it exists |
-| `novelty` | `"net-new"` (a capability that did not exist) or `"improvement"` (an existing one changed) | not read: drawn as a badge |
+| `novelty` | `"net-new"` (a capability that did not exist) or `"improvement"` (an existing one changed) | not shown: it sets the framing below |
 
 The page shows the description as a paragraph, then two labeled lines, `Use case: …` and
 `Problem it solves: …`. The labels are part of each line Octave reads, so they never change.
-The New / Improvement badge is drawn by the stylesheet rather than written as text, because
-"New" on every other entry would be a repeated line, and the crawl swallows repeated lines.
+Novelty is not shown on the page: "New" says nothing on a changelog, and as text it would repeat
+on every other entry, a line the crawl swallows.
 
 **Novelty sets the framing.** An `improvement` leads its description with what changed about
 the existing capability, under its existing name. A capability that was gated and is now open
@@ -62,7 +62,7 @@ The fields fix what an entry says; these keep it from reading like a press relea
 
 ## Worked example
 
-> **2026-08-20 — Motion Playbooks** `New`
+> **2026-08-20 — Motion Playbooks**
 >
 > Motion Playbooks let a sequence agent pick an outreach motion and write every step against it,
 > instead of filling one generic template per prospect. The agent matches a prospect's segment

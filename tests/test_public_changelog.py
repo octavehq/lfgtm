@@ -73,6 +73,25 @@ class PublicChangelogTest(unittest.TestCase):
         self.assertEqual(cl.page_lines(html), cl.render_lines(s))
         self.assertEqual(cl.render_lines(s)[:4], ['# Acme Changelog', PAGE['dek'], '## August 2026', '### 2026-08-20 — Deal Plans'])
 
+    def test_the_heading_spans_read_as_the_line_the_previous_markup_did(self):
+        s = state(entry('a', '2026-08-20', 'Deal Plans & <Notes>'), legacy('b', '2026-07-02', 'Call Notes'))
+        html = cl.render_html(s, cl.build_style())
+        self.assertIn('<h3><time class="cl-date">2026-08-20</time><span class="cl-sep"> — </span>'
+                      '<span class="cl-title">Deal Plans &amp; &lt;Notes&gt;</span></h3>', html)
+        # A page published before the spans: the plain <h3> and <p> it carried.
+        previous = ('<h1>Acme Changelog</h1><p>' + PAGE['dek'] + '</p><h2>August 2026</h2>'
+                    '<h3>2026-08-20 — Deal Plans &amp; &lt;Notes&gt;</h3>'
+                    f'<p>{cl.escape(s["entries"][0]["description"])}</p>'
+                    f'<p class="cl-field"><span class="cl-label">Use case:</span> {cl.escape(s["entries"][0]["useCase"])}</p>'
+                    f'<p class="cl-field"><span class="cl-label">Problem it solves:</span> {cl.escape(s["entries"][0]["problem"])}</p>'
+                    '<h2>July 2026</h2><h3>2026-07-02 — Call Notes</h3>'
+                    f'<p>{cl.escape(s["entries"][1]["body"])}</p><footer><div>{PAGE["footer"]}</div></footer>')
+        self.assertEqual(cl.page_lines(html), cl.page_lines(previous))
+
+    def test_a_new_page_style_gains_nothing_on_the_next_publish(self):
+        style = cl.build_style()
+        self.assertEqual(cl.ensure_fields_css(style), style)
+
     def test_bootstrap_reproduces_a_page_byte_for_byte(self):
         s = state(legacy('a', '2026-08-20', 'Deal Plans & <Notes>'), legacy('b', '2026-08-20', 'Call Notes'),
                   legacy('c', '2026-07-02', 'Win Rooms'))
@@ -145,7 +164,7 @@ class PublicChangelogTest(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertFalse((self.dir/'bundle').exists())
 
-    def test_a_fielded_entry_reads_as_labeled_lines_and_its_badge_is_not_text(self):
+    def test_a_fielded_entry_reads_as_labeled_lines_and_its_novelty_is_not_shown(self):
         s = state(entry('a', '2026-08-20', 'Deal Plans'), legacy('b', '2026-07-02', 'Call Notes'))
         html = cl.render_html(s, cl.build_style())
         lines = cl.page_lines(html)
@@ -153,10 +172,9 @@ class PublicChangelogTest(unittest.TestCase):
         self.assertEqual(lines[3:7], ['### 2026-08-20 — Deal Plans', entry('a', '', 'Deal Plans')['description'],
                                       'Use case: ' + entry('a', '', 'Deal Plans')['useCase'],
                                       'Problem it solves: ' + entry('a', '', 'Deal Plans')['problem']])
-        # The badge is drawn by the stylesheet, so two "New" entries never repeat a line.
-        self.assertIn('data-novelty="net-new"', html)
-        self.assertIn('content: "New"', html)
+        # Novelty shapes the wording but is never shown, as text or as a badge.
         self.assertNotIn('New', [line.strip() for line in lines])
+        self.assertNotIn('content: "New"', html)
 
     def test_a_version_1_state_is_read_and_written_back_as_version_2(self):
         s = state(legacy('a', '2026-08-20', 'Deal Plans'))

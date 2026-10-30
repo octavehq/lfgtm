@@ -131,8 +131,10 @@ python3 scripts/changelog.py init --title '…' --dek '…' --footer '…' --out
 
 Style it with the workspace brand, following [brand kit usage](../shared/brand-kit-usage.md):
 pass the kit's `tokens.css` as `--tokens` and its verified logo files as `--logo-light` /
-`--logo-dark` in step 4. The kit's `--brand-*` tokens drive the layout; without a kit the page
-falls back to a neutral palette. Never hotlink a font or image. Page safety refuses an external
+`--logo-dark` in step 4. The kit's `--brand-*` tokens drive the layout (titles in
+`--brand-font-heading`, text in `--brand-font-body`, dates and labels in `--brand-font-mono` when
+the kit defines one, otherwise the system monospace); without a kit the page falls back to a
+neutral palette. Never hotlink a font or image. Page safety refuses an external
 fetch, because fetched content becomes part of what the crawl reads.
 
 ### 3. Write the entries file
@@ -165,7 +167,9 @@ an attempt to touch a live entry. Read each refusal back in plain words. The com
 | `✗ line-uniqueness` | a line repeats an existing one | reword the new entry's title or the repeated field |
 
 On an existing page the stylesheet is carried over from the live page. Pass `--tokens` only
-when the user asks to restyle; styling is not crawled, so restyling is safe.
+when the user asks to restyle; styling is not crawled, so restyling is safe. A restyle also moves
+an older page onto the current layout (dates in a left column, the two fields as
+labeled rows); without one, the page keeps the look it was published with.
 
 On success it prints the exact lines this publish adds, and, when the paste reshapes or removes
 entries, the live lines those retire. **Show them to the user and get an

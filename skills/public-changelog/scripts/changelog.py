@@ -45,9 +45,10 @@ TITLE_MAX_CHARS = 120
 # label is part of the line the crawl reads, so the wording is permanent.
 FIELD_LABELS = [('useCase', 'Use case:'), ('problem', 'Problem it solves:')]
 TEXT_FIELDS = ['description'] + [key for key, _ in FIELD_LABELS]
-# Shown as a badge drawn by the stylesheet, never as page text: "New" on every
-# other entry would be a repeated line, which the crawl swallows.
-NOVELTY_BADGES = {'net-new': 'New', 'improvement': 'Improvement'}
+# Shapes how the description is framed and is kept on the entry, but is never
+# shown: "New" on a changelog says nothing, and as text it would repeat on
+# every other entry, a line the crawl swallows.
+NOVELTY_VALUES = {'net-new', 'improvement'}
 # Mirrors the ingestion's delta floor and cap. Additions under the floor are
 # recorded as a sync and fire no extraction, so they reach readers and never
 # reach the library; over the cap the delta is truncated mid-line.
@@ -176,10 +177,18 @@ def render_lines(state):
     return lines
 
 
+def entry_heading(entry):
+    return (f'<h3><time class="cl-date">{escape(entry["date"])}</time><span class="cl-sep"> — </span>'
+            f'<span class="cl-title">{escape(entry["title"])}</span></h3>')
+
+
 def render_html(state, style):
     """The page. Every element is chosen so its markdown equals render_lines():
     the month is a real <h2>, the date stays fused into the <h3>, and the logo is
-    a background image on an aria-hidden div, carrying no text and no href."""
+    a background image on an aria-hidden div, carrying no text and no href.
+    Inside the <h3> the date, separator and title are inline spans, so the
+    stylesheet can lay them out apart while the line still reads
+    '2026-10-26 — Title'."""
     page = state['page']
     body = []
     current = None
@@ -196,15 +205,15 @@ def render_html(state, style):
             # emphasis differently across versions, and a line that changes
             # shape between two crawls is re-read as new.
             body += [f'<article class="cl-entry" data-novelty="{escape(entry["novelty"])}">',
-                     f'<h3>{escape(entry["date"])} — {escape(entry["title"])}</h3>',
-                     f'<p>{escape(entry["description"])}</p>',
-                     *[f'<p class="cl-field"><span class="cl-label">{escape(label)}</span> {escape(entry[key])}</p>'
+                     entry_heading(entry),
+                     f'<p class="cl-desc">{escape(entry["description"])}</p>',
+                     *[f'<p class="cl-field" data-field="{key}"><span class="cl-label">{escape(label)}</span> {escape(entry[key])}</p>'
                        for key, label in FIELD_LABELS],
                      '</article>']
         else:
             body += ['<article class="cl-entry">',
-                     f'<h3>{escape(entry["date"])} — {escape(entry["title"])}</h3>',
-                     f'<p>{escape(entry["body"])}</p>',
+                     entry_heading(entry),
+                     f'<p class="cl-desc">{escape(entry["body"])}</p>',
                      '</article>']
     if current is not None:
         body.append('</section>')
@@ -233,30 +242,38 @@ def render_html(state, style):
     ])
 
 
-# The layout for a new page. It reads the workspace brand kit's --brand-*
-# tokens (inlined ahead of it) and falls back to a neutral palette without one.
-# The stylesheet is not crawled — markdown conversion drops it — so it can be
+# The layout for a new page: a ledger, dates in a left column, the title and description beside them, the two fields as labeled
+# rows under a dashed rule. It reads the workspace brand kit's --brand-* tokens
+# (inlined ahead of it) and falls back to a neutral palette without one. The
+# stylesheet is not crawled — markdown conversion drops it — so it can be
 # replaced wholesale later; what must never move is text between elements.
+# It carries the cl-fields marker, so a later publish appends nothing to it.
 LAYOUT_CSS = """
+/* cl-fields */
 :root {
   color-scheme: light;
-  --page-bg: var(--brand-bg, #ffffff);
-  --ink: var(--brand-ink, #111827);
-  --muted: var(--brand-muted, #6b7280);
-  --body-ink: var(--brand-body-ink, #374151);
-  --accent: var(--brand-primary, #4338ca);
-  --line: var(--brand-border, #e5e7eb);
-  --band: var(--brand-band, var(--brand-primary, #1f2937));
-  --on-band: var(--brand-on-dark, #f9fafb);
+  --page-bg: var(--brand-bg, #fbfbfd);
+  --ink: var(--brand-ink, #0f172a);
+  --body-ink: var(--brand-body-ink, #526074);
+  --muted: var(--brand-muted, #64748b);
+  --faint: var(--brand-faint, #94a3b8);
+  --accent: var(--brand-primary, #4f46e5);
+  --line: var(--brand-border, #e2e8f0);
   --logo: var(--cl-logo-light, none);
+  --font-heading: var(--brand-font-heading, var(--brand-font-body, -apple-system, 'Segoe UI', Roboto, sans-serif));
+  --font-body: var(--brand-font-body, -apple-system, 'Segoe UI', Roboto, sans-serif);
+  /* Monospace by contract: the field label's colon is clipped by width in ch. */
+  --font-mono: var(--brand-font-mono, ui-monospace, 'SF Mono', Menlo, Consolas, monospace);
+  --rail: 180px;
 }
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
     --page-bg: #0b0d12;
     --ink: #eceef3;
+    --body-ink: rgba(236, 238, 243, .74);
     --muted: #9aa1ae;
-    --body-ink: rgba(236, 238, 243, .84);
+    --faint: #6b7280;
     --accent: var(--brand-emph-ink-dark, #a5b4fc);
     --line: #2a2f3a;
     --logo: var(--cl-logo-dark, var(--cl-logo-light, none));
@@ -264,52 +281,65 @@ LAYOUT_CSS = """
 }
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
-body { margin: 0; background: var(--page-bg); color: var(--ink);
-  font-family: var(--brand-font-body, -apple-system, 'Segoe UI', Roboto, sans-serif);
-  font-size: 17px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
-h1, h2, h3 { font-family: var(--brand-font-heading, var(--brand-font-body, -apple-system, 'Segoe UI', sans-serif));
-  font-weight: var(--brand-weight-heading, 600); margin: 0; }
-.cl-top { max-width: 880px; margin: 0 auto; padding: 28px 24px 20px; }
-.cl-logo { width: 130px; height: 26px; background: var(--logo) left center / contain no-repeat; }
-.cl-hero { max-width: 880px; margin: 0 auto; padding: 56px 40px; border-radius: 20px;
-  background: var(--band); color: var(--on-band);
-  print-color-adjust: exact; -webkit-print-color-adjust: exact; }
-.cl-hero h1 { font-size: clamp(30px, 5vw, 44px); line-height: 1.14; color: var(--on-band); text-wrap: balance; }
-.cl-hero .cl-dek { margin: 14px 0 0; max-width: 52ch; opacity: .8; font-size: 16px; }
-.cl-wrap { max-width: 880px; margin: 0 auto; padding: 0 40px 24px; }
-.cl-group { padding-top: 56px; }
-.cl-group-head { padding-bottom: 20px; border-bottom: 1px solid var(--line); }
-.cl-eyebrow { display: inline-block; padding: 5px 13px; font-size: 12px; font-weight: 600;
-  letter-spacing: .06em; text-transform: uppercase; line-height: 1.4; border-radius: 100px;
-  font-family: var(--brand-font-body, -apple-system, 'Segoe UI', sans-serif);
-  color: var(--accent); border: 1px solid var(--line); }
-.cl-entry { padding: 30px 0; border-bottom: 1px solid var(--line); }
+body { margin: 0; background: var(--page-bg); color: var(--ink); font-family: var(--font-body);
+  font-size: 16px; line-height: 1.65; font-optical-sizing: auto; -webkit-font-smoothing: antialiased; }
+h1, h2, h3, p { margin: 0; }
+.cl-top, .cl-hero, .cl-wrap, .cl-foot { max-width: 1040px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
+.cl-top { padding-top: 36px; }
+.cl-logo { width: 128px; height: 25px; background: var(--logo) left center / contain no-repeat; }
+.cl-hero { display: grid; grid-template-columns: var(--rail) 1fr; padding-top: 88px; padding-bottom: 56px; }
+.cl-hero h1, .cl-hero .cl-dek { grid-column: 2; }
+.cl-hero h1 { font-family: var(--font-heading); font-weight: var(--brand-weight-h1, 300); font-size: 60px;
+  line-height: 1.05; letter-spacing: -0.03em; text-wrap: balance; }
+.cl-hero .cl-dek { margin-top: 18px; max-width: 46ch; font-size: 18px; color: var(--muted); }
+.cl-group { padding-top: 24px; }
+.cl-group-head { position: sticky; top: 0; z-index: 2; padding: 18px 0 14px;
+  background: linear-gradient(var(--page-bg) 70%, transparent); }
+.cl-eyebrow { display: flex; align-items: center; gap: 14px; font: 500 12px/1 var(--font-mono);
+  letter-spacing: .02em; text-transform: uppercase; color: var(--ink); }
+.cl-eyebrow::after { content: ""; height: 1px; flex: 1; background: var(--line); }
+.cl-entry { display: grid; grid-template-columns: var(--rail) 1fr; padding: 30px 0 34px; border-bottom: 1px solid var(--line); }
 .cl-entry:last-child { border-bottom: 0; }
-.cl-entry h3 { font-size: 23px; line-height: 1.25; margin-bottom: 10px; font-variant-numeric: tabular-nums; }
-.cl-entry p { margin: 0; color: var(--body-ink); }
-.cl-foot { max-width: 880px; margin: 0 auto; padding: 0 40px 72px; }
-.cl-foot > div { padding-top: 26px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
-@media (max-width: 720px) {
-  body { font-size: 16.5px; }
-  .cl-hero { padding: 40px 24px; border-radius: 0; }
-  .cl-wrap, .cl-foot { padding-left: 24px; padding-right: 24px; }
-  .cl-top { padding: 20px 24px 16px; }
+/* The <h3>'s spans become grid items: the date in the rail, the title beside it. */
+.cl-entry h3 { display: contents; }
+.cl-sep { display: none; }
+.cl-date { grid-column: 1; grid-row: 1; font: 400 12.5px/32px var(--font-mono); color: var(--muted);
+  font-variant-numeric: tabular-nums; }
+.cl-title { grid-column: 2; grid-row: 1; font-family: var(--font-heading); font-weight: var(--brand-weight-heading, 400);
+  font-size: 26px; line-height: 32px; letter-spacing: -0.02em; color: var(--ink); }
+.cl-desc { grid-column: 2; grid-row: 2; margin-top: 10px; max-width: 60ch; color: var(--body-ink); }
+.cl-field { grid-column: 2; display: grid; grid-template-columns: 150px 1fr; align-items: baseline;
+  margin-top: 18px; padding-top: 16px; border-top: 1px dashed var(--line); font-size: 15px; color: var(--body-ink); }
+.cl-field + .cl-field { margin-top: 0; padding-top: 10px; border-top: 0; }
+/* The label keeps its colon for the crawl; on screen the width clips it. */
+.cl-label { overflow: hidden; white-space: nowrap; font: 500 11.5px/1.6 var(--font-mono); letter-spacing: 0;
+  text-transform: uppercase; color: var(--faint); }
+[data-field="useCase"] .cl-label { width: 8ch; }
+[data-field="problem"] .cl-label { width: 17ch; }
+.cl-foot { padding-top: 40px; padding-bottom: 80px; }
+.cl-foot > div { margin-left: var(--rail); padding-top: 22px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+@media (max-width: 760px) {
+  .cl-top, .cl-hero, .cl-wrap, .cl-foot { padding-left: 22px; padding-right: 22px; }
+  .cl-hero { display: block; padding-top: 48px; padding-bottom: 32px; }
+  .cl-hero h1 { font-size: 40px; }
+  .cl-entry { grid-template-columns: auto 1fr; column-gap: 10px; }
+  .cl-date { line-height: 22px; }
+  .cl-title, .cl-desc, .cl-field { grid-column: 1 / -1; }
+  .cl-title { grid-row: 2; margin-top: 6px; font-size: 22px; line-height: 28px; }
+  .cl-desc { grid-row: 3; }
+  .cl-field { grid-template-columns: 1fr; row-gap: 4px; }
+  .cl-foot > div { margin-left: 0; }
 }
 """.strip()
 
-# The fielded entry's labels and novelty badge. Kept apart from LAYOUT_CSS so a
-# page whose stylesheet predates the fielded shape gets it appended on its next
-# publish; the stylesheet is not crawled, so appending it moves no line.
+# The fielded entry's labels for a page whose stylesheet
+# predates the fielded shape: appended on its next publish, styled for that
+# older layout. The stylesheet is not crawled, so appending it moves no line.
 FIELDS_CSS = """
 /* cl-fields */
 .cl-entry .cl-field { margin-top: 12px; }
 .cl-entry .cl-label { font-weight: 600; color: var(--ink); }
-.cl-entry[data-novelty] h3::after { display: inline-block; vertical-align: middle; margin-left: 10px;
-  padding: 3px 10px; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
-  line-height: 1.4; border-radius: 100px; border: 1px solid var(--line); color: var(--accent);
-  font-family: var(--brand-font-body, -apple-system, 'Segoe UI', sans-serif); }
-""".strip() + '\n' + '\n'.join(
-    f'.cl-entry[data-novelty="{key}"] h3::after {{ content: "{label}"; }}' for key, label in NOVELTY_BADGES.items())
+""".strip()
 
 
 def ensure_fields_css(style):
@@ -342,7 +372,7 @@ def build_style(tokens_css=None, logo_light=None, logo_dark=None):
         logos.append(f'--cl-logo-dark: url({data_uri(logo_dark)});')
     if logos:
         parts.append(':root { ' + ' '.join(logos) + ' }')
-    parts += [LAYOUT_CSS, FIELDS_CSS]
+    parts.append(LAYOUT_CSS)
     return '\n'.join(parts)
 
 
@@ -530,7 +560,7 @@ def field_problems(label, fields, novelty):
             errors.append(f'{label}: its {key} has a line break; each field is one paragraph.')
         elif LEAD_HAZARD.match(value):
             errors.append(f'{label}: its {key} starts with a markdown character (#, -, *, >, |, or "1.").')
-    if novelty not in NOVELTY_BADGES:
+    if novelty not in NOVELTY_VALUES:
         errors.append(f'{label} has no novelty; it must be "net-new" or "improvement".')
     return errors
 

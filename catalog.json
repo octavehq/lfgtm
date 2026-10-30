@@ -1294,7 +1294,7 @@
       ]
     },
     "public-changelog": {
-      "version": "2.0.0",
+      "version": "2.1.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1303,6 +1303,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "2.1.0",
+          "date": "2026-10-30",
+          "notes": "A new or restyled page uses a ledger layout: dates in a left column, the title and description beside them, and Use case and Problem it solves as labeled rows. The New / Improvement badge is gone; novelty still shapes how a description is framed. Titles take the kit's heading font, dates and labels a monospace font. The dated heading is split into inline spans, so every crawled line reads exactly as before; an existing page keeps its look until it is restyled.",
+          "review": false
+        },
         {
           "version": "2.0.0",
           "date": "2026-10-29",
