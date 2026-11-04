@@ -16,7 +16,8 @@ byte-identical. The live page is the lock.
                          [--published-at YYYY-MM-DD]
   changelog.py lines     --html index.html [--expect-state changelog.json]
 
-A new entry is fielded (description, use case, problem, novelty). An entry
+A new entry is fielded (description, use case, problem, novelty), and may carry
+a looping video (`media`: an https mp4 and its poster image). An entry
 published as one paragraph before that keeps its shape unless the paste lists
 it under `reshape` (its paragraph is replaced by fields) or `remove` (it comes
 off the page). Those are the only live lines a publish may change; every other
@@ -35,10 +36,10 @@ from datetime import date as Date, datetime, timezone
 from html.parser import HTMLParser
 from pathlib import Path
 
-# Version 2 added the fielded entry; a version 1 state holds only paragraph
-# entries and is read as-is, then written back as version 2.
-SCHEMA_VERSION = 2
-READABLE_SCHEMA_VERSIONS = {1, 2}
+# Version 2 added the fielded entry and version 3 an entry's optional media. An
+# older state is read as-is and written back as the current version.
+SCHEMA_VERSION = 3
+READABLE_SCHEMA_VERSIONS = {1, 2, 3}
 TITLE_MAX_CHARS = 120
 
 # A new entry is fielded: a description, then one labeled line per field. Each
@@ -55,6 +56,12 @@ NOVELTY_VALUES = {'net-new', 'improvement'}
 DELTA_MIN_CHARS = 40
 DELTA_MAX_CHARS = 100_000
 BUNDLE_FILES = ['index.html', 'changelog.json']
+# An entry's media is a looping, muted video beside its fields: an https mp4 and
+# a poster image. A <video> carries no text, so the crawl reads no line from it;
+# it is the one element the page may fetch from elsewhere, and only these URLs.
+MEDIA_KEYS = ('mp4', 'poster')
+MEDIA_URL_RE = {'mp4': re.compile(r'^https://[^\s"\'<>]+\.mp4$', re.I),
+                'poster': re.compile(r'^https://[^\s"\'<>]+\.(png|jpe?g|webp)$', re.I)}
 
 # Locale-independent on purpose: a month heading that changes shape between two
 # operators' machines is a whole month re-extracted as new.
@@ -156,6 +163,25 @@ def entry_lines(entry):
     return [entry['description']] + [f'{label} {entry[key]}' for key, label in FIELD_LABELS]
 
 
+def media_problems(label, media):
+    """What is wrong with one entry's media, as refusal lines; [] when it can publish.
+
+      media_problems('"X"', {'mp4': 'https://cdn.example/x.mp4', 'poster': 'https://cdn.example/x.png'})  # -> []
+      media_problems('"X"', {'mp4': 'http://cdn.example/x.mov', 'poster': 'https://cdn.example/x.png'})
+      # -> ['"X": its media mp4 must be an https URL ending in .mp4 (…).']
+    """
+    if not isinstance(media, dict) or set(media) != set(MEDIA_KEYS):
+        return [f'{label}: its media must be exactly {{"mp4": …, "poster": …}}.']
+    return [f'{label}: its media {key} must be an https URL ending in '
+            f'{".mp4" if key == "mp4" else ".png, .jpg or .webp"} ({media[key]!r}).'
+            for key in MEDIA_KEYS if not isinstance(media[key], str) or not MEDIA_URL_RE[key].match(media[key])]
+
+
+def media_html(media):
+    return (f'<video class="cl-media" src="{escape(media["mp4"])}" poster="{escape(media["poster"])}" '
+            'autoplay muted loop playsinline preload="metadata"></video>')
+
+
 def sorted_entries(state):
     """Newest date first. Python's sort is stable, so entries sharing a date keep
     their stored order and never swap places between renders."""
@@ -208,13 +234,14 @@ def render_html(state, style):
                      entry_heading(entry),
                      f'<p class="cl-desc">{escape(entry["description"])}</p>',
                      *[f'<p class="cl-field" data-field="{key}"><span class="cl-label">{escape(label)}</span> {escape(entry[key])}</p>'
-                       for key, label in FIELD_LABELS],
-                     '</article>']
+                       for key, label in FIELD_LABELS]]
         else:
             body += ['<article class="cl-entry">',
                      entry_heading(entry),
-                     f'<p class="cl-desc">{escape(entry["body"])}</p>',
-                     '</article>']
+                     f'<p class="cl-desc">{escape(entry["body"])}</p>']
+        if entry.get('media'):
+            body.append(media_html(entry['media']))
+        body.append('</article>')
     if current is not None:
         body.append('</section>')
     return '\n'.join([
@@ -345,6 +372,22 @@ FIELDS_CSS = """
 def ensure_fields_css(style):
     """A carried-over stylesheet, plus the fielded-entry rules if it lacks them."""
     return style if '/* cl-fields */' in style else f'{style}\n{FIELDS_CSS}'
+
+
+# An entry's video, sized to the description's column. Appended to a stylesheet
+# the first time an entry carries media, and never again (the marker).
+MEDIA_CSS = """
+/* cl-media */
+.cl-media { display: block; grid-column: 2; width: 100%; height: auto; margin-top: 22px;
+  border: 1px solid var(--line); border-radius: var(--brand-radius-card, var(--brand-radius, 12px)); background: var(--line); }
+@media (max-width: 760px) { .cl-media { grid-column: 1 / -1; margin-top: 18px; } }
+""".strip()
+
+
+def ensure_media_css(style, state):
+    """The stylesheet, plus the media rules when an entry carries media and it lacks them."""
+    needed = any(entry.get('media') for entry in state['entries'])
+    return f'{style}\n{MEDIA_CSS}' if needed and '/* cl-media */' not in style else style
 
 
 LOGO_MIME = {'.png': 'image/png', '.svg': 'image/svg+xml', '.jpg': 'image/jpeg',
@@ -542,8 +585,11 @@ def validate_entering(entries, state):
             errors.append(f'{label} is a single paragraph. New entries are fielded: give it a description, a useCase, a problem and a novelty ("net-new" or "improvement") instead of a body.')
             continue
         errors += field_problems(label, fields, novelty)
+        media = raw.get('media')
+        if media is not None:
+            errors += media_problems(label, media)
         entering.append({'id': entry_id, 'date': entry_date, 'title': title, 'novelty': novelty,
-                         **{key: fields[key] for key in TEXT_FIELDS}})
+                         **{key: fields[key] for key in TEXT_FIELDS}, **({'media': media} if media is not None else {})})
     if errors:
         raise Refused(f'Refusing the whole batch ({len(errors)} problem(s)):\n- ' + '\n- '.join(errors))
     return entering, already_live
@@ -596,7 +642,10 @@ def validate_live_changes(reshape, remove, state, entering_ids):
         fields = {key: (raw.get(key) or '').strip() if isinstance(raw.get(key), str) else '' for key in TEXT_FIELDS}
         novelty = raw.get('novelty')
         errors += field_problems(label, fields, novelty)
-        reshaped[entry_id] = {'novelty': novelty, **fields}
+        media = raw.get('media')
+        if media is not None:
+            errors += media_problems(label, media)
+        reshaped[entry_id] = {'novelty': novelty, **fields, **({'media': media} if media is not None else {})}
     for entry_id in remove:
         if not isinstance(entry_id, str) or entry_id not in live:
             errors.append(f'Remove {entry_id!r} is not live; only an entry already on the page can be removed.')
@@ -685,11 +734,20 @@ def run_checks(old_lines, state, style, retiring=frozenset()):
     else:
         checks.append(check('delta', True, f'{len(added)} new line(s), {chars} characters'))
 
-    problem = next((label for pattern, label in VOLATILE if pattern.search(html)), None)
-    if problem is None and LINK_RE.search(html):
+    # Media is the one sanctioned fetch, so the page is scanned without it and
+    # every media URL is checked on its own, carried-over ones included.
+    without_media = render_html({**state, 'entries': [{k: v for k, v in entry.items() if k != 'media'}
+                                                      for entry in state['entries']]}, style)
+    problem = next((label for pattern, label in VOLATILE if pattern.search(without_media)), None)
+    if problem is None and LINK_RE.search(without_media):
         problem = 'a link; shallow-domain crawling turns each one into its own child resource'
-    if problem is None and EXTERNAL_FETCH_RE.search(html):
+    if problem is None and EXTERNAL_FETCH_RE.search(without_media):
         problem = 'an external fetch (stylesheet, @import, font or image URL); inline it instead'
+    if problem is None:
+        bad_media = [line for entry in state['entries'] if 'media' in entry
+                     for line in media_problems(f'"{entry["title"]}"', entry['media'])]
+        if bad_media:
+            problem = f'media that is not an https mp4 with a poster image: {bad_media[0]}'
     checks.append(check('page-safety', problem is None,
                         'no volatile text, links or external fetches' if problem is None else f'page contains {problem}'))
 
@@ -757,6 +815,7 @@ def cmd_add(args):
         print(f'\n  Live lines the reviewer\'s reshapes and removals retire ({len(retiring)}):')
         for line in sorted(retiring):
             print(f'    - {line if len(line) <= 110 else line[:110] + "…"}')
+    style = ensure_media_css(style, next_state)
     checks, html, added = run_checks(old_lines, next_state, style, retiring)
     print()
     print_checks(checks)

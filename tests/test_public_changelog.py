@@ -12,6 +12,7 @@ spec = importlib.util.spec_from_file_location('changelog', ROOT/'skills/public-c
 cl = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(cl)
 
+MEDIA = {'mp4': 'https://cdn.example/changelog/loop.mp4', 'poster': 'https://cdn.example/changelog/loop-poster.png'}
 PAGE = {'title': 'Acme Changelog', 'dek': 'What we shipped, and what it means for Acme teams.',
         'footer': 'Acme, pipeline that plans itself.'}
 
@@ -116,7 +117,7 @@ class PublicChangelogTest(unittest.TestCase):
         written = json.loads((self.dir/'bundle/changelog.json').read_text())
         expected = {k: v for k, v in entry('n', '2026-09-20', 'Pipeline Watch').items() if k != 'availability'}
         self.assertEqual(written['entries'][0], {**expected, 'publishedAt': '2026-09-23'})
-        self.assertEqual(written['schemaVersion'], 2)
+        self.assertEqual(written['schemaVersion'], 3)
         self.assertEqual(json.loads((self.dir/'bundle.manifest.json').read_text()), ['index.html', 'changelog.json'])
 
     def test_a_live_line_that_would_change_refuses_the_publish(self):
@@ -176,12 +177,12 @@ class PublicChangelogTest(unittest.TestCase):
         self.assertNotIn('New', [line.strip() for line in lines])
         self.assertNotIn('content: "New"', html)
 
-    def test_a_version_1_state_is_read_and_written_back_as_version_2(self):
+    def test_a_version_1_state_is_read_and_written_back_as_the_current_version(self):
         s = state(legacy('a', '2026-08-20', 'Deal Plans'))
         self.assertEqual(s['schemaVersion'], 1)
         code, output = self.add(s, [entry('n', '2026-09-20', 'Pipeline Watch')], html=cl.render_html(s, cl.build_style()))
         self.assertEqual(code, 0, output)
-        self.assertEqual(json.loads((self.dir/'bundle/changelog.json').read_text())['schemaVersion'], 2)
+        self.assertEqual(json.loads((self.dir/'bundle/changelog.json').read_text())['schemaVersion'], 3)
 
     def test_a_duplicate_line_is_refused(self):
         twin = entry('twin', '2026-09-20', 'Deal Plans')
@@ -291,6 +292,42 @@ class PublicChangelogTest(unittest.TestCase):
         code, output = self.publish(s, live, reshape=[self.fields_for('a', 'Deal Plans')])
         self.assertEqual(code, 1)
         self.assertIn('✗ history', output)
+
+    def test_an_entry_with_media_renders_a_video_the_crawl_reads_nothing_from(self):
+        s = state(legacy('a', '2026-08-20', 'Deal Plans'))
+        live = cl.render_html(s, 'body{color:red}\n/* cl-fields */')
+        code, output = self.add(s, [entry('n', '2026-09-20', 'Pipeline Watch', media=MEDIA)], html=live)
+        self.assertEqual(code, 0, output)
+        self.assertIn('✓ page-safety', output)
+        html = (self.dir/'bundle/index.html').read_text()
+        self.assertIn(f'<video class="cl-media" src="{MEDIA["mp4"]}" poster="{MEDIA["poster"]}" '
+                      'autoplay muted loop playsinline preload="metadata"></video>\n</article>', html)
+        self.assertEqual(cl.page_lines(html), cl.render_lines(json.loads((self.dir/'bundle/changelog.json').read_text())))
+        # The media rules are appended once, and a later publish carries the video and adds no rules.
+        self.assertEqual(html.count('/* cl-media */'), 1)
+        written = json.loads((self.dir/'bundle/changelog.json').read_text())
+        self.assertEqual(written['entries'][0]['media'], MEDIA)
+        code, output = self.add(written, [entry('m', '2026-10-20', 'Win Rooms')], html=html)
+        self.assertEqual(code, 0, output)
+        again = (self.dir/'bundle/index.html').read_text()
+        self.assertEqual(again.count('/* cl-media */'), 1)
+        self.assertEqual(again.count('<video'), 1)
+
+    def test_media_that_is_not_an_https_mp4_with_a_poster_is_refused(self):
+        s = state(legacy('a', '2026-08-20', 'Deal Plans'))
+        live = cl.render_html(s, cl.build_style())
+        for media, message in [({'mp4': MEDIA['mp4']}, 'must be exactly'),
+                               ({**MEDIA, 'mp4': 'http://cdn.example/loop.mp4'}, 'media mp4 must be an https URL'),
+                               ({**MEDIA, 'poster': 'https://cdn.example/x.png" onload="1'}, 'media poster must be an https URL')]:
+            with self.subTest(message=message):
+                code, output = self.add(s, [entry('n', '2026-09-20', 'Pipeline Watch', media=media)], html=live)
+                self.assertEqual(code, 1)
+                self.assertIn(message, output)
+        # Carried-over media is checked too, not only what is pasted.
+        bad = {**state(entry('n', '2026-09-20', 'Pipeline Watch')), 'schemaVersion': 3}
+        bad['entries'][0]['media'] = {**MEDIA, 'mp4': 'https://cdn.example/loop.mov'}
+        checks, _, _ = cl.run_checks([], bad, cl.build_style())
+        self.assertFalse(next(c for c in checks if c['name'] == 'page-safety')['ok'])
 
     def test_lines_confirms_a_page_against_its_state(self):
         s = state(entry('a', '2026-08-20', 'Deal Plans'))
