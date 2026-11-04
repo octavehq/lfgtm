@@ -1294,7 +1294,7 @@
       ]
     },
     "public-changelog": {
-      "version": "2.1.0",
+      "version": "2.2.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1303,6 +1303,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "2.2.0",
+          "date": "2026-11-03",
+          "notes": "An entry can carry a looping video (an https mp4 and its poster image), shown under its fields. The page state moves to version 3 and older states are still read. A page that already shows videos is re-rendered byte for byte, so publishing on top of it keeps them.",
+          "review": false
+        },
         {
           "version": "2.1.0",
           "date": "2026-10-30",

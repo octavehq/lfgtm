@@ -77,6 +77,11 @@ month heading when nothing else is left under it. All of it goes out in the same
 new entries. Before step 5, tell the user that Octave reads reshaped fields as new content once,
 so a batch of Core Feature update suggestions follows.
 
+An entry may also carry `"media": { "mp4": "https://….mp4", "poster": "https://….png" }`, a
+looping muted video shown under its fields (on a new entry or a reshape). Both URLs must be https;
+a video carries no text, so it adds no line the crawl reads. It is the only thing the page loads
+from elsewhere, so host it somewhere permanent: a URL that later breaks leaves an empty frame.
+
 An older staging page copies `schemaVersion: 2` entries with a single `body`. Those are refused
 as new entries; ask for the fields (or re-copy from an updated staging page). One already live
 with identical text is skipped, as always.
