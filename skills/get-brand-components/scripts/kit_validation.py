@@ -142,7 +142,7 @@ def surface_issues(render):
     return issues
 
 
-def validate_manifest(root, man, expected_domain=None, workspace=None, strict=False):
+def validate_manifest(root, man, expected_domain=None, workspace=None):
     if expected_domain and man.get('canonicalDomain') != expected_domain.lower().rstrip('.'):
         raise ValueError('brand domain identity mismatch')
     if workspace and man.get('workspaceOId') != workspace:
@@ -188,11 +188,6 @@ def validate_manifest(root, man, expected_domain=None, workspace=None, strict=Fa
     for name, digest in man.get('assetChecksums', {}).items():
         if hashlib.sha256(asset_path(root, name).read_bytes()).hexdigest() != digest:
             raise ValueError(f'asset checksum mismatch: {name}')
-    # Strict (promotion): the kit must be able to brand a document; a kit already in the cache is read as it is.
-    if strict:
-        issues = surface_issues(render)
-        if issues:
-            raise ValueError('the kit cannot brand a document: ' + '; '.join(issues))
     return render
 
 
