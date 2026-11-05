@@ -113,7 +113,7 @@ def promote(staging,base,domain,workspace,status='draft',write_checksums_first=F
     if manifest.get('schemaVersion')!=1:raise ValueError('capture requires schemaVersion 1')
     if not manifest.get('sourceUrls') or not manifest.get('capturedAt') or not manifest.get('allowedUse'):
         raise ValueError('capture requires provenance, date and allowed-use decisions')
-    validate_manifest(staging,manifest,domain,workspace)
+    validate_manifest(staging,manifest,domain,workspace,strict=True)
     for name in ('tokens.css','brand-kit.md','components.html'):asset_path(staging,name)
     checks=manifest.get('assetChecksums') or {}
     for rel,p in capture_files(staging):

@@ -242,6 +242,32 @@ class SvgLifting(unittest.TestCase):
         self.assertEqual(out[1]["src"], "https://www.acme.com/media/loop.mp4")
         self.assertEqual(files, ["hero-img-2.png", "og-3.png", "poster-0.jpg"])
 
+    def test_surface_issues_want_a_second_surface_and_both_logos(self):
+        light = {'tokens': {'--brand-bg': '#ffffff', '--brand-band': 'linear-gradient(175deg, #08062c, #1b1a35)', '--brand-on-dark': '#dfdff4'},
+                 'logo': {'onLight': 'logo.svg', 'onDark': 'logo-dark.svg'}}
+        self.assertEqual(kit_validation.surface_issues(light), [])
+        # A site captured as one dark navy throughout: page and every surface the same, one logo.
+        navy = {'tokens': {'--brand-bg': '#08062c', '--brand-canvas': '#08062c', '--brand-band': '#08062c', '--brand-on-dark': '#dfdff4'},
+                'logo': {'onLight': 'logo.svg'}}
+        issues = kit_validation.surface_issues(navy)
+        self.assertEqual(len(issues), 2)
+        self.assertIn('one surface only', issues[0])
+        self.assertIn('render.logo.onDark', issues[1])
+        # A raised surface and the dark mark settle it; a light brand with no dark surface needs neither.
+        navy['tokens']['--brand-surface'] = '#1b1a35'
+        navy['logo']['onDark'] = 'logo-dark.png'
+        self.assertEqual(kit_validation.surface_issues(navy), [])
+        # A faint alternate background is not a second surface: a light brand needs its dark band.
+        paper = {'tokens': {'--brand-bg': '#ffffff', '--brand-bg-alt': '#eff0f7'}, 'logo': {'onLight': 'logo.svg'}}
+        self.assertEqual(len(kit_validation.surface_issues(paper)), 1)
+        paper['tokens']['--brand-band'] = '#0c1615'
+        paper['tokens']['--brand-on-dark'] = '#ffffff'
+        paper['logo']['onDark'] = 'logo-dark.svg'
+        self.assertEqual(kit_validation.surface_issues(paper), [])
+        self.assertEqual(kit_validation.surface_issues({'tokens': {'--brand-bg': '#fff'}, 'logo': {}}),
+                         ['render.logo.onLight is required: the mark for a light surface',
+                          'one surface only: none of --brand-band, --brand-surface-dark, --brand-bg-alt, --brand-surface, --brand-canvas reads as a different surface from --brand-bg; a document needs a second surface for its cover and bands (a dark band for a light brand, a raised surface for a dark one)'])
+
     def test_logo_ink_luminance_suggests_the_surface(self):
         white = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><path fill="#fff" d="M0 0h10v10z"/><path fill="white" d="M0 0h5"/></svg>'
         dark = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><path fill="#111" d="M0 0h10v10z"/><path fill="rgb(20, 20, 20)" d="M0 0h5"/></svg>'
