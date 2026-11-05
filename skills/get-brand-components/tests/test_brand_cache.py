@@ -20,7 +20,9 @@ def module(name):
 
 cache = module("brand_cache")
 
+# A kit that can brand a document: the page, a second (dark) surface and the ink on it.
 TOKENS = {"--brand-bg": "#ffffff", "--brand-ink": "#111111", "--brand-primary": "#0055ff",
+          "--brand-surface-dark": "#0b1f33", "--brand-on-dark": "#ffffff",
           "--brand-font-heading": "Georgia, serif", "--brand-font-body": "Arial, sans-serif"}
 LOGO = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 30"><rect width="120" height="30" fill="#0055ff"/></svg>'
 
