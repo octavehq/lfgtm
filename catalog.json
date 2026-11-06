@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "skills": {
     "abm": {
-      "version": "1.3.0",
+      "version": "1.3.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -11,6 +11,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.1",
+          "date": "2026-11-05",
+          "notes": "Shared presentation guidance: cards, callouts and quotes no longer carry accent stripes unless the brand kit draws one.",
+          "review": false
+        },
         {
           "version": "1.3.0",
           "date": "2026-10-27",
@@ -56,7 +62,7 @@
       ]
     },
     "ads": {
-      "version": "1.2.0",
+      "version": "1.2.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -65,6 +71,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.1",
+          "date": "2026-11-05",
+          "notes": "Shared presentation guidance: cards, callouts and quotes no longer carry accent stripes unless the brand kit draws one.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-27",
@@ -110,7 +122,7 @@
       ]
     },
     "ads-resonance": {
-      "version": "1.2.0",
+      "version": "1.2.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -119,6 +131,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.1",
+          "date": "2026-11-05",
+          "notes": "Shared presentation guidance: cards, callouts and quotes no longer carry accent stripes unless the brand kit draws one.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-27",
@@ -158,7 +176,7 @@
       ]
     },
     "asset-manager": {
-      "version": "1.4.1",
+      "version": "1.4.2",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -167,6 +185,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.4.2",
+          "date": "2026-11-05",
+          "notes": "Shared presentation guidance: cards, callouts and quotes no longer carry accent stripes unless the brand kit draws one.",
+          "review": false
+        },
         {
           "version": "1.4.1",
           "date": "2026-10-28",
@@ -224,7 +248,7 @@
       ]
     },
     "audit": {
-      "version": "1.2.0",
+      "version": "1.2.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -233,6 +257,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.1",
+          "date": "2026-11-05",
+          "notes": "Shared presentation guidance: cards, callouts and quotes no longer carry accent stripes unless the brand kit draws one.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-27",
@@ -272,7 +302,7 @@
       ]
     },
     "battlecard-doc": {
-      "version": "1.3.0",
+      "version": "1.3.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -281,6 +311,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.1",
+          "date": "2026-11-05",
+          "notes": "Shared presentation guidance: cards, callouts and quotes no longer carry accent stripes unless the brand kit draws one.",
+          "review": false
+        },
         {
           "version": "1.3.0",
           "date": "2026-10-27",
@@ -326,7 +362,7 @@
       ]
     },
     "call-analyzer": {
-      "version": "1.3.0",
+      "version": "1.3.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -335,6 +371,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.1",
+          "date": "2026-11-05",
+          "notes": "Shared presentation guidance: cards, callouts and quotes no longer carry accent stripes unless the brand kit draws one.",
+          "review": false
+        },
         {
           "version": "1.3.0",
           "date": "2026-10-27",
@@ -391,7 +433,7 @@
       "changelog": [
         {
           "version": "1.4.0",
-          "date": "2026-11-02",
+          "date": "2026-11-05",
           "notes": "Quotes and cards no longer carry accent stripes unless the brand kit draws one; the visual kit's quote is set apart by size instead of a left border.",
           "review": false
         },
@@ -440,7 +482,7 @@
       ]
     },
     "deal-coach": {
-      "version": "1.3.0",
+      "version": "1.3.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -449,6 +491,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.1",
+          "date": "2026-11-05",
+          "notes": "Shared presentation guidance: cards, callouts and quotes no longer carry accent stripes unless the brand kit draws one.",
+          "review": false
+        },
         {
           "version": "1.3.0",
           "date": "2026-10-27",
@@ -505,7 +553,7 @@
       "changelog": [
         {
           "version": "1.3.0",
-          "date": "2026-11-02",
+          "date": "2026-11-05",
           "notes": "Cards and quotes no longer carry accent stripes (a colored bar along the top or left edge) unless the brand kit draws one; depth comes from a soft shadow or a surface step, importance from size, weight and space.",
           "review": false
         },
@@ -548,7 +596,7 @@
       ]
     },
     "digest": {
-      "version": "1.3.0",
+      "version": "1.3.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -557,6 +605,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.1",
+          "date": "2026-11-05",
+          "notes": "Shared presentation guidance: cards, callouts and quotes no longer carry accent stripes unless the brand kit draws one.",
+          "review": false
+        },
         {
           "version": "1.3.0",
           "date": "2026-10-27",
@@ -608,7 +662,7 @@
       ]
     },
     "generate": {
-      "version": "1.3.0",
+      "version": "1.3.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -617,6 +671,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.1",
+          "date": "2026-11-05",
+          "notes": "Shared presentation guidance: cards, callouts and quotes no longer carry accent stripes unless the brand kit draws one.",
+          "review": false
+        },
         {
           "version": "1.3.0",
           "date": "2026-10-27",
@@ -662,7 +722,7 @@
       ]
     },
     "get-brand-components": {
-      "version": "1.5.0",
+      "version": "1.6.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -671,6 +731,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.6.0",
+          "date": "2026-11-05",
+          "notes": "Brand kits name a second surface and carry a logo for light and for dark backgrounds. A kit missing either is still saved, with a warning that names what is missing. Shared presentation guidance: cards, callouts and quotes no longer carry accent stripes unless the brand kit draws one.",
+          "review": false
+        },
         {
           "version": "1.5.0",
           "date": "2026-10-27",
@@ -728,7 +794,7 @@
       ]
     },
     "icp-refine": {
-      "version": "1.3.0",
+      "version": "1.3.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -737,6 +803,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.1",
+          "date": "2026-11-05",
+          "notes": "Shared presentation guidance: cards, callouts and quotes no longer carry accent stripes unless the brand kit draws one.",
+          "review": false
+        },
         {
           "version": "1.3.0",
           "date": "2026-10-27",
@@ -782,7 +854,7 @@
       ]
     },
     "insights": {
-      "version": "1.3.0",
+      "version": "1.3.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -791,6 +863,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.1",
+          "date": "2026-11-05",
+          "notes": "Shared presentation guidance: cards, callouts and quotes no longer carry accent stripes unless the brand kit draws one.",
+          "review": false
+        },
         {
           "version": "1.3.0",
           "date": "2026-10-27",
@@ -836,7 +914,7 @@
       ]
     },
     "library": {
-      "version": "1.2.0",
+      "version": "1.2.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -847,6 +925,12 @@
         "get_entity_schema"
       ],
       "changelog": [
+        {
+          "version": "1.2.1",
+          "date": "2026-11-05",
+          "notes": "Shared presentation guidance: cards, callouts and quotes no longer carry accent stripes unless the brand kit draws one.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-27",
@@ -892,7 +976,7 @@
       ]
     },
     "meeting-prep": {
-      "version": "1.3.0",
+      "version": "1.3.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -901,6 +985,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.1",
+          "date": "2026-11-05",
+          "notes": "Shared presentation guidance: cards, callouts and quotes no longer carry accent stripes unless the brand kit draws one.",
+          "review": false
+        },
         {
           "version": "1.3.0",
           "date": "2026-10-27",
@@ -957,7 +1047,7 @@
       "changelog": [
         {
           "version": "1.3.0",
-          "date": "2026-11-02",
+          "date": "2026-11-05",
           "notes": "Quotes and cards no longer carry accent stripes unless the brand kit draws one; the visual kit's quote is set apart by size instead of a left border.",
           "review": false
         },
@@ -1011,7 +1101,7 @@
       "changelog": [
         {
           "version": "1.4.0",
-          "date": "2026-11-02",
+          "date": "2026-11-05",
           "notes": "Quotes and cards no longer carry accent stripes unless the brand kit draws one; the visual kit's quote is set apart by size instead of a left border.",
           "review": false
         },
@@ -1060,7 +1150,7 @@
       ]
     },
     "pipeline": {
-      "version": "1.3.0",
+      "version": "1.3.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1069,6 +1159,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.1",
+          "date": "2026-11-05",
+          "notes": "Shared presentation guidance: cards, callouts and quotes no longer carry accent stripes unless the brand kit draws one.",
+          "review": false
+        },
         {
           "version": "1.3.0",
           "date": "2026-10-27",
@@ -1114,7 +1210,7 @@
       ]
     },
     "positioning": {
-      "version": "1.3.0",
+      "version": "1.3.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1123,6 +1219,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.1",
+          "date": "2026-11-05",
+          "notes": "Shared presentation guidance: cards, callouts and quotes no longer carry accent stripes unless the brand kit draws one.",
+          "review": false
+        },
         {
           "version": "1.3.0",
           "date": "2026-10-27",
@@ -1168,7 +1270,7 @@
       ]
     },
     "product-launch": {
-      "version": "1.2.0",
+      "version": "1.2.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1177,6 +1279,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.1",
+          "date": "2026-11-05",
+          "notes": "Shared presentation guidance: cards, callouts and quotes no longer carry accent stripes unless the brand kit draws one.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-27",
@@ -1216,7 +1324,7 @@
       ]
     },
     "proposal": {
-      "version": "1.3.0",
+      "version": "1.3.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1225,6 +1333,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.1",
+          "date": "2026-11-05",
+          "notes": "Shared presentation guidance: cards, callouts and quotes no longer carry accent stripes unless the brand kit draws one.",
+          "review": false
+        },
         {
           "version": "1.3.0",
           "date": "2026-10-27",
@@ -1270,7 +1384,7 @@
       ]
     },
     "prospector": {
-      "version": "1.2.0",
+      "version": "1.2.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1279,6 +1393,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.1",
+          "date": "2026-11-05",
+          "notes": "Shared presentation guidance: cards, callouts and quotes no longer carry accent stripes unless the brand kit draws one.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-27",
@@ -1318,7 +1438,7 @@
       ]
     },
     "public-changelog": {
-      "version": "2.2.0",
+      "version": "2.2.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1327,6 +1447,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "2.2.1",
+          "date": "2026-11-05",
+          "notes": "Shared presentation guidance: cards, callouts and quotes no longer carry accent stripes unless the brand kit draws one.",
+          "review": false
+        },
         {
           "version": "2.2.0",
           "date": "2026-11-03",
@@ -1372,7 +1498,7 @@
       ]
     },
     "qual-doctor": {
-      "version": "1.2.0",
+      "version": "1.2.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1381,6 +1507,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.1",
+          "date": "2026-11-05",
+          "notes": "Shared presentation guidance: cards, callouts and quotes no longer carry accent stripes unless the brand kit draws one.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-27",
@@ -1420,7 +1552,7 @@
       ]
     },
     "research": {
-      "version": "1.3.0",
+      "version": "1.3.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1429,6 +1561,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.1",
+          "date": "2026-11-05",
+          "notes": "Shared presentation guidance: cards, callouts and quotes no longer carry accent stripes unless the brand kit draws one.",
+          "review": false
+        },
         {
           "version": "1.3.0",
           "date": "2026-10-27",
@@ -1474,7 +1612,7 @@
       ]
     },
     "signals": {
-      "version": "1.2.0",
+      "version": "1.2.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1483,6 +1621,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.1",
+          "date": "2026-11-05",
+          "notes": "Shared presentation guidance: cards, callouts and quotes no longer carry accent stripes unless the brand kit draws one.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-27",
@@ -1522,7 +1666,7 @@
       ]
     },
     "train": {
-      "version": "1.2.0",
+      "version": "1.2.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1531,6 +1675,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.1",
+          "date": "2026-11-05",
+          "notes": "Shared presentation guidance: cards, callouts and quotes no longer carry accent stripes unless the brand kit draws one.",
+          "review": false
+        },
         {
           "version": "1.2.0",
           "date": "2026-10-27",
@@ -1570,7 +1720,7 @@
       ]
     },
     "win-loss-report": {
-      "version": "1.3.0",
+      "version": "1.3.1",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1579,6 +1729,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.1",
+          "date": "2026-11-05",
+          "notes": "Shared presentation guidance: cards, callouts and quotes no longer carry accent stripes unless the brand kit draws one.",
+          "review": false
+        },
         {
           "version": "1.3.0",
           "date": "2026-10-27",
