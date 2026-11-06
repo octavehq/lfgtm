@@ -172,6 +172,14 @@ The reusable core. A single `:root` block plus a web-font `@import`/comment. Use
   --brand-positive: <hex>;
   --brand-negative: <hex>;
   --brand-band: <full gradient or solid for dark hero/footer>;
+  /* Two surfaces, always. --brand-bg is the page; at least one of --brand-band (its first stop),
+     --brand-surface-dark, --brand-bg-alt, --brand-surface or --brand-canvas must read as a different
+     surface (as `kit_validation.surface_issues` measures it), so a document can change surface for its cover and bands:
+     a light brand gives its dark band, a dark-only brand a raised surface. A kit with any dark
+     surface also carries --brand-on-dark and both logo variants. `brand_cache.py promote` warns
+     about a kit without them and records it (kit_validation.surface_issues); fix them before
+     marking the kit ready, or its documents come out one colour. Check a kit with
+     `python3 scripts/kit_validation.py <kit-dir>`. */
 
   /* type */
   --brand-font-heading: <stack>;

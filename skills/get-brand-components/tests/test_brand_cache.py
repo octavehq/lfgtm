@@ -20,7 +20,9 @@ def module(name):
 
 cache = module("brand_cache")
 
+# A kit that can brand a document: the page, a second (dark) surface and the ink on it.
 TOKENS = {"--brand-bg": "#ffffff", "--brand-ink": "#111111", "--brand-primary": "#0055ff",
+          "--brand-surface-dark": "#0b1f33", "--brand-on-dark": "#ffffff",
           "--brand-font-heading": "Georgia, serif", "--brand-font-body": "Arial, sans-serif"}
 LOGO = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 30"><rect width="120" height="30" fill="#0055ff"/></svg>'
 
@@ -40,6 +42,32 @@ def staging_kit(root):
 
 
 class CacheLifecycle(unittest.TestCase):
+    def test_a_one_surface_kit_is_saved_with_a_warning_and_its_issues_recorded(self):
+        with tempfile.TemporaryDirectory() as d:
+            staging = staging_kit(pathlib.Path(d) / "staging")
+            # one colour throughout: no second surface, no ink for a dark one
+            man = json.loads((staging / "manifest.json").read_text())
+            for token in ("--brand-surface-dark", "--brand-on-dark"):
+                man["render"]["tokens"].pop(token)
+            (staging / "manifest.json").write_text(json.dumps(man))
+            base = pathlib.Path(d) / "brands"
+            r = subprocess.run([sys.executable, str(SKILL / "scripts/brand_cache.py"), "promote", str(staging), "--base", str(base),
+                                "--domain", "acme.com", "--workspace", "ws1", "--write-checksums"], capture_output=True, text=True)
+            self.assertEqual(r.returncode, 0, r.stderr)
+            self.assertIn("WARNING: this kit cannot fully brand a document: one surface only", r.stderr)
+            target = (base / "ws1" / "acme.com").absolute()
+            issues = cache.status(target)["documentIssues"]
+            self.assertEqual(len(issues), 1)
+            self.assertTrue(issues[0].startswith("one surface only"))
+            # marking it ready keeps the record, and the kit loads like any other
+            cache.mark_ready(target, "34/40")
+            self.assertEqual(cache.status(target)["documentIssues"], issues)
+            self.assertEqual(cache.resolve(target)[1]["canonicalDomain"], "acme.com")
+            # a kit with both surfaces records nothing
+            good = staging_kit(pathlib.Path(d) / "good")
+            cache.write_checksums(good)
+            self.assertEqual(cache.status(cache.promote(good, pathlib.Path(d) / "other", "acme.com", "ws1"))["documentIssues"], [])
+
     def test_checksums_then_promote_as_draft_then_mark_ready(self):
         with tempfile.TemporaryDirectory() as d:
             staging = staging_kit(pathlib.Path(d) / "staging")

@@ -152,6 +152,8 @@ Both the floor rules and the craft bar apply to every output.
 
 22. **Accent color is semantic, not decorative.** The primary accent is reserved for elements that carry meaning: active states, callouts, stat values, interactive affordances. Never used as a decorative fill or ornamental border. In charts and data visualizations, use accent color to highlight the key data point that supports the headline: don't make every bar the same color when one bar IS the story. Use callouts or arrows to annotate the key data point when the takeaway isn't self-evident from the visual alone.
 
+22b. **No accent stripes.** Cards, callouts and quotes are never marked with a colored bar or border along their top or left edge unless the brand kit itself uses that device. A quote reads as a quote by its size, its quotation marks and the attribution under it. Importance comes from scale, weight and space, not from a stripe.
+
 23. **Sufficient contrast.** Text meets WCAG AA contrast ratios against its background. Accent colors used as text must be legible on their surface. Define text and surface tokens as checked pairs (4.5:1 for body text, 3:1 at 18px and up); when an accent fails as text, use its darker variant for text and keep the bright one for fills. A contrast self-check computes ratios only on fills it can resolve: text whose nearest fill it cannot compute (`color-mix()`, `oklch()`, a gradient or image) is skipped until an opaque fill it can read sits under the text, and then checked by eye. The [render gate](scripts/render-gate.js) works this way.
 
 ---

@@ -24,7 +24,7 @@ import tempfile
 import time
 from urllib.parse import urlsplit
 import uuid
-from kit_validation import validate_manifest, asset_path
+from kit_validation import validate_manifest, asset_path, surface_issues
 
 STATUSES = ('draft', 'ready')
 
@@ -114,6 +114,9 @@ def promote(staging,base,domain,workspace,status='draft',write_checksums_first=F
     if not manifest.get('sourceUrls') or not manifest.get('capturedAt') or not manifest.get('allowedUse'):
         raise ValueError('capture requires provenance, date and allowed-use decisions')
     validate_manifest(staging,manifest,domain,workspace)
+    # What keeps this kit from branding a document (one surface, a missing mark): recorded on the pointer and
+    # reported, never a reason to refuse the capture. A one-colour kit still loads; its documents are one colour.
+    issues=surface_issues(manifest.get('render') or {})
     for name in ('tokens.css','brand-kit.md','components.html'):asset_path(staging,name)
     checks=manifest.get('assetChecksums') or {}
     for rel,p in capture_files(staging):
@@ -131,7 +134,7 @@ def promote(staging,base,domain,workspace,status='draft',write_checksums_first=F
         shutil.copytree(staging,temp,dirs_exist_ok=True,ignore=shutil.ignore_patterns('.*','__pycache__'))
         resolve(temp,domain,workspace)
         os.rename(temp,versions/capture)
-        write_pointer(target,{'capture':'versions/'+capture,'status':status,'promotedAt':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())})
+        write_pointer(target,{'capture':'versions/'+capture,'status':status,'promotedAt':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),**({'documentIssues':issues} if issues else {})})
     finally:
         if temp.exists():shutil.rmtree(temp)
     return target
@@ -165,7 +168,8 @@ def status(root):
     if capture_dir(root,pointer) is None:  # the folder went away: treat the cache as empty, say what the pointer named
         return {'root':str(root),'status':'missing','capture':None,'stale':pointer['capture']}
     return {'root':str(root),'status':pointer['status'],'capture':pointer['capture'],
-            'promotedAt':pointer.get('promotedAt'),'readyAt':pointer.get('readyAt'),'fidelityScore':pointer.get('fidelityScore')}
+            'promotedAt':pointer.get('promotedAt'),'readyAt':pointer.get('readyAt'),'fidelityScore':pointer.get('fidelityScore'),
+            'documentIssues':pointer.get('documentIssues',[])}
 
 
 def main(argv=None):
@@ -190,6 +194,7 @@ def main(argv=None):
     elif args.cmd=='checksums':print(f'{len(write_checksums(args.staging))} files catalogued in {args.staging/"manifest.json"}')
     elif args.cmd=='promote':
         target=promote(args.staging,args.base,args.domain,args.workspace,args.status,args.write_checksums)
+        for issue in status(target).get('documentIssues',[]):print(f'WARNING: this kit cannot fully brand a document: {issue}',file=sys.stderr)
         print(target);print(f'status: {args.status}'+(' (run the fidelity gate, then `brand_cache.py mark-ready` to publish for consumers)' if args.status=='draft' else ''))
     elif args.cmd=='mark-ready':print(json.dumps(mark_ready(args.root,args.score)))
     elif args.cmd=='status':print(json.dumps(status(args.root)))

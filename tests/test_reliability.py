@@ -182,8 +182,10 @@ print('201' if method=='POST' else '200',end='')
     def test_failed_refresh_preserves_promoted_brand(self):
         staging=self.root/'staging';staging.mkdir()
         for name in ('tokens.css','brand-kit.md','components.html'):(staging/name).write_text('synthetic visual fixture')
-        tokens={'--brand-bg':'#fff','--brand-ink':'#111','--brand-primary':'#124c80','--brand-font-heading':'Arial','--brand-font-body':'Arial'}
-        man={'schemaVersion':1,'canonicalDomain':'example.com','workspaceOId':'workspace-a','capturedAt':'2026-01-01T00:00:00Z','sourceUrls':['https://example.com'],'allowedUse':{'text':'synthetic'},'assetChecksums':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in staging.iterdir()},'render':{'tokens':tokens}}
+        for name,ink in (('logo.svg','#111'),('logo-on-dark.svg','#fff')):(staging/name).write_text(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 10"><rect width="40" height="10" fill="{ink}"/></svg>')
+        # a kit that can brand a document: a second surface, the ink on it, and a mark for each
+        tokens={'--brand-bg':'#fff','--brand-ink':'#111','--brand-primary':'#124c80','--brand-surface-dark':'#0b1f33','--brand-on-dark':'#fff','--brand-font-heading':'Arial','--brand-font-body':'Arial'}
+        man={'schemaVersion':1,'canonicalDomain':'example.com','workspaceOId':'workspace-a','capturedAt':'2026-01-01T00:00:00Z','sourceUrls':['https://example.com'],'allowedUse':{'text':'synthetic'},'assetChecksums':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in staging.iterdir()},'render':{'tokens':tokens,'logo':{'onLight':'logo.svg','onDark':'logo-on-dark.svg'}}}
         (staging/'manifest.json').write_text(json.dumps(man))
         target=cache.promote(staging,self.root/'cache','EXAMPLE.COM','workspace-a');before=(target/'current.json').read_text()
         (staging/'tokens.css').write_text('changed without checksum')

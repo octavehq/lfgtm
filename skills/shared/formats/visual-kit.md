@@ -1,6 +1,6 @@
 # Visual kit: shared components for story and document outputs
 
-A small set of brand-token-driven components that give an HTML output a signature visual instead of another run of cards and bullets. [`visual-kit.css`](visual-kit.css) holds the styles, [`visual-kit.js`](visual-kit.js) the runtime, and [`examples/`](examples/) two finished pages built from nothing else: [`acme-story.html`](examples/acme-story.html) (story mode, buyer-facing) and [`acme-report.html`](examples/acme-report.html) (document mode, internal). Every name and number in them is invented.
+A small set of brand-token-driven components that give an HTML output a signature visual instead of another run of cards and bullets. [`visual-kit.css`](visual-kit.css) holds the styles, [`visual-kit.js`](visual-kit.js) the runtime, and the examples folder two finished pages built from nothing else: [`acme-story.html`](examples/acme-story.html) (story mode, buyer-facing) and [`acme-report.html`](examples/acme-report.html) (document mode, internal). Every name and number in them is invented.
 
 **Who uses it:** any skill rendering HTML. [Story mode](story-mode.md) is built on it. Document-mode outputs ([html-document.md](html-document.md)) borrow single components where one explains a mechanism or a dataset better than prose.
 

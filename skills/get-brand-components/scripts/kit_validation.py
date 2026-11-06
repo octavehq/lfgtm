@@ -116,6 +116,80 @@ def svg_root(raw):
     return tree
 
 
+# ─── Surfaces ───────────────────────────────────────────────────────────
+
+# Two colors read as different surfaces at this contrast ratio, or, between two dark colors where
+# the ratio barely moves, at this distance in RGB (a raised navy card on a navy page is about 29).
+SURFACE_RATIO = 1.25
+SURFACE_DISTANCE = 24
+# A surface with a relative luminance under this reads as dark.
+DARK_LUMINANCE = 0.4
+# The tokens that may carry a kit's second surface, in the order a document prefers them.
+SECOND_SURFACE_TOKENS = ('--brand-band', '--brand-surface-dark', '--brand-bg-alt', '--brand-surface', '--brand-canvas')
+
+
+def first_hex(value):
+    """The first hex color in a token value as (r, g, b), so a gradient gives its first stop; None without one."""
+    m = re.search(r'#([0-9a-f]{6}|[0-9a-f]{3})\b', str(value or ''), re.I)
+    if not m:
+        return None
+    h = m.group(1)
+    if len(h) == 3:
+        h = ''.join(c * 2 for c in h)
+    return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
+
+
+def luminance(rgb):
+    def lin(c):
+        v = c / 255
+        return v / 12.92 if v <= 0.03928 else ((v + 0.055) / 1.055) ** 2.4
+    r, g, b = rgb
+    return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b)
+
+
+def contrast(a, b):
+    hi, lo = sorted((luminance(a), luminance(b)), reverse=True)
+    return (hi + 0.05) / (lo + 0.05)
+
+
+def distinct_surfaces(a, b):
+    """Whether two colors read as different surfaces (see SURFACE_RATIO and SURFACE_DISTANCE)."""
+    distance = sum((x - y) ** 2 for x, y in zip(a, b)) ** 0.5
+    return contrast(a, b) >= SURFACE_RATIO or distance >= SURFACE_DISTANCE
+
+
+def surface_issues(render):
+    """What keeps a kit from branding a document, as plain lines; empty when nothing does.
+
+    A document (a deck, a magazine, a one-pager) alternates two surfaces: the page and a field for
+    its cover and bands. So every kit names a second surface that visibly differs from --brand-bg,
+    and a kit with any dark surface carries the mark for it (logo.onDark) and the ink on it
+    (--brand-on-dark). A site captured as one dark navy throughout fails here until the author
+    gives it a raised surface.
+    """
+    tokens = render.get('tokens') or {}
+    logo = render.get('logo') or {}
+    issues = []
+    if not logo.get('onLight'):
+        issues.append('render.logo.onLight is required: the mark for a light surface')
+    bg = first_hex(tokens.get('--brand-bg'))
+    if bg is None:
+        return issues
+    seconds = []
+    for key in SECOND_SURFACE_TOKENS:
+        color = first_hex(tokens.get(key))
+        if color and distinct_surfaces(bg, color):
+            seconds.append(color)
+    if not seconds:
+        issues.append('one surface only: none of ' + ', '.join(SECOND_SURFACE_TOKENS) + ' reads as a different surface from --brand-bg; a document needs a second surface for its cover and bands (a dark band for a light brand, a raised surface for a dark one)')
+    if luminance(bg) < DARK_LUMINANCE or any(luminance(c) < DARK_LUMINANCE for c in seconds):
+        if not logo.get('onDark'):
+            issues.append('a kit with a dark surface needs render.logo.onDark, the mark for that surface')
+        if '--brand-on-dark' not in tokens:
+            issues.append('--brand-on-dark is required when the kit has a dark surface: the ink on it')
+    return issues
+
+
 def validate_manifest(root, man, expected_domain=None, workspace=None):
     if expected_domain and man.get('canonicalDomain') != expected_domain.lower().rstrip('.'):
         raise ValueError('brand domain identity mismatch')
@@ -163,3 +237,17 @@ def validate_manifest(root, man, expected_domain=None, workspace=None):
         if hashlib.sha256(asset_path(root, name).read_bytes()).hexdigest() != digest:
             raise ValueError(f'asset checksum mismatch: {name}')
     return render
+
+
+if __name__ == '__main__':
+    import json
+    import sys
+    kit = Path(sys.argv[1]) if len(sys.argv) > 1 else None
+    if kit is None or not (kit / 'manifest.json').exists():
+        print('usage: kit_validation.py <kit-dir>  (prints what keeps the kit from branding a document)', file=sys.stderr)
+        sys.exit(2)
+    found = surface_issues(json.loads((kit / 'manifest.json').read_text()).get('render') or {})
+    for line in found:
+        print('- ' + line)
+    print('ok: two surfaces and the logos a document needs' if not found else f'{len(found)} issue(s)')
+    sys.exit(1 if found else 0)
