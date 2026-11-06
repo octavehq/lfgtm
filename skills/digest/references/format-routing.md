@@ -30,7 +30,7 @@ For internal deck and magazine output, offer a compact appendix after the recomm
 - Name and link included Octave report runs or identify the investigation scope and relevant accessible sources
 - Show the reporting window. Show a timezone only when an exact timestamp boundary materially affects scope.
 - State the selected evidence depth and any privacy limitation
-- Include a copyable **Chat with this insight** prompt
+- Include a **Chat with this insight** prompt card with one "Copy prompt" button, built per [HTML document principle 9](../../shared/formats/html-document.md)
 
 The prompt should direct the reader to use the Octave MCP and fetch the named report runs by stable identifier when available, or investigate the specified population and period. Give it a specific analytical starting point, but make clear the reader can replace that question. Keep the appendix visually secondary to the narrative; it should not become a dense evidence dump.
 

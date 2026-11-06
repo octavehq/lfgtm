@@ -9,7 +9,7 @@ description: Analyze deal outcomes and conversation patterns to refine ICP defin
 
 Read [the task method](references/task-method.md) before selecting context, claims, or output. It is the execution method for this skill. Supporting templates supply structure and styling; populate them from the task method and current evidence, not their illustrative figures or assertions.
 
-Use pursued and closed outcomes with denominators. Separate fit, readiness, execution, commercial constraints and unknowns. Validate proposed criteria on held-out cases before applying scoped changes. A missing champion or budget is not automatically a fit exclusion.
+Use pursued and closed outcomes with denominators. Separate fit, readiness, execution, commercial constraints and unknowns. Validate proposed criteria on held-out cases from a period before the diagnostic window before applying scoped changes; a signal that reverses in a sub-segment never gets the top weight. A missing champion or budget is not automatically a fit exclusion.
 
 Use [GTM context](../shared/gtm-context.md) for strategic tasks and [evidence and inputs](../shared/evidence-and-inputs.md) for material claims and missing facts. A narrow list/get or a render-only handoff does not require unrelated research. Read [host runtime](../shared/host-runtime.md) for available tools, portable resource paths, routing, and review fallback.
 

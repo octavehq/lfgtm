@@ -27,7 +27,7 @@ Three horizontal bands forming a "house" — Market layer at the top, MVP in the
   background: transparent;
   border: 1px solid var(--border);
   padding: 0;
-  overflow: hidden;
+  overflow-x: auto; /* the 8-column grid scrolls inside the band on narrow screens; never clip it */
 }
 .house-layer-label {
   font-family: var(--font-display);
@@ -58,7 +58,8 @@ Three horizontal bands forming a "house" — Market layer at the top, MVP in the
 /* Value Proposition Grid (8-column layout) */
 .vp-grid {
   display: grid;
-  grid-template-columns: 120px repeat(7, 1fr);
+  grid-template-columns: 120px repeat(7, minmax(0, 1fr));
+  min-width: 720px;
   font-size: clamp(0.7rem, 0.9vw, 0.8rem);
 }
 .vp-header {
@@ -89,11 +90,11 @@ Three horizontal bands forming a "house" — Market layer at the top, MVP in the
   line-height: 1.4;
 }
 /* Persona color left border on VP rows */
-.vp-row.persona-user { border-left: 3px solid #34d399; }
-.vp-row.persona-champion { border-left: 3px solid #60a5fa; }
-.vp-row.persona-decision { border-left: 3px solid #f59e0b; }
-.vp-row.persona-financial { border-left: 3px solid #f87171; }
-.vp-row.persona-technical { border-left: 3px solid #a78bfa; }
+.vp-row.persona-user { border-left: 3px solid var(--persona-user); }
+.vp-row.persona-champion { border-left: 3px solid var(--persona-champion); }
+.vp-row.persona-decision { border-left: 3px solid var(--persona-decision); }
+.vp-row.persona-financial { border-left: 3px solid var(--persona-financial); }
+.vp-row.persona-technical { border-left: 3px solid var(--persona-technical); }
 
 @media (max-width: 768px) {
   .vp-grid {
@@ -255,10 +256,10 @@ Four columns with a left-to-right color gradient indicating awareness progressio
 .funnel-cell.funnel-stage-4 { opacity: 1.0; }
 
 /* Stage header background colors */
-.funnel-header.funnel-stage-1 { background: rgba(251, 191, 36, 0.1); color: var(--warning); }
-.funnel-header.funnel-stage-2 { background: rgba(248, 113, 113, 0.1); color: var(--error); }
-.funnel-header.funnel-stage-3 { background: rgba(59, 130, 246, 0.1); color: var(--brand-primary); }
-.funnel-header.funnel-stage-4 { background: rgba(52, 211, 153, 0.1); color: var(--success); }
+.funnel-header.funnel-stage-1 { background: color-mix(in srgb, var(--warning) 10%, transparent); color: var(--warning); }
+.funnel-header.funnel-stage-2 { background: color-mix(in srgb, var(--error) 10%, transparent); color: var(--error); }
+.funnel-header.funnel-stage-3 { background: color-mix(in srgb, var(--brand-primary) 10%, transparent); color: var(--brand-primary); }
+.funnel-header.funnel-stage-4 { background: color-mix(in srgb, var(--success) 10%, transparent); color: var(--success); }
 
 .funnel-row-label {
   font-family: var(--font-display);
@@ -299,7 +300,7 @@ Four columns with a left-to-right color gradient indicating awareness progressio
 
 ## Section 6: Use Case Canvas — Split-View Comparison
 
-Two-column layout: "The Current Way" (left, red-tinted) and "The New Way" (right, blue/green-tinted). Each side flows left to right through steps.
+Two-column layout: "The current way" (left, red-tinted) and "The new way" (right, blue/green-tinted). Each side flows left to right through steps.
 
 ```css
 /* === Use Case Canvas === */
@@ -311,22 +312,20 @@ Two-column layout: "The Current Way" (left, red-tinted) and "The New Way" (right
 .canvas-current {
   border-radius: var(--radius-lg);
   padding: 1.25rem;
-  background: rgba(248, 113, 113, 0.04);
-  border: 1px solid rgba(248, 113, 113, 0.15);
+  background: color-mix(in srgb, var(--error) 4%, transparent);
+  border: 1px solid color-mix(in srgb, var(--error) 15%, transparent);
 }
 .canvas-new {
   border-radius: var(--radius-lg);
   padding: 1.25rem;
-  background: rgba(59, 130, 246, 0.04);
-  border: 1px solid rgba(59, 130, 246, 0.15);
+  background: color-mix(in srgb, var(--brand-primary) 4%, transparent);
+  border: 1px solid color-mix(in srgb, var(--brand-primary) 15%, transparent);
 }
 .canvas-label {
   font-family: var(--font-display);
   font-size: 1rem;
   font-weight: 700;
   margin-bottom: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 .canvas-label-current { color: var(--error); }
 .canvas-label-new { color: var(--brand-primary); }
@@ -399,9 +398,10 @@ Horizontal scrollable phase timeline. Each phase is a column card with header, a
   flex: 1;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
-  overflow: hidden;
+  min-width: 0;
 }
 .phase-header {
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   padding: 0.6rem 0.75rem;
   background: var(--bg-elevated);
   border-bottom: 1px solid var(--border);

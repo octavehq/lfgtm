@@ -16,6 +16,13 @@ byte-identical. The live page is the lock.
                          [--published-at YYYY-MM-DD]
   changelog.py lines     --html index.html [--expect-state changelog.json]
 
+A new entry is fielded (description, use case, problem, novelty), and may carry
+a looping video (`media`: an https mp4 and its poster image). An entry
+published as one paragraph before that keeps its shape unless the paste lists
+it under `reshape` (its paragraph is replaced by fields) or `remove` (it comes
+off the page). Those are the only live lines a publish may change; every other
+one must survive.
+
 `add` writes DIR/index.html and DIR/changelog.json (the whole bundle) plus
 DIR.manifest.json beside DIR for the public upload. It writes nothing when a
 check fails. Exit 0 = ok, 1 = refused or invalid input.
@@ -29,16 +36,32 @@ from datetime import date as Date, datetime, timezone
 from html.parser import HTMLParser
 from pathlib import Path
 
-SCHEMA_VERSION = 1
-BODY_MIN_CHARS = 200
-BODY_MAX_CHARS = 900
+# Version 2 added the fielded entry and version 3 an entry's optional media. An
+# older state is read as-is and written back as the current version.
+SCHEMA_VERSION = 3
+READABLE_SCHEMA_VERSIONS = {1, 2, 3}
 TITLE_MAX_CHARS = 120
+
+# A new entry is fielded: a description, then one labeled line per field. Each
+# label is part of the line the crawl reads, so the wording is permanent.
+FIELD_LABELS = [('useCase', 'Use case:'), ('problem', 'Problem it solves:')]
+TEXT_FIELDS = ['description'] + [key for key, _ in FIELD_LABELS]
+# Shapes how the description is framed and is kept on the entry, but is never
+# shown: "New" on a changelog says nothing, and as text it would repeat on
+# every other entry, a line the crawl swallows.
+NOVELTY_VALUES = {'net-new', 'improvement'}
 # Mirrors the ingestion's delta floor and cap. Additions under the floor are
 # recorded as a sync and fire no extraction, so they reach readers and never
 # reach the library; over the cap the delta is truncated mid-line.
 DELTA_MIN_CHARS = 40
 DELTA_MAX_CHARS = 100_000
 BUNDLE_FILES = ['index.html', 'changelog.json']
+# An entry's media is a looping, muted video beside its fields: an https mp4 and
+# a poster image. A <video> carries no text, so the crawl reads no line from it;
+# it is the one element the page may fetch from elsewhere, and only these URLs.
+MEDIA_KEYS = ('mp4', 'poster')
+MEDIA_URL_RE = {'mp4': re.compile(r'^https://[^\s"\'<>]+\.mp4$', re.I),
+                'poster': re.compile(r'^https://[^\s"\'<>]+\.(png|jpe?g|webp)$', re.I)}
 
 # Locale-independent on purpose: a month heading that changes shape between two
 # operators' machines is a whole month re-extracted as new.
@@ -83,13 +106,15 @@ def load_state(path):
         state = json.loads(Path(path).read_text(encoding='utf-8'))
     except (OSError, ValueError) as error:
         raise Refused(f'Could not read the changelog state at {path}: {error}')
-    if not isinstance(state, dict) or state.get('schemaVersion') != SCHEMA_VERSION:
-        raise Refused(f'{path} is not a schemaVersion {SCHEMA_VERSION} changelog state.')
+    if not isinstance(state, dict) or state.get('schemaVersion') not in READABLE_SCHEMA_VERSIONS:
+        raise Refused(f'{path} is not a changelog state this skill can read (schemaVersion 1 or 2).')
     page = state.get('page')
     if not isinstance(page, dict) or not all(isinstance(page.get(k), str) and page[k].strip() for k in ('title', 'dek', 'footer')):
         raise Refused(f'{path} has no page title, dek and footer.')
     if not isinstance(state.get('entries'), list):
         raise Refused(f'{path} has no entries list.')
+    if not isinstance(state.get('removed', []), list):
+        raise Refused(f'{path} has a removed list that is not a list.')
     return state
 
 
@@ -118,6 +143,45 @@ def month_heading(date):
     return f'{MONTH_NAMES[int(month) - 1]} {year}'
 
 
+def is_fielded(entry):
+    """Paragraph entries (everything published before the fielded shape) carry
+    `body`; fielded ones carry `description`. A live paragraph entry is only
+    converted when a reviewer approved its reshape on staging."""
+    return 'description' in entry
+
+
+def entry_lines(entry):
+    """The crawl lines one entry yields, after its heading.
+
+      {'body': 'Motion Playbooks let…'}                      -> ['Motion Playbooks let…']
+      {'description': 'X does Y.', 'useCase': 'A rep…',
+       'problem': 'Reps had to…'}                            -> ['X does Y.', 'Use case: A rep…',
+                                                                 'Problem it solves: Reps had to…']
+    """
+    if not is_fielded(entry):
+        return [entry['body']]
+    return [entry['description']] + [f'{label} {entry[key]}' for key, label in FIELD_LABELS]
+
+
+def media_problems(label, media):
+    """What is wrong with one entry's media, as refusal lines; [] when it can publish.
+
+      media_problems('"X"', {'mp4': 'https://cdn.example/x.mp4', 'poster': 'https://cdn.example/x.png'})  # -> []
+      media_problems('"X"', {'mp4': 'http://cdn.example/x.mov', 'poster': 'https://cdn.example/x.png'})
+      # -> ['"X": its media mp4 must be an https URL ending in .mp4 (…).']
+    """
+    if not isinstance(media, dict) or set(media) != set(MEDIA_KEYS):
+        return [f'{label}: its media must be exactly {{"mp4": …, "poster": …}}.']
+    return [f'{label}: its media {key} must be an https URL ending in '
+            f'{".mp4" if key == "mp4" else ".png, .jpg or .webp"} ({media[key]!r}).'
+            for key in MEDIA_KEYS if not isinstance(media[key], str) or not MEDIA_URL_RE[key].match(media[key])]
+
+
+def media_html(media):
+    return (f'<video class="cl-media" src="{escape(media["mp4"])}" poster="{escape(media["poster"])}" '
+            'autoplay muted loop playsinline preload="metadata"></video>')
+
+
 def sorted_entries(state):
     """Newest date first. Python's sort is stable, so entries sharing a date keep
     their stored order and never swap places between renders."""
@@ -134,15 +198,23 @@ def render_lines(state):
         if heading != current:
             current = heading
             lines.append(f'## {heading}')
-        lines += [f'### {entry["date"]} — {entry["title"]}', entry['body']]
+        lines += [f'### {entry["date"]} — {entry["title"]}', *entry_lines(entry)]
     lines.append(page['footer'])
     return lines
+
+
+def entry_heading(entry):
+    return (f'<h3><time class="cl-date">{escape(entry["date"])}</time><span class="cl-sep"> — </span>'
+            f'<span class="cl-title">{escape(entry["title"])}</span></h3>')
 
 
 def render_html(state, style):
     """The page. Every element is chosen so its markdown equals render_lines():
     the month is a real <h2>, the date stays fused into the <h3>, and the logo is
-    a background image on an aria-hidden div, carrying no text and no href."""
+    a background image on an aria-hidden div, carrying no text and no href.
+    Inside the <h3> the date, separator and title are inline spans, so the
+    stylesheet can lay them out apart while the line still reads
+    '2026-10-26 — Title'."""
     page = state['page']
     body = []
     current = None
@@ -154,10 +226,22 @@ def render_html(state, style):
             current = heading
             body += ['<section class="cl-group">',
                      f'<div class="cl-group-head"><h2 class="cl-eyebrow">{escape(heading)}</h2></div>']
-        body += ['<article class="cl-entry">',
-                 f'<h3>{escape(entry["date"])} — {escape(entry["title"])}</h3>',
-                 f'<p>{escape(entry["body"])}</p>',
-                 '</article>']
+        if is_fielded(entry):
+            # The label is a span, not <strong>: markdown converters render
+            # emphasis differently across versions, and a line that changes
+            # shape between two crawls is re-read as new.
+            body += [f'<article class="cl-entry" data-novelty="{escape(entry["novelty"])}">',
+                     entry_heading(entry),
+                     f'<p class="cl-desc">{escape(entry["description"])}</p>',
+                     *[f'<p class="cl-field" data-field="{key}"><span class="cl-label">{escape(label)}</span> {escape(entry[key])}</p>'
+                       for key, label in FIELD_LABELS]]
+        else:
+            body += ['<article class="cl-entry">',
+                     entry_heading(entry),
+                     f'<p class="cl-desc">{escape(entry["body"])}</p>']
+        if entry.get('media'):
+            body.append(media_html(entry['media']))
+        body.append('</article>')
     if current is not None:
         body.append('</section>')
     return '\n'.join([
@@ -185,30 +269,38 @@ def render_html(state, style):
     ])
 
 
-# The layout for a new page. It reads the workspace brand kit's --brand-*
-# tokens (inlined ahead of it) and falls back to a neutral palette without one.
-# The stylesheet is not crawled — markdown conversion drops it — so it can be
+# The layout for a new page: a ledger, dates in a left column, the title and description beside them, the two fields as labeled
+# rows under a dashed rule. It reads the workspace brand kit's --brand-* tokens
+# (inlined ahead of it) and falls back to a neutral palette without one. The
+# stylesheet is not crawled — markdown conversion drops it — so it can be
 # replaced wholesale later; what must never move is text between elements.
+# It carries the cl-fields marker, so a later publish appends nothing to it.
 LAYOUT_CSS = """
+/* cl-fields */
 :root {
   color-scheme: light;
-  --page-bg: var(--brand-bg, #ffffff);
-  --ink: var(--brand-ink, #111827);
-  --muted: var(--brand-muted, #6b7280);
-  --body-ink: var(--brand-body-ink, #374151);
-  --accent: var(--brand-primary, #4338ca);
-  --line: var(--brand-border, #e5e7eb);
-  --band: var(--brand-band, var(--brand-primary, #1f2937));
-  --on-band: var(--brand-on-dark, #f9fafb);
+  --page-bg: var(--brand-bg, #fbfbfd);
+  --ink: var(--brand-ink, #0f172a);
+  --body-ink: var(--brand-body-ink, #526074);
+  --muted: var(--brand-muted, #64748b);
+  --faint: var(--brand-faint, #94a3b8);
+  --accent: var(--brand-primary, #4f46e5);
+  --line: var(--brand-border, #e2e8f0);
   --logo: var(--cl-logo-light, none);
+  --font-heading: var(--brand-font-heading, var(--brand-font-body, -apple-system, 'Segoe UI', Roboto, sans-serif));
+  --font-body: var(--brand-font-body, -apple-system, 'Segoe UI', Roboto, sans-serif);
+  /* Monospace by contract: the field label's colon is clipped by width in ch. */
+  --font-mono: var(--brand-font-mono, ui-monospace, 'SF Mono', Menlo, Consolas, monospace);
+  --rail: 180px;
 }
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
     --page-bg: #0b0d12;
     --ink: #eceef3;
+    --body-ink: rgba(236, 238, 243, .74);
     --muted: #9aa1ae;
-    --body-ink: rgba(236, 238, 243, .84);
+    --faint: #6b7280;
     --accent: var(--brand-emph-ink-dark, #a5b4fc);
     --line: #2a2f3a;
     --logo: var(--cl-logo-dark, var(--cl-logo-light, none));
@@ -216,38 +308,87 @@ LAYOUT_CSS = """
 }
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
-body { margin: 0; background: var(--page-bg); color: var(--ink);
-  font-family: var(--brand-font-body, -apple-system, 'Segoe UI', Roboto, sans-serif);
-  font-size: 17px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
-h1, h2, h3 { font-family: var(--brand-font-heading, var(--brand-font-body, -apple-system, 'Segoe UI', sans-serif));
-  font-weight: var(--brand-weight-heading, 600); margin: 0; }
-.cl-top { max-width: 880px; margin: 0 auto; padding: 28px 24px 20px; }
-.cl-logo { width: 130px; height: 26px; background: var(--logo) left center / contain no-repeat; }
-.cl-hero { max-width: 880px; margin: 0 auto; padding: 56px 40px; border-radius: 20px;
-  background: var(--band); color: var(--on-band);
-  print-color-adjust: exact; -webkit-print-color-adjust: exact; }
-.cl-hero h1 { font-size: clamp(30px, 5vw, 44px); line-height: 1.14; color: var(--on-band); text-wrap: balance; }
-.cl-hero .cl-dek { margin: 14px 0 0; max-width: 52ch; opacity: .8; font-size: 16px; }
-.cl-wrap { max-width: 880px; margin: 0 auto; padding: 0 40px 24px; }
-.cl-group { padding-top: 56px; }
-.cl-group-head { padding-bottom: 20px; border-bottom: 1px solid var(--line); }
-.cl-eyebrow { display: inline-block; padding: 5px 13px; font-size: 12px; font-weight: 600;
-  letter-spacing: .06em; text-transform: uppercase; line-height: 1.4; border-radius: 100px;
-  font-family: var(--brand-font-body, -apple-system, 'Segoe UI', sans-serif);
-  color: var(--accent); border: 1px solid var(--line); }
-.cl-entry { padding: 30px 0; border-bottom: 1px solid var(--line); }
+body { margin: 0; background: var(--page-bg); color: var(--ink); font-family: var(--font-body);
+  font-size: 16px; line-height: 1.65; font-optical-sizing: auto; -webkit-font-smoothing: antialiased; }
+h1, h2, h3, p { margin: 0; }
+.cl-top, .cl-hero, .cl-wrap, .cl-foot { max-width: 1040px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
+.cl-top { padding-top: 36px; }
+.cl-logo { width: 128px; height: 25px; background: var(--logo) left center / contain no-repeat; }
+.cl-hero { display: grid; grid-template-columns: var(--rail) 1fr; padding-top: 88px; padding-bottom: 56px; }
+.cl-hero h1, .cl-hero .cl-dek { grid-column: 2; }
+.cl-hero h1 { font-family: var(--font-heading); font-weight: var(--brand-weight-h1, 300); font-size: 60px;
+  line-height: 1.05; letter-spacing: -0.03em; text-wrap: balance; }
+.cl-hero .cl-dek { margin-top: 18px; max-width: 46ch; font-size: 18px; color: var(--muted); }
+.cl-group { padding-top: 24px; }
+.cl-group-head { position: sticky; top: 0; z-index: 2; padding: 18px 0 14px;
+  background: linear-gradient(var(--page-bg) 70%, transparent); }
+.cl-eyebrow { display: flex; align-items: center; gap: 14px; font: 500 12px/1 var(--font-mono);
+  letter-spacing: .02em; text-transform: uppercase; color: var(--ink); }
+.cl-eyebrow::after { content: ""; height: 1px; flex: 1; background: var(--line); }
+.cl-entry { display: grid; grid-template-columns: var(--rail) 1fr; padding: 30px 0 34px; border-bottom: 1px solid var(--line); }
 .cl-entry:last-child { border-bottom: 0; }
-.cl-entry h3 { font-size: 23px; line-height: 1.25; margin-bottom: 10px; font-variant-numeric: tabular-nums; }
-.cl-entry p { margin: 0; color: var(--body-ink); }
-.cl-foot { max-width: 880px; margin: 0 auto; padding: 0 40px 72px; }
-.cl-foot > div { padding-top: 26px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
-@media (max-width: 720px) {
-  body { font-size: 16.5px; }
-  .cl-hero { padding: 40px 24px; border-radius: 0; }
-  .cl-wrap, .cl-foot { padding-left: 24px; padding-right: 24px; }
-  .cl-top { padding: 20px 24px 16px; }
+/* The <h3>'s spans become grid items: the date in the rail, the title beside it. */
+.cl-entry h3 { display: contents; }
+.cl-sep { display: none; }
+.cl-date { grid-column: 1; grid-row: 1; font: 400 12.5px/32px var(--font-mono); color: var(--muted);
+  font-variant-numeric: tabular-nums; }
+.cl-title { grid-column: 2; grid-row: 1; font-family: var(--font-heading); font-weight: var(--brand-weight-heading, 400);
+  font-size: 26px; line-height: 32px; letter-spacing: -0.02em; color: var(--ink); }
+.cl-desc { grid-column: 2; grid-row: 2; margin-top: 10px; max-width: 60ch; color: var(--body-ink); }
+.cl-field { grid-column: 2; display: grid; grid-template-columns: 150px 1fr; align-items: baseline;
+  margin-top: 18px; padding-top: 16px; border-top: 1px dashed var(--line); font-size: 15px; color: var(--body-ink); }
+.cl-field + .cl-field { margin-top: 0; padding-top: 10px; border-top: 0; }
+/* The label keeps its colon for the crawl; on screen the width clips it. */
+.cl-label { overflow: hidden; white-space: nowrap; font: 500 11.5px/1.6 var(--font-mono); letter-spacing: 0;
+  text-transform: uppercase; color: var(--faint); }
+[data-field="useCase"] .cl-label { width: 8ch; }
+[data-field="problem"] .cl-label { width: 17ch; }
+.cl-foot { padding-top: 40px; padding-bottom: 80px; }
+.cl-foot > div { margin-left: var(--rail); padding-top: 22px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+@media (max-width: 760px) {
+  .cl-top, .cl-hero, .cl-wrap, .cl-foot { padding-left: 22px; padding-right: 22px; }
+  .cl-hero { display: block; padding-top: 48px; padding-bottom: 32px; }
+  .cl-hero h1 { font-size: 40px; }
+  .cl-entry { grid-template-columns: auto 1fr; column-gap: 10px; }
+  .cl-date { line-height: 22px; }
+  .cl-title, .cl-desc, .cl-field { grid-column: 1 / -1; }
+  .cl-title { grid-row: 2; margin-top: 6px; font-size: 22px; line-height: 28px; }
+  .cl-desc { grid-row: 3; }
+  .cl-field { grid-template-columns: 1fr; row-gap: 4px; }
+  .cl-foot > div { margin-left: 0; }
 }
 """.strip()
+
+# The fielded entry's labels for a page whose stylesheet
+# predates the fielded shape: appended on its next publish, styled for that
+# older layout. The stylesheet is not crawled, so appending it moves no line.
+FIELDS_CSS = """
+/* cl-fields */
+.cl-entry .cl-field { margin-top: 12px; }
+.cl-entry .cl-label { font-weight: 600; color: var(--ink); }
+""".strip()
+
+
+def ensure_fields_css(style):
+    """A carried-over stylesheet, plus the fielded-entry rules if it lacks them."""
+    return style if '/* cl-fields */' in style else f'{style}\n{FIELDS_CSS}'
+
+
+# An entry's video, sized to the description's column. Appended to a stylesheet
+# the first time an entry carries media, and never again (the marker).
+MEDIA_CSS = """
+/* cl-media */
+.cl-media { display: block; grid-column: 2; width: 100%; height: auto; margin-top: 22px;
+  border: 1px solid var(--line); border-radius: var(--brand-radius-card, var(--brand-radius, 12px)); background: var(--line); }
+@media (max-width: 760px) { .cl-media { grid-column: 1 / -1; margin-top: 18px; } }
+""".strip()
+
+
+def ensure_media_css(style, state):
+    """The stylesheet, plus the media rules when an entry carries media and it lacks them."""
+    needed = any(entry.get('media') for entry in state['entries'])
+    return f'{style}\n{MEDIA_CSS}' if needed and '/* cl-media */' not in style else style
+
 
 LOGO_MIME = {'.png': 'image/png', '.svg': 'image/svg+xml', '.jpg': 'image/jpeg',
              '.jpeg': 'image/jpeg', '.webp': 'image/webp'}
@@ -375,15 +516,20 @@ def valid_date(value):
 
 
 def read_entries(path):
-    """Accepts {"entries": [...]} (what the staging page copies) or a bare list."""
+    """Returns (entries, reshape, remove). Accepts {"entries": [...], "reshape": [...],
+    "remove": [...]} (what the staging page copies; the last two only when a
+    reviewer decided a live paragraph entry) or a bare list of new entries."""
     try:
         blob = json.loads(Path(path).read_text(encoding='utf-8'))
     except (OSError, ValueError) as error:
         raise Refused(f'Could not read the entries at {path}: {error}')
-    entries = blob.get('entries') if isinstance(blob, dict) else blob
-    if not isinstance(entries, list) or not entries:
+    parts = blob if isinstance(blob, dict) else {'entries': blob}
+    entries, reshape, remove = (parts.get(key, []) for key in ('entries', 'reshape', 'remove'))
+    if not all(isinstance(part, list) for part in (entries, reshape, remove)):
+        raise Refused('The pasted entries are not lists of entries.')
+    if not (entries or reshape or remove):
         raise Refused('The pasted entries contain nothing to publish.')
-    return entries
+    return entries, reshape, remove
 
 
 def validate_entering(entries, state):
@@ -391,6 +537,7 @@ def validate_entering(entries, state):
     a partial publish would hide an attempt to touch a live entry."""
     errors, entering, already_live, seen = [], [], [], set()
     existing = {entry['id']: entry for entry in state['entries']}
+    removed = {gone['id'] for gone in state.get('removed', [])}
     for number, raw in enumerate(entries, 1):
         if not isinstance(raw, dict):
             errors.append(f'Entry {number} is not an object.')
@@ -410,9 +557,20 @@ def validate_entering(entries, state):
             errors.append(f'"{entry_id}" appears twice in the pasted entries.')
             continue
         seen.add(entry_id)
+        if entry_id in removed:
+            errors.append(f'"{entry_id}" was removed from the page; publish it under a new id if it belongs back.')
+            continue
+        fielded = 'body' not in raw or any(key in raw for key in TEXT_FIELDS)
+        fields = {key: (raw.get(key) or '').strip() if isinstance(raw.get(key), str) else '' for key in TEXT_FIELDS}
+        novelty = raw.get('novelty')
         if entry_id in existing:
             live = existing[entry_id]
-            if (live['date'], live['title'], live['body']) == (entry_date, title, body):
+            if is_fielded(live):
+                same = fielded and (live['date'], live['title'], live['novelty'], *[live[k] for k in TEXT_FIELDS]) == \
+                    (entry_date, title, novelty, *[fields[k] for k in TEXT_FIELDS])
+            else:
+                same = not fielded and (live['date'], live['title'], live['body']) == (entry_date, title, body)
+            if same:
                 already_live.append(entry_id)
             else:
                 errors.append(f'"{entry_id}" is already live with different text. Published entries are never re-worded (the crawl would read the new wording as a new capability); publish a new entry that supersedes it instead.')
@@ -423,19 +581,108 @@ def validate_entering(entries, state):
             errors.append(f'{label} has no title.')
         elif '\n' in title or len(title) > TITLE_MAX_CHARS:
             errors.append(f'{label}: a title is one line of at most {TITLE_MAX_CHARS} characters.')
-        if not body:
-            errors.append(f'{label} has no public paragraph.')
-        else:
-            if not BODY_MIN_CHARS <= len(body) <= BODY_MAX_CHARS:
-                errors.append(f'{label} has a {len(body)}-character paragraph; it must be {BODY_MIN_CHARS}–{BODY_MAX_CHARS}.')
-            if '\n' in body:
-                errors.append(f'{label} has a paragraph with a line break; one entry is exactly one paragraph.')
-            if LEAD_HAZARD.match(body):
-                errors.append(f'{label} has a paragraph starting with a markdown character (#, -, *, >, |, or "1.").')
-        entering.append({'id': entry_id, 'date': entry_date, 'title': title, 'body': body})
+        if not fielded:
+            errors.append(f'{label} is a single paragraph. New entries are fielded: give it a description, a useCase, a problem and a novelty ("net-new" or "improvement") instead of a body.')
+            continue
+        errors += field_problems(label, fields, novelty)
+        media = raw.get('media')
+        if media is not None:
+            errors += media_problems(label, media)
+        entering.append({'id': entry_id, 'date': entry_date, 'title': title, 'novelty': novelty,
+                         **{key: fields[key] for key in TEXT_FIELDS}, **({'media': media} if media is not None else {})})
     if errors:
         raise Refused(f'Refusing the whole batch ({len(errors)} problem(s)):\n- ' + '\n- '.join(errors))
     return entering, already_live
+
+
+def field_problems(label, fields, novelty):
+    """What is wrong with one entry's fields, as refusal lines; [] when they can publish."""
+    errors = []
+    for key in TEXT_FIELDS:
+        value = fields[key]
+        if not value:
+            errors.append(f'{label} has no {key}.')
+        elif '\n' in value:
+            errors.append(f'{label}: its {key} has a line break; each field is one paragraph.')
+        elif LEAD_HAZARD.match(value):
+            errors.append(f'{label}: its {key} starts with a markdown character (#, -, *, >, |, or "1.").')
+    if novelty not in NOVELTY_VALUES:
+        errors.append(f'{label} has no novelty; it must be "net-new" or "improvement".')
+    return errors
+
+
+def validate_live_changes(reshape, remove, state, entering_ids):
+    """Returns (reshaped, removed): the fields each reshaped entry takes in place
+    of its paragraph, keyed by id, and the ids coming off the page. A reshape
+    names a live paragraph entry and keeps its date and title, so its heading
+    survives; a removal names any live entry. Any problem refuses the whole batch.
+
+      validate_live_changes([{'id': 'a', 'description': 'X does Y.', 'useCase': 'A rep can now…',
+                              'problem': 'Reps had to…', 'novelty': 'improvement'}], ['b'], state, set())
+      # -> ({'a': {'novelty': 'improvement', 'description': 'X does Y.', …}}, ['b'])
+    """
+    errors, reshaped, removed = [], {}, []
+    live = {entry['id']: entry for entry in state['entries']}
+    for number, raw in enumerate(reshape, 1):
+        entry_id = raw.get('id') if isinstance(raw, dict) else None
+        current = live.get(entry_id) if isinstance(entry_id, str) else None
+        if current is None:
+            errors.append(f'Reshape {number} ({entry_id!r}) is not live; only an entry already on the page can be reshaped.')
+            continue
+        label = f'"{current["title"]}"'
+        if entry_id in reshaped:
+            errors.append(f'"{entry_id}" is reshaped twice in the pasted entries.')
+            continue
+        if is_fielded(current):
+            errors.append(f'{label} is already fielded; its lines are the lock.')
+            continue
+        for key in ('date', 'title'):
+            if key in raw and raw[key] != current[key]:
+                errors.append(f'{label}: a reshape keeps the {key} ({current[key]!r}); moving or renaming an entry is a new entry.')
+        fields = {key: (raw.get(key) or '').strip() if isinstance(raw.get(key), str) else '' for key in TEXT_FIELDS}
+        novelty = raw.get('novelty')
+        errors += field_problems(label, fields, novelty)
+        media = raw.get('media')
+        if media is not None:
+            errors += media_problems(label, media)
+        reshaped[entry_id] = {'novelty': novelty, **fields, **({'media': media} if media is not None else {})}
+    for entry_id in remove:
+        if not isinstance(entry_id, str) or entry_id not in live:
+            errors.append(f'Remove {entry_id!r} is not live; only an entry already on the page can be removed.')
+        elif entry_id in removed:
+            errors.append(f'"{entry_id}" is removed twice in the pasted entries.')
+        elif entry_id in reshaped:
+            errors.append(f'"{live[entry_id]["title"]}" is both reshaped and removed; it can only be one.')
+        else:
+            removed.append(entry_id)
+    for entry_id in entering_ids & (set(reshaped) | set(removed)):
+        errors.append(f'"{entry_id}" is both a new entry and a change to a live one.')
+    if errors:
+        raise Refused(f'Refusing the whole batch ({len(errors)} problem(s)):\n- ' + '\n- '.join(errors))
+    return reshaped, removed
+
+
+def apply_live_changes(state, reshaped, removed, changed_at):
+    """The state after the reviewer's reshapes and removals, and the live lines
+    they retire on purpose: a reshaped entry's paragraph, every line of a removed
+    entry, and a month heading no entry is left under. A removed entry leaves
+    only its id and date on the record, so its text is gone from the bundle."""
+    entries, retiring = [], set()
+    for entry in state['entries']:
+        if entry['id'] in removed:
+            retiring.update([f'### {entry["date"]} — {entry["title"]}', *entry_lines(entry)])
+        elif entry['id'] in reshaped:
+            retiring.add(entry['body'])
+            rest = {key: value for key, value in entry.items() if key not in ('id', 'date', 'title', 'body')}
+            entries.append({'id': entry['id'], 'date': entry['date'], 'title': entry['title'],
+                            **reshaped[entry['id']], **rest, 'reshapedAt': changed_at})
+        else:
+            entries.append(entry)
+    months_left = {month_heading(entry['date']) for entry in entries}
+    retiring.update(f'## {month_heading(entry["date"])}' for entry in state['entries']
+                    if entry['id'] in removed and month_heading(entry['date']) not in months_left)
+    gone = state.get('removed', []) + [{'id': entry_id, 'removedAt': changed_at} for entry_id in removed]
+    return {**state, 'entries': entries, **({'removed': gone} if gone else {})}, retiring
 
 
 # --------------------------------------------------------------------------
@@ -446,7 +693,10 @@ def check(name, ok, detail):
     return {'name': name, 'ok': ok, 'detail': detail}
 
 
-def run_checks(old_lines, state, style):
+def run_checks(old_lines, state, style, retiring=frozenset()):
+    """The publish checks over the next state. `retiring` is the live lines the
+    reviewer's reshapes and removals replace on purpose; every other live line
+    must survive."""
     html = render_html(state, style)
     lines = render_lines(state)
     checks = []
@@ -462,15 +712,20 @@ def run_checks(old_lines, state, style):
                         'the crawl silently swallows repeated lines: ' + ', '.join(repr(d[:60]) for d in dupes[:3])))
 
     old = {line.strip() for line in old_lines if line.strip()}
-    missing = sorted(old - seen)
+    retired = old & {line.strip() for line in retiring}
+    missing = sorted(old - seen - retired)
+    kept = f'all {len(old)} live lines unchanged' if not retired else \
+        f'{len(old) - len(retired)} live lines unchanged, {len(retired)} retired by reshapes and removals'
     checks.append(check('history', not missing,
-                        f'all {len(old)} live lines unchanged' if not missing else
+                        kept if not missing else
                         f'{len(missing)} live line(s) would change or disappear, and the crawl would read the result as new capabilities: '
                         + ', '.join(repr(m[:60]) for m in missing[:3])))
 
     added = [line for line in lines if line.strip() and line.strip() not in old]
     chars = len('\n'.join(added))
-    if chars == 0:
+    if chars == 0 and retired:
+        checks.append(check('delta', True, f'removes {len(retired)} line(s) and adds none'))
+    elif chars == 0:
         checks.append(check('delta', False, 'nothing new to publish'))
     elif chars < DELTA_MIN_CHARS:
         checks.append(check('delta', False, f'only {chars} new characters, under the {DELTA_MIN_CHARS}-character floor below which ingestion fires no extraction'))
@@ -479,11 +734,20 @@ def run_checks(old_lines, state, style):
     else:
         checks.append(check('delta', True, f'{len(added)} new line(s), {chars} characters'))
 
-    problem = next((label for pattern, label in VOLATILE if pattern.search(html)), None)
-    if problem is None and LINK_RE.search(html):
+    # Media is the one sanctioned fetch, so the page is scanned without it and
+    # every media URL is checked on its own, carried-over ones included.
+    without_media = render_html({**state, 'entries': [{k: v for k, v in entry.items() if k != 'media'}
+                                                      for entry in state['entries']]}, style)
+    problem = next((label for pattern, label in VOLATILE if pattern.search(without_media)), None)
+    if problem is None and LINK_RE.search(without_media):
         problem = 'a link; shallow-domain crawling turns each one into its own child resource'
-    if problem is None and EXTERNAL_FETCH_RE.search(html):
+    if problem is None and EXTERNAL_FETCH_RE.search(without_media):
         problem = 'an external fetch (stylesheet, @import, font or image URL); inline it instead'
+    if problem is None:
+        bad_media = [line for entry in state['entries'] if 'media' in entry
+                     for line in media_problems(f'"{entry["title"]}"', entry['media'])]
+        if bad_media:
+            problem = f'media that is not an https mp4 with a poster image: {bad_media[0]}'
     checks.append(check('page-safety', problem is None,
                         'no volatile text, links or external fetches' if problem is None else f'page contains {problem}'))
 
@@ -522,7 +786,9 @@ def cmd_add(args):
     state = load_state(args.state)
     current_html = Path(args.html).read_text(encoding='utf-8') if args.html else None
     old_lines = page_lines(current_html) if current_html else []
-    entering, already_live = validate_entering(read_entries(args.entries), state)
+    entries, reshape, remove = read_entries(args.entries)
+    entering, already_live = validate_entering(entries, state)
+    reshaped, removed = validate_live_changes(reshape, remove, state, {entry['id'] for entry in entering})
 
     if args.tokens or args.logo_light or args.logo_dark or not current_html:
         tokens = Path(args.tokens).read_text(encoding='utf-8') if args.tokens else None
@@ -531,19 +797,26 @@ def cmd_add(args):
         style = style_of(current_html)
         if style is None:
             raise Refused('The current page has no <style> block to carry over; pass --tokens to restyle it.')
+        style = ensure_fields_css(style)
 
     if already_live:
         print(f'  Already live, skipped: {", ".join(already_live)}')
-    if not entering:
+    if not (entering or reshaped or removed):
         print('\n  Nothing new to publish; the page is already up to date.\n')
         return 0
 
     published_at = args.published_at or datetime.now(timezone.utc).date().isoformat()
     if not valid_date(published_at):
         raise Refused('--published-at must be YYYY-MM-DD.')
-    next_state = {**state, 'entries': [{**entry, 'publishedAt': published_at} for entry in entering] + state['entries']}
+    changed, retiring = apply_live_changes(state, reshaped, removed, published_at)
+    next_state = {**changed, 'schemaVersion': SCHEMA_VERSION, 'entries': [{**entry, 'publishedAt': published_at} for entry in entering] + changed['entries']}
 
-    checks, html, added = run_checks(old_lines, next_state, style)
+    if retiring:
+        print(f'\n  Live lines the reviewer\'s reshapes and removals retire ({len(retiring)}):')
+        for line in sorted(retiring):
+            print(f'    - {line if len(line) <= 110 else line[:110] + "…"}')
+    style = ensure_media_css(style, next_state)
+    checks, html, added = run_checks(old_lines, next_state, style, retiring)
     print()
     print_checks(checks)
     print()

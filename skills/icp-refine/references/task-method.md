@@ -6,7 +6,7 @@ triggers, and disqualifiers. Read full selected entities/cells. Segment is
 one dimension of ICP; the same company type can fit renewal and net-new
 differently. Services and Solutions are first-class offerings.
 
-Use [Ask Octave first](../../shared/octave-research-toolkit.md#ask-octave-first-for-questions-that-span-records) to form hypotheses before building the cohorts: ask `ask_octave` which segments, personas, use cases, and proof points are most tied to won and to lost deals. Test every hypothesis with the opportunity rows below; a graph ranking is not a win rate. If the tool is unavailable, start from the cohort rows and say so.
+Use [Ask Octave first](../../shared/octave-research-toolkit.md#ask-octave-first-for-questions-that-span-records) to form hypotheses before building the cohorts: ask `ask_octave` which segments, personas, use cases, and proof points are most tied to won and to lost deals. Anchor the question on the offering and Motion by name and id, and read outcomes, stages and loss reasons from the opportunity records rather than from the answer's wording. Test every hypothesis with the opportunity rows below; a graph ranking is not a win rate. If the tool is unavailable, start from the cohort rows and say so.
 
 Load [analytics-contract.md](../../shared/analytics-contract.md). Build one opportunity row per final
 outcome with firmographics, use case, buying roles, motion, acquisition
@@ -32,6 +32,8 @@ Classify each proposed signal before proposing an ICP change:
 - Competitive/product gap: specific unmet requirement or stronger alternative.
 - Unknown: not observed, conflicting, or not inferable from current sources.
 
+Read each loss's conversations in their setting ([information principles #16](../../shared/information-principles.md#reading-calls-and-deals)): an enterprise deal that stalled after a first meeting without a dated next step, or a buyer remark that the product could touch many teams, is a readiness or scoping signal, not evidence against fit.
+
 A loss association alone cannot create a disqualifier. For each proposed
 criterion specify target entity/cell; question/definition; rationale;
 observable evidence; public-research versus discovery-only availability;
@@ -46,8 +48,20 @@ for remediable conditions instead of narrowing ICP to hide execution gaps.
 
 Propose a before/after criterion set and a small holdout: known-fit wins,
 known-fit losses, genuine nonfit accounts, underrepresented segments, and
-unknown-evidence cases. Define expected distinctions before inspecting
-revised results. Use the existing qualification-validation workflow and
+unknown-evidence cases. Draw the holdout from a period that ends before the
+diagnostic window that produced the hypotheses (for a window of Apr to Oct,
+accounts that closed before Apr), and never reuse an account that served as
+evidence for a criterion. When no earlier period has enough closed deals,
+say the check is a fixture check rather than a blind test, and keep its
+result out of the weight decision. Define expected distinctions before
+inspecting revised results.
+
+Set weights from how a signal holds up across segments. A signal whose
+direction reverses in a sub-segment (it lifts wins in one segment and
+lowers them in another), or that is flagged as a difference to watch, cannot
+take the top weight or a must-have role: keep it at a lower weight scoped to
+the segments where it holds, state the reversal beside it, and propose the
+test that would settle it. Use the existing qualification-validation workflow and
 current configured agents/tools when available; do not invent a scoring
 endpoint. Test answer-level sourcing, unknown handling, true-disqualifier
 semantics, false rejections, and changed rankings.

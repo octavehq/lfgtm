@@ -16,7 +16,7 @@ Self-contained HTML with a dark "sheet" container on a black body. Design modele
 
 ## CSS Variable System
 
-Define a custom palette per output. Use the seller's brand colors as accent (e.g., Descope's teal). Fall back to a generic dark palette if no brand kit exists.
+Define a custom palette per output. Use the seller's brand colors as accent (e.g., Acme's teal). Fall back to a generic dark palette if no brand kit exists.
 
 ```css
 :root{
@@ -104,8 +104,9 @@ Wrap alternating sections in `.canvas` divs for visual rhythm: Deal Situation (c
 .cmp-hdr span{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--faint)}
 .cmp-hdr span:last-child{padding-left:20px}
 .cmp-grid{display:flex;flex-direction:column;gap:8px}
-.cmp-row{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border);border-radius:8px;overflow:hidden}
-.cmp-them{padding:14px 18px;background:var(--surface-dk);font-size:.88rem;color:var(--muted);
+.cmp-row{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border);border-radius:8px}
+.cmp-row>*{min-width:0}
+.cmp-them{padding:14px 18px;background:var(--surface-dk);border-radius:7px 0 0 7px;font-size:.88rem;color:var(--muted);
   line-height:1.55;border-right:1px solid var(--border)}
 .cmp-us{padding:14px 18px;font-size:.88rem;line-height:1.55;color:var(--muted);
   border-left:2px solid var(--link)}
@@ -205,12 +206,11 @@ Reuses the proof-list visual language (marker + text) with the link color instea
 
 ### Win Rate Bar
 ```css
-.wr-bar{display:flex;height:1.6rem;border-radius:8px;overflow:hidden;background:var(--surface-dk);margin-top:8px}
-.wr-w{background:var(--accent);display:flex;align-items:center;justify-content:center;
-  font-weight:700;font-size:.7rem;color:var(--bg)}
-.wr-l{background:var(--neg);display:flex;align-items:center;justify-content:center;
-  font-weight:700;font-size:.7rem;color:var(--bg)}
+.wr-bar{display:flex;height:.7rem;border-radius:8px;overflow:hidden;background:var(--surface-dk);margin-top:8px}
+.wr-w{background:var(--accent)} .wr-l{background:var(--neg)}
+.wr-cap{font-size:.82rem;color:var(--muted);margin-top:6px}
 ```
+The bar segments carry no text, so a narrow segment never clips a label; the counts go in a `.wr-cap` line under it ("3 won and 5 lost of 8 closed deals against them, last 180 days").
 
 ### Pitch Cards (Our Pitch section)
 ```css
@@ -249,7 +249,16 @@ Our Pitch uses three sub-sections with `.p-sub` labels:
   .tab-panel{padding:24px 18px}
   .deal-grid,.cmp-row,.cmp-hdr{grid-template-columns:1fr}
   .cmp-us{border-left:none;border-top:1px solid var(--border)}
+  .cmp-them{border-radius:7px 7px 0 0;border-right:none}
   .hero h1{font-size:1.9rem}
+}
+@media(max-width:520px){
+  body{padding:0}
+  .sheet{border-radius:0;border:none}
+  .wrap,.topbar,.hero,.foot{padding-left:16px;padding-right:16px}
+  .topbar{flex-wrap:wrap;gap:10px}
+  .tab-bar{overflow-x:auto}
+  .tab-bar button{min-height:44px;flex:0 0 auto}
 }
 @media print{
   body{background:#fff;padding:0}
@@ -297,3 +306,4 @@ Tab switching + keyboard navigation only. No sidebar dots (the sheet container m
 6. **Logos as base64** -- self-contained, no external image dependencies
 7. **Google Fonts only** -- the single external dependency (Inter)
 8. **Tab panels need `class="tab-panel"`** -- the CSS show/hide targets this class
+9. **One-sentence headings, growing cards** -- the h1, section and card headings are each one sentence with no muted second line ([editorial rule 8c](../../shared/editorial-rules.md)); the `overflow:hidden` on `.sheet` and `.hero` clips corners and the glow layer only, and no card that holds text gets a fixed height or `overflow:hidden` ([presentation principles](../../shared/presentation-principles.md) 9i, 9k)

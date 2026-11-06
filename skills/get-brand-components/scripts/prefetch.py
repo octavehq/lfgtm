@@ -27,6 +27,8 @@ Needs: python3, bs4; optional playwright (computed styles + fallback shots), Pil
 """
 import argparse, collections, hashlib, ipaddress, json, os, pathlib, re, shutil, socket, subprocess, sys, tempfile, time, urllib.request, urllib.parse
 from bs4 import BeautifulSoup
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+from kit_validation import sanitize_svg_markup, svg_root
 
 UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36"
 PAGE_PREFS = [  # (role, keywords in path) in the skill's priority order
@@ -363,35 +365,63 @@ def recover_head(page_url, log, fetch=http_fetch):
         log(f"head recovery failed {page_url[:80]}: {str(e)[:80]}"); return None
 
 
-def css_of_page(html, page_url, out_css, log, budget=6, fetch_head=recover_head):
+MAIN_SHEET_RE = re.compile(r"(?:^|[/._-])(?:layout|globals?|main|app|base|site|theme|styles?|tokens|variables|brand)(?:[._-]|$)", re.I)
+
+
+def rank_sheets(urls):
+    """Sheets whose file name says they hold the site-wide rules (layout, globals, main, app, theme...) first, the rest
+    in page order. Component-split builds link dozens of sheets, and the one carrying the tokens and @font-face is
+    rarely among the first few."""
+    name = lambda u: urllib.parse.urlparse(u).path.rsplit("/", 1)[-1]
+    return sorted(urls, key=lambda u: 0 if MAIN_SHEET_RE.search(name(u)) else 1)
+
+
+def has_brand_rules(css):
+    """True once the gathered CSS carries @font-face and a handful of custom properties, the two things a kit needs."""
+    return "@font-face" in css and len(set(re.findall(r"--[\w-]+\s*:", css))) >= 8
+
+
+def css_of_page(html, page_url, out_css, log, budget=6, fetch_head=recover_head, seen=None, max_sheets=16):
     """Download linked stylesheets (+ @import) and gather inline <style>.
+    `seen` (a set shared across pages) skips sheets another page already supplied. After `budget` sheets the miner
+    keeps going, up to `max_sheets`, while the CSS still lacks @font-face or custom properties.
     Returns (css_text, sheets, head_recovered)."""
     head_recovered = False
+    seen = set() if seen is None else seen
     if not re.search(r"<head\b", html, re.I):
         head = fetch_head(page_url, log)
         if head:
             html = head + html; head_recovered = True
             log(f"head recovered for {page_url[:80]}")
     soup = BeautifulSoup(html, "html.parser")
+    base_tag = soup.find("base", href=True)
+    base_url = urllib.parse.urljoin(page_url, base_tag["href"]) if base_tag else page_url
     urls = []
     for link in soup.find_all("link"):
-        rel = " ".join(link.get("rel") or []).lower()
+        rel = set((" ".join(link.get("rel") or [])).lower().split())
         href = link.get("href")
-        if href and ("stylesheet" in rel or (rel == "preload" and link.get("as") == "style")):
-            urls.append(urllib.parse.urljoin(page_url, href))
+        as_style = (link.get("as") or "").lower() == "style"
+        if href and ("stylesheet" in rel or (as_style and rel & {"preload", "prefetch"})):
+            u = urllib.parse.urljoin(base_url, href)
+            if u not in urls: urls.append(u)
     inline = absolutize_css_urls("\n".join(s.get_text() for s in soup.find_all("style")), page_url)
     text, sheets = inline, []
     kept = []
     for u in urls:
         if THIRD_PARTY_RE.search(urllib.parse.urlparse(u).netloc):
             log(f"css skipped (third-party widget) {u[:80]}")
-        else:
+        elif u not in seen:
             kept.append(u)
-    for u in kept[:budget]:
+    fetched = 0
+    for u in rank_sheets(kept):
+        if fetched >= max_sheets or (fetched >= budget and has_brand_rules(text)):
+            break
+        seen.add(u)
         try:
             css = http_get(u)
         except Exception as e:
             log(f"css fetch failed {u[:80]}: {str(e)[:80]}"); continue
+        fetched += 1
         # absolutize url(...) against the SHEET url, so relative font/image paths survive concatenation;
         # each @import is resolved against ITS OWN url before being appended, not the parent sheet's
         css = absolutize_css_urls(css, u)
@@ -403,6 +433,8 @@ def css_of_page(html, page_url, out_css, log, budget=6, fetch_head=recover_head)
         (out_css / name).write_text(css)
         sheets.append({"url": u, "bytes": len(css), "file": f"css/{name}", "headRecovered": head_recovered})
         text += "\n" + css
+    if len(kept) > fetched:
+        log(f"css: {fetched} of {len(kept)} linked sheets read for {page_url[:80]}")
     return text, sheets, head_recovered
 
 
@@ -713,15 +745,34 @@ def rendered_ink_luminance(browser, svg_path):
         pg.close()
 
 
+HOME_PATHS = {"", "/home", "/homepage", "/index.html", "/index.htm", "/index.php"}
+HOME_LABEL = re.compile(r"\bhome\b|homepage|\blogo\b", re.I)
+
+
+def is_home_anchor(a, page_url):
+    """A link back to the site root: "/", the homepage URL, /home or /homepage on the same host, or a same-site link
+    labelled as home or logo ("Navigate to home"). The header lockup usually sits inside one."""
+    href = (a.get("href") or "").strip()
+    if not href or href.startswith(("#", "mailto:", "tel:", "javascript:")):
+        return False
+    u = urllib.parse.urlparse(urllib.parse.urljoin(page_url, href))
+    host = lambda h: (h or "").lower().removeprefix("www.")
+    if host(u.netloc) != host(urllib.parse.urlparse(page_url).netloc):
+        return False
+    if u.path.rstrip("/").lower() in HOME_PATHS and not u.query:
+        return True
+    label = " ".join([norm_text(a.get("aria-label")), norm_text(a.get("title")), " ".join(a.get("class") or [])])
+    return bool(HOME_LABEL.search(label))
+
+
 def lift_logos(html, page_url, out_logos, log):
     soup = BeautifulSoup(html, "html.parser")
     cands = []
     regions = [("header", soup.find("header")), ("nav", soup.find("nav")), ("footer", soup.find("footer"))]
-    home_links = [a for a in soup.find_all("a", href=True) if a["href"] in ("/", page_url, page_url.rstrip("/")) or a["href"].rstrip("/") == page_url.rstrip("/")]
+    home_links = [a for a in soup.find_all("a", href=True) if is_home_anchor(a, page_url)]
     for a in home_links[:6]:
         regions.append(("home-link", a))
     seen = set()
-    home_hrefs = {"", "/", page_url.rstrip("/")}
     for region, node in regions:
         if node is None: continue
         wall = bool(WALL_HINT.search(" ".join(node.get("class") or []) + " " + (node.get("id") or "")))
@@ -738,7 +789,7 @@ def lift_logos(html, page_url, out_logos, log):
                 u = urllib.parse.urljoin(page_url, src)
                 if u in seen: continue
                 seen.add(u)
-                in_home = any(p.name == "a" and (p.get("href") or "").rstrip("/") in home_hrefs for p in el.parents)
+                in_home = any(p.name == "a" and is_home_anchor(p, page_url) for p in el.parents)
                 cands.append({"region": region, "kind": "img", "src": u, "alt": alt or None, "class": " ".join(el.get("class") or [])[:80],
                               "width": el.get("width"), "height": el.get("height"), "suspectWall": in_wall, "homeLink": in_home})
             else:
@@ -758,6 +809,8 @@ def lift_logos(html, page_url, out_logos, log):
     for c in cands:
         if c["kind"] == "img" and not c.get("homeLink") and marks[c["region"]] >= WALL_MIN_LOGOS:
             c["suspectWall"] = True
+    # the header lockup outranks a footer mark: list footer candidates last, so the cap never drops a header one
+    cands.sort(key=lambda c: c["region"] == "footer")
     out = []
     for i, c in enumerate(cands[:16]):
         try:
@@ -798,6 +851,11 @@ def icon_entry(raw, name, seen):
     except Exception: return None
     if not (12 <= w <= 64 and 12 <= h <= 64): return None
     inner = re.sub(r"^<svg[^>]*>|</svg>$", "", raw, flags=re.S).strip()
+    try:  # the renderer allows no style, class or data-* attributes; keep what they paint, drop the rest
+        inner = sanitize_svg_markup(inner)
+        svg_root(f'<svg viewBox="{vb}">{inner}</svg>')
+    except Exception:
+        return None
     key = hashlib.sha1(inner.encode()).hexdigest()[:8]
     if key in seen: return None
     seen.add(key)
@@ -1241,9 +1299,9 @@ def cmd_mine(args):
     browser = Browser(not args.no_playwright, log)
     try:
         # CSS from home + first two other pages (bundles are shared; keep budget)
-        css_text, sheets, head_recovered = "", [], []
+        css_text, sheets, head_recovered, seen_sheets = "", [], [], set()
         for u, p in pages[:3]:
-            t, s, rec = css_of_page(p["html"], u, out / "css", log); css_text += "\n" + t; sheets += s
+            t, s, rec = css_of_page(p["html"], u, out / "css", log, seen=seen_sheets); css_text += "\n" + t; sheets += s
             if rec: head_recovered.append(slug_of(u))
         log(f"css: {len(sheets)} sheets, {len(css_text)//1024} KB")
         ev = {"domain": domain, "seedUrl": base, "generatedAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "stylesheets": sheets}

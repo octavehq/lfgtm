@@ -46,6 +46,6 @@ Each ad set gets its own section containing:
 - **Theme**: Dark (navy/charcoal backgrounds, clean typography, accent colors for variant types)
 - **Animations**: Scroll-triggered fade-in
 - **Navigation**: Sticky nav with section jump links
-- **Layout**: Responsive grid layouts
+- **Layout**: Responsive grid layouts. Every table (source provenance, targeting, exclusions, keyword strategy, field intelligence coverage) holds at 375px: below 520px it stacks into one card per row with each cell labelled by its column header, or scrolls inside its own box with a visible scroll cue; no column is clipped at the right edge ([presentation principle 9k](../../shared/presentation-principles.md))
 - **Typography**: Import Inter + JetBrains Mono from Google Fonts
 - **Self-contained**: No external dependencies beyond Google Fonts

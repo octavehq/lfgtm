@@ -88,7 +88,7 @@ If [Competitor] is in the mix, demonstrate:
 
 NEXT STEP TO PROPOSE
 --------------------
-Primary: [Specific next step with stakeholders]
+Primary: [Specific next step with stakeholders, sized to the stage; after a first enterprise meeting, who the champion shows next]
 Backup: [Alternative if they're not ready]
 
 ---

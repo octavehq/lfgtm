@@ -33,17 +33,19 @@
     .sidebar a:hover { background: var(--brand-500); transform: scale(1.3); }
 
     /* === Section Base === */
-    .section { margin-bottom: clamp(3rem, 6vh, 5rem); padding-top: 1rem; }
+    .pos-section { margin-bottom: clamp(3rem, 6vh, 5rem); padding-top: 1rem; }
     .section-number { font-family: var(--font-mono); font-size: 0.75rem; color: var(--brand-primary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.25rem; }
     .section-title { font-family: var(--font-display); font-size: clamp(1.4rem, 2.5vw, 2rem); font-weight: 700; margin-bottom: 0.5rem; }
+    /* .section-subtitle is the section's lede inside .section-body: a sentence that adds information, never a muted second half of the title */
     .section-subtitle { font-size: clamp(0.85rem, 1.2vw, 1rem); color: var(--text-secondary); margin-bottom: 1.5rem; }
 
     /* === Collapsible Sections (details/summary) === */
-    details.section { border-bottom: 1px solid var(--border); padding-bottom: 2rem; }
-    details.section summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 0.75rem; }
-    details.section summary::before { content: "\25B6"; font-size: 0.6em; color: var(--brand-primary); transition: transform 0.2s ease; }
-    details.section[open] summary::before { transform: rotate(90deg); }
-    details.section .section-body { margin-top: 1.5rem; }
+    details.pos-section { border-bottom: 1px solid var(--border); padding-bottom: 2rem; }
+    details.pos-section summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 0.75rem; }
+    details.pos-section summary::-webkit-details-marker { display: none; }
+    details.pos-section summary::before { content: "\25B6"; font-size: 0.6em; color: var(--brand-primary); transition: transform 0.2s ease; }
+    details.pos-section[open] summary::before { transform: rotate(90deg); }
+    details.pos-section .section-body { margin-top: 1.5rem; }
 
     /* === Header Banner === */
     .header-banner { padding: clamp(2rem, 5vh, 4rem) 0; border-bottom: 1px solid var(--border); margin-bottom: clamp(2rem, 4vh, 3rem); }
@@ -59,6 +61,7 @@
     .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(0.75rem, 1.5vw, 1.25rem); }
     .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(0.75rem, 1.5vw, 1.25rem); }
     .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: clamp(0.75rem, 1.5vw, 1rem); }
+    .grid-2 > *, .grid-3 > *, .grid-4 > *, .grid-5 > * { min-width: 0; }
 
     /* === Callout Box === */
     .callout { padding: clamp(1rem, 2vh, 1.5rem); border-radius: var(--radius-lg); background: var(--bg-card); border-left: 4px solid var(--brand-primary); }
@@ -68,33 +71,38 @@
     .data-table th { text-align: left; padding: 0.75rem; border-bottom: 2px solid var(--border-strong); color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
     .data-table td { padding: 0.75rem; border-bottom: 1px solid var(--border); vertical-align: top; }
 
-    /* === Persona Colors === */
-    .persona-user { border-color: #34d399; }
-    .persona-user .persona-dot { background: #34d399; }
-    .persona-champion { border-color: #60a5fa; }
-    .persona-champion .persona-dot { background: #60a5fa; }
-    .persona-decision { border-color: #f59e0b; }
-    .persona-decision .persona-dot { background: #f59e0b; }
-    .persona-financial { border-color: #f87171; }
-    .persona-financial .persona-dot { background: #f87171; }
-    .persona-technical { border-color: #a78bfa; }
-    .persona-technical .persona-dot { background: #a78bfa; }
-    .persona-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 0.4rem; }
+    /* === Persona Colors: derived from the brand kit, never a fixed rainbow === */
+    /* A kit often allows one accent family, so personas take steps of it plus neutrals; the persona name always sits next to its colour, so colour is never the only cue. */
+    :root {
+      --persona-user: var(--brand-primary);
+      --persona-champion: var(--brand-accent, color-mix(in srgb, var(--brand-primary) 65%, var(--text-primary)));
+      --persona-decision: color-mix(in srgb, var(--brand-primary) 45%, var(--bg));
+      --persona-financial: var(--text-primary);
+      --persona-technical: var(--text-muted);
+    }
+    .persona-user { border-color: var(--persona-user); }
+    .persona-champion { border-color: var(--persona-champion); }
+    .persona-decision { border-color: var(--persona-decision); }
+    .persona-financial { border-color: var(--persona-financial); }
+    .persona-technical { border-color: var(--persona-technical); }
+    .persona-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 0.4rem; background: var(--text-muted); }
+    .persona-user .persona-dot, .persona-dot-user { background: var(--persona-user); }
+    .persona-champion .persona-dot, .persona-dot-champion { background: var(--persona-champion); }
+    .persona-decision .persona-dot, .persona-dot-decision { background: var(--persona-decision); }
+    .persona-financial .persona-dot, .persona-dot-financial { background: var(--persona-financial); }
+    .persona-technical .persona-dot, .persona-dot-technical { background: var(--persona-technical); }
 
     /* === Badges === */
-    .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: var(--radius-pill); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }
-    .badge-primary { background: rgba(59, 130, 246, 0.15); color: var(--brand-primary); }
-    .badge-success { background: rgba(52, 211, 153, 0.15); color: var(--success); }
-    .badge-warning { background: rgba(251, 191, 36, 0.15); color: var(--warning); }
-    .badge-error { background: rgba(248, 113, 113, 0.15); color: var(--error); }
+    .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: var(--radius-pill); font-size: 0.75rem; font-weight: 600; } /* no uppercase: badges carry product and feature names in their own case */
+    .badge-primary { background: color-mix(in srgb, var(--brand-primary) 15%, transparent); color: var(--brand-primary); }
+    .badge-neutral { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-secondary); }
+    .badge-success { background: color-mix(in srgb, var(--success) 15%, transparent); color: var(--success); }
+    .badge-warning { background: color-mix(in srgb, var(--warning) 15%, transparent); color: var(--warning); }
+    .badge-error { background: color-mix(in srgb, var(--error) 15%, transparent); color: var(--error); }
 
     /* === Highlighted Text (for positioning anchors) === */
-    .highlight { padding: 0.1rem 0.4rem; border-radius: 3px; font-weight: 600; }
-    .highlight-category { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
-    .highlight-persona { background: rgba(59, 130, 246, 0.2); color: #93c5fd; }
-    .highlight-usecase { background: rgba(52, 211, 153, 0.2); color: #6ee7b7; }
-    .highlight-problem { background: rgba(248, 113, 113, 0.2); color: #fca5a5; }
-    .highlight-feature { background: rgba(251, 191, 36, 0.2); color: #fcd34d; }
+    /* Emphasis follows the kit's emphasis rule: its emphasis ink and weight. Add a background wash only when the kit's guardrails allow one; the type classes stay as hooks. */
+    .highlight { font-weight: var(--brand-emph-weight, 600); color: var(--brand-emph-ink-light, var(--brand-primary)); }
 
     /* === Section-specific layouts — see references/section-layouts.md === */
     /* Included inline: message framework bands, funnel columns, timeline, canvas split */
@@ -108,11 +116,14 @@
       .timeline-phases { overflow-x: auto; }
     }
 
+    @media (max-width: 520px) { .meta-badges { display: none; } }
+    @media (max-width: 375px) { .doc-container { padding-left: 16px; padding-right: 16px; } }
+
     /* === Print === */
     @media print {
       .sidebar { display: none; }
-      details.section { break-inside: avoid; }
-      details.section[open] { break-inside: avoid; }
+      details.pos-section { break-inside: avoid; }
+      details.pos-section[open] { break-inside: avoid; }
       .card { break-inside: avoid; }
       body { color: #111; background: white; }
       .meta-badge { border: 1px solid #ccc; background: transparent; }
@@ -160,12 +171,12 @@
   </div>
 
   <script>
-    // Sidebar: generate dots from .section elements
+    // Sidebar: generate dots from .pos-section elements
     // Intersection Observer highlights active section dot
     // Smooth scroll on dot click
     // Open all details on print
     (function() {
-      const sections = document.querySelectorAll('.section');
+      const sections = document.querySelectorAll('.pos-section');
       const sidebar = document.getElementById('sidebar-nav');
       sections.forEach((section, i) => {
         const dot = document.createElement('a');
@@ -185,7 +196,7 @@
       }, { threshold: 0.2 });
       sections.forEach(s => observer.observe(s));
       window.onbeforeprint = () => {
-        document.querySelectorAll('details.section').forEach(d => d.open = true);
+        document.querySelectorAll('details.pos-section').forEach(d => d.open = true);
       };
     })();
   </script>
@@ -194,11 +205,13 @@
 </html>
 ```
 
+**Robustness:** text containers grow and wide grids scroll inside their own container, never clipped (presentation principles [9i, 9k, 9l](../../shared/presentation-principles.md)). If the user asks for a positioning map or any 2x2, follow principle 15b: labels inside each box, no arrows, the item's current box marked, and the condition that moves it written as text.
+
 **Self-contained:** Inline CSS, zero external dependencies (except Google Fonts). No JavaScript frameworks.
 
 **Key differences from brief/battlecard-doc HTML:**
 - **Max-width 1100px** (wider — positioning frameworks need horizontal space for grids)
-- **Persona color system** — consistent color coding across all 8 sections (User=green, Champion=blue, Decision Maker=amber, Financial Buyer=red, Technical Influencer=purple)
-- **Highlight classes** — for styling positioning anchor keywords (category, persona, use case, problem, feature)
+- **Persona colours from the brand kit**: the `--persona-*` tokens take steps of the kit's primary and accent plus its neutrals, the same in all 8 sections, and each persona keeps its name label so colour is never the only cue
+- **Highlight classes**: mark positioning anchor keywords (category, persona, use case, problem, feature) with the kit's emphasis ink, a wash only where the kit allows it
 - **Grid-4 and Grid-5** — for persona columns and awareness stage columns
 - **Section numbering** — "Section 01" labels for clear progression through the exercise

@@ -129,7 +129,8 @@ p{margin:0 0 14px;}
 /* gallery.eyebrowStyle "chip": a bordered pill, for brands whose labels sit in a hairline capsule */
 .hero .eyebrow.chip{display:inline-block;border:1px solid var(--brand-border);border-radius:var(--brand-radius-pill,999px);padding:5px 11px;}
 .is-dark.hero .eyebrow.chip{border-color:var(--brand-border-dark,rgba(255,255,255,.18));}
-.hero h1{font-size:var(--brand-h1,38px);letter-spacing:var(--brand-tracking-heading,-0.04em);
+/* the kit's display size is a desktop size: on a phone the H1 shrinks with the viewport so no word runs off the edge */
+.hero h1{font-size:min(var(--brand-h1,38px), calc(10px + 8.5vw));overflow-wrap:break-word;letter-spacing:var(--brand-tracking-heading,-0.04em);
   font-weight:var(--brand-weight-h1,var(--brand-weight-heading,600));margin-bottom:16px;max-width:20ch;}
 .is-dark.hero h1{color:#fff;}
 .hero .lead{font-family:var(--brand-font-body);font-size:15.5px;line-height:1.62;
@@ -395,8 +396,14 @@ p{margin:0 0 14px;}
   .stats:not(.on-light){padding:0 2px;}
   .hero .lede{grid-template-columns:1fr;gap:22px;}
   .g3,.g2,.feat{grid-template-columns:1fr !important;}
-  .cmp-band .head,.cmp-band .r,.cmp-soft .r,.cmp-diptych{grid-template-columns:1fr !important;}
-  .cmp-band .r .bad,.cmp-soft .r .bad{border-right:0;}
+  /* before/after rows keep their two columns on a phone, so each "before" sits beside its "after";
+     tighter measures make the room, and only the diptych (two separate lists) stacks */
+  .cmp-diptych{grid-template-columns:1fr !important;}
+  .cmp-diptych::after{display:none;}
+  .cmp-band,.cmp-soft{--cmp-pad:12px;--cmp-mark:16px;--cmp-gap:7px;}
+  .cmp-band .head .c,.cmp-band .r .c,.cmp-soft .r .c{padding-top:12px;padding-bottom:12px;padding-right:10px;font-size:12.5px;min-width:0;overflow-wrap:anywhere;}
+  .cmp-band .head .c,.cmp-soft .head .c{font-size:10.5px;letter-spacing:.04em;}
+  .cmp-band .m,.cmp-soft .m{height:16px;font-size:9.5px;}
   .stats{grid-auto-flow:row;grid-template-columns:repeat(2,1fr);}
   .stat:nth-child(2n){border-right:0;}
   .topbar{flex-wrap:wrap;gap:12px;}

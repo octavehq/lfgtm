@@ -16,7 +16,7 @@ EXPORT & SHARE OPTIONS
 5. Google Slides    **     Yes       Via PPTX import — same limitations
 6. Gamma            *      Yes       Text outline only — Gamma applies its own styling
 7. Markdown         *      Yes       Plain text structure only
-8. Keep as HTML     *****  Yes       Already saved, full fidelity + editable
+8. Keep as HTML     *****  Yes       Already saved, full fidelity; editing only in a working copy
 
 Your choice:
 ```

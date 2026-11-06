@@ -32,8 +32,11 @@ downstream rendering; a name match alone is not identity.
   label needs resolution before deletion. Deleting a local kit does not imply
   deletion of separately hosted artifacts.
 
-Legacy name-based directories remain usable as explicitly supplied paths, but
-reuse as a workspace brand requires matching verified manifest identity. Bind
+Legacy name-based directories remain usable as explicitly supplied paths, and
+consumers fall back to one when the workspace path is empty and its manifest
+domain matches exactly (see the legacy fallback in
+[brand kit usage](../../shared/brand-kit-usage.md#2-brand-kit-lookup-cache-first)).
+Binding it as the workspace brand requires matching verified manifest identity. Bind
 missing identity from actual evidence before migration; never guess the domain
 from a company-name slug. The renderer accepts `--domain` and `--workspace` to
 assert the expected identity when loading a kit.

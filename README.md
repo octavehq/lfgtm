@@ -121,7 +121,7 @@ See [**docs/org-instructions/**](docs/org-instructions/) for short and long reco
 | Skill | Description |
 |-------|-------------|
 | `/octave:get-brand-components` | Capture a company's brand (fonts, colors, logo, real imagery, components) from its website into a reusable kit — every Document Builder below can render **on-brand** with it; kits can be reused from and hosted to the asset store (asset-manager) |
-| `/octave:meeting-prep` | Strategic meeting battle plan with coaching frameworks and talk tracks as HTML |
+| `/octave:meeting-prep` | Meeting prep that leads with lookalike deals, charts what each attendee will raise, and ends on the next best action (HTML or Markdown) |
 | `/octave:deck` | Build Octave-powered HTML slide decks with brand styling and export |
 | `/octave:one-pager` | Personalized one-pager / leave-behind as self-contained HTML |
 | `/octave:proposal` | Formal business case and proposal as customer-facing HTML |
@@ -409,7 +409,7 @@ Build Octave-powered HTML presentations with brand styling:
 ### /octave:champion-deal-room
 Internal deal room a rep hands a champion so they can run the buying-committee sell:
 - Quantified business case built from real deal data
-- Stakeholder map with per-seat talking points
+- Committee map (people to engage now and later) with talking points for each
 - Objection handling and a concrete path to yes
 - Self-contained HTML — shareable inside the account
 
@@ -590,8 +590,8 @@ The workspace's own company profile (singleton).
 - `run_qualify_company_agent` - Run company qualification agent
 
 ### Assets
-- `asset_generate_access_token` - Mint the per-user access token used by the upload/download scripts (rotates the previous one)
-- `asset_refresh_access_token` - Rotate the access token (e.g. after a 401)
+- `asset_generate_access_token` - Mint an access token for the upload/download scripts (an additional token; earlier ones stay valid, and an optional `name` replaces only your earlier token of that name)
+- `asset_refresh_access_token` - Mint a fresh token and revoke only the one named by `replacesPrefix`
 - `assets_list` - List your assets and your workspace's assets, with status/privacy filters
 - `asset_get_by_id` - Get one asset by uuid
 - `asset_update` - Update metadata: identifier, description, entry point, privacy (only_me/workspace/public), status, vanity slug (pretty `/s/<handle>/<slug>/` URL)

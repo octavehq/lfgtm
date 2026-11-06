@@ -27,11 +27,11 @@ The proposal uses the same CSS variable system as `/octave:deck` (see the shared
     /* Sections — .proposal-section: margin-bottom clamp, scroll-margin-top for anchor offset */
     /* Cover Page — .cover-page: min-height 100vh, flex center, text-align center */
     /* Typography — h1-h3 with clamp() font sizes, --font-display; p with --text-secondary */
-    /* Components — .card, .solves-for (pain-mapping tag on capability cards), .persona-frame (per-persona framing strip, one row per real persona), .metric-card, .big-number, .quote-block, .pricing-table, .logo-grid, .placeholder (LITERAL prominent panel: dashed accent border, "Your input goes here" tag + display-size "( Add your ___ )" cue, for spots where the seller's input beats ours like pricing and rollout timing; never fabricate to fill, never bury in small print), .unconfirmed (tag for any person/detail not confirmed via a real tool result) */
+    /* Components: .card, .solves-for (pain-mapping tag on capability cards), .persona-frame (per-persona framing strip, one row per real persona), .metric-card, .big-number, .quote-block, .pricing-table, .logo-grid, .placeholder (LITERAL prominent panel: dashed accent border, "Your input goes here" tag + display-size "( Add your ___ )" cue, for spots where the seller's input beats ours like pricing and rollout timing; never fabricate to fill, never bury in small print), .unconfirmed (tag for a detail not yet confirmed; people off the record stay out of the document) */
     /* Side-by-side proof/result cards: align internal bands (header, body, metric row, quote) across cards via CSS subgrid — parent sets the row tracks, each card sets grid-template-rows: subgrid and spans them. Give cards a parallel metric count so the number row reads as one strip. */
     /* Cover: no Stage/deal-process chip; no Confidential stamp unless requested. Section titles are standard proposal headings, one label per heading (no eyebrow that repeats the title). */
     /* Print Styles (critical) — hide sidebar, full-width content, page-break-after on cover, page-break-inside avoid on sections/cards */
-    /* Responsive — hide sidebar below 900px */
+    /* Responsive: hide sidebar below 900px; at 520px side-by-side cards and the timeline stack; at 375px 16px gutters and no sideways page scroll (presentation principles 9k). Cards grow with their text: no fixed heights or overflow:hidden on text containers, min-width:0 on grid children (9i). Any mono stack ends ui-monospace, SFMono-Regular, Menlo, Consolas, monospace (4d). */
     /* prefers-reduced-motion — disable transitions */
   </style>
 </head>

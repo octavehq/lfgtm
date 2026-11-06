@@ -22,7 +22,7 @@ comparison: defaults to a gradient-band header table; on light brands (no dark b
   it auto-falls back to a soft table; set "variant":"diptych" for the luminous split panel.
 """
 import argparse, base64, html, json, os, pathlib, re, sys
-from kit_validation import asset_path, safe_url, css_value, svg_root, validate_manifest
+from kit_validation import asset_path, safe_url, css_value, sanitize_svg_markup, svg_root, validate_manifest
 from brand_cache import resolve
 
 BRANDS = pathlib.Path.home() / ".octave" / "brands"
@@ -110,6 +110,7 @@ def icon_svg(kitdir, name_or_raw, kit_icons):
         vb, inner = kit_icons[name_or_raw]["viewBox"], kit_icons[name_or_raw]["inner"]
     else:
         return ""  # unknown icon -> empty (tile still renders)
+    inner = sanitize_svg_markup(inner)  # kits mined before the miner sanitized icons can still carry style attributes
     svg_root(f'<svg viewBox="{html.escape(vb)}">{inner}</svg>')
     return (f'<svg viewBox="{html.escape(vb)}" width="22" height="22" fill="none" stroke="currentColor" '
             f'stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">{inner}</svg>')

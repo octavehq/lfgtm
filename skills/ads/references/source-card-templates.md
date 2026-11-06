@@ -6,7 +6,7 @@ See [octave-research-toolkit.md](../../shared/octave-research-toolkit.md) for `l
 
 #### 1. Pain Language Audit (drives Pain-Focused variant)
 
-Analyze all findings fetched via `list_findings` for this persona/segment. If no findings exist, analyze the persona entity description and matched use case descriptions instead.
+Analyze all findings fetched via `list_findings` for this persona/segment. If no findings exist, analyze the persona entity description and matched use case descriptions instead. The emotional core comes from the buyer's work, never from a personal fact said on a call; leave those excerpts out and count them ([information principles #19](../../shared/information-principles.md#reading-calls-and-deals)).
 
 ```markdown
 ### Pain Language Audit: {Persona} × {Segment}

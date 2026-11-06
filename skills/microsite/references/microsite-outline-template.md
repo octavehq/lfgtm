@@ -7,7 +7,7 @@ MICROSITE OUTLINE: Built for [Company]
 Target: [Company name / Person name]
 Angle: [Pain-point / Competitive / Value-led / Trigger-based]
 CTA: [Book a demo / See case study / etc.]
-Sections: [4-5 sections]
+Rendering: [Story mode, 5 to 8 screens (default) / Document mode, 4-5 sections]
 
 ---
 

@@ -14,6 +14,14 @@ scope and external-use status; creative derivation; uncertainty.
 Findings are discovery leads. Retrieve the underlying transcript/email or
 source before presenting a verbatim quote. Keep paraphrase and quote fields
 separate. Named proof and metrics must be applicable to this offer/audience.
+Personal facts from a call never enter a source card, a headline or any
+creative, even reworded ([information principles #19](../../shared/information-principles.md#reading-calls-and-deals)).
+Every headline, description and primary-text field is live copy the
+platform serves as written. A caveat or working note ("names from our
+approved list", "their reported result, not a guarantee", "TBD") never sits
+inside one; it goes in the source card, a notes column or the delivery
+message ([information principles #22](../../shared/information-principles.md#reading-calls-and-deals)).
+A claim that needs a caveat to be true is reworded or dropped.
 
 Load [evidence-and-inputs.md](../../shared/evidence-and-inputs.md) for material substantiation gaps.
 Ask for specific missing capability, proof/POC, or offer facts; incorporate

@@ -29,7 +29,6 @@ Resolve current tool schemas before execution; use returned IDs and pagination. 
 - [frameworks](references/frameworks.md)
 - [html scaffold](references/html-scaffold.md)
 - [messaging narratives](references/messaging-narratives.md)
-- [stage mapping](references/stage-mapping.md)
 
 Read only the reference for the selected mode, then the format/layout references when rendering. Do not repeat intake or change approved claims when routing to a renderer.
 

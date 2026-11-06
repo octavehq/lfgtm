@@ -76,7 +76,7 @@ Green-accented list. 1-3 entries. Each entry explains WHY the proof point matter
 
 ### d. Win Rate (if data available)
 
-CSS bar showing wins vs losses. Include trending context (direction + why).
+CSS bar showing wins vs losses, with the closed-deal counts in a caption under it. Include trending context (direction + why).
 
 ### e. Watch-out (standalone)
 

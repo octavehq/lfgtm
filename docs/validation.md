@@ -62,7 +62,7 @@ commercials, POC or usage data where it matters.
 | research | Discovery or demo / absent proof | QBR receives missing results on turn two; no reference result becomes realized value |
 | abm | Known account / candidates only | A library trigger with no occurrence cannot become a congratulatory email; full count is honored |
 | pipeline | Opportunity coaching / incomplete history | Two opportunities at one domain retain different blockers and buyer-agreed pauses |
-| meeting-prep | Discovery meeting / unknown workflow | Replacement and service offers do not inherit a context-layer pitch; six sections agree |
+| meeting-prep | Discovery meeting / unknown workflow | Replacement and service offers do not inherit a context-layer pitch; eight sections agree |
 | deal-coach | Committee rehearsal / absent CRM | Real cash cap or better-fit rival permits defer/no-fit; no invented stage probability |
 | champion-deal-room | Committee case / qualitative value | Restricted seller notes stay private; freed hours are not automatically cash savings |
 | generate | One follow-up / no saved agent | All engines preserve the same claims, scope and requested count |

@@ -2,7 +2,7 @@
 
 Long-form scrollable HTML documents with section-based structure. The most common Octave output format.
 
-**Skills that produce this format:** research (HTML mode), positioning, meeting-prep, battlecard (HTML mode), win-loss (HTML mode), proposal
+**Skills that produce this format:** research (HTML mode), positioning, meeting-prep, battlecard (HTML mode), win-loss (HTML mode), proposal, and champion-deal-room on request. It stays the default for internal reports; buyer-facing pages default to [story mode](story-mode.md). Single components from the [visual kit](visual-kit.md) (a big stat, a stage strip, a plan timeline) belong here when one explains a mechanism or a dataset better than prose; see [`examples/acme-report.html`](examples/acme-report.html).
 
 These principles supplement the universal visual rules in `presentation-principles.md` (one directory up). The universal principles are the floor; these add format-specific requirements.
 
@@ -24,6 +24,8 @@ These principles supplement the universal visual rules in `presentation-principl
 
 8. **Footer with provenance.** Data window, generation date, confidentiality notice, branding. The reader should know when the document was made and what data it covers.
 
+9. **Follow-on prompts are copy-ready cards.** When a document suggests next questions or tasks, render each as a card with a title, one line on what it produces, and a single "Copy prompt" button that shows "Copied" after it runs. The copied text is the card's task followed by one shared context block written once for every card, opening with something like "Use the Octave tools you have to read Acme's records" and naming the account, deal and asset the task needs. The prompt text can sit in a collapsed "Show prompt" row. Never imply the prompt opens a specific app or arrives pre-filled; the reader pastes it into whichever assistant they use. The buttons hide in print, where the prompt text prints in full.
+
 ---
 
 ## Review Checklist
@@ -32,9 +34,11 @@ Format-specific audit for scrollable HTML documents. Run alongside the universal
 
 Run the render gate first. A scrolling document has no panes, so pass none: the contrast and font checks are what matter here, and they catch the two defects this format actually produces. The first is a light card nested inside a dark band that inherits the band's light text colour and paints near-white on near-white. The second is a brand font that was declared but never delivered, which falls back to a system face with nothing on screen to announce it.
 
+The gate also reports text cut off by a container that clips it (`clipped-text`) and, at the 375px viewport, a page that scrolls sideways (`page-scroll-x`).
+
 ```bash
 node <skill-dir>/../shared/scripts/render-gate.js <document.html> \
-  --chrome "nav,.toc,.sticky-nav" --viewports 1600x900,1280x800
+  --chrome "nav,.toc,.sticky-nav" --viewports 1600x900,1280x800,375x812
 ```
 
 - [ ] **Sticky nav present.** `<nav>` element with jump links, `position: sticky`, backdrop-filter for frosted glass. Links match existing sections only: no dead links, no missing links.
@@ -44,4 +48,5 @@ node <skill-dir>/../shared/scripts/render-gate.js <document.html> \
 - [ ] **Modals (if present) accessible.** Close on Escape, close on backdrop click, `aria-label` on close button, `body` overflow hidden when open.
 - [ ] **Print flattens.** `@media print` block: tabs become labeled blocks via `data-tab-label`, modals expand inline, dark inverts to light, nav hidden, cards get `break-inside: avoid`.
 - [ ] **Footer complete.** Data window, generation date, confidentiality notice, branding: all present and consistent with header.
+- [ ] **Prompt cards (if present).** One "Copy prompt" button per card; the copied text is the task plus the shared context; no wording that promises a pre-filled app; buttons hidden in print.
 - [ ] **Share metadata.** og:title and og:description present and filled. og:image, when present, is a relative path to a real sibling file (assets/og.png); no og:url or canonical. See [social-meta.md](../social-meta.md).
