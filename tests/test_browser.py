@@ -77,9 +77,9 @@ class BrowserChecks(unittest.TestCase):
         self.page.get_by_text('Next buy',exact=True).click()
         sent=self.page.evaluate('sent')
         self.assertEqual([(e['name'],e['key']) for e in sent],[('slide','2'),('answer','sell-1'),('answer','sell-2'),('slide','3'),('answer','buy-1'),('slide','4'),('score','final')])
-        self.assertEqual(sent[1]['data'],{'question':'Which problem?','choice':'No sell-1','correct':False})
-        self.assertEqual(sent[0]['data'],{'type':'content','title':'What we sell','of':4})
-        self.assertEqual(sent[-1]['data'],{'correct':2,'total':3})
+        self.assertEqual(sent[1]['data'],{'question':'Which problem?','choice':'No sell-1','correct':False,'attempt':1})
+        self.assertEqual(sent[0]['data'],{'type':'content','title':'What we sell','of':4,'attempt':1})
+        self.assertEqual(sent[-1]['data'],{'correct':2,'total':3,'attempt':1})
         self.assertEqual(self.page.locator('[data-score-msg]').inner_text(),'1 to revisit. Those topics are listed first.')
         rows=self.page.locator('.review-menu button')
         self.assertEqual(rows.all_inner_texts(),['What we sell\n1 of 2','Who buys\n1 of 1'])
@@ -89,7 +89,15 @@ class BrowserChecks(unittest.TestCase):
         rows.nth(0).click();self.page.evaluate('go(3)')
         self.assertEqual(len([e for e in self.page.evaluate('sent') if e['name']=='score']),1)
         self.page.get_by_text('Restart',exact=True).click()
-        self.assertEqual(self.page.evaluate('sent')[-1]['name'],'restart')
+        self.assertEqual(self.page.evaluate('sent')[-1],{'name':'restart','data':{'attempt':2},'key':None})
+        # A second run reports again and says which attempt it is.
+        self.page.get_by_text('Start',exact=True).click()
+        self.page.get_by_text('Yes sell-1',exact=True).click();self.page.get_by_text('Yes sell-2',exact=True).click()
+        self.page.get_by_text('Next sell',exact=True).click();self.page.get_by_text('Yes buy-1',exact=True).click()
+        self.page.get_by_text('Next buy',exact=True).click()
+        retake=self.page.evaluate('sent')
+        self.assertEqual(retake[-1],{'name':'score','data':{'correct':3,'total':3,'attempt':2},'key':'final'})
+        self.assertEqual(len([e for e in retake if e['name']=='score']),2)
         # Opened from disk: no recorder, no errors, and no form that would go nowhere.
         self.page.set_content(lesson(''))
         self.page.get_by_text('Start',exact=True).click()
@@ -97,7 +105,7 @@ class BrowserChecks(unittest.TestCase):
         self.page.get_by_text('Next sell',exact=True).click();self.page.get_by_text('Yes buy-1',exact=True).click()
         self.page.get_by_text('Next buy',exact=True).click()
         self.assertEqual(self.page.locator('.score-big').inner_text(),'3 / 3')
-        self.assertEqual(self.page.locator('[data-score-msg]').inner_text(),'Every check cleared on the first attempt.')
+        self.assertEqual(self.page.locator('[data-score-msg]').inner_text(),'Every check cleared.')
         self.assertFalse(self.page.locator('.done-form').is_visible());self.assertFalse(self.page.locator('.record-note').is_visible())
 
     def test_response_form_fits_a_phone_on_light_and_dark(self):
@@ -115,6 +123,11 @@ class BrowserChecks(unittest.TestCase):
             boxes=self.page.evaluate(f'''[...document.querySelectorAll("{root} input,{root} textarea")].map(e=>{{const r=e.getBoundingClientRect();return [Math.round(r.left),Math.round(r.height)]}})''')
             self.assertEqual(len({left for left,_ in boxes}),1)  # the two-up row stacks into one column
             self.assertTrue(all(height>=44 for _,height in boxes))
+        # on a lesson's dark band the submit button takes the kit's on-dark tokens, not the light-surface ones
+        band=f'<!doctype html><style>:root{{--brand-primary:#101828;--brand-btn-bg:transparent;--brand-btn-ink:#101828;--brand-btn-bg-dark:#fff;--brand-btn-ink-dark:#101828}}.btn-primary{{background:var(--brand-btn-bg,var(--brand-primary))}}{form_css}</style><div class="slide gradient" style="background:#101828">'+form.replace('class="btn"','class="btn btn-primary"')+'</div>'
+        self.page.set_content(band)
+        self.assertEqual(self.page.evaluate('getComputedStyle(document.querySelector(".rf .btn-primary")).backgroundColor'),'rgb(255, 255, 255)')
+        self.page.set_content(f'<!doctype html><style>{tokens}body{{margin:0;padding:16px}}{form_css}</style><div id="light">{form}</div><div id="dark" class="is-dark" style="background:#101828;padding:16px">{form}</div>')
         ink=lambda root:self.page.evaluate(f'getComputedStyle(document.querySelector("{root} input")).color')
         self.assertNotEqual(ink('#light'),ink('#dark'))
 

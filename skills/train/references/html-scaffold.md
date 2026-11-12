@@ -165,7 +165,7 @@ html[data-octave-recording] .done-form { display:flex; justify-content:center; w
     <div class="slide-inner">
       <div class="done-grid">
         <div class="done-score">
-          <p class="done-k">Your first-attempt score</p>
+          <p class="done-k">Your score</p>
           <p class="score-big"></p>
           <p class="score-msg" data-score-msg></p>
           <div class="review-menu"><button data-go="slide-id">Topic title</button><!-- one per content slide --></div>
@@ -207,7 +207,7 @@ A published lesson reports what each learner did to its owner, through the recor
 
 - **Give every checkpoint a stable id**: `data-checkpoint="sell-1"`, unique in the lesson and kept when the lesson is edited, so one question's answers line up across versions. An empty `data-checkpoint` still works and is numbered by position.
 - **`.q-text` holds the question and nothing else.** Its text and the chosen option's text are what the owner reads, so neither carries numbering, icons or hidden helper text.
-- **What is recorded:** `answer` per checkpoint (question, choice, correct), `slide` as each topic is first reached, `score` on the completion slide, `restart`, and the feedback form (`form`, key `lesson-feedback`). Nothing is recorded when the file is opened from disk.
+- **What is recorded:** `answer` per checkpoint (question, choice, correct), `slide` as each topic is first reached, `score` on the completion slide, `restart`, and the feedback form (`form`, key `lesson-feedback`). Each lesson event carries an `attempt` number that goes up on every restart, because the owner sees the latest answer per question. Nothing is recorded when the file is opened from disk.
 - **The completion slide tells the learner.** `.record-note` and the feedback form appear only when the page is really being recorded (`html[data-octave-recording]`), so a local copy never shows a form that goes nowhere. Keep the note's meaning when rewording it: answers are shared with whoever sent the lesson.
 - **Named results need named viewers.** Publish at workspace tier or share to named recipients when the owner wants to know who answered what. A public or open link gives anonymous results; say so before publishing that way, and only then add optional name and email fields to the form (the [response form](../../shared/formats/response-form.css) has the `.rf-row` for them).
 - **The form is the shared component.** Inline [response-form.css](../../shared/formats/response-form.css) after the kit's tokens and `kit_base.css`; do not restyle its fields per lesson.

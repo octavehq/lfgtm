@@ -106,6 +106,12 @@
   border-color:var(--brand-emph-ink-dark,var(--brand-primary));background:color-mix(in srgb,#fff 10%,transparent);}
 .is-dark .rf-check,.slide.gradient .rf-check{color:#fff;background:color-mix(in srgb,#fff 14%,transparent);}
 .is-dark .rf-choice,.slide.gradient .rf-choice{color:#fff;border-color:var(--brand-border-dark,rgba(255,255,255,.2));}
+/* kit_base.css gives .btn-primary its on-dark tokens only under .is-dark; a lesson's .slide.gradient needs the same mapping */
+.slide.gradient .rf .btn-primary{background:var(--brand-btn-bg-dark,var(--brand-btn-bg,var(--brand-primary)));
+  color:var(--brand-btn-ink-dark,var(--brand-btn-ink,var(--brand-primary-ink)));
+  border-color:var(--brand-btn-border-dark,var(--brand-btn-border,transparent));}
+.slide.gradient .rf .btn-primary:hover{background:var(--brand-btn-hover-bg-dark,var(--brand-btn-hover-bg,var(--brand-primary-hover,var(--brand-btn-bg-dark,var(--brand-btn-bg,var(--brand-primary))))));
+  color:var(--brand-btn-hover-ink-dark,var(--brand-btn-hover-ink,var(--brand-btn-ink-dark,var(--brand-btn-ink,var(--brand-primary-ink)))));}
 
 @media (max-width:520px){.rf-row{grid-template-columns:1fr;}.rf,.rf-done{max-width:none;}}
 @media (prefers-reduced-motion:reduce){.rf *,.rf-done{animation:none!important;transition:none!important;}}

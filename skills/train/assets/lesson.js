@@ -14,6 +14,7 @@
   const questionKey = q => q.dataset.checkpoint || `q${questions.indexOf(q) + 1}`;
   const seen = new Set();
   let scored = false;
+  let attempt = 1; /* a restart starts attempt 2, 3, ...; the owner sees the latest answer per question, so each carries its attempt */
   const content = slides.filter(s => s.dataset.type === 'content');
   const done = s => [...s.querySelectorAll('[data-checkpoint]')].every(q => answers.has(q));
   const canReach = i => slides.slice(0, i).filter(s => s.dataset.type === 'content').every(done);
@@ -51,12 +52,12 @@
     const slide = slides[current];
     if (!seen.has(current) && slide.dataset.type !== 'cover') {
       seen.add(current);
-      record('slide', { type: slide.dataset.type || '', title: text(slide.querySelector('h1,h2,.slide-title'), 120), of: slides.length }, String(current + 1));
+      record('slide', { type: slide.dataset.type || '', title: text(slide.querySelector('h1,h2,.slide-title'), 120), of: slides.length, attempt }, String(current + 1));
     }
     if (slide.dataset.type === 'done') results();
     if (slide.dataset.type === 'done' && !scored && questions.length && answers.size === questions.length) {
       scored = true;
-      record('score', { correct: [...answers.values()].filter(Boolean).length, total: questions.length }, 'final');
+      record('score', { correct: [...answers.values()].filter(Boolean).length, total: questions.length, attempt }, 'final');
     }
   }
   /* The completion slide's review links carry each topic's result, topics with a miss first, so the
@@ -64,7 +65,7 @@
   function results() {
     const wrong = [...answers.values()].filter(v => v === false).length;
     document.querySelectorAll('[data-score-msg]').forEach(e => {
-      e.textContent = !questions.length ? '' : wrong ? `${wrong} to revisit. Those topics are listed first.` : 'Every check cleared on the first attempt.';
+      e.textContent = !questions.length ? '' : wrong ? `${wrong} to revisit. Those topics are listed first.` : 'Every check cleared.';
     });
     document.querySelectorAll('.review-menu').forEach(menu => {
       const rows = [...menu.querySelectorAll('[data-go]')].map((b, order) => {
@@ -85,8 +86,8 @@
     current = i; update(); slides[i].querySelector('.slide-body')?.scrollTo(0, 0); return true;
   }
   function restart() {
-    answers.clear(); seen.clear(); scored = false;
-    record('restart');
+    answers.clear(); seen.clear(); scored = false; attempt += 1;
+    record('restart', { attempt });
     questions.forEach(q => {
       q.querySelectorAll('.cp-opt').forEach(b => { b.disabled = false; b.classList.remove('correct', 'wrong'); });
       q.querySelector('.cp-explain')?.classList.remove('show');
@@ -97,7 +98,7 @@
     if (answers.has(q)) return;
     const correct = b.dataset.answer === 'true'; answers.set(q, correct);
     b.classList.add(correct ? 'correct' : 'wrong');
-    record('answer', { question: text(q.querySelector('.q-text')), choice: text(b), correct }, questionKey(q));
+    record('answer', { question: text(q.querySelector('.q-text')), choice: text(b), correct, attempt }, questionKey(q));
     q.querySelectorAll('.cp-opt').forEach(o => o.disabled = true);
     q.querySelector('.cp-explain')?.classList.add('show'); update();
   })));
