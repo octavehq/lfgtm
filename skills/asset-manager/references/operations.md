@@ -89,7 +89,7 @@ Anonymous public visitors are **counted in stats but never identified** — neve
 A hosted page can report what its reader did: quiz answers and a score, a submitted form, how far they got ([asset responses](../../shared/asset-responses.md)). Same audience as stats: the owner and anyone whose `canManage` is true.
 
 - **Read** → `asset_responses_list`: one entry per reader with their latest answer per question or form, plus the newest raw events.
-- **Delete** → `asset_responses_delete`: one reader's responses (pass their `id`), only the test responses (`testsOnly: true`), or all of them. Deleting cannot be undone, so confirm which before calling it.
+- **Delete** → `asset_responses_delete`: one reader's responses (pass their `id`), only the test responses (`testsOnly: true`), or all of them. Deleting cannot be undone, so confirm which before calling it. When the request is about tests, always pass `testsOnly: true` and never use the all-responses form: without that flag every real response is deleted too. "Delete all responses" includes the tests, so say so when confirming.
 
 **Adding it to an asset that is already published.** Nothing is switched on per asset: any hosted website can record. To make an existing page collect answers, edit its HTML and upload the new version:
 

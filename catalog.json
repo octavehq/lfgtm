@@ -188,7 +188,7 @@
         {
           "version": "1.5.0",
           "date": "2026-11-12",
-          "notes": "Read what readers answered on a hosted page (quiz answers, scores, form submissions) with asset_responses_list, and delete one reader's responses or all of them. Covers adding a form or recorded answers to an asset that is already published, and trying it as a reader. Sends a test response with ?octave-record=test and clears tests on their own.",
+          "notes": "Read what readers answered on a hosted page (quiz answers, scores, form submissions) with asset_responses_list, and delete one reader's responses or all of them. Covers adding a form or recorded answers to an asset that is already published, and trying it as a reader. Covers sending a test response with ?octave-record=test, keeping tests out of results, and clearing only the tests.",
           "review": false
         },
         {
