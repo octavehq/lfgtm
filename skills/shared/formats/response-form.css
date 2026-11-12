@@ -1,0 +1,112 @@
+/* ============================================================================
+   Response form: the one form component for any published asset that asks its
+   reader for something (feedback, a sign-up, a short survey). Inline it after
+   the brand kit's tokens.css and kit_base.css. Every color, radius, face and
+   the focus ring come from the kit's --brand-* tokens, so the form looks like
+   the rest of the asset in any brand. Contract and markup:
+   ../asset-responses.md
+   ============================================================================ */
+
+/* ---- the card ---- */
+.rf{display:flex;flex-direction:column;gap:16px;width:100%;max-width:440px;box-sizing:border-box;text-align:left;
+  padding:clamp(20px,3vw,28px);
+  border-radius:var(--brand-radius-card,var(--brand-radius,14px));
+  border:1px solid var(--brand-card-border,var(--brand-border));
+  background:var(--brand-card-bg,var(--brand-surface,var(--brand-bg-alt)));
+  color:var(--brand-ink);
+  box-shadow:var(--brand-shadow-sm,none);}
+.rf-head{display:flex;flex-direction:column;gap:6px;}
+.rf-title{margin:0;font-family:var(--brand-font-heading);font-weight:var(--brand-weight-heading,600);
+  font-size:1.3rem;line-height:1.2;letter-spacing:var(--brand-tracking-heading,-0.01em);text-wrap:balance;}
+.rf-lede{margin:0;font-family:var(--brand-font-body);font-size:.94rem;line-height:1.5;
+  color:var(--brand-muted);text-wrap:pretty;}
+
+/* ---- fields: a visible label above every control, never a placeholder alone ---- */
+.rf-fields{display:flex;flex-direction:column;gap:12px;}
+.rf-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.rf-field{display:flex;flex-direction:column;gap:6px;min-width:0;}
+.rf-field > label,.rf-legend{font-family:var(--brand-font-body);font-size:.82rem;font-weight:500;line-height:1.3;
+  color:var(--brand-body-ink,var(--brand-ink));}
+.rf-opt{font-weight:400;color:var(--brand-muted);}
+.rf input[type=text],.rf input[type=email],.rf input[type=tel],.rf input[type=url],.rf input[type=number],
+.rf select,.rf textarea{
+  width:100%;min-height:44px;box-sizing:border-box;margin:0;
+  padding:10px 12px;
+  font:inherit;font-family:var(--brand-font-body);font-size:.95rem;line-height:1.4;
+  color:var(--brand-ink);
+  background:color-mix(in srgb,var(--brand-ink) 4%,transparent);
+  border:1px solid var(--brand-border);
+  border-radius:var(--brand-btn-md-radius,var(--brand-radius-tile,8px));
+  transition:border-color var(--brand-duration,.2s) var(--brand-ease,ease),
+             box-shadow var(--brand-duration,.2s) var(--brand-ease,ease),
+             background-color var(--brand-duration,.2s) var(--brand-ease,ease);}
+.rf textarea{min-height:104px;resize:vertical;}
+.rf ::placeholder{color:var(--brand-muted);opacity:.75;}
+.rf input:hover,.rf select:hover,.rf textarea:hover{border-color:color-mix(in srgb,var(--brand-ink) 34%,var(--brand-border));}
+.rf input:focus-visible,.rf select:focus-visible,.rf textarea:focus-visible{outline:none;
+  border-color:var(--brand-primary);
+  background:color-mix(in srgb,var(--brand-ink) 6%,transparent);
+  box-shadow:var(--brand-focus-ring,0 0 0 3px color-mix(in srgb,var(--brand-primary) 32%,transparent));}
+.rf input:user-invalid,.rf textarea:user-invalid{border-color:var(--brand-negative);}
+
+/* ---- choices: one tap target per option, the whole row is the control ---- */
+.rf-choices{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;border:0;min-width:0;}
+.rf-legend{padding:0;margin-bottom:2px;}
+.rf-choice{display:flex;align-items:center;gap:10px;min-height:44px;padding:9px 12px;cursor:pointer;
+  font-family:var(--brand-font-body);font-size:.95rem;line-height:1.35;color:var(--brand-ink);
+  border:1px solid var(--brand-border);border-radius:var(--brand-btn-md-radius,var(--brand-radius-tile,8px));
+  transition:border-color var(--brand-duration,.2s) var(--brand-ease,ease),background-color var(--brand-duration,.2s) var(--brand-ease,ease);}
+.rf-choice:hover{border-color:color-mix(in srgb,var(--brand-ink) 34%,var(--brand-border));}
+.rf-choice input{flex:0 0 auto;width:18px;height:18px;margin:0;accent-color:var(--brand-primary);}
+.rf-choice:has(input:checked){border-color:var(--brand-primary);
+  background:color-mix(in srgb,var(--brand-primary) 10%,transparent);}
+.rf-choice:has(input:focus-visible){box-shadow:var(--brand-focus-ring,0 0 0 3px color-mix(in srgb,var(--brand-primary) 32%,transparent));}
+
+/* ---- submit row: the kit's own button, then the notice on the same baseline ---- */
+.rf-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-top:2px;}
+.rf-actions .btn{flex:0 0 auto;min-height:44px;}
+.rf-actions .btn:active{transform:translateY(0) scale(.98);}
+.rf [data-octave-notice],.rf-note{flex:1 1 180px;margin:0!important;
+  font-family:var(--brand-font-body);font-size:.78rem!important;line-height:1.45!important;
+  color:var(--brand-muted);opacity:1!important;text-wrap:pretty;}
+
+/* ---- sent: replaces the form in place, same footprint, no layout jump ---- */
+.rf-done{display:flex;align-items:flex-start;gap:14px;width:100%;max-width:440px;box-sizing:border-box;text-align:left;
+  padding:clamp(20px,3vw,28px);
+  border-radius:var(--brand-radius-card,var(--brand-radius,14px));
+  border:1px solid var(--brand-card-border,var(--brand-border));
+  background:var(--brand-card-bg,var(--brand-surface,var(--brand-bg-alt)));
+  color:var(--brand-ink);animation:rf-in var(--brand-duration,.2s) var(--brand-ease,ease) both;}
+.rf-done[hidden]{display:none;}
+.rf-done .rf-check{flex:0 0 auto;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;
+  background:color-mix(in srgb,var(--brand-primary) 16%,transparent);color:var(--brand-primary);}
+.rf-done .rf-check svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
+.rf-done .rf-title{font-size:1.1rem;}
+.rf-done p{margin:4px 0 0;font-family:var(--brand-font-body);font-size:.94rem;line-height:1.5;color:var(--brand-muted);}
+@keyframes rf-in{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+/* ---- on a dark band (kit .is-dark, a lesson's .slide.gradient): the on-dark tokens ---- */
+.is-dark .rf,.slide.gradient .rf,.is-dark .rf-done,.slide.gradient .rf-done{
+  color:#fff;border-color:var(--brand-border-dark,rgba(255,255,255,.16));
+  background:var(--brand-card-bg-dark,color-mix(in srgb,#fff 6%,transparent));
+  /* a lit top edge and a soft blur, so the card sits on the band's glow instead of floating as a grey box */
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);}
+.is-dark .rf-lede,.slide.gradient .rf-lede,.is-dark .rf-opt,.slide.gradient .rf-opt,
+.is-dark .rf [data-octave-notice],.slide.gradient .rf [data-octave-notice],
+.is-dark .rf-note,.slide.gradient .rf-note,.is-dark .rf-done p,.slide.gradient .rf-done p{color:var(--brand-faint,rgba(255,255,255,.7));}
+.is-dark .rf-field > label,.slide.gradient .rf-field > label,.is-dark .rf-legend,.slide.gradient .rf-legend{color:var(--brand-on-dark,#fff);}
+.is-dark .rf input,.is-dark .rf select,.is-dark .rf textarea,
+.slide.gradient .rf input,.slide.gradient .rf select,.slide.gradient .rf textarea{
+  color:#fff;background:color-mix(in srgb,#fff 7%,transparent);border-color:var(--brand-border-dark,rgba(255,255,255,.2));}
+.is-dark .rf ::placeholder,.slide.gradient .rf ::placeholder{color:var(--brand-faint,rgba(255,255,255,.7));}
+.is-dark .rf input:hover,.is-dark .rf textarea:hover,.is-dark .rf select:hover,
+.slide.gradient .rf input:hover,.slide.gradient .rf textarea:hover,.slide.gradient .rf select:hover{border-color:rgba(255,255,255,.42);}
+.is-dark .rf input:focus-visible,.is-dark .rf textarea:focus-visible,.is-dark .rf select:focus-visible,
+.slide.gradient .rf input:focus-visible,.slide.gradient .rf textarea:focus-visible,.slide.gradient .rf select:focus-visible{
+  border-color:var(--brand-emph-ink-dark,var(--brand-primary));background:color-mix(in srgb,#fff 10%,transparent);}
+.is-dark .rf-check,.slide.gradient .rf-check{color:#fff;background:color-mix(in srgb,#fff 14%,transparent);}
+.is-dark .rf-choice,.slide.gradient .rf-choice{color:#fff;border-color:var(--brand-border-dark,rgba(255,255,255,.2));}
+
+@media (max-width:520px){.rf-row{grid-template-columns:1fr;}.rf,.rf-done{max-width:none;}}
+@media (prefers-reduced-motion:reduce){.rf *,.rf-done{animation:none!important;transition:none!important;}}
+@media print{.rf,.rf-done{display:none!important;}}

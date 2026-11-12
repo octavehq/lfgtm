@@ -176,7 +176,7 @@
       ]
     },
     "asset-manager": {
-      "version": "1.4.2",
+      "version": "1.5.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -185,6 +185,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.5.0",
+          "date": "2026-11-12",
+          "notes": "Read what readers answered on a hosted page (quiz answers, scores, form submissions) with asset_responses_list, and delete one reader's responses or all of them. Covers adding a form or recorded answers to an asset that is already published, and trying it as a reader.",
+          "review": false
+        },
         {
           "version": "1.4.2",
           "date": "2026-11-05",
@@ -1036,7 +1042,7 @@
       ]
     },
     "microsite": {
-      "version": "1.3.0",
+      "version": "1.4.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1045,6 +1051,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.4.0",
+          "date": "2026-11-12",
+          "notes": "A microsite can collect a reply or a short poll from its reader with the shared response form; the published page reports it to the owner.",
+          "review": false
+        },
         {
           "version": "1.3.0",
           "date": "2026-11-05",
@@ -1666,7 +1678,7 @@
       ]
     },
     "train": {
-      "version": "1.2.1",
+      "version": "1.3.0",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1675,6 +1687,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.0",
+          "date": "2026-11-12",
+          "notes": "A published lesson reports each learner's answers, score and progress to its owner, by person when it is shared with named viewers. The completion slide shows each topic's result with the missed ones first, and a short note to the lesson's owner.",
+          "review": false
+        },
         {
           "version": "1.2.1",
           "date": "2026-11-05",

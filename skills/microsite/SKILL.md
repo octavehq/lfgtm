@@ -28,6 +28,7 @@ Resolve current tool schemas before execution; use returned IDs and pagination. 
 - [microsite outline template](references/microsite-outline-template.md)
 - [octave tool reference](references/octave-tool-reference.md)
 - [page sections by angle](references/page-sections-by-angle.md)
+- [asset responses](../shared/asset-responses.md): only when the page should collect something from its reader (a reply form, a short poll). The published page reports it to the owner; read this before adding a form.
 
 Read only the reference for the selected mode, then the format/layout references when rendering. Do not repeat intake or change approved claims when routing to a renderer.
 
