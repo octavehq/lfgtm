@@ -112,6 +112,8 @@
   border-color:var(--brand-btn-border-dark,var(--brand-btn-border,transparent));}
 .slide.gradient .rf .btn-primary:hover{background:var(--brand-btn-hover-bg-dark,var(--brand-btn-hover-bg,var(--brand-primary-hover,var(--brand-btn-bg-dark,var(--brand-btn-bg,var(--brand-primary))))));
   color:var(--brand-btn-hover-ink-dark,var(--brand-btn-hover-ink,var(--brand-btn-ink-dark,var(--brand-btn-ink,var(--brand-primary-ink)))));}
+/* the kit's focus ring falls back to the primary colour, which can be the band's own colour: use the on-dark accent */
+.is-dark .rf .btn:focus-visible,.slide.gradient .rf .btn:focus-visible{box-shadow:var(--brand-focus-ring-dark,0 0 0 3px var(--brand-emph-ink-dark,#fff));}
 
 @media (max-width:520px){.rf-row{grid-template-columns:1fr;}.rf,.rf-done{max-width:none;}}
 @media (prefers-reduced-motion:reduce){.rf *,.rf-done{animation:none!important;transition:none!important;}}

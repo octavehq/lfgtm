@@ -127,6 +127,11 @@ class BrowserChecks(unittest.TestCase):
         band=f'<!doctype html><style>:root{{--brand-primary:#101828;--brand-btn-bg:transparent;--brand-btn-ink:#101828;--brand-btn-bg-dark:#fff;--brand-btn-ink-dark:#101828}}.btn-primary{{background:var(--brand-btn-bg,var(--brand-primary))}}{form_css}</style><div class="slide gradient" style="background:#101828">'+form.replace('class="btn"','class="btn btn-primary"')+'</div>'
         self.page.set_content(band)
         self.assertEqual(self.page.evaluate('getComputedStyle(document.querySelector(".rf .btn-primary")).backgroundColor'),'rgb(255, 255, 255)')
+        self.page.focus('.rf .btn');self.page.keyboard.press('Shift+Tab');self.page.keyboard.press('Tab');self.page.wait_for_timeout(500)
+        self.assertEqual(self.page.evaluate('document.activeElement.className'),'btn btn-primary')
+        ring=self.page.evaluate('getComputedStyle(document.activeElement).boxShadow')
+        self.assertNotIn('rgb(16, 24, 40)',ring)  # the ring is not the band's own colour
+        self.assertNotEqual(ring,'none')
         self.page.set_content(f'<!doctype html><style>{tokens}body{{margin:0;padding:16px}}{form_css}</style><div id="light">{form}</div><div id="dark" class="is-dark" style="background:#101828;padding:16px">{form}</div>')
         ink=lambda root:self.page.evaluate(f'getComputedStyle(document.querySelector("{root} input")).color')
         self.assertNotEqual(ink('#light'),ink('#dark'))
