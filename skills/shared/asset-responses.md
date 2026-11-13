@@ -65,7 +65,7 @@ A skill run inside Octave (the skill page's Run, a schedule, `skill_run`) writes
 </form>
 ```
 
-Follow the host's own layout rules for the exact contract (they are given to the run). The names, keys, identity rules and reading tools below are the same on both paths. A gated slide lesson such as the onboarding primer needs its own controller, so it is produced with this plugin in a coding agent and published, not by a run inside Octave.
+The host does this only for a skill that asks for it: the skill's SKILL.md (or a file it bundles) must name `data-quiz` or `data-octave-form`, as the "Reader answers" section Octave's skill builder writes does. A skill that names neither has any form stripped from its document. Follow the host's own layout rules for the exact contract (they are given to such a run). The names, keys, identity rules and reading tools below are the same on both paths. A gated slide lesson such as the onboarding primer needs its own controller, so it is produced with this plugin in a coding agent and published, not by a run inside Octave.
 
 ## Names and keys
 
