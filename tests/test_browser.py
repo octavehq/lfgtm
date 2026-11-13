@@ -48,6 +48,94 @@ class BrowserChecks(unittest.TestCase):
         self.assertTrue(all(self.page.locator('.slide').nth(i).is_visible() for i in range(3)))
         self.assertTrue(self.page.locator('.cp-explain').is_visible())
 
+    def test_lesson_reports_answers_score_and_topic_results(self):
+        script=(ROOT/'skills/train/assets/lesson.js').read_text()
+        scaffold=(ROOT/'skills/train/references/html-scaffold.md').read_text()
+        css=re.search(r'```css\n(.*?)```',scaffold,re.S)[1]
+        form_css=(ROOT/'skills/shared/formats/response-form.css').read_text()
+        def topic(sid,title,checks):
+            qs=''.join(f'<div data-checkpoint="{key}"><div class="q-text"> {q} </div><button class="cp-opt" data-answer="false">No {key}</button><button class="cp-opt" data-answer="true">Yes {key}</button></div>' for key,q in checks)
+            return f'<section class="slide" id="{sid}" data-type="content"><h2>{title}</h2><div class="slide-body">{qs}</div><button data-next>Next {sid}</button></section>'
+        def lesson(recorder):
+            return f'''<!doctype html><html><head><style>{css}{form_css}</style>{recorder}</head><body><div id="dots"></div>
+          <div class="deck"><section class="slide" data-type="cover"><button data-start>Start</button></section>
+          {topic('sell','What we sell',[('sell-1','Which problem?'),('sell-2','What does it replace?')])}
+          {topic('buy','Who buys',[('buy-1','Who signs?')])}
+          <section class="slide gradient" data-type="done" id="done"><div class="slide-inner"><div class="done-grid"><div class="done-score">
+            <p class="score-big"></p><p data-score-msg></p>
+            <div class="review-menu"><button data-go="sell">What we sell</button><button data-go="buy">Who buys</button></div>
+            <p class="record-note">Shared</p><button class="btn-quiet" data-restart>Restart</button></div>
+            <div class="done-form"><form class="rf" data-octave-form="lesson-feedback"><textarea name="notes"></textarea><button type="submit">Send note</button></form></div>
+          </div></div></section></div><script>{script}</script></body></html>'''
+        # Published: a stand-in for Octave's recorder collects what the lesson reports.
+        recorder='<script>window.sent=[];window.octave={record:(name,data,key)=>{window.sent.push({name,data,key});return true}};document.documentElement.setAttribute("data-octave-recording","")</script>'
+        self.page.set_content(lesson(recorder))
+        self.assertEqual(self.page.evaluate('sent'),[])  # opening the lesson reports nothing
+        self.page.get_by_text('Start',exact=True).click()
+        self.page.get_by_text('No sell-1',exact=True).click();self.page.get_by_text('Yes sell-2',exact=True).click()
+        self.page.get_by_text('Next sell',exact=True).click();self.page.get_by_text('Yes buy-1',exact=True).click()
+        self.page.get_by_text('Next buy',exact=True).click()
+        sent=self.page.evaluate('sent')
+        self.assertEqual([(e['name'],e['key']) for e in sent],[('slide','2'),('answer','sell-1'),('answer','sell-2'),('slide','3'),('answer','buy-1'),('slide','4'),('score','final')])
+        self.assertEqual(sent[1]['data'],{'question':'Which problem?','choice':'No sell-1','correct':False,'attempt':1})
+        self.assertEqual(sent[0]['data'],{'type':'content','title':'What we sell','of':4,'attempt':1})
+        self.assertEqual(sent[-1]['data'],{'correct':2,'total':3,'attempt':1})
+        self.assertEqual(self.page.locator('[data-score-msg]').inner_text(),'1 to revisit. Those topics are listed first.')
+        rows=self.page.locator('.review-menu button')
+        self.assertEqual(rows.all_inner_texts(),['What we sell\n1 of 2','Who buys\n1 of 1'])
+        self.assertEqual([rows.nth(i).get_attribute('data-result') for i in range(2)],['missed','clear'])
+        self.assertTrue(self.page.locator('.done-form').is_visible());self.assertTrue(self.page.locator('.record-note').is_visible())
+        # The completion slide reports the score once, however often it is revisited.
+        rows.nth(0).click();self.page.evaluate('go(3)')
+        self.assertEqual(len([e for e in self.page.evaluate('sent') if e['name']=='score']),1)
+        self.page.get_by_text('Restart',exact=True).click()
+        self.assertEqual(self.page.evaluate('sent')[-1],{'name':'restart','data':{'attempt':2},'key':None})
+        # A second run reports again and says which attempt it is.
+        self.page.get_by_text('Start',exact=True).click()
+        self.page.get_by_text('Yes sell-1',exact=True).click();self.page.get_by_text('Yes sell-2',exact=True).click()
+        self.page.get_by_text('Next sell',exact=True).click();self.page.get_by_text('Yes buy-1',exact=True).click()
+        self.page.get_by_text('Next buy',exact=True).click()
+        retake=self.page.evaluate('sent')
+        self.assertEqual(retake[-1],{'name':'score','data':{'correct':3,'total':3,'attempt':2},'key':'final'})
+        self.assertEqual(len([e for e in retake if e['name']=='score']),2)
+        # Opened from disk: no recorder, no errors, and no form that would go nowhere.
+        self.page.set_content(lesson(''))
+        self.page.get_by_text('Start',exact=True).click()
+        self.page.get_by_text('Yes sell-1',exact=True).click();self.page.get_by_text('Yes sell-2',exact=True).click()
+        self.page.get_by_text('Next sell',exact=True).click();self.page.get_by_text('Yes buy-1',exact=True).click()
+        self.page.get_by_text('Next buy',exact=True).click()
+        self.assertEqual(self.page.locator('.score-big').inner_text(),'3 / 3')
+        self.assertEqual(self.page.locator('[data-score-msg]').inner_text(),'Every check cleared.')
+        self.assertFalse(self.page.locator('.done-form').is_visible());self.assertFalse(self.page.locator('.record-note').is_visible())
+
+    def test_response_form_fits_a_phone_on_light_and_dark(self):
+        form_css=(ROOT/'skills/shared/formats/response-form.css').read_text()
+        tokens=':root{--brand-bg:#fff;--brand-ink:#14181f;--brand-muted:#5b6472;--brand-border:#d9dee7;--brand-primary:#2f5bea;--brand-band:#101828;--brand-font-body:system-ui;--brand-font-heading:system-ui}'
+        form='''<form class="rf" data-octave-form="f"><div class="rf-head"><h3 class="rf-title">Want the pilot plan?</h3></div>
+          <div class="rf-fields"><div class="rf-row"><div class="rf-field"><label for="n">Name</label><input id="n" name="name" type="text"></div>
+          <div class="rf-field"><label for="e">Work email</label><input id="e" name="email" type="email"></div></div>
+          <div class="rf-field"><label for="t">Notes</label><textarea id="t" name="notes"></textarea></div></div>
+          <div class="rf-actions"><button class="btn" type="submit">Send</button><p data-octave-notice>Shared with the owner.</p></div></form>'''
+        self.page.set_viewport_size({'width':375,'height':812})
+        self.page.set_content(f'<!doctype html><style>{tokens}body{{margin:0;padding:16px}}{form_css}</style><div id="light">{form}</div><div id="dark" class="is-dark" style="background:#101828;padding:16px">{form}</div>')
+        self.assertFalse(self.page.evaluate('document.documentElement.scrollWidth > innerWidth'))
+        for root in ('#light','#dark'):
+            boxes=self.page.evaluate(f'''[...document.querySelectorAll("{root} input,{root} textarea")].map(e=>{{const r=e.getBoundingClientRect();return [Math.round(r.left),Math.round(r.height)]}})''')
+            self.assertEqual(len({left for left,_ in boxes}),1)  # the two-up row stacks into one column
+            self.assertTrue(all(height>=44 for _,height in boxes))
+        # on a lesson's dark band the submit button takes the kit's on-dark tokens, not the light-surface ones
+        band=f'<!doctype html><style>:root{{--brand-primary:#101828;--brand-btn-bg:transparent;--brand-btn-ink:#101828;--brand-btn-bg-dark:#fff;--brand-btn-ink-dark:#101828}}.btn-primary{{background:var(--brand-btn-bg,var(--brand-primary))}}{form_css}</style><div class="slide gradient" style="background:#101828">'+form.replace('class="btn"','class="btn btn-primary"')+'</div>'
+        self.page.set_content(band)
+        self.assertEqual(self.page.evaluate('getComputedStyle(document.querySelector(".rf .btn-primary")).backgroundColor'),'rgb(255, 255, 255)')
+        self.page.focus('.rf .btn');self.page.keyboard.press('Shift+Tab');self.page.keyboard.press('Tab');self.page.wait_for_timeout(500)
+        self.assertEqual(self.page.evaluate('document.activeElement.className'),'btn btn-primary')
+        ring=self.page.evaluate('getComputedStyle(document.activeElement).boxShadow')
+        self.assertNotIn('rgb(16, 24, 40)',ring)  # the ring is not the band's own colour
+        self.assertNotEqual(ring,'none')
+        self.page.set_content(f'<!doctype html><style>{tokens}body{{margin:0;padding:16px}}{form_css}</style><div id="light">{form}</div><div id="dark" class="is-dark" style="background:#101828;padding:16px">{form}</div>')
+        ink=lambda root:self.page.evaluate(f'getComputedStyle(document.querySelector("{root} input")).color')
+        self.assertNotEqual(ink('#light'),ink('#dark'))
+
     def test_deck_navigation_edit_export_mobile(self):
         script=(ROOT/'skills/deck/assets/presentation.js').read_text()
         css='@media(min-width:721px){.slide{display:none}.slide.active{display:block}}'

@@ -6,6 +6,15 @@
   const questions = [...document.querySelectorAll('[data-checkpoint]')];
   const answers = new Map();
   let current = 0;
+  /* Results. A published lesson is served with Octave's recorder (window.octave), which reports what the
+     learner did to the lesson's owner; opened from disk there is none and every call below is a no-op.
+     The recorder decides who the learner is; nothing here names them. See shared/asset-responses.md. */
+  const record = (name, data, key) => { try { return window.octave?.record?.(name, data, key) === true; } catch { return false; } };
+  const text = (el, max = 300) => (el?.textContent ?? '').replace(/\s+/g, ' ').trim().slice(0, max);
+  const questionKey = q => q.dataset.checkpoint || `q${questions.indexOf(q) + 1}`;
+  const seen = new Set();
+  let scored = false;
+  let attempt = 1; /* a restart starts attempt 2, 3, ...; the owner sees the latest answer per question, so each carries its attempt */
   const content = slides.filter(s => s.dataset.type === 'content');
   const done = s => [...s.querySelectorAll('[data-checkpoint]')].every(q => answers.has(q));
   const canReach = i => slides.slice(0, i).filter(s => s.dataset.type === 'content').every(done);
@@ -35,13 +44,50 @@
     const logo = document.querySelector('.topbar .brand');
     const dark = ['cover', 'done'].includes(slides[current].dataset.type);
     if (logo?.dataset[dark ? 'onDark' : 'onLight']) logo.src = logo.dataset[dark ? 'onDark' : 'onLight'];
+    report();
+  }
+  /* One "slide" per slide first reached (how far the learner got), and one "score" when the completion
+     slide is reached with every question answered. A restart begins a new attempt. */
+  function report() {
+    const slide = slides[current];
+    if (!seen.has(current) && slide.dataset.type !== 'cover') {
+      seen.add(current);
+      record('slide', { type: slide.dataset.type || '', title: text(slide.querySelector('h1,h2,.slide-title'), 120), of: slides.length, attempt }, String(current + 1));
+    }
+    if (slide.dataset.type === 'done') results();
+    if (slide.dataset.type === 'done' && !scored && questions.length && answers.size === questions.length) {
+      scored = true;
+      record('score', { correct: [...answers.values()].filter(Boolean).length, total: questions.length, attempt }, 'final');
+    }
+  }
+  /* The completion slide's review links carry each topic's result, topics with a miss first, so the
+     learner sees what to revisit instead of a bare score. */
+  function results() {
+    const wrong = [...answers.values()].filter(v => v === false).length;
+    document.querySelectorAll('[data-score-msg]').forEach(e => {
+      e.textContent = !questions.length ? '' : wrong ? `${wrong} to revisit. Those topics are listed first.` : 'Every check cleared.';
+    });
+    document.querySelectorAll('.review-menu').forEach(menu => {
+      const rows = [...menu.querySelectorAll('[data-go]')].map((b, order) => {
+        const qs = [...(document.getElementById(b.dataset.go)?.querySelectorAll('[data-checkpoint]') ?? [])];
+        const right = qs.filter(q => answers.get(q) === true).length;
+        const missed = qs.filter(q => answers.get(q) === false).length;
+        b.dataset.result = !qs.length ? 'none' : missed ? 'missed' : right === qs.length ? 'clear' : 'open';
+        let tally = b.querySelector('.rv-score');
+        if (qs.length && !tally) { tally = document.createElement('span'); tally.className = 'rv-score'; b.append(tally); }
+        if (tally) tally.textContent = `${right} of ${qs.length}`;
+        return { b, missed, order: Number(b.dataset.order ??= String(order)) };
+      });
+      rows.sort((x, y) => (y.missed - x.missed) || (x.order - y.order)).forEach(r => menu.append(r.b));
+    });
   }
   function go(i) {
     if (!Number.isInteger(i) || i < 0 || i >= slides.length || !canReach(i)) return false;
     current = i; update(); slides[i].querySelector('.slide-body')?.scrollTo(0, 0); return true;
   }
   function restart() {
-    answers.clear();
+    answers.clear(); seen.clear(); scored = false; attempt += 1;
+    record('restart', { attempt });
     questions.forEach(q => {
       q.querySelectorAll('.cp-opt').forEach(b => { b.disabled = false; b.classList.remove('correct', 'wrong'); });
       q.querySelector('.cp-explain')?.classList.remove('show');
@@ -52,6 +98,7 @@
     if (answers.has(q)) return;
     const correct = b.dataset.answer === 'true'; answers.set(q, correct);
     b.classList.add(correct ? 'correct' : 'wrong');
+    record('answer', { question: text(q.querySelector('.q-text')), choice: text(b), correct, attempt }, questionKey(q));
     q.querySelectorAll('.cp-opt').forEach(o => o.disabled = true);
     q.querySelector('.cp-explain')?.classList.add('show'); update();
   })));
