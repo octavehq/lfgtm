@@ -59,6 +59,18 @@
           "firstName": { "type": ["string", "null"] },
           "lastName": { "type": ["string", "null"] },
           "title": { "type": ["string", "null"] },
+          "seniority": {
+            "type": ["string", "null"],
+            "description": "The current role's seniority, as a tool returned it."
+          },
+          "jobFunction": {
+            "type": ["string", "null"],
+            "description": "The current role's function, as a tool returned it."
+          },
+          "headline": {
+            "type": ["string", "null"],
+            "description": "The profile's headline, as a tool returned it; it may arrive already cut short."
+          },
           "companyDomain": {
             "type": ["string", "null"],
             "description": "The domain of the account this person belongs to, matching an account row."
