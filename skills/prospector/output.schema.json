@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Prospect results",
+  "description": "The accounts and contacts the run returned, as two flat lists in the same order as the results it wrote, so a later step can act on the rows without reading the document. Only a name is required on a row: every other field is filled when a tool returned it and left out or null otherwise, never made up.",
+  "type": "object",
+  "required": ["accounts"],
+  "properties": {
+    "accounts": {
+      "type": "array",
+      "description": "One row per returned account. Empty when nothing qualified.",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" },
+          "domain": {
+            "type": ["string", "null"],
+            "description": "The account's website domain. Contacts point at their account by this."
+          },
+          "logoUrl": {
+            "type": ["string", "null"],
+            "description": "The company's logo image, as a tool returned it."
+          },
+          "industry": { "type": ["string", "null"] },
+          "employeeCount": { "type": ["integer", "null"], "minimum": 0 },
+          "founded": {
+            "type": ["integer", "null"],
+            "description": "The year the company was founded."
+          },
+          "city": { "type": ["string", "null"] },
+          "countryCode": {
+            "type": ["string", "null"],
+            "description": "Two-letter country code."
+          },
+          "qualification": {
+            "type": ["string", "null"],
+            "enum": ["qualified", "not_qualified", "unknown", null],
+            "description": "The configured qualification's actual result. unknown when it was not run or could not decide."
+          },
+          "score": {
+            "type": ["number", "null"],
+            "description": "The qualification's overall score, when it returned one."
+          },
+          "fitReason": {
+            "type": ["string", "null"],
+            "description": "One sentence on why the account fits or does not."
+          }
+        }
+      }
+    },
+    "contacts": {
+      "type": "array",
+      "description": "One row per person discovered, across every account. Empty or left out for company-only results.",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string", "description": "Full name." },
+          "firstName": { "type": ["string", "null"] },
+          "lastName": { "type": ["string", "null"] },
+          "title": { "type": ["string", "null"] },
+          "companyDomain": {
+            "type": ["string", "null"],
+            "description": "The domain of the account this person belongs to, matching an account row."
+          },
+          "companyName": { "type": ["string", "null"] },
+          "profileUrl": {
+            "type": ["string", "null"],
+            "description": "The person's public profile link, as a tool returned it."
+          },
+          "photoUrl": {
+            "type": ["string", "null"],
+            "description": "The person's profile photo, as a tool returned it."
+          },
+          "email": {
+            "type": ["string", "null"],
+            "description": "Only an address a tool returned; never guessed."
+          },
+          "location": { "type": ["string", "null"] },
+          "city": { "type": ["string", "null"] },
+          "countryCode": {
+            "type": ["string", "null"],
+            "description": "Two-letter country code."
+          },
+          "qualification": {
+            "type": ["string", "null"],
+            "enum": ["qualified", "not_qualified", "unknown", null],
+            "description": "The person qualification's actual result, when one was run."
+          },
+          "roleReason": {
+            "type": ["string", "null"],
+            "description": "One sentence on why this person is the one to reach, from the role evidence."
+          }
+        }
+      }
+    },
+    "requested": {
+      "type": ["integer", "null"],
+      "minimum": 0,
+      "description": "How many results were asked for, when a number was given."
+    },
+    "shortfall": {
+      "type": ["string", "null"],
+      "description": "When fewer rows are returned than asked for, or rows were left out to fit what the host accepts: why and how many, in one or two plain sentences. Null otherwise."
+    }
+  }
+}
