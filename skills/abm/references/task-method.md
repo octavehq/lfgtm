@@ -19,3 +19,7 @@ Keep the committee, per-persona positioning, outreach, and sequence aligned. For
 Quick: a compact account decision, the strongest available entry route, up to three primary people/roles, relevant persona framing, one sample email, and the next three actions. Retrieve enough evidence for those claims; put unresolved research into a short next-check list.
 
 Full: cover the requested stakeholder count and relevant buying roles, all material persona framing, engagement sequence, and risks. Show a compact primary committee with additional verified people in an appendix when needed. The user's explicit count overrides default display caps. Return an honest discovery shortfall rather than weak matches or invented people. Do not treat a fixed security persona triad as the default committee.
+
+## Data beside the document
+
+When the run is asked for data beside its document (the skill's `output.schema.json`), return the account's name and domain, each mapped person as a row of `stakeholders` (name, title, matched persona, their part in a decision, profile link, and one sentence on the angle) and each recommended play as a row of `plays` in the order to run them. Copy names, titles and links exactly as a tool returned them, write null for what no tool returned, and use `unknown` for a part in a decision the evidence does not show.

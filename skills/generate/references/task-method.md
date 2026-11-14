@@ -15,3 +15,7 @@ Read [content-contracts.md](content-contracts.md) for the applicable mode.
 - General content: derive the format, reader, desired decision, and completion criteria from the request. Preserve explicit scope rather than generating unsolicited variants.
 
 On refinement, change the requested element while preserving validated facts and constraints. Recheck affected claims and the final payload after operator corrections.
+
+## Data beside the document
+
+When the run is asked for data beside its document (the skill's `output.schema.json`), return every piece as a row of `pieces` in the order the document shows them: the channel, its place in a sequence, who it is written to, their company's domain, the subject and the whole body exactly as written, plus one sentence on the angle. Write null where a piece has no subject or no single recipient. An email address appears only when the request or a tool gave it.

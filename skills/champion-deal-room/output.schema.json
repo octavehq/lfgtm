@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Champion deal room",
+  "description": "The account the room is for, the people the champion has to bring along, the objections it answers and the path to yes, so a later step can act on them without reading the document. Every required field is stated: the value from the work, copied exactly, or null when there is none. Nothing is made up.",
+  "type": "object",
+  "required": [
+    "accountName",
+    "stakeholders",
+    "objections",
+    "pathToYes"
+  ],
+  "properties": {
+    "accountName": {
+      "type": "string"
+    },
+    "accountDomain": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "championName": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "businessCase": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The quantified case in two or three sentences, with its numbers as the room states them."
+    },
+    "stakeholders": {
+      "type": "array",
+      "description": "One row per person to engage.",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "title",
+          "when",
+          "needsToHear"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "A name, or the role when no name is known."
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "when": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "now",
+              "later",
+              null
+            ]
+          },
+          "needsToHear": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "What this person needs to hear, in one or two sentences."
+          }
+        }
+      }
+    },
+    "objections": {
+      "type": "array",
+      "description": "One row per objection the room answers.",
+      "items": {
+        "type": "object",
+        "required": [
+          "objection",
+          "response"
+        ],
+        "properties": {
+          "objection": {
+            "type": "string"
+          },
+          "response": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "raisedBy": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Who is likely to raise it."
+          }
+        }
+      }
+    },
+    "pathToYes": {
+      "type": "array",
+      "description": "One row per step toward a decision, in order.",
+      "items": {
+        "type": "object",
+        "required": [
+          "step",
+          "owner"
+        ],
+        "properties": {
+          "step": {
+            "type": "string"
+          },
+          "owner": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "by": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
