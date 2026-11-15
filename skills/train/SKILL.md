@@ -26,6 +26,7 @@ Resolve current tool schemas before execution; use returned IDs and pagination. 
 
 - [html scaffold](references/html-scaffold.md)
 - [primer sections](references/primer-sections.md)
+- [asset responses](../shared/asset-responses.md): a published lesson reports each learner's answers and score to its owner. Read it before publishing, and publish to named viewers when the owner wants results by person.
 
 Read only the reference for the selected mode, then the format/layout references when rendering. Do not repeat intake or change approved claims when routing to a renderer.
 
