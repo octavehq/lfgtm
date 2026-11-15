@@ -11,6 +11,12 @@ Discover broadly enough to satisfy the requested count after deduplication and e
 
 Use actual configured qualification results, including available question-level evidence, sub-scores, missingness, and disqualifiers. Separate company fit from person fit. Unknown is not false; a high composite does not cancel a true hard disqualifier. Do not invent scores or infer hidden candidate scores. If the response cannot explain a material decision, fetch supported detail or label the assessment's limitation.
 
+### Octave tools for this task
+On an Octave host, find companies with `find_company` and people at a company with `find_person`; take firmographics from `enrich_company`. For company fit, use the workspace's own saved qualification agent: list them with `list_agents` (type `QUALIFY_COMPANY`), and run the one the request names, or the only one when there is exactly one, with `run_qualify_company_agent`. With none, or several and no way to choose, use `qualify_company`. Person fit works the same way with `QUALIFY_PERSON`, `run_qualify_person_agent` and `qualify_person`. Report each tool's fields as returned.
+
+### What a qualification result means
+A qualification returns a score, its rationale, answers per question and whether a disqualifier was triggered. It does not return a pass or fail. Report `not_qualified` when a disqualifier was triggered. Report `qualified` only when a pass score is known, because the request states one or the saved agent's description does, and the score meets it with no disqualifier. Otherwise report `unknown` with the score and the reason. Never choose a pass score yourself.
+
 Return the requested number of unique eligible results or an explicit shortfall with searched/returned/qualified counts and the limiting constraint. Do not refill the list with unqualified names simply to reach N.
 
 Read [scale-filters.md](scale-filters.md) for the applicable mode.

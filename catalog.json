@@ -1420,7 +1420,7 @@
         {
           "version": "1.3.0",
           "date": "2026-11-13",
-          "notes": "Returns its results as data beside the document: a flat list of accounts (firmographics, logo, qualification) and a flat list of the contacts found there (title, profile, photo), so a later step can act on the rows.",
+          "notes": "Returns its results as data beside the document: a flat list of accounts (firmographics, logo, qualification) and a flat list of the contacts found there (title, profile, photo), so a later step can act on the rows. Names the Octave tools it uses, prefers the workspace's own saved qualification agent, and says what a qualification result means.",
           "review": false
         },
         {
