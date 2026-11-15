@@ -606,6 +606,8 @@ The workspace's own company profile (singleton).
 - `asset_version_delete` - Delete an old version to free storage (the current version can't be deleted)
 - `asset_stats_get` - Per-day unique visit and download counts for an asset (owner-only)
 - `asset_visitors_list` - Identified viewers: verified share recipients and workspace members (anonymous public visits are counted, never named)
+- `asset_responses_list` - What readers did on a hosted page: one entry per reader with their latest answers, scores and form submissions, plus the newest raw events (owner or `canManage`)
+- `asset_responses_delete` - Delete one reader's responses or all of them (cannot be undone)
 - `asset_access_requests_list` - Cross-asset access-request inbox (filter by status; pending = needs action)
 - `asset_access_request_grant` - Grant a request by minting a single-recipient share (the returned URL is shown only once; no email is sent)
 - `asset_access_request_dismiss` - Dismiss a request ("not now" - the requester can re-request)
