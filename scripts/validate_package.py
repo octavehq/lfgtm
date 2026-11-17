@@ -11,7 +11,7 @@ import yaml
 def validate(root):
     root=Path(root).resolve();errors=[]
     skills=list((root/'skills').glob('*/SKILL.md'))
-    if len(skills)!=30:errors.append(f'expected 30 skills, found {len(skills)}')
+    if len(skills)!=32:errors.append(f'expected 32 skills, found {len(skills)}')
     agents=list((root/'agents').rglob('*.md'))
     if len(agents)!=12:errors.append(f'expected 12 agent resources, found {len(agents)}')
     for path in agents:

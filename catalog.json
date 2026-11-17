@@ -776,6 +776,35 @@
         }
       ]
     },
+    "document": {
+      "version": "1.0.0",
+      "title": "Document",
+      "kind": "output",
+      "about": [
+        "topic",
+        "company",
+        "deal",
+        "period"
+      ],
+      "outputs": [
+        "html-document"
+      ],
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-11-17",
+          "notes": "New output skill: how a long-form document is shaped and written, for any subject or supplied content, with narrative patterns by purpose.",
+          "review": false
+        }
+      ]
+    },
     "generate": {
       "version": "1.3.1",
       "title": "Draft a message",
@@ -1135,6 +1164,35 @@
           "version": "1.0.0",
           "date": "2026-09-18",
           "notes": "Initial catalogued release",
+          "review": false
+        }
+      ]
+    },
+    "magazine": {
+      "version": "1.0.0",
+      "title": "Magazine",
+      "kind": "output",
+      "about": [
+        "period",
+        "topic",
+        "company",
+        "deal"
+      ],
+      "outputs": [
+        "magazine"
+      ],
+      "default": true,
+      "owner": "octave",
+      "runtimes": [
+        "octave-managed",
+        "claude-code"
+      ],
+      "requiredTools": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-11-17",
+          "notes": "New output skill: how a magazine is shaped and written, for any subject or supplied content, with narrative patterns by purpose.",
           "review": false
         }
       ]

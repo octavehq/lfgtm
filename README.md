@@ -124,6 +124,8 @@ See [**docs/org-instructions/**](docs/org-instructions/) for short and long reco
 | `/octave:meeting-prep` | Meeting prep that leads with lookalike deals, charts what each attendee will raise, and ends on the next best action (HTML or Markdown) |
 | `/octave:deck` | Build Octave-powered HTML slide decks with brand styling and export |
 | `/octave:one-pager` | Personalized one-pager / leave-behind as self-contained HTML |
+| `/octave:document` | Turn a subject or supplied content into a long-form document, with a narrative pattern picked by purpose |
+| `/octave:magazine` | Turn a subject or supplied content into an editorial magazine to swipe through |
 | `/octave:proposal` | Formal business case and proposal as customer-facing HTML |
 | `/octave:microsite` | Personalized ABM microsite / landing page as HTML |
 | `/octave:champion-deal-room` | Internal deal room a rep hands a champion to run the buying-committee sell — business case, stakeholder map, objection handling, path to yes |
