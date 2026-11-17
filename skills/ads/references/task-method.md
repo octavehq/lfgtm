@@ -16,6 +16,8 @@ source before presenting a verbatim quote. Keep paraphrase and quote fields
 separate. Named proof and metrics must be applicable to this offer/audience.
 Personal facts from a call never enter a source card, a headline or any
 creative, even reworded ([information principles #19](../../shared/information-principles.md#reading-calls-and-deals)).
+Write each platform's copy for that platform, inside its field lengths:
+read [platform-copy.md](platform-copy.md) before the first headline.
 Every headline, description and primary-text field is live copy the
 platform serves as written. A caveat or working note ("names from our
 approved list", "their reported result, not a guarantee", "TBD") never sits

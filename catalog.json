@@ -3,6 +3,16 @@
   "skills": {
     "abm": {
       "version": "1.3.1",
+      "title": "Plan an account",
+      "kind": "job",
+      "about": [
+        "company",
+        "deal"
+      ],
+      "pillars": [
+        "outbound",
+        "deal-execution"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -62,7 +72,16 @@
       ]
     },
     "ads": {
-      "version": "1.2.1",
+      "version": "1.3.0",
+      "title": "Build an ad campaign",
+      "kind": "job",
+      "about": [
+        "persona",
+        "segment"
+      ],
+      "pillars": [
+        "outbound"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -118,11 +137,25 @@
           "date": "2026-09-18",
           "notes": "Initial catalogued release",
           "review": false
+        },
+        {
+          "version": "1.3.0",
+          "date": "2026-11-16",
+          "notes": "Platform copy guide: how copy differs on Google Search, LinkedIn and Meta, with each platform's field lengths, and a rule to write each platform's copy for that platform.",
+          "review": false
         }
       ]
     },
     "ads-resonance": {
       "version": "1.2.1",
+      "title": "Learn from ad performance",
+      "kind": "job",
+      "about": [
+        "period"
+      ],
+      "pillars": [
+        "outbound"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -177,6 +210,8 @@
     },
     "asset-manager": {
       "version": "1.5.0",
+      "title": "Publish and manage assets",
+      "kind": "tool",
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -255,6 +290,11 @@
     },
     "audit": {
       "version": "1.2.1",
+      "title": "Audit the library",
+      "kind": "tool",
+      "about": [
+        "library"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -309,6 +349,20 @@
     },
     "battlecard-doc": {
       "version": "1.3.1",
+      "title": "Build a battlecard",
+      "kind": "job",
+      "about": [
+        "competitor",
+        "deal"
+      ],
+      "pillars": [
+        "messaging",
+        "deal-execution"
+      ],
+      "outputs": [
+        "html-document",
+        "one-pager"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -369,6 +423,16 @@
     },
     "call-analyzer": {
       "version": "1.3.1",
+      "title": "Review a call or thread",
+      "kind": "job",
+      "about": [
+        "call",
+        "deal"
+      ],
+      "pillars": [
+        "revenue-intelligence",
+        "deal-execution"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -429,6 +493,15 @@
     },
     "champion-deal-room": {
       "version": "1.4.0",
+      "title": "Arm a champion",
+      "kind": "job",
+      "about": [
+        "deal",
+        "person"
+      ],
+      "pillars": [
+        "deal-execution"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -489,6 +562,16 @@
     },
     "deal-coach": {
       "version": "1.3.1",
+      "title": "Rehearse a deal conversation",
+      "kind": "job",
+      "about": [
+        "deal",
+        "company",
+        "person"
+      ],
+      "pillars": [
+        "deal-execution"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -549,6 +632,16 @@
     },
     "deck": {
       "version": "1.3.0",
+      "title": "Deck",
+      "kind": "output",
+      "about": [
+        "company",
+        "deal",
+        "topic"
+      ],
+      "outputs": [
+        "slide-deck"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -603,6 +696,22 @@
     },
     "digest": {
       "version": "1.3.1",
+      "title": "Recap the period",
+      "kind": "job",
+      "about": [
+        "period",
+        "team"
+      ],
+      "pillars": [
+        "revenue-intelligence",
+        "messaging"
+      ],
+      "outputs": [
+        "magazine",
+        "slide-deck",
+        "one-pager",
+        "html-document"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -669,6 +778,17 @@
     },
     "generate": {
       "version": "1.3.1",
+      "title": "Draft a message",
+      "kind": "job",
+      "about": [
+        "person",
+        "company",
+        "call"
+      ],
+      "pillars": [
+        "outbound",
+        "deal-execution"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -729,6 +849,11 @@
     },
     "get-brand-components": {
       "version": "1.6.0",
+      "title": "Capture a brand kit",
+      "kind": "tool",
+      "about": [
+        "company"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -801,6 +926,19 @@
     },
     "icp-refine": {
       "version": "1.3.1",
+      "title": "Refine the ICP",
+      "kind": "job",
+      "about": [
+        "period",
+        "segment"
+      ],
+      "pillars": [
+        "revenue-intelligence",
+        "outbound"
+      ],
+      "outputs": [
+        "html-document"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -861,6 +999,21 @@
     },
     "insights": {
       "version": "1.3.1",
+      "title": "Ask what buyers are saying",
+      "kind": "job",
+      "about": [
+        "topic",
+        "period",
+        "competitor"
+      ],
+      "pillars": [
+        "revenue-intelligence"
+      ],
+      "outputs": [
+        "html-document",
+        "magazine",
+        "slide-deck"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -921,6 +1074,11 @@
     },
     "library": {
       "version": "1.2.1",
+      "title": "Look up or edit the library",
+      "kind": "tool",
+      "about": [
+        "library"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -983,6 +1141,21 @@
     },
     "meeting-prep": {
       "version": "1.3.1",
+      "title": "Prepare for a meeting",
+      "kind": "job",
+      "about": [
+        "deal",
+        "company",
+        "person"
+      ],
+      "pillars": [
+        "deal-execution"
+      ],
+      "outputs": [
+        "html-document",
+        "slide-deck",
+        "one-pager"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1043,6 +1216,15 @@
     },
     "microsite": {
       "version": "1.4.0",
+      "title": "Microsite",
+      "kind": "output",
+      "about": [
+        "company",
+        "person"
+      ],
+      "outputs": [
+        "microsite"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1103,6 +1285,16 @@
     },
     "one-pager": {
       "version": "1.4.0",
+      "title": "One-pager",
+      "kind": "output",
+      "about": [
+        "company",
+        "deal",
+        "call"
+      ],
+      "outputs": [
+        "one-pager"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1163,6 +1355,19 @@
     },
     "pipeline": {
       "version": "1.3.1",
+      "title": "Plan the next move on a deal",
+      "kind": "job",
+      "about": [
+        "deal",
+        "company"
+      ],
+      "pillars": [
+        "deal-execution"
+      ],
+      "outputs": [
+        "html-document",
+        "one-pager"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1223,6 +1428,15 @@
     },
     "positioning": {
       "version": "1.3.1",
+      "title": "Build positioning and messaging",
+      "kind": "job",
+      "about": [
+        "persona",
+        "product"
+      ],
+      "pillars": [
+        "messaging"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1283,6 +1497,14 @@
     },
     "product-launch": {
       "version": "1.2.1",
+      "title": "Plan a launch",
+      "kind": "job",
+      "about": [
+        "product"
+      ],
+      "pillars": [
+        "messaging"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1337,6 +1559,18 @@
     },
     "proposal": {
       "version": "1.3.1",
+      "title": "Write a proposal",
+      "kind": "job",
+      "about": [
+        "deal",
+        "company"
+      ],
+      "pillars": [
+        "deal-execution"
+      ],
+      "outputs": [
+        "html-document"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1397,6 +1631,16 @@
     },
     "prospector": {
       "version": "1.2.1",
+      "title": "Find who to sell to",
+      "kind": "job",
+      "about": [
+        "segment",
+        "persona",
+        "company"
+      ],
+      "pillars": [
+        "outbound"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1451,6 +1695,11 @@
     },
     "public-changelog": {
       "version": "2.2.1",
+      "title": "Publish the changelog",
+      "kind": "tool",
+      "about": [
+        "product"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1511,6 +1760,11 @@
     },
     "qual-doctor": {
       "version": "1.2.1",
+      "title": "Tune qualification",
+      "kind": "tool",
+      "about": [
+        "library"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1565,6 +1819,20 @@
     },
     "research": {
       "version": "1.3.1",
+      "title": "Get to know a company or person",
+      "kind": "job",
+      "about": [
+        "company",
+        "person"
+      ],
+      "pillars": [
+        "outbound",
+        "deal-execution"
+      ],
+      "outputs": [
+        "html-document",
+        "one-pager"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1625,6 +1893,18 @@
     },
     "signals": {
       "version": "1.2.1",
+      "title": "See what needs me today",
+      "kind": "job",
+      "about": [
+        "team",
+        "period"
+      ],
+      "pillars": [
+        "revenue-intelligence"
+      ],
+      "outputs": [
+        "html-document"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1679,6 +1959,15 @@
     },
     "train": {
       "version": "1.3.0",
+      "title": "Onboard a rep",
+      "kind": "job",
+      "about": [
+        "team",
+        "product"
+      ],
+      "pillars": [
+        "messaging"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1738,7 +2027,17 @@
       ]
     },
     "win-loss-report": {
-      "version": "1.3.1",
+      "version": "1.3.2",
+      "title": "Understand wins and losses",
+      "kind": "job",
+      "about": [
+        "period",
+        "segment",
+        "competitor"
+      ],
+      "pillars": [
+        "revenue-intelligence"
+      ],
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1793,6 +2092,12 @@
           "version": "1.0.0",
           "date": "2026-09-18",
           "notes": "Initial catalogued release",
+          "review": false
+        },
+        {
+          "version": "1.3.2",
+          "date": "2026-11-16",
+          "notes": "Description points text-only questions about buyer conversations at the insights skill.",
           "review": false
         }
       ]

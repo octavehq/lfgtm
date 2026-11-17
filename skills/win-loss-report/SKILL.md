@@ -1,6 +1,6 @@
 ---
 name: win-loss-report
-description: Generate visual win/loss analysis reports as self-contained HTML with CSS-based charts and data visualizations. Use when user says "win/loss report", "deal report", "visual analysis", or wants a formatted HTML version of deal outcome analysis. Do NOT use for text-based deal analysis — use /octave:win-loss-report instead.
+description: Generate visual win/loss analysis reports as self-contained HTML with CSS-based charts and data visualizations. Use when user says "win/loss report", "deal report", "visual analysis", or wants a formatted HTML version of deal outcome analysis. Do NOT use for questions about what buyers are saying that are not about deal outcomes; use /octave:insights instead.
 ---
 
 # /octave:win-loss-report - Visual Win/Loss Report Builder
