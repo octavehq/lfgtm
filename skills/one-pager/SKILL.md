@@ -9,6 +9,8 @@ description: Personalized one-pager / leave-behind generator rendered as self-co
 
 Read [the task method](references/task-method.md) before selecting context, claims, or output. It is the execution method for this skill. Supporting templates supply structure and styling; populate them from the task method and current evidence, not their illustrative figures or assertions.
 
+This is an output skill: it says how a one-pager is shaped and written, for any subject or supplied content. When a job skill fits the request (meeting prep, a battlecard, an account plan, a win/loss review), run that skill and let it use this one for the shape.
+
 Resolve physical one-page Letter/A4 versus a web leave-behind. A physical page must remain one page at readable type (at least 11pt body); verify PDF page count. A web leave-behind renders in [story mode](../shared/formats/story-mode.md) by default, at most 3 screens or a single scrolling page with one signature visual unless the user asks for another count (mapped in the document sections reference); the physical page keeps the print-first document layout. Preserve the inherited sender brand and use approved applicable qualitative proof when numeric evidence is absent.
 
 Use [GTM context](../shared/gtm-context.md) for strategic tasks and [evidence and inputs](../shared/evidence-and-inputs.md) for material claims and missing facts. A narrow list/get or a render-only handoff does not require unrelated research. Read [host runtime](../shared/host-runtime.md) for available tools, portable resource paths, routing, and review fallback.

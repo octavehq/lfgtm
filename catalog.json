@@ -348,7 +348,7 @@
       ]
     },
     "battlecard-doc": {
-      "version": "1.3.1",
+      "version": "1.4.0",
       "title": "Build a battlecard",
       "kind": "job",
       "about": [
@@ -417,6 +417,12 @@
           "version": "1.0.0",
           "date": "2026-09-18",
           "notes": "Initial catalogued release",
+          "review": false
+        },
+        {
+          "version": "1.4.0",
+          "date": "2026-11-17",
+          "notes": "Starts from what Octave already knows about the competitor: its generated battlecard, its intel, and how deals against it went, before the library profile.",
           "review": false
         }
       ]
@@ -631,7 +637,7 @@
       ]
     },
     "deck": {
-      "version": "1.3.0",
+      "version": "1.4.0",
       "title": "Deck",
       "kind": "output",
       "about": [
@@ -690,6 +696,12 @@
           "version": "1.0.0",
           "date": "2026-09-18",
           "notes": "Initial catalogued release",
+          "review": false
+        },
+        {
+          "version": "1.4.0",
+          "date": "2026-11-17",
+          "notes": "The task method leads with the two ways in (supplied content, or only a subject) and the narrative patterns by purpose: a pitch, a review, an update, a readout. The review rules it already held are unchanged, under their pattern.",
           "review": false
         }
       ]
@@ -1273,7 +1285,7 @@
       ]
     },
     "microsite": {
-      "version": "1.4.0",
+      "version": "1.5.0",
       "title": "Microsite",
       "kind": "output",
       "about": [
@@ -1338,11 +1350,17 @@
           "date": "2026-09-18",
           "notes": "Initial catalogued release",
           "review": false
+        },
+        {
+          "version": "1.5.0",
+          "date": "2026-11-17",
+          "notes": "The task method leads with the two ways in (supplied content, or only a subject) and the narrative patterns by purpose: a page for a named account, a page for a persona or segment, a rendered handoff. The rules it already held are unchanged, under their pattern.",
+          "review": false
         }
       ]
     },
     "one-pager": {
-      "version": "1.4.0",
+      "version": "1.5.0",
       "title": "One-pager",
       "kind": "output",
       "about": [
@@ -1407,6 +1425,12 @@
           "version": "1.0.0",
           "date": "2026-09-18",
           "notes": "Initial catalogued release",
+          "review": false
+        },
+        {
+          "version": "1.5.0",
+          "date": "2026-11-17",
+          "notes": "The task method leads with the two ways in (supplied content, or only a subject) and the narrative patterns by purpose: a follow-up, a leave-behind, cold outreach, a POC plan. The rules it already held are unchanged, under their pattern.",
           "review": false
         }
       ]

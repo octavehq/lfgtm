@@ -9,6 +9,8 @@ description: Octave-powered presentation builder that researches, structures, an
 
 Read [the task method](references/task-method.md) before selecting context, claims, or output. It is the execution method for this skill. Supporting templates supply structure and styling; populate them from the task method and current evidence, not their illustrative figures or assertions.
 
+This is an output skill: it says how a slide deck is shaped and written, for any subject or supplied content. When a job skill fits the request (meeting prep, a battlecard, an account plan, a win/loss review), run that skill and let it use this one for the shape.
+
 Select the actual decision narrative. QBR/renewal/value reviews use goals versus results and an auditable claim ledger; a pitch may use problem/solution/proof/ask. A buyer-facing deck shared as a link and read without a presenter renders in [story mode](../shared/formats/story-mode.md) by default (five to eight screens on the story arc unless the user asks for a count, the visual kit inlined); a deck to be presented, projected or exported to PDF or PPTX uses the slide format below. Use the complete presentation controller for slides; check the actual requested HTML/PDF/PPTX export before reporting it ready.
 
 Use [GTM context](../shared/gtm-context.md) for strategic tasks and [evidence and inputs](../shared/evidence-and-inputs.md) for material claims and missing facts. A narrow list/get or a render-only handoff does not require unrelated research. Read [host runtime](../shared/host-runtime.md) for available tools, portable resource paths, routing, and review fallback.

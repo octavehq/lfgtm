@@ -8,6 +8,16 @@ Select format (HTML/text) and scope before collecting inputs:
   scope; no account is required. --competitor all defaults to this branch.
 Honor supplied choices and ask only material unresolved questions.
 
+### Start from what Octave already knows about the competitor
+
+For every competitor on the card, read these three before the library profile, and build on them:
+
+1. **Octave's own battlecard.** `get_entity` on the competitor with `includeBattlecard: true` returns the battlecard Octave generated for it: the executive brief, momentum, the threat assessment and how to respond, by section. When there is one, it is the starting point. Keep its positions, sharpen them for this deal or scope, and do not write a second card beside it that disagrees. `battlecard` is null until the competitor's first intel run; then work from the profile.
+2. **Intel on the competitor.** `list_intel` for the competitor, then `get_intel` on the items that bear on this card: what they shipped, changed or announced, with dates and citations. Use the newest relevant items and keep their dates on the page.
+3. **How deals against them went.** `get_competitive_insights` for the period gives how often the competitor came up and how those deals ended. Lead the card's "where we win" and "where we lose" with it.
+
+Where the deal's own calls contradict the battlecard or the intel, say which is newer and go with the evidence from this deal. Where none of the three has anything, say nothing about it and work from the library and the calls.
+
 Load [gtm-context.md](../../shared/gtm-context.md). Resolve offering, Motion, buyer cells, and
 competitive Custom Playbook. Read full selected offering, competitor,
 proof/reference, and cell narratives; list results are discovery only.
