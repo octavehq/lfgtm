@@ -1,5 +1,8 @@
 # abm: task method
 
+### One company or a cohort
+A request that names one company follows the account plan contract below. A request that names a segment, a cohort or a list of accounts follows [cohort-plan.md](cohort-plan.md) instead and does not build a committee for any single account. When a request could be read either way (one parent company with many divisions, a list of one), ask once and continue with the reading the wording supports.
+
 ### Account plan contract
 Read [gtm-context.md](../../shared/gtm-context.md) for the selected account's offering, motion, segment, and persona cells. Read [evidence-and-inputs.md](../../shared/evidence-and-inputs.md) for claims and operator inputs; use [output-readiness.md](../../shared/output-readiness.md) for the final plan. Load HTML/brand references only when rendering the plan. Do not load mutation guidance unless the user requests a separate library change.
 

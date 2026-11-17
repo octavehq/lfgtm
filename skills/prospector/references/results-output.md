@@ -1,6 +1,6 @@
 # Prospect results
 
-Company-only rows: returned account identity/domain; offering/motion; fit reasoning; actual qualification status and available subscores; hard disqualifiers; unknowns; source/date; next validation/action.
+Company-only rows: returned account identity/domain; offering/motion; fit reasoning; actual qualification status and available subscores; hard disqualifiers; unknowns; source/date; next validation/action. A lookalike row also names the seed it resembles and the traits matched; the seed's name stays in the internal list and out of outreach copy.
 
 Company-plus-contact adds discovered/enriched person ID/profile, name/title, identity source, and role evidence. Verified identity is distinct from a confirmed buying role. Discover these people before output.
 

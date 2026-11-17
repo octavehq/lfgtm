@@ -1,5 +1,8 @@
 # prospector: task method
 
+### Choose the way in
+When the request gives no explicit ICP, criteria or seed, start from lookalikes of won deals: read [lookalikes.md](lookalikes.md) and use it to build the candidate pool. A named seed company (`--similar-to`) follows the same reference with that company as the only seed. When the request names a motion, segment, persona or its own criteria, build the pool from those criteria as described below. The two can be combined: criteria given alongside a lookalike request narrow the seeds and the candidates. Whatever the way in, the rest of this method (scope and suppressions, qualification, identity, count and shortfall) applies to every candidate.
+
 ### Resolve criteria before search
 Read [gtm-context.md](../../shared/gtm-context.md) for the offering, motion, persona/segment cells, and approved qualification criteria. Read [evidence-and-inputs.md](../../shared/evidence-and-inputs.md) for qualification evidence and operator constraints, and [output-readiness.md](../../shared/output-readiness.md) for the list's actual completion state. Load [analytics-contract.md](../../shared/analytics-contract.md) only when claiming historical win/loss-derived targeting or comparing a defined cohort.
 

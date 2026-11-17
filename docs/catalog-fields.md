@@ -5,7 +5,7 @@
 | Field | What it holds | Example |
 | --- | --- | --- |
 | `title` | The name people read, written as the thing that gets done | `"Prepare for a meeting"` |
-| `kind` | `job`, `output` or `tool` (below) | `"job"` |
+| `kind` | `job` or `output` (below) | `"job"` |
 | `about` | What a run is usually about, most likely first | `["deal", "company", "person"]` |
 | `pillars` | The GTM areas it belongs to, home first | `["deal-execution"]` |
 | `outputs` | The documents it makes, default first | `["html-document", "slide-deck"]` |
@@ -14,7 +14,12 @@
 
 - **job**: gathers evidence about a subject and decides what to say. Most skills.
 - **output**: says how something is shaped and styled, for any subject. Run it alone ("make a deck about X") or let a job use it. `deck`, `one-pager`, `microsite`, `document` and `magazine` are outputs: they hold narrative patterns and the rules for the shape, and no opinion about which evidence a subject needs.
-- **tool**: for running Octave itself (the library, publishing, brand kits).
+
+## Pillars
+
+`pillars` uses these ids: `outbound`, `deal-execution`, `messaging`, `revenue-intelligence`, `octave-setup`.
+
+`octave-setup` holds the jobs for running Octave itself (the library, the audit, brand kits, assets, qualification, the changelog). It sorts last, after the GTM areas.
 
 ## Outputs and the default
 
