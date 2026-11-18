@@ -2,21 +2,21 @@
   "repo": "octavehq/lfgtm",
   "pr": 77,
   "title": "Catalog: how each skill is offered, four output skills, a cohort plan and lookalike prospecting",
-  "headSha": "1d291f6f1c3b600a133c6b1b8ea98d1c2ce2c508",
+  "headSha": "4d157400cf9dbe5fc3d889951ead641ba3917b3e",
   "baseSha": "4808a1dd1c2cc111fb9e4e8582d9710335c00c4a",
   "mergeBaseSha": "4808a1dd1c2cc111fb9e4e8582d9710335c00c4a",
   "model": "claude-opus-5-5",
   "effort": "high",
   "stats": {
     "files": 37,
-    "hunks": 82,
-    "additions": 1852,
+    "hunks": 88,
+    "additions": 1951,
     "deletions": 29
   },
-  "durationMs": 304493,
-  "turns": 31,
-  "costUsd": 4.5867766,
-  "analysisCostUsd": 2.0415080000000008,
+  "durationMs": 325102,
+  "turns": 33,
+  "costUsd": 5.715632,
+  "analysisCostUsd": 3.9021108,
   "crossRepo": {
     "owner": "octavehq",
     "searched": [
@@ -42,7 +42,7 @@
           "octavehq/octavia-village",
           "octavehq/prevue"
         ],
-        "cached": false
+        "cached": true
       }
     ],
     "repos": [],
@@ -52,7 +52,7 @@
       "octavehq/docs wasn't searched: git@github.com: Permission denied (publickey).\r",
       "octavehq/lfgtm-codex wasn't searched: git@github.com: Permission denied (publickey).\r"
     ],
-    "ms": 7844
+    "ms": 8435
   },
   "investigation": {
     "decision": "1 investigator started with the analyzer, 0 after it",
@@ -63,327 +63,92 @@
         "groups": [
           "R1"
         ],
-        "traced": "Followed validate() into validate.sh, build-release.py, the Codex/Cursor builds with package_resources.py, and both main-branch workflows. Checked the new skills' links and frontmatter, catalog coverage, the outputs vocabulary, and each bumped version against its changelog.",
+        "traced": "Followed validate() through validate.sh (source, build/codex and build/cursor), build-release.py and both main-branch workflows. Checked all 32 catalog entries, every new SKILL.md frontmatter, the new files' links and the files the builds copy.",
         "findings": 1,
-        "costUsd": 0.6797964,
-        "durationMs": 77119
+        "costUsd": 0.6263098,
+        "durationMs": 74174
       }
     ],
     "added": [
-      "ads 1.3.0 changelog entry appended last"
+      "About words are not checked against the documented"
     ],
     "duplicates": [],
-    "costUsd": 0.6797964,
-    "durationMs": 258889
+    "costUsd": 0.6263098,
+    "durationMs": 288668
   },
   "stages": {
     "reach": {
       "costUsd": 0,
-      "ms": 31
+      "ms": 22
     },
     "crossRepo": {
       "costUsd": 0,
-      "ms": 7844
+      "ms": 8435
     },
     "analyze": {
-      "costUsd": 2.0415080000000008,
-      "ms": 258884,
+      "costUsd": 3.9021108,
+      "ms": 288660,
       "usage": {
-        "input": 48,
-        "output": 26431,
-        "cacheRead": 2241320,
-        "cacheCreate": 133054
+        "input": 52,
+        "output": 27344,
+        "cacheRead": 2059682,
+        "cacheCreate": 133738
       }
     },
     "investigate": {
-      "costUsd": 0.6797964,
-      "ms": 3,
+      "costUsd": 0.6263098,
+      "ms": 4,
       "usage": {
-        "input": 34,
-        "output": 6972,
-        "cacheRead": 553902,
-        "cacheCreate": 53680
+        "input": 36,
+        "output": 7041,
+        "cacheRead": 542849,
+        "cacheCreate": 47097
       }
     },
     "verify": {
-      "costUsd": 1.8654722000000001,
-      "ms": 45267,
+      "costUsd": 1.1872113999999998,
+      "ms": 36140,
       "usage": {
-        "input": 174,
-        "output": 23555,
-        "cacheRead": 1024861,
-        "cacheCreate": 148588
+        "input": 104,
+        "output": 15251,
+        "cacheRead": 556237,
+        "cacheCreate": 96316
       }
     }
   },
   "verification": {
     "verifiers": 3,
-    "checked": 10,
-    "kept": 8,
+    "checked": 6,
+    "kept": 4,
     "dropped": 2,
-    "costUsd": 1.8654722000000001,
-    "durationMs": 45267,
+    "costUsd": 1.1872113999999998,
+    "durationMs": 36140,
     "findings": [
       {
-        "title": "Cohort plans have no matching data shape",
-        "kind": "blocker",
-        "votes": [
-          {
-            "vote": "real",
-            "category": "bug",
-            "origin": "introduced",
-            "reason": "The PR adds cohort runs (catalog `about` includes segment) and a schema that requires accountName and stakeholders, with no cohort or tier fields. The data instructions cover only single-account runs, and the cohort method forbids naming per-account contacts, so a cohort run asked for data has no valid shape.",
-            "evidence": [
-              {
-                "file": "skills/abm/output.schema.json",
-                "line": 6,
-                "endLine": 11,
-                "side": "head"
-              },
-              {
-                "file": "skills/abm/references/task-method.md",
-                "line": 29,
-                "endLine": 31,
-                "side": "head"
-              },
-              {
-                "file": "skills/abm/references/cohort-plan.md",
-                "line": 55,
-                "endLine": 59,
-                "side": "head"
-              },
-              {
-                "file": "catalog.json",
-                "line": 8,
-                "endLine": 11,
-                "side": "head"
-              }
-            ]
-          },
-          {
-            "vote": "real",
-            "category": "bug",
-            "origin": "introduced",
-            "reason": "This PR adds both cohort plans and abm's output.schema.json. The schema needs a single accountName string plus stakeholders, and has no field for cohort members or tiers. The cohort method bans naming contacts for any account, and the 'Data beside' section covers only the single-account case.",
-            "evidence": [
-              {
-                "file": "skills/abm/output.schema.json",
-                "line": 6,
-                "endLine": 15,
-                "side": "head"
-              },
-              {
-                "file": "skills/abm/references/task-method.md",
-                "line": 3,
-                "endLine": 4,
-                "side": "head"
-              },
-              {
-                "file": "skills/abm/references/task-method.md",
-                "line": 29,
-                "endLine": 31,
-                "side": "head"
-              },
-              {
-                "file": "skills/abm/references/cohort-plan.md",
-                "line": 55,
-                "side": "head"
-              }
-            ]
-          }
-        ],
-        "real": 2,
-        "notReal": 0,
-        "failed": 0,
-        "kept": true,
-        "why": "2 of 3 verifiers found it real",
-        "origin": "introduced",
-        "category": "bug"
-      },
-      {
-        "title": "Six changelogs put the new release last",
+        "title": "Unmentioned 7-of-10 pass mark in two skills",
         "kind": "gap",
         "votes": [
           {
             "vote": "real",
-            "category": "bug",
+            "category": "question",
             "origin": "introduced",
-            "reason": "In six skills (ads, battlecard-doc, deck, microsite, one-pager, win-loss-report), the PR adds the new changelog entry after 1.0.0, while every other skill lists the newest release first. The base catalog had no such misordered entries.",
-            "evidence": [
-              {
-                "file": "catalog.json",
-                "line": 141,
-                "endLine": 152,
-                "side": "head"
-              },
-              {
-                "file": "catalog.json",
-                "line": 24,
-                "endLine": 29,
-                "side": "head"
-              },
-              {
-                "file": "catalog.json",
-                "line": 2229,
-                "endLine": 2236,
-                "side": "head"
-              },
-              {
-                "file": "catalog.json",
-                "line": 431,
-                "endLine": 436,
-                "side": "head"
-              }
-            ]
-          },
-          {
-            "vote": "real",
-            "category": "bug",
-            "origin": "introduced",
-            "reason": "In six skills (ads, battlecard-doc, deck, microsite, one-pager, win-loss-report), the new release is appended after 1.0.0. Every other changelog lists the newest release first, and the base checkout has no case like this.",
-            "evidence": [
-              {
-                "file": "catalog.json",
-                "line": 141,
-                "endLine": 152,
-                "side": "head"
-              },
-              {
-                "file": "catalog.json",
-                "line": 24,
-                "endLine": 29,
-                "side": "head"
-              },
-              {
-                "file": "catalog.json",
-                "line": 2229,
-                "endLine": 2236,
-                "side": "head"
-              },
-              {
-                "file": "catalog.json",
-                "line": 431,
-                "endLine": 436,
-                "side": "head"
-              }
-            ]
-          }
-        ],
-        "real": 2,
-        "notReal": 0,
-        "failed": 0,
-        "kept": true,
-        "why": "2 of 3 verifiers found it real",
-        "origin": "introduced",
-        "category": "bug"
-      },
-      {
-        "title": "Deal card order conflicts with section template",
-        "kind": "gap",
-        "votes": [
-          {
-            "vote": "real",
-            "category": "risk",
-            "origin": "introduced",
-            "reason": "The new nine-part deal card (buyer quotes, ending on say/show/ask, \"replaces a generic objection list\") conflicts with the unchanged sections template (strengths/weaknesses grids, watch-outs, no prospect quotes, Our Pitch). The two also name different tools for win rates.",
-            "evidence": [
-              {
-                "file": "skills/battlecard-doc/references/task-method.md",
-                "line": 21,
-                "endLine": 35,
-                "side": "head"
-              },
-              {
-                "file": "skills/battlecard-doc/references/single-competitor-sections.md",
-                "line": 8,
-                "endLine": 8,
-                "side": "head"
-              },
-              {
-                "file": "skills/battlecard-doc/references/single-competitor-sections.md",
-                "line": 59,
-                "endLine": 115,
-                "side": "head"
-              },
-              {
-                "file": "skills/battlecard-doc/references/task-method.md",
-                "line": 76,
-                "endLine": 79,
-                "side": "head"
-              }
-            ]
-          },
-          {
-            "vote": "real",
-            "category": "risk",
-            "origin": "introduced",
-            "reason": "The new nine-part deal card (buyer quotes with outcomes, how our claims landed) contradicts the unchanged template, which is still linked from SKILL.md and asks for grids, watch-outs, trap questions, Our Pitch and no prospect quotes. Win-rate sources also differ within task-method.md.",
-            "evidence": [
-              {
-                "file": "skills/battlecard-doc/references/task-method.md",
-                "line": 21,
-                "endLine": 35,
-                "side": "head"
-              },
-              {
-                "file": "skills/battlecard-doc/references/single-competitor-sections.md",
-                "line": 8,
-                "endLine": 8,
-                "side": "head"
-              },
-              {
-                "file": "skills/battlecard-doc/references/single-competitor-sections.md",
-                "line": 159,
-                "endLine": 164,
-                "side": "head"
-              },
-              {
-                "file": "skills/battlecard-doc/references/task-method.md",
-                "line": 76,
-                "endLine": 79,
-                "side": "head"
-              },
-              {
-                "file": "skills/battlecard-doc/SKILL.md",
-                "line": 28,
-                "endLine": 28,
-                "side": "head"
-              }
-            ]
-          }
-        ],
-        "real": 2,
-        "notReal": 0,
-        "failed": 0,
-        "kept": true,
-        "why": "2 of 3 verifiers found it real",
-        "origin": "introduced",
-        "category": "risk"
-      },
-      {
-        "title": "Fixed pass score of 7 for qualification",
-        "kind": "gap",
-        "votes": [
-          {
-            "vote": "real",
-            "category": "risk",
-            "origin": "introduced",
-            "reason": "The PR adds a fixed pass score of 7/10 to prospector (line 21) and abm (line 13); only an explicit request can change it. Line 15 says to use configured results and that unknown is not false, but a low score from unanswered questions now reads as not_qualified.",
+            "reason": "Both methods newly default to a 7/10 pass when only a score comes back, and the base files have no such rule. The PR description never mentions it and says abm's single-account path is unchanged, yet that path gained the tool paragraph and the 7 default.",
             "evidence": [
               {
                 "file": "skills/prospector/references/task-method.md",
-                "line": 21,
-                "side": "head"
-              },
-              {
-                "file": "skills/prospector/references/task-method.md",
-                "line": 15,
+                "line": 20,
+                "endLine": 21,
                 "side": "head"
               },
               {
                 "file": "skills/abm/references/task-method.md",
                 "line": 13,
                 "side": "head"
+              },
+              {
+                "file": "skills/abm/references/task-method.md",
+                "line": 8,
+                "side": "base"
               }
             ]
           },
@@ -391,18 +156,12 @@
             "vote": "real",
             "category": "question",
             "origin": "introduced",
-            "reason": "This PR adds a fixed pass score of 7 (prospector line 21, abm line 13); base has none. Line 15 says to use the configured qualification and that unknown is not false, yet line 21 allows `unknown` only when no score came back, so low scores from unanswered questions become not_qualified.",
+            "reason": "Both task methods add a new default: a score with no stated verdict passes at 7 of 10, and the page must say 7 was assumed. The base has no such rule. A commit message calls abm's single-account path unchanged, but its account plan gained this rule and the Octave tool steps.",
             "evidence": [
               {
                 "file": "skills/prospector/references/task-method.md",
-                "line": 21,
+                "line": 20,
                 "endLine": 21,
-                "side": "head"
-              },
-              {
-                "file": "skills/prospector/references/task-method.md",
-                "line": 15,
-                "endLine": 15,
                 "side": "head"
               },
               {
@@ -412,181 +171,232 @@
                 "side": "head"
               }
             ]
+          }
+        ],
+        "real": 2,
+        "notReal": 0,
+        "failed": 0,
+        "kept": true,
+        "why": "2 of 3 verifiers found it real",
+        "origin": "introduced",
+        "category": "question"
+      },
+      {
+        "title": "Prospector data drops the seed and score",
+        "kind": "gap",
+        "votes": [
+          {
+            "vote": "real",
+            "category": "question",
+            "origin": "introduced",
+            "reason": "The method says each lookalike row names its seed and matched traits, and that every row carries the score. The new schema has no seed or trait field, and `score` is optional, so a later step reading the data can lose both. Dropping the seed may be deliberate to keep it out of outreach.",
+            "evidence": [
+              {
+                "file": "skills/prospector/references/results-output.md",
+                "line": 3,
+                "endLine": 3,
+                "side": "head"
+              },
+              {
+                "file": "skills/prospector/output.schema.json",
+                "line": 15,
+                "endLine": 25,
+                "side": "head"
+              },
+              {
+                "file": "skills/prospector/references/task-method.md",
+                "line": 21,
+                "endLine": 21,
+                "side": "head"
+              },
+              {
+                "file": "skills/prospector/references/lookalikes.md",
+                "line": 39,
+                "endLine": 39,
+                "side": "head"
+              }
+            ]
           },
           {
             "vote": "real",
             "category": "risk",
             "origin": "introduced",
-            "reason": "The PR adds a fixed rule: a score of 7 or more is qualified. Line 15 says to use the configured qualification's results, and the schema calls the field that result. A workspace that passes at another score, or a candidate with unanswered questions, is labeled not_qualified.",
+            "reason": "Lookalike rows must name their seed and matched traits, and the method says every row carries the score. The new accounts schema has no seed or traits field and leaves `score` out of `required`, even though the guide says never to leave a field out. A later step reading the data loses both.",
             "evidence": [
+              {
+                "file": "skills/prospector/references/results-output.md",
+                "line": 3,
+                "endLine": 9,
+                "side": "head"
+              },
+              {
+                "file": "skills/prospector/output.schema.json",
+                "line": 15,
+                "endLine": 25,
+                "side": "head"
+              },
               {
                 "file": "skills/prospector/references/task-method.md",
                 "line": 21,
                 "side": "head"
               },
               {
-                "file": "skills/prospector/references/task-method.md",
-                "line": 15,
+                "file": "skills/prospector/references/lookalikes.md",
+                "line": 39,
                 "side": "head"
-              },
+              }
+            ]
+          },
+          {
+            "vote": "real",
+            "category": "question",
+            "origin": "introduced",
+            "reason": "Lookalike rows must name their seed and matched traits, and the method says every row gets a score. The new account schema has no seed or traits field and doesn't require `score`, so rows can lose all three. Leaving the seed out may be deliberate privacy; the author should confirm.",
+            "evidence": [
               {
-                "file": "skills/abm/references/task-method.md",
-                "line": 13,
+                "file": "skills/prospector/references/results-output.md",
+                "line": 3,
+                "endLine": 3,
                 "side": "head"
               },
               {
                 "file": "skills/prospector/output.schema.json",
-                "line": 78,
-                "endLine": 89,
-                "side": "head"
-              }
-            ]
-          }
-        ],
-        "real": 3,
-        "notReal": 0,
-        "failed": 0,
-        "kept": true,
-        "why": "3 of 3 verifiers found it real",
-        "origin": "introduced",
-        "category": "risk"
-      },
-      {
-        "title": "Lookalike route skips saved qualification agents",
-        "kind": "gap",
-        "votes": [
-          {
-            "vote": "real",
-            "category": "risk",
-            "origin": "introduced",
-            "reason": "task-method.md:18 says to prefer the saved QUALIFY_COMPANY/PERSON agent via run_qualify_*_agent. The new lookalikes.md step 5 and SKILL.md tell the model to run qualify_company/qualify_person on every candidate. So the lookalike route can skip the configured agent.",
-            "evidence": [
-              {
-                "file": "skills/prospector/references/lookalikes.md",
-                "line": 37,
-                "endLine": 37,
-                "side": "head"
-              },
-              {
-                "file": "skills/prospector/SKILL.md",
-                "line": 12,
-                "endLine": 12,
+                "line": 15,
+                "endLine": 25,
                 "side": "head"
               },
               {
                 "file": "skills/prospector/references/task-method.md",
-                "line": 18,
-                "endLine": 18,
+                "line": 21,
+                "endLine": 21,
                 "side": "head"
-              }
-            ]
-          },
-          {
-            "vote": "real",
-            "category": "bug",
-            "origin": "introduced",
-            "reason": "The task method says to use the saved qualification agent (run_qualify_company_agent) first and only fall back to qualify_company. The new lookalike route (§5) and SKILL.md say to run qualify_company/qualify_person on every candidate, so the default route skips saved agents. The PR adds all of these lines.",
-            "evidence": [
+              },
               {
                 "file": "skills/prospector/references/lookalikes.md",
-                "line": 37,
-                "endLine": 37,
-                "side": "head"
-              },
-              {
-                "file": "skills/prospector/SKILL.md",
-                "line": 12,
-                "endLine": 12,
-                "side": "head"
-              },
-              {
-                "file": "skills/prospector/references/task-method.md",
-                "line": 18,
-                "endLine": 18,
-                "side": "head"
-              }
-            ]
-          },
-          {
-            "vote": "real",
-            "category": "bug",
-            "origin": "introduced",
-            "reason": "task-method.md:18 says to prefer the saved QUALIFY_COMPANY/PERSON agent via run_qualify_*_agent, but the new default lookalike step 5 and SKILL.md:12 say to run qualify_company/qualify_person on every candidate. Both were added in this PR and conflict.",
-            "evidence": [
-              {
-                "file": "skills/prospector/references/lookalikes.md",
-                "line": 35,
-                "endLine": 37,
-                "side": "head"
-              },
-              {
-                "file": "skills/prospector/SKILL.md",
-                "line": 12,
-                "side": "head"
-              },
-              {
-                "file": "skills/prospector/references/task-method.md",
-                "line": 18,
-                "side": "head"
-              }
-            ]
-          }
-        ],
-        "real": 3,
-        "notReal": 0,
-        "failed": 0,
-        "kept": true,
-        "why": "3 of 3 verifiers found it real",
-        "origin": "introduced",
-        "category": "bug"
-      },
-      {
-        "title": "Battlecard depends on tools not listed here",
-        "kind": "gap",
-        "votes": [
-          {
-            "vote": "not_real",
-            "category": "question",
-            "origin": "introduced",
-            "reason": "The README's tool list is already incomplete: it leaves out get_competitive_insights, which other skills already use. Missing tools are covered by host-runtime.md:5 and by task-method's 'where none of the three has anything… work from the library and the calls'. The tool list doesn't show the intel tools are missing.",
-            "evidence": [
-              {
-                "file": "skills/shared/host-runtime.md",
-                "line": 5,
-                "side": "head"
-              },
-              {
-                "file": "skills/battlecard-doc/references/task-method.md",
-                "line": 19,
-                "side": "head"
-              },
-              {
-                "file": "skills/meeting-prep/references/task-method.md",
                 "line": 39,
+                "endLine": 39,
                 "side": "head"
               }
             ]
-          },
+          }
+        ],
+        "real": 3,
+        "notReal": 0,
+        "failed": 0,
+        "kept": true,
+        "why": "3 of 3 verifiers found it real",
+        "origin": "introduced",
+        "category": "question"
+      },
+      {
+        "title": "Battlecard relies on intel tools new here",
+        "kind": "gap",
+        "votes": [
           {
-            "vote": "not_real",
+            "vote": "real",
             "category": "question",
             "origin": "introduced",
-            "reason": "The README tool list is not complete: get_competitive_insights is already used by base skills without being listed, so leaving list_intel out proves nothing. The method also covers the case: if none of the three has anything, work from the library and the calls.",
+            "reason": "This PR is the first place list_intel, get_intel and get_entity's includeBattlecard appear. They are in no other skill, the shared toolkit or the base. The method handles a null battlecard but not a missing tool, so it's fair to ask whether the server already has them.",
             "evidence": [
+              {
+                "file": "skills/battlecard-doc/references/tool-reference.md",
+                "line": 21,
+                "endLine": 22,
+                "side": "head"
+              },
               {
                 "file": "skills/battlecard-doc/references/task-method.md",
                 "line": 15,
-                "endLine": 19,
+                "endLine": 16,
                 "side": "head"
               },
               {
-                "file": "skills/meeting-prep/references/task-method.md",
-                "line": 39,
-                "side": "base"
+                "file": "skills/shared/octave-research-toolkit.md",
+                "line": 104,
+                "endLine": 104,
+                "side": "head"
+              }
+            ]
+          },
+          {
+            "vote": "real",
+            "category": "question",
+            "origin": "introduced",
+            "reason": "`list_intel`, `get_intel` and `includeBattlecard` appear only in the battlecard-doc references, not at base and not in the README tool list. The method has a fallback for a null battlecard but none for a missing tool, unlike its own `ask_octave` step.",
+            "evidence": [
+              {
+                "file": "skills/battlecard-doc/references/tool-reference.md",
+                "line": 21,
+                "endLine": 22,
+                "side": "head"
+              },
+              {
+                "file": "skills/battlecard-doc/references/task-method.md",
+                "line": 15,
+                "endLine": 16,
+                "side": "head"
+              },
+              {
+                "file": "skills/battlecard-doc/references/task-method.md",
+                "line": 68,
+                "endLine": 68,
+                "side": "head"
               },
               {
                 "file": "README.md",
                 "line": 481,
+                "endLine": 481,
+                "side": "head"
+              }
+            ]
+          }
+        ],
+        "real": 2,
+        "notReal": 0,
+        "failed": 0,
+        "kept": true,
+        "why": "2 of 3 verifiers found it real",
+        "origin": "introduced",
+        "category": "question"
+      },
+      {
+        "title": "Merge order with the app change unstated",
+        "kind": "gap",
+        "votes": [
+          {
+            "vote": "not_real",
+            "category": "question",
+            "origin": "introduced",
+            "reason": "The new catalog fields are optional additions, schemaVersion stays at 1, and nothing in this repo checks the catalog strictly. The data shapes are returned beside the document. Nothing here shows an older app would break, and the app's sync code isn't in this repo to check.",
+            "evidence": [
+              {
+                "file": "docs/catalog-fields.md",
+                "line": 3,
+                "side": "head"
+              },
+              {
+                "file": "catalog.json",
+                "line": 2,
+                "endLine": 16,
+                "side": "head"
+              }
+            ]
+          },
+          {
+            "vote": "not_real",
+            "category": "question",
+            "origin": "introduced",
+            "reason": "The new catalog fields are optional and additive, and schemaVersion stays at 1, so an older app can ignore them. Nothing in this repo shows the current app rejecting unknown fields. This is a speculative question about the PR description, not a defect in the code.",
+            "evidence": [
+              {
+                "file": "docs/catalog-fields.md",
+                "line": 3,
+                "side": "head"
+              },
+              {
+                "file": "catalog.json",
+                "line": 2,
+                "endLine": 15,
                 "side": "head"
               }
             ]
@@ -600,25 +410,97 @@
         "category": "question"
       },
       {
-        "title": "Catalog fields depend on octave-app#8914",
+        "title": "Seven changed skills not yet run",
+        "kind": "gap",
+        "votes": [
+          {
+            "vote": "not_real",
+            "category": "risk",
+            "origin": "introduced",
+            "reason": "This is a process note restating the PR description's own list of skills that haven't been run yet. It names no defect in the cited prospector or cohort-plan prose. The prose reads as coherent, and these skills have no tests at either base or head.",
+            "evidence": [
+              {
+                "file": "skills/prospector/SKILL.md",
+                "line": 12,
+                "endLine": 12,
+                "side": "head"
+              },
+              {
+                "file": "skills/abm/references/cohort-plan.md",
+                "line": 1,
+                "endLine": 9,
+                "side": "head"
+              }
+            ]
+          },
+          {
+            "vote": "real",
+            "category": "risk",
+            "origin": "introduced",
+            "reason": "The PR description says deck, one-pager, microsite, battlecard-doc, ads, abm and prospector were not yet run to completion. This PR adds prospector's new default lookalike route and abm's cohort method, and only the validator checks skill text, so the new behavior is unproven.",
+            "evidence": [
+              {
+                "file": "skills/prospector/SKILL.md",
+                "line": 12,
+                "side": "head"
+              },
+              {
+                "file": "skills/abm/references/cohort-plan.md",
+                "line": 1,
+                "endLine": 9,
+                "side": "head"
+              }
+            ]
+          },
+          {
+            "vote": "real",
+            "category": "risk",
+            "origin": "introduced",
+            "reason": "The PR description says deck, one-pager, microsite, battlecard-doc, ads, abm and prospector were not yet run to completion. Prospector now defaults to a lookalike route and abm gains a cohort path, and no recorded run or automated check covers either.",
+            "evidence": [
+              {
+                "file": "skills/prospector/SKILL.md",
+                "line": 12,
+                "endLine": 12,
+                "side": "head"
+              },
+              {
+                "file": "skills/abm/references/cohort-plan.md",
+                "line": 1,
+                "endLine": 9,
+                "side": "head"
+              }
+            ]
+          }
+        ],
+        "real": 2,
+        "notReal": 1,
+        "failed": 0,
+        "kept": true,
+        "why": "2 of 3 verifiers found it real",
+        "origin": "introduced",
+        "category": "risk"
+      },
+      {
+        "title": "About words are not checked against the documented",
         "kind": "gap",
         "votes": [
           {
             "vote": "not_real",
             "category": "question",
             "origin": "introduced",
-            "reason": "The fields are optional additions to JSON entries. Nothing in this repo limits catalog keys: validate_package.py only checks that each skill is listed. Whether the sync in another repo rejects unknown keys or skips unbumped entries is speculation that this code can't confirm.",
+            "reason": "The docs say to use the twelve words \"where they fit\", so `about` is a suggested list, not a closed one like pillars and outputs. Checking only for lowercase words matches that. Nothing in this repo shows that an unknown word drops a skill from a page; that claim is a guess.",
             "evidence": [
               {
                 "file": "docs/catalog-fields.md",
-                "line": 3,
-                "endLine": 3,
+                "line": 32,
+                "endLine": 34,
                 "side": "head"
               },
               {
                 "file": "scripts/validate_package.py",
-                "line": 54,
-                "endLine": 59,
+                "line": 60,
+                "endLine": 75,
                 "side": "head"
               }
             ]
@@ -627,18 +509,18 @@
             "vote": "not_real",
             "category": "question",
             "origin": "introduced",
-            "reason": "The new catalog keys are optional, and nothing in this repo validates them or depends on them. Merge order and how the sync treats unknown keys or metadata-only changes are octave-app behaviour I can't see from here, so I can't confirm the gap.",
+            "reason": "The docs offer the twelve about words as a suggestion (\"Use these words where they fit\"), not a closed list, and the validator deliberately checks only the shape. A fixed set would contradict the docs. Nothing in this repo shows a non-listed word drops a skill from a page.",
             "evidence": [
               {
                 "file": "docs/catalog-fields.md",
-                "line": 3,
-                "endLine": 3,
+                "line": 32,
+                "endLine": 34,
                 "side": "head"
               },
               {
-                "file": "docs/catalog-fields.md",
-                "line": 38,
-                "endLine": 38,
+                "file": "scripts/validate_package.py",
+                "line": 60,
+                "endLine": 75,
                 "side": "head"
               }
             ]
@@ -650,212 +532,6 @@
         "kept": false,
         "why": "dropped: only 0 of 3 verifiers found it real",
         "category": "question"
-      },
-      {
-        "title": "New catalog fields are never validated",
-        "kind": "gap",
-        "votes": [
-          {
-            "vote": "real",
-            "category": "risk",
-            "information": null,
-            "origin": "introduced",
-            "reason": "The validator only checks that each skill has a catalog.json key. Nothing in the repo checks the new kind, pillars or outputs values against the ids listed in docs/catalog-fields.md, so a typo would reach Octave's catalog sync unnoticed.",
-            "evidence": [
-              {
-                "file": "scripts/validate_package.py",
-                "line": 54,
-                "endLine": 59,
-                "side": "head"
-              },
-              {
-                "file": "docs/catalog-fields.md",
-                "line": 20,
-                "endLine": 26,
-                "side": "head"
-              }
-            ]
-          },
-          {
-            "vote": "real",
-            "category": "risk",
-            "origin": "introduced",
-            "reason": "validate_package.py only checks that each skill has a key in catalog.json. The new fields (kind, pillars, outputs) are never checked against the fixed id sets in docs/catalog-fields.md, so a typo would pass validation and ship. 'about' is an open, suggested list, so that part is weaker.",
-            "evidence": [
-              {
-                "file": "scripts/validate_package.py",
-                "line": 54,
-                "endLine": 59,
-                "side": "head"
-              },
-              {
-                "file": "docs/catalog-fields.md",
-                "line": 20,
-                "endLine": 26,
-                "side": "head"
-              }
-            ]
-          }
-        ],
-        "real": 2,
-        "notReal": 0,
-        "failed": 0,
-        "kept": true,
-        "why": "2 of 3 verifiers found it real",
-        "origin": "introduced",
-        "category": "risk"
-      },
-      {
-        "title": "Seven changed skills not run end to end",
-        "kind": "gap",
-        "votes": [
-          {
-            "vote": "real",
-            "category": "risk",
-            "origin": "introduced",
-            "reason": "The PR's Checks section says deck, one-pager, microsite, battlecard-doc, ads, abm and prospector were not run to completion after their change. Prospector now starts from lookalikes by default and abm gains a cohort plan, and only the validator checks these files, so nothing tests the new routes.",
-            "evidence": [
-              {
-                "file": "skills/prospector/references/lookalikes.md",
-                "line": 3,
-                "side": "head"
-              },
-              {
-                "file": "skills/abm/references/cohort-plan.md",
-                "line": 3,
-                "side": "head"
-              },
-              {
-                "file": "skills/battlecard-doc/references/task-method.md",
-                "line": 11,
-                "endLine": 19,
-                "side": "head"
-              }
-            ]
-          },
-          {
-            "vote": "real",
-            "category": "risk",
-            "origin": "introduced",
-            "reason": "The PR description lists deck, one-pager, microsite, battlecard-doc, ads, abm and prospector as not yet run to completion after their changes. The new behaviour (lookalike route, cohort plans, battlecard sources) is prose that no automated test checks.",
-            "evidence": [
-              {
-                "file": "skills/battlecard-doc/references/task-method.md",
-                "line": 11,
-                "endLine": 19,
-                "side": "head"
-              },
-              {
-                "file": "skills/prospector/references/lookalikes.md",
-                "line": 3,
-                "side": "head"
-              },
-              {
-                "file": "skills/abm/references/cohort-plan.md",
-                "line": 3,
-                "side": "head"
-              }
-            ]
-          }
-        ],
-        "real": 2,
-        "notReal": 0,
-        "failed": 0,
-        "kept": true,
-        "why": "2 of 3 verifiers found it real",
-        "origin": "introduced",
-        "category": "risk"
-      },
-      {
-        "title": "ads 1.3.0 changelog entry appended last",
-        "kind": "gap",
-        "votes": [
-          {
-            "vote": "real",
-            "category": "bug",
-            "origin": "introduced",
-            "reason": "This PR appends the ads 1.3.0 changelog entry after 1.0.0, so it is the last entry. Every other entry, including prospector 1.3.0 in this same PR, is listed newest first. The validator never compares version against changelog order, so nothing catches it.",
-            "evidence": [
-              {
-                "file": "catalog.json",
-                "line": 98,
-                "endLine": 153,
-                "side": "head"
-              },
-              {
-                "file": "catalog.json",
-                "line": 1774,
-                "endLine": 1779,
-                "side": "head"
-              },
-              {
-                "file": "scripts/validate_package.py",
-                "line": 54,
-                "endLine": 59,
-                "side": "head"
-              }
-            ]
-          },
-          {
-            "vote": "real",
-            "category": "risk",
-            "origin": "introduced",
-            "reason": "This PR adds the ads 1.3.0 changelog entry at the end of the list, after 1.0.0. Every other skill lists its entries newest first, so a reader that takes the first entry as the latest release would show the 1.2.1 notes for 1.3.0. The validator doesn't check this order.",
-            "evidence": [
-              {
-                "file": "catalog.json",
-                "line": 80,
-                "endLine": 81,
-                "side": "head"
-              },
-              {
-                "file": "catalog.json",
-                "line": 98,
-                "endLine": 104,
-                "side": "head"
-              },
-              {
-                "file": "catalog.json",
-                "line": 141,
-                "endLine": 153,
-                "side": "head"
-              }
-            ]
-          },
-          {
-            "vote": "real",
-            "category": "bug",
-            "origin": "introduced",
-            "reason": "The PR adds the ads 1.3.0 changelog entry after 1.0.0. Every other skill's changelog lists the newest release first, so anything that reads the first entry as the latest gets the 1.2.1 notes. Nothing in the repo checks the order.",
-            "evidence": [
-              {
-                "file": "catalog.json",
-                "line": 98,
-                "endLine": 104,
-                "side": "head"
-              },
-              {
-                "file": "catalog.json",
-                "line": 141,
-                "endLine": 153,
-                "side": "head"
-              },
-              {
-                "file": "scripts/validate_package.py",
-                "line": 54,
-                "endLine": 59,
-                "side": "head"
-              }
-            ]
-          }
-        ],
-        "real": 3,
-        "notReal": 0,
-        "failed": 0,
-        "kept": true,
-        "why": "3 of 3 verifiers found it real",
-        "origin": "introduced",
-        "category": "bug"
       }
     ]
   },
@@ -863,22 +539,22 @@
     "schemaValid": true,
     "schemaErrors": [],
     "coverage": {
-      "totalHunks": 82,
-      "inThemes": 82,
+      "totalHunks": 88,
+      "inThemes": 88,
       "unexplainedByModel": 0,
       "backfilled": [],
       "duplicates": [],
       "unknownIds": []
     },
     "evidence": {
-      "total": 50,
-      "valid": 50,
+      "total": 45,
+      "valid": 45,
       "invalid": []
     },
     "claims": {
-      "total": 30,
-      "checked": 17,
-      "inferred": 13
+      "total": 22,
+      "checked": 15,
+      "inferred": 7
     },
     "reach": {
       "groups": 1,
@@ -892,13 +568,13 @@
     "symbols": 1,
     "groups": 1,
     "sites": 16,
-    "ms": 31
+    "ms": 22
   },
-  "generatedAt": "2026-11-18T04:11:44.462Z",
+  "generatedAt": "2026-11-18T04:37:18.056Z",
   "runBy": "jtemps",
   "depth": "brief",
   "auto": {
     "picked": "brief",
-    "reason": "1268 changed lines of code in 9 files"
+    "reason": "1363 changed lines of code in 9 files"
   }
 }

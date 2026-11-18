@@ -1,140 +1,44 @@
 {
   "schemaVersion": "5",
-  "verdictLine": "Medium risk · needs work · 1 blocker · 7 gaps",
+  "verdictLine": "Medium risk · needs work · 4 gaps",
   "intent": {
-    "stated": "Add offering fields to the catalog, two new output skills, restructured deck/one-pager/microsite methods, a battlecard built from Octave's own competitor data, ads copy guidance, abm cohort plans, lookalike prospecting, and data schemas from #76.",
+    "stated": "Add offering fields to the catalog, add document and magazine, reframe deck, one-pager and microsite, deepen battlecard-doc, add abm cohort plans and prospector lookalikes, and fold in #76's structured results.",
     "actual": {
-      "text": "Implements each listed item as skill prose, catalog entries and JSON schemas. It also adds a fixed qualification pass score and Octave tool lists to abm and prospector.",
+      "text": "Implements each listed change. abm's single-company plan also gains new tool steps and a default 7-of-10 fit rule that the description calls unchanged.",
       "status": "checked",
       "evidence": [
         {
-          "file": "skills/abm/output.schema.json",
-          "line": 1,
-          "endLine": 11,
+          "file": "skills/prospector/SKILL.md",
+          "line": 12,
           "side": "head"
         },
         {
-          "file": "skills/prospector/references/results-output.md",
-          "line": 9,
-          "endLine": 11,
+          "file": "skills/prospector/references/lookalikes.md",
+          "line": 7,
+          "endLine": 19,
+          "side": "head"
+        },
+        {
+          "file": "skills/prospector/references/task-method.md",
+          "line": 17,
+          "endLine": 21,
           "side": "head"
         }
       ]
     },
-    "delivers": "yes"
+    "delivers": "partial"
   },
   "attention": [
     {
-      "kind": "blocker",
-      "title": "Cohort plans have no matching data shape",
-      "detail": "abm now writes cohort plans, but its new output schema only fits a single-account plan. It requires `accountName` and stakeholders, and has no place for cohort members, tiers or plays per tier. The cohort method forbids naming contacts for individual accounts. A host that asks a cohort run for data will get an invented account, or rows that fail the schema.",
-      "status": "checked",
-      "evidence": [
-        {
-          "file": "skills/abm/output.schema.json",
-          "line": 6,
-          "endLine": 11,
-          "side": "head"
-        },
-        {
-          "file": "skills/abm/references/task-method.md",
-          "line": 29,
-          "endLine": 31,
-          "side": "head"
-        },
-        {
-          "file": "skills/abm/references/cohort-plan.md",
-          "line": 55,
-          "side": "head"
-        }
-      ],
-      "origin": "introduced",
-      "verification": {
-        "verifiers": 2,
-        "real": 2,
-        "notReal": 0,
-        "failed": 0
-      }
-    },
-    {
       "kind": "gap",
-      "title": "Six changelogs put the new release last",
-      "detail": "Every other changelog lists the newest release first. For ads, battlecard-doc, deck, microsite, one-pager and win-loss-report, the new entry was added after 1.0.0 instead. Any reader that takes the first entry as the latest will show stale release notes for these six skills.",
+      "title": "Unmentioned 7-of-10 pass mark in two skills",
+      "detail": "When a qualification returns only a score, prospector and abm now count 7 of 10 as a pass and say on the page that 7 was assumed. The description doesn't mention this. It also calls abm's single-company path unchanged, but that account plan gained this rule and new tool steps.",
       "status": "checked",
-      "evidence": [
-        {
-          "file": "catalog.json",
-          "line": 141,
-          "endLine": 152,
-          "side": "head"
-        },
-        {
-          "file": "catalog.json",
-          "line": 24,
-          "endLine": 29,
-          "side": "head"
-        },
-        {
-          "file": "catalog.json",
-          "line": 2232,
-          "endLine": 2236,
-          "side": "head"
-        }
-      ],
-      "origin": "introduced",
-      "verification": {
-        "verifiers": 2,
-        "real": 2,
-        "notReal": 0,
-        "failed": 0
-      }
-    },
-    {
-      "kind": "gap",
-      "title": "Deal card order conflicts with section template",
-      "detail": "battlecard-doc's method now sets a nine-part deal card in order of weight. The unchanged sections reference still sets a different layout: strengths/weaknesses grids, watch-outs, trap questions and Our Pitch. Win rates now come from `get_entity` includeUsage and competitive insights, but later in the same file they come from `get_entity_outcome_stats`.",
-      "status": "checked",
-      "evidence": [
-        {
-          "file": "skills/battlecard-doc/references/task-method.md",
-          "line": 21,
-          "endLine": 35,
-          "side": "head"
-        },
-        {
-          "file": "skills/battlecard-doc/references/single-competitor-sections.md",
-          "line": 8,
-          "side": "head"
-        },
-        {
-          "file": "skills/battlecard-doc/references/task-method.md",
-          "line": 76,
-          "endLine": 79,
-          "side": "head"
-        }
-      ],
-      "origin": "introduced",
-      "verification": {
-        "verifiers": 2,
-        "real": 2,
-        "notReal": 0,
-        "failed": 0
-      }
-    },
-    {
-      "kind": "gap",
-      "title": "Fixed pass score of 7 for qualification",
-      "detail": "prospector and abm now treat a score of 7 out of 10 as qualified. The same prospector method says to use the configured qualification, and that unknown is not false. A workspace whose agent passes at a different score, or a candidate with unanswered questions, gets labeled not qualified. The description doesn't mention this rule.",
-      "status": "inferred",
       "evidence": [
         {
           "file": "skills/prospector/references/task-method.md",
-          "line": 21,
-          "side": "head"
-        },
-        {
-          "file": "skills/prospector/references/task-method.md",
-          "line": 15,
+          "line": 20,
+          "endLine": 21,
           "side": "head"
         },
         {
@@ -145,63 +49,6 @@
       ],
       "origin": "introduced",
       "verification": {
-        "verifiers": 3,
-        "real": 3,
-        "notReal": 0,
-        "failed": 0
-      }
-    },
-    {
-      "kind": "gap",
-      "title": "Lookalike route skips saved qualification agents",
-      "detail": "The prospector method says to prefer the workspace's saved qualification agent (`run_qualify_company_agent`) and fall back to `qualify_company`. The new lookalike route and the skill entry tell the model to run `qualify_company` and `qualify_person` on every candidate. That conflicts with the description's 'the workspace's own qualification'.",
-      "status": "checked",
-      "evidence": [
-        {
-          "file": "skills/prospector/references/lookalikes.md",
-          "line": 37,
-          "side": "head"
-        },
-        {
-          "file": "skills/prospector/SKILL.md",
-          "line": 12,
-          "side": "head"
-        },
-        {
-          "file": "skills/prospector/references/task-method.md",
-          "line": 18,
-          "side": "head"
-        }
-      ],
-      "origin": "introduced",
-      "verification": {
-        "verifiers": 3,
-        "real": 3,
-        "notReal": 0,
-        "failed": 0
-      }
-    },
-    {
-      "kind": "gap",
-      "title": "New catalog fields are never validated",
-      "detail": "The validator checks only that each skill has a catalog key. A typo in a `kind`, pillar, `outputs` id or `about` word would ship unnoticed. The docs list the allowed ids, and the current values all match them.",
-      "status": "checked",
-      "evidence": [
-        {
-          "file": "scripts/validate_package.py",
-          "line": 54,
-          "endLine": 59,
-          "side": "head"
-        },
-        {
-          "file": "docs/catalog-fields.md",
-          "line": 20,
-          "endLine": 26,
-          "side": "head"
-        }
-      ],
-      "origin": "introduced",
-      "verification": {
         "verifiers": 2,
         "real": 2,
         "notReal": 0,
@@ -210,23 +57,50 @@
     },
     {
       "kind": "gap",
-      "title": "Seven changed skills not run end to end",
-      "detail": "The description says deck, one-pager, microsite, battlecard-doc, ads, abm and prospector weren't run to completion after their change. These are the riskiest behavior changes: prospector's new default route, abm cohort plans, and battlecard-doc's new sources. No automated test covers skill prose.",
+      "title": "Prospector data drops the seed and score",
+      "detail": "The results reference says each lookalike row names the won deal it resembles and the traits that matched, and the method says every row carries the score. The new data shape has no field for the seed or traits and doesn't require `score`, so a later step reading the rows loses both.",
       "status": "checked",
       "evidence": [
         {
-          "file": "skills/prospector/references/lookalikes.md",
+          "file": "skills/prospector/references/results-output.md",
           "line": 3,
           "side": "head"
         },
         {
-          "file": "skills/abm/references/cohort-plan.md",
-          "line": 3,
+          "file": "skills/prospector/output.schema.json",
+          "line": 15,
+          "endLine": 25,
+          "side": "head"
+        },
+        {
+          "file": "skills/prospector/references/task-method.md",
+          "line": 21,
+          "side": "head"
+        }
+      ],
+      "origin": "introduced",
+      "verification": {
+        "verifiers": 3,
+        "real": 3,
+        "notReal": 0,
+        "failed": 0
+      }
+    },
+    {
+      "kind": "gap",
+      "title": "Battlecard relies on intel tools new here",
+      "detail": "`list_intel`, `get_intel` and the battlecard option on `get_entity` appear nowhere else in the repo or in the README tool list. The method only covers empty results. It doesn't say what to do if the server lacks these tools. Can the author confirm they ship today, or that they arrive with octave-app#8914?",
+      "status": "inferred",
+      "evidence": [
+        {
+          "file": "skills/battlecard-doc/references/tool-reference.md",
+          "line": 21,
+          "endLine": 23,
           "side": "head"
         },
         {
           "file": "skills/battlecard-doc/references/task-method.md",
-          "line": 11,
+          "line": 15,
           "endLine": 19,
           "side": "head"
         }
@@ -241,108 +115,68 @@
     },
     {
       "kind": "gap",
-      "title": "ads 1.3.0 changelog entry appended last",
-      "detail": "If the catalog sync reads the first changelog entry as the latest release, ads 1.3.0 shows the 1.2.1 notes. The 1.3.0 entry sits after 1.0.0, but every other skill lists newest first. validate() never compares version with the changelog, so CI passes and both main workflows publish it. Ask how octave-app orders or picks entries, and move this one to the top.",
+      "title": "Seven changed skills not yet run",
+      "detail": "The description says deck, one-pager, microsite, battlecard-doc, ads, abm and prospector were not run to completion after the change. Prospector's new default route and abm's new cohort path are new behavior with no recorded run, and no automated check covers skill prose.",
       "status": "inferred",
       "evidence": [
         {
-          "file": "catalog.json",
-          "line": 80,
-          "endLine": 81,
+          "file": "skills/prospector/SKILL.md",
+          "line": 12,
           "side": "head"
         },
         {
-          "file": "catalog.json",
-          "line": 98,
-          "endLine": 104,
-          "side": "head"
-        },
-        {
-          "file": "catalog.json",
-          "line": 141,
-          "endLine": 153,
-          "side": "head"
-        },
-        {
-          "file": "scripts/validate_package.py",
-          "line": 54,
-          "endLine": 59,
+          "file": "skills/abm/references/cohort-plan.md",
+          "line": 1,
+          "endLine": 9,
           "side": "head"
         }
       ],
       "origin": "introduced",
       "verification": {
         "verifiers": 3,
-        "real": 3,
-        "notReal": 0,
+        "real": 2,
+        "notReal": 1,
         "failed": 0
       }
+    },
+    {
+      "kind": "info",
+      "title": "Release and sync now gate on catalog fields",
+      "detail": "The validator now fails on an unknown kind, pillar or output id, a malformed about list, or a changelog whose first entry isn't the current version. It gates the release ZIP and the downstream sync. The Codex and Cursor builds carry no catalog, so only the root run checks these rules.",
+      "status": "checked",
+      "evidence": [
+        {
+          "file": "scripts/build-release.py",
+          "line": 11,
+          "endLine": 12,
+          "side": "head"
+        },
+        {
+          "file": "scripts/validate.sh",
+          "line": 5,
+          "side": "head"
+        },
+        {
+          "file": "scripts/validate_package.py",
+          "line": 60,
+          "endLine": 77,
+          "side": "head"
+        }
+      ]
     }
   ],
   "themes": [
     {
       "id": "T1",
-      "title": "Data schemas for five skills' results",
-      "kind": "feature",
-      "summary": {
-        "text": "prospector, abm, champion-deal-room, generate and pipeline each return their rows as JSON beside the document.",
-        "status": "checked",
-        "evidence": [
-          {
-            "file": "skills/abm/output.schema.json",
-            "line": 1,
-            "endLine": 11,
-            "side": "head"
-          },
-          {
-            "file": "skills/prospector/references/results-output.md",
-            "line": 9,
-            "endLine": 11,
-            "side": "head"
-          }
-        ]
-      },
-      "before": "These skills returned only a document; a later step had to read it to act on the rows.",
-      "after": "Each ships an output schema, and its method says what rows to return, copying tool values exactly and writing null for anything unknown.",
-      "hunks": [
-        "H17",
-        "H18",
-        "H23",
-        "H32",
-        "H49",
-        "H53",
-        "H58",
-        "H59",
-        "H65",
-        "H66",
-        "H73",
-        "H74",
-        "H77",
-        "H79"
-      ],
-      "owners": [
-        {
-          "login": "akash13s",
-          "reason": "8 commits to 2 of these files in 6 months"
-        },
-        {
-          "login": "hayksaryan",
-          "reason": "5 commits to catalog.json in 6 months"
-        }
-      ]
-    },
-    {
-      "id": "T2",
       "title": "Prospecting starts from lookalikes of won deals",
       "kind": "feature",
       "summary": {
-        "text": "With no criteria given, prospector seeds from recent won deals and finds similar companies and buyers.",
+        "text": "With no criteria given, prospector seeds from recent won deals, finds similar companies and buyers, then qualifies them.",
         "status": "checked",
         "evidence": [
           {
-            "file": "skills/prospector/references/task-method.md",
-            "line": 3,
-            "endLine": 4,
+            "file": "skills/prospector/SKILL.md",
+            "line": 12,
             "side": "head"
           },
           {
@@ -359,42 +193,40 @@
           }
         ]
       },
-      "before": "prospector built its candidate list from the library's segments, personas and ICP criteria.",
-      "after": "By default it picks a few recent won deals as seeds, finds similar companies and buyers, then qualifies each one. Criteria or a seed company still work, and it can run on a schedule.",
+      "before": "Prospector built its candidate list from the library's segments, personas and ICP criteria.",
+      "after": "A bare request reads won deals from the past year, picks a few as seeds, and searches for similar companies and people. When a qualification gives only a score, 7 of 10 counts as a pass.",
       "hunks": [
-        "H4",
-        "H8",
-        "H36",
-        "H37",
-        "H75",
-        "H76",
-        "H78",
-        "H80",
-        "H81"
+        "H41",
+        "H42",
+        "H81",
+        "H82",
+        "H84",
+        "H85",
+        "H86",
+        "H87"
       ],
       "owners": [
         {
           "login": "akash13s",
-          "reason": "9 commits to 3 of these files in 6 months"
+          "reason": "8 commits to 3 of these files in 6 months"
         },
         {
-          "login": "arisrayelyan",
-          "reason": "9 commits to 2 of these files in 6 months"
+          "login": "hayksaryan",
+          "reason": "5 commits to catalog.json in 6 months"
         }
       ]
     },
     {
-      "id": "T3",
-      "title": "Account planning also covers a whole cohort",
+      "id": "T2",
+      "title": "Account planning covers a whole segment",
       "kind": "feature",
       "summary": {
-        "text": "abm writes a cohort plan for a segment or list, leaving per-account plans to separate runs.",
+        "text": "Asked about a segment or account list, abm writes one cohort plan and leaves per-account committees to separate runs.",
         "status": "checked",
         "evidence": [
           {
-            "file": "skills/abm/references/task-method.md",
-            "line": 3,
-            "endLine": 4,
+            "file": "skills/abm/SKILL.md",
+            "line": 12,
             "side": "head"
           },
           {
@@ -402,40 +234,225 @@
             "line": 53,
             "endLine": 55,
             "side": "head"
+          },
+          {
+            "file": "skills/abm/references/task-method.md",
+            "line": 3,
+            "endLine": 4,
+            "side": "head"
           }
         ]
       },
-      "before": "abm planned one named company: stakeholders, persona matching and outreach.",
-      "after": "A segment, cohort or list gets one plan: who is in it, the angle they share, tiers and plays per tier. Tier 1 accounts are listed as ready-to-run single-account plans.",
+      "before": "abm planned one named company: stakeholders, persona matches and outreach.",
+      "after": "A segment, cohort or list gets a plan covering who is in it, one shared angle from similar won deals, tiers and plays per tier. It names no people at individual accounts.",
       "hunks": [
-        "H3",
-        "H5",
-        "H7",
         "H9",
         "H10",
-        "H47",
-        "H48",
-        "H50",
-        "H51",
-        "H52"
+        "H53",
+        "H54",
+        "H56",
+        "H57",
+        "H58"
       ],
       "owners": [
         {
           "login": "akash13s",
-          "reason": "9 commits to 3 of these files in 6 months"
+          "reason": "8 commits to 2 of these files in 6 months"
         },
         {
-          "login": "arisrayelyan",
-          "reason": "9 commits to 2 of these files in 6 months"
+          "login": "hayksaryan",
+          "reason": "5 commits to catalog.json in 6 months"
+        }
+      ]
+    },
+    {
+      "id": "T3",
+      "title": "Five skills return rows beside the document",
+      "kind": "feature",
+      "summary": {
+        "text": "prospector, abm, champion-deal-room, generate and pipeline each declare a data shape and return matching rows when asked.",
+        "status": "checked",
+        "evidence": [
+          {
+            "file": "skills/prospector/output.schema.json",
+            "line": 1,
+            "endLine": 20,
+            "side": "head"
+          },
+          {
+            "file": "skills/abm/references/task-method.md",
+            "line": 29,
+            "endLine": 33,
+            "side": "head"
+          },
+          {
+            "file": "skills/pipeline/references/task-method.md",
+            "line": 21,
+            "endLine": 23,
+            "side": "head"
+          }
+        ]
+      },
+      "before": "These skills produced only a document. A later step had to read the page to act on it.",
+      "after": "When the host asks for data, each returns the rows its document shows (accounts, people, plays, pieces, risks), with null where a tool returned nothing.",
+      "hunks": [
+        "H19",
+        "H20",
+        "H26",
+        "H36",
+        "H37",
+        "H55",
+        "H59",
+        "H64",
+        "H65",
+        "H71",
+        "H72",
+        "H79",
+        "H80",
+        "H83"
+      ],
+      "owners": [
+        {
+          "login": "akash13s",
+          "reason": "6 commits to catalog.json in 6 months"
+        },
+        {
+          "login": "hayksaryan",
+          "reason": "5 commits to catalog.json in 6 months"
         }
       ]
     },
     {
       "id": "T4",
-      "title": "Battlecards start from Octave's own competitor data",
+      "title": "Four output skills shape any subject",
       "kind": "feature",
       "summary": {
-        "text": "battlecard-doc reads the generated battlecard, intel and deal outcomes before the library profile.",
+        "text": "New document and magazine skills join deck and one-pager as format-only skills, and microsite becomes a landing-page job.",
+        "status": "checked",
+        "evidence": [
+          {
+            "file": "catalog.json",
+            "line": 809,
+            "endLine": 821,
+            "side": "head"
+          },
+          {
+            "file": "skills/deck/references/task-method.md",
+            "line": 11,
+            "endLine": 24,
+            "side": "head"
+          },
+          {
+            "file": "scripts/validate_package.py",
+            "line": 14,
+            "side": "head"
+          }
+        ]
+      },
+      "before": "Document and magazine existed only as shared format guides and couldn't be run by name. Deck, one-pager and microsite opened with their special-case rules.",
+      "after": "All five open with two ways in (content supplied, or only a subject) and narrative patterns chosen by purpose, and existing rules sit under the matching pattern. The skill count goes to 32.",
+      "hunks": [
+        "H22",
+        "H23",
+        "H25",
+        "H31",
+        "H32",
+        "H33",
+        "H34",
+        "H35",
+        "H51",
+        "H66",
+        "H67",
+        "H68",
+        "H69",
+        "H70",
+        "H73",
+        "H74",
+        "H75",
+        "H76",
+        "H77",
+        "H78"
+      ],
+      "owners": [
+        {
+          "login": "akash13s",
+          "reason": "8 commits to 5 of these files in 6 months"
+        },
+        {
+          "login": "hayksaryan",
+          "reason": "6 commits to 2 of these files in 6 months"
+        }
+      ]
+    },
+    {
+      "id": "T5",
+      "title": "Catalog entries say how a skill is offered",
+      "kind": "config",
+      "summary": {
+        "text": "Every catalog entry gains optional fields: title, kind, about, pillars and outputs. The validator checks them and the changelog order.",
+        "status": "checked",
+        "evidence": [
+          {
+            "file": "docs/catalog-fields.md",
+            "line": 3,
+            "endLine": 11,
+            "side": "head"
+          },
+          {
+            "file": "docs/catalog-fields.md",
+            "line": 28,
+            "endLine": 30,
+            "side": "head"
+          },
+          {
+            "file": "scripts/validate_package.py",
+            "line": 60,
+            "endLine": 77,
+            "side": "head"
+          }
+        ]
+      },
+      "before": "Catalog entries held only release fields: version, runtimes, required tools and changelog.",
+      "after": "Entries carry a readable title, a job or output kind, likely subjects, GTM areas and formats (default first). Changing only these fields needs no version bump.",
+      "hunks": [
+        "H13",
+        "H14",
+        "H15",
+        "H18",
+        "H21",
+        "H24",
+        "H27",
+        "H28",
+        "H29",
+        "H30",
+        "H38",
+        "H39",
+        "H40",
+        "H43",
+        "H44",
+        "H45",
+        "H46",
+        "H47",
+        "H50",
+        "H52"
+      ],
+      "owners": [
+        {
+          "login": "akash13s",
+          "reason": "6 commits to 2 of these files in 6 months"
+        },
+        {
+          "login": "hayksaryan",
+          "reason": "6 commits to 2 of these files in 6 months"
+        }
+      ]
+    },
+    {
+      "id": "T6",
+      "title": "Battlecards build on Octave's own competitor read",
+      "kind": "feature",
+      "summary": {
+        "text": "battlecard-doc reads Octave's generated battlecard, intel and deal outcomes before the library profile, then fills nine weighted parts.",
         "status": "checked",
         "evidence": [
           {
@@ -445,156 +462,46 @@
             "side": "head"
           },
           {
-            "file": "skills/battlecard-doc/references/task-method.md",
+            "file": "skills/battlecard-doc/references/tool-reference.md",
             "line": 21,
-            "endLine": 35,
-            "side": "head"
-          }
-        ]
-      },
-      "before": "A card was built from the competitor's library profile, plus calls and Ask Octave.",
-      "after": "It first reads Octave's generated battlecard, recent intel and competitive deal outcomes, then builds a deal card in nine weighted parts.",
-      "hunks": [
-        "H15",
-        "H16",
-        "H56",
-        "H57"
-      ],
-      "owners": [
-        {
-          "login": "akash13s",
-          "reason": "6 commits to catalog.json in 6 months"
-        },
-        {
-          "login": "hayksaryan",
-          "reason": "5 commits to catalog.json in 6 months"
-        }
-      ]
-    },
-    {
-      "id": "T5",
-      "title": "Catalog says how each skill is offered",
-      "kind": "config",
-      "summary": {
-        "text": "Every catalog entry gains a display name, job-or-output kind, subjects, pillars and default formats.",
-        "status": "checked",
-        "evidence": [
-          {
-            "file": "docs/catalog-fields.md",
-            "line": 24,
-            "endLine": 38,
-            "side": "head"
-          },
-          {
-            "file": "catalog.json",
-            "line": 1242,
-            "endLine": 1258,
-            "side": "head"
-          }
-        ]
-      },
-      "before": "The catalog held only release fields such as version, changelog and runtimes.",
-      "after": "Entries carry optional offering fields, documented in a new guide. Changing only these fields needs no version bump.",
-      "hunks": [
-        "H13",
-        "H14",
-        "H19",
-        "H24",
-        "H25",
-        "H26",
-        "H27",
-        "H33",
-        "H34",
-        "H35",
-        "H38",
-        "H39",
-        "H40",
-        "H41",
-        "H42",
-        "H45"
-      ],
-      "owners": [
-        {
-          "login": "akash13s",
-          "reason": "6 commits to catalog.json in 6 months"
-        },
-        {
-          "login": "hayksaryan",
-          "reason": "5 commits to catalog.json in 6 months"
-        }
-      ]
-    },
-    {
-      "id": "T6",
-      "title": "Four output skills, microsite becomes a job",
-      "kind": "feature",
-      "summary": {
-        "text": "Adds document and magazine, restructures deck and one-pager by purpose, and offers microsite as a job.",
-        "status": "checked",
-        "evidence": [
-          {
-            "file": "skills/document/references/task-method.md",
-            "line": 11,
-            "endLine": 30,
-            "side": "head"
-          },
-          {
-            "file": "skills/deck/references/task-method.md",
-            "line": 3,
             "endLine": 24,
             "side": "head"
           }
         ]
       },
-      "before": "Document and magazine existed only as shared format guides and couldn't be run by name; deck, one-pager and microsite opened on their specific rules.",
-      "after": "Each output method opens with two ways in and a table of narrative patterns by purpose, with the existing rules filed under their pattern. Microsite is offered as a landing-page job.",
+      "before": "A card was built from the library's competitor profile alone.",
+      "after": "The generated battlecard is the starting point, with intel and deal results leading the card. A card for one deal ends on one thing to say, show and ask.",
       "hunks": [
-        "H6",
-        "H20",
-        "H21",
-        "H22",
-        "H28",
-        "H29",
-        "H30",
-        "H31",
-        "H46",
-        "H60",
-        "H61",
+        "H16",
+        "H17",
         "H62",
-        "H63",
-        "H64",
-        "H67",
-        "H68",
-        "H69",
-        "H70",
-        "H71",
-        "H72"
+        "H63"
       ],
       "owners": [
         {
           "login": "akash13s",
-          "reason": "9 commits to 6 of these files in 6 months"
+          "reason": "6 commits to catalog.json in 6 months"
         },
         {
-          "login": "arisrayelyan",
-          "reason": "10 commits to 4 of these files in 6 months"
+          "login": "hayksaryan",
+          "reason": "5 commits to catalog.json in 6 months"
         }
       ]
     },
     {
       "id": "T7",
-      "title": "Ads platform copy guide",
+      "title": "Ads gets a per-platform copy guide",
       "kind": "docs",
       "summary": {
-        "text": "Adds a guide to Google, LinkedIn and Meta field lengths, a pointer to it from the ads method, and the ads 1.3.0 catalog entry.",
+        "text": "New reference on visible field lengths and reader differences for Google Search, LinkedIn and Meta, linked from the ads method. Version 1.3.0.",
         "status": "inferred",
         "evidence": []
       },
       "hunks": [
         "H11",
         "H12",
-        "H54",
-        "H55"
+        "H60",
+        "H61"
       ],
       "owners": [
         {
@@ -609,17 +516,17 @@
     },
     {
       "id": "T8",
-      "title": "Win-loss report routes text questions to insights",
+      "title": "Win-loss report routes buyer questions to insights",
       "kind": "fix",
       "summary": {
-        "text": "Its description pointed text-only questions back at itself; it now points at insights. Version 1.3.2.",
+        "text": "The description used to send text-only questions back to the skill itself. It now points at insights. Version 1.3.2.",
         "status": "inferred",
         "evidence": []
       },
       "hunks": [
-        "H43",
-        "H44",
-        "H82"
+        "H48",
+        "H49",
+        "H88"
       ],
       "owners": [
         {
@@ -637,7 +544,7 @@
       "title": "Plugin version bump",
       "kind": "mechanical",
       "summary": {
-        "text": "Plugin and marketplace go from 2.21.0 to 2.22.1 together; the validator checks they match.",
+        "text": "Plugin and marketplace versions both go to 2.22.1, kept equal as the validator requires.",
         "status": "inferred",
         "evidence": []
       },
@@ -655,44 +562,64 @@
           "reason": "4 commits to .claude-plugin in 6 months"
         }
       ]
+    },
+    {
+      "id": "T10",
+      "title": "README and examples describe the new behavior",
+      "kind": "docs",
+      "summary": {
+        "text": "Skill table rows and usage examples for lookalike prospecting, cohort abm, document and magazine.",
+        "status": "inferred",
+        "evidence": []
+      },
+      "hunks": [
+        "H3",
+        "H4",
+        "H5",
+        "H6",
+        "H7",
+        "H8"
+      ],
+      "owners": [
+        {
+          "login": "arisrayelyan",
+          "reason": "6 commits to README.md in 6 months"
+        },
+        {
+          "login": "akash13s",
+          "reason": "4 commits to README.md in 6 months"
+        }
+      ]
     }
   ],
   "unexplainedChanges": [],
   "blastRadius": {
-    "summary": "All changes are skill prose and JSON, but default behavior shifts for several customer-facing skills that weren't rerun, and another repo consumes the new fields and schemas.",
-    "callers": [],
-    "endpoints": [
+    "summary": "Medium: no data changes, but two skills change their default behavior with no recorded run, and the app reads the new fields.",
+    "callers": [
       {
-        "text": "New route `/octave:document`",
-        "status": "inferred",
-        "evidence": []
-      },
-      {
-        "text": "New route `/octave:magazine`",
-        "status": "inferred",
-        "evidence": []
-      },
-      {
-        "text": "Changed route `/octave:abm --segment / --accounts`",
-        "status": "inferred",
-        "evidence": []
-      },
-      {
-        "text": "Changed route `/octave:prospector (no arguments)`",
-        "status": "inferred",
-        "evidence": []
-      },
-      {
-        "text": "Changed route `/octave:battlecard-doc`",
-        "status": "inferred",
-        "evidence": []
-      },
-      {
-        "text": "Changed route `/octave:microsite`",
-        "status": "inferred",
-        "evidence": []
+        "text": "The release ZIP build and the validate workflow (used by publish and sync) now also fail on bad offering fields or a changelog not newest-first. They pass at head.",
+        "status": "checked",
+        "evidence": [
+          {
+            "file": "scripts/build-release.py",
+            "line": 11,
+            "endLine": 12,
+            "side": "head"
+          },
+          {
+            "file": ".github/workflows/validate.yml",
+            "line": 25,
+            "side": "head"
+          },
+          {
+            "file": "scripts/validate.sh",
+            "line": 5,
+            "side": "head"
+          }
+        ]
       }
     ],
+    "endpoints": [],
     "jobs": [],
     "tables": [],
     "irreversible": []
@@ -700,18 +627,23 @@
   "reach": [
     {
       "group": "R1",
-      "verdict": "not_affected",
-      "note": "The workflows and validate.sh still pass: the repo, the Codex build and the Cursor build each hold 32 skill folders now that document and magazine exist.",
+      "verdict": "affected",
+      "note": "The release ZIP build and the validate workflow (used by publish and sync) now also fail on bad offering fields or a changelog not newest-first. They pass at head.",
       "evidence": [
         {
-          "file": "scripts/validate.sh",
-          "line": 5,
+          "file": "scripts/build-release.py",
+          "line": 11,
+          "endLine": 12,
+          "side": "head"
+        },
+        {
+          "file": ".github/workflows/validate.yml",
+          "line": 25,
           "side": "head"
         },
         {
           "file": "scripts/validate.sh",
-          "line": 13,
-          "endLine": 14,
+          "line": 5,
           "side": "head"
         }
       ],
@@ -727,19 +659,24 @@
     "sites": 16,
     "checkedGroups": 1,
     "checkedSites": 16,
-    "affectedGroups": 0,
-    "affectedSites": 0,
+    "affectedGroups": 1,
+    "affectedSites": 16,
     "uncheckedGroups": 0,
     "line": "checked 16 of 16 uses of the changed code"
   },
   "risk": {
     "level": "medium",
-    "reason": "Changes the default behavior of customer-facing skills (prospector, abm, battlecard-doc) that weren't rerun, and adds catalog fields and data shapes that another repo consumes. Everything is prose and JSON, so a revert undoes it.",
+    "reason": "The changes are agent instructions, not data writes, but prospector's default behavior and abm's scope change for every user. These new paths have no recorded run, and the app reads the new catalog fields.",
     "claims": [
       {
-        "text": "With no arguments, prospector now starts from lookalikes of recent won deals instead of library criteria.",
+        "text": "With no criteria given, prospector now starts from lookalikes of recent won deals instead of library criteria.",
         "status": "checked",
         "evidence": [
+          {
+            "file": "skills/prospector/SKILL.md",
+            "line": 12,
+            "side": "head"
+          },
           {
             "file": "skills/prospector/references/task-method.md",
             "line": 3,
@@ -749,24 +686,13 @@
         ]
       },
       {
-        "text": "The only automated check touched is the validator's skill count, raised from 30 to 32 for the two new skills.",
+        "text": "The validator checks catalog field values and changelog order but doesn't load or check the new data shape files.",
         "status": "checked",
         "evidence": [
           {
             "file": "scripts/validate_package.py",
-            "line": 14,
-            "side": "head"
-          }
-        ]
-      },
-      {
-        "text": "Five skills gain an output schema; the abm one describes only a single-account plan.",
-        "status": "checked",
-        "evidence": [
-          {
-            "file": "skills/abm/output.schema.json",
-            "line": 1,
-            "endLine": 11,
+            "line": 54,
+            "endLine": 77,
             "side": "head"
           }
         ]
@@ -787,197 +713,85 @@
   },
   "guide": {
     "overview": {
-      "oneLine": "Adds offering metadata to every catalog entry, two new output skills, abm cohort plans, lookalike-first prospecting, a sourced battlecard, and data schemas for five skills.",
-      "riskLine": "All changes are skill prose and JSON, but default behavior shifts for several customer-facing skills that weren't rerun, and another repo consumes the new fields and schemas.",
-      "minutes": 14,
-      "plain": "Once the paired octave-app change ships, Octave can show each skill by an everyday name and group it by sales area. Users get long-form document and magazine skills. Account planning can cover a whole segment, and prospecting starts from companies like recent wins.",
+      "oneLine": "Adds offering fields to every catalog entry, two new output skills, a cohort mode for abm, a lookalike default for prospector, and structured results for five skills.",
+      "riskLine": "Medium: no data changes, but two skills change their default behavior with no recorded run, and the app reads the new fields.",
+      "minutes": 15,
+      "plain": "The skill catalog now gives each skill a readable name, says whether it does a job or shapes a document, and lists the formats it makes. Prospecting now starts from companies like recent wins, account planning can cover a whole segment, and two new document skills arrive.",
       "terms": [
         {
-          "term": "Job skill vs output skill",
-          "meaning": "A job gathers evidence and decides what to say; an output only shapes how a deck, page or document looks and reads."
+          "term": "Job vs output skill",
+          "meaning": "A job gathers evidence about a subject and decides what to say. An output only shapes it as a deck, one-pager, document or magazine."
         },
         {
           "term": "Pillar",
-          "meaning": "The go-to-market area a skill is filed under, such as outbound or deal execution, used to group skills in the app."
+          "meaning": "The go-to-market area a skill is filed under, such as outbound or deal execution."
         },
         {
           "term": "Lookalikes",
-          "meaning": "Companies and buyers that resemble accounts the team has already won, used as a starting list of prospects."
+          "meaning": "Companies and buyers that resemble ones from recently won deals, used as the starting pool of prospects."
         }
       ],
-      "surface": [
-        {
-          "kind": "route",
-          "change": "new",
-          "name": "/octave:document"
-        },
-        {
-          "kind": "route",
-          "change": "new",
-          "name": "/octave:magazine"
-        },
-        {
-          "kind": "route",
-          "change": "changed",
-          "name": "/octave:abm --segment / --accounts"
-        },
-        {
-          "kind": "route",
-          "change": "changed",
-          "name": "/octave:prospector (no arguments)"
-        },
-        {
-          "kind": "route",
-          "change": "changed",
-          "name": "/octave:battlecard-doc"
-        },
-        {
-          "kind": "route",
-          "change": "changed",
-          "name": "/octave:microsite"
-        }
-      ]
+      "surface": []
     },
     "intent": {
-      "asks": "Add offering fields to the catalog, two new output skills, restructured deck/one-pager/microsite methods, a battlecard built from Octave's own competitor data, ads copy guidance, abm cohort plans, lookalike prospecting, and data schemas from #76.",
-      "does": "Implements each listed item as skill prose, catalog entries and JSON schemas. It also adds a fixed qualification pass score and Octave tool lists to abm and prospector.",
+      "asks": "Add offering fields to the catalog, add document and magazine, reframe deck, one-pager and microsite, deepen battlecard-doc, add abm cohort plans and prospector lookalikes, and fold in #76's structured results.",
+      "does": "Implements each listed change. abm's single-company plan also gains new tool steps and a default 7-of-10 fit rule that the description calls unchanged.",
       "extra": [
-        "abm and prospector now treat a qualification score of 7 or more as qualified, and name specific Octave tools.",
-        "prospector prefers a workspace's saved qualification agent (noted in its changelog, not the description)."
+        "A default 7-of-10 qualification pass mark in prospector and abm"
       ],
       "missing": [],
       "descriptionGaps": [
-        "No merge order or compatibility note for octave-app#8914, which reads the new catalog fields and schemas.",
-        "No run evidence for the seven changed skills the description says weren't run to completion."
+        "No merge or sync order relative to octave-app#8914"
       ],
-      "verdict": "matches",
-      "question": "Is it right to merge before deck, abm, prospector and battlecard-doc have been run end to end?"
+      "verdict": "partly",
+      "question": "Is folding #76's structured results into this PR right, so each skill gets one release?"
     },
     "decisions": [
       {
         "id": "D1",
-        "title": "Data schemas for five skills' results",
-        "headline": "prospector, abm, champion-deal-room, generate and pipeline each return their rows as JSON beside the document.",
-        "risk": "medium",
-        "irreversible": false,
-        "audience": "internal",
-        "before": "These skills returned only a document; a later step had to read it to act on the rows.",
-        "after": "Each ships an output schema, and its method says what rows to return, copying tool values exactly and writing null for anything unknown.",
-        "why": "So a later step can act on accounts, contacts, plays or messages without reading the document.",
-        "whySource": "description",
-        "reuse": {
-          "verdict": "new, justified",
-          "text": "No skill had an output schema before. prospector's schema mirrors the rows its existing results reference already lists.",
-          "evidence": [
-            {
-              "file": "skills/prospector/references/results-output.md",
-              "line": 3,
-              "endLine": 7,
-              "side": "head"
-            }
-          ]
-        },
-        "simplicity": {
-          "verdict": "justified",
-          "text": "One schema per skill plus a short paragraph in each method; no shared machinery."
-        },
-        "proof": {
-          "verdict": "none",
-          "text": "No test validates the schemas or checks that a run's output matches them."
-        },
-        "rollout": "Takes effect only once the host requests data beside the document, presumably with octave-app#8914.",
-        "seenInProd": null,
-        "findings": [
-          "Cohort plans have no matching data shape"
-        ],
-        "authorAsks": null,
-        "question": "Is an account-plan-only schema for abm right, given abm now also writes cohort plans with tiers and no contacts?",
-        "evidence": [
-          {
-            "file": "skills/abm/output.schema.json",
-            "line": 1,
-            "endLine": 11,
-            "side": "head"
-          },
-          {
-            "file": "skills/prospector/references/results-output.md",
-            "line": 9,
-            "endLine": 11,
-            "side": "head"
-          }
-        ],
-        "hunks": [
-          "H17",
-          "H18",
-          "H23",
-          "H32",
-          "H49",
-          "H53",
-          "H58",
-          "H59",
-          "H65",
-          "H66",
-          "H73",
-          "H74",
-          "H77",
-          "H79"
-        ],
-        "kind": "feature",
-        "owners": [
-          {
-            "login": "akash13s",
-            "reason": "8 commits to 2 of these files in 6 months"
-          },
-          {
-            "login": "hayksaryan",
-            "reason": "5 commits to catalog.json in 6 months"
-          }
-        ]
-      },
-      {
-        "id": "D2",
         "title": "Prospecting starts from lookalikes of won deals",
-        "headline": "With no criteria given, prospector seeds from recent won deals and finds similar companies and buyers.",
-        "risk": "medium",
+        "headline": "With no criteria given, prospector seeds from recent won deals, finds similar companies and buyers, then qualifies them.",
+        "risk": "high",
         "irreversible": false,
         "audience": "customers",
-        "before": "prospector built its candidate list from the library's segments, personas and ICP criteria.",
-        "after": "By default it picks a few recent won deals as seeds, finds similar companies and buyers, then qualifies each one. Criteria or a seed company still work, and it can run on a schedule.",
-        "why": "Lookalikes of real wins make a better default starting pool than authored criteria.",
+        "before": "Prospector built its candidate list from the library's segments, personas and ICP criteria.",
+        "after": "A bare request reads won deals from the past year, picks a few as seeds, and searches for similar companies and people. When a qualification gives only a score, 7 of 10 counts as a pass.",
+        "why": "To find more accounts like the customers already won, and to support running on a schedule or when a deal is won.",
         "whySource": "description",
         "reuse": {
           "verdict": "reuses",
-          "text": "Uses the existing similar-company and similar-people tools and the existing qualification rules; meeting-prep already reads won deals the same way.",
+          "text": "Uses the existing similar-company, similar-people and qualification tools, which the agents already list.",
           "evidence": [
             {
-              "file": "skills/prospector/references/lookalikes.md",
-              "line": 23,
-              "endLine": 23,
+              "file": "agents/octave-assistant.md",
+              "line": 38,
+              "endLine": 38,
               "side": "head"
             }
           ]
         },
         "simplicity": {
           "verdict": "justified",
-          "text": "One new reference file; the existing criteria route is kept unchanged."
+          "text": "One new reference file. The criteria route stays as is, and the scheduled-run guidance is prose only."
         },
         "proof": {
           "verdict": "none",
-          "text": "The description says prospector wasn't run to completion after this change; no test covers it."
+          "text": "No test exercises skill instructions, and the description says prospector wasn't run to completion."
         },
         "rollout": null,
-        "seenInProd": null,
+        "seenInProd": "A bare prospector run should open its internal summary with a line naming the seed deals. Without deal history, it should fall back to the criteria route and say so.",
         "findings": [
-          "Fixed pass score of 7 for qualification",
-          "Lookalike route skips saved qualification agents"
+          "Unmentioned 7-of-10 pass mark in two skills",
+          "Prospector data drops the seed and score",
+          "Seven changed skills not yet run"
         ],
         "authorAsks": null,
-        "question": "Is lookalikes of recent wins the right default for a bare prospecting request, ahead of the library's ICP?",
+        "question": "Is lookalikes-of-won-deals the right default, given a bare request now depends on the workspace's deal history?",
         "evidence": [
           {
-            "file": "skills/prospector/references/task-method.md",
-            "line": 3,
-            "endLine": 4,
+            "file": "skills/prospector/SKILL.md",
+            "line": 12,
+            "endLine": 12,
             "side": "head"
           },
           {
@@ -994,69 +808,62 @@
           }
         ],
         "hunks": [
-          "H4",
-          "H8",
-          "H36",
-          "H37",
-          "H75",
-          "H76",
-          "H78",
-          "H80",
-          "H81"
+          "H41",
+          "H42",
+          "H81",
+          "H82",
+          "H84",
+          "H85",
+          "H86",
+          "H87"
         ],
         "kind": "feature",
         "owners": [
           {
             "login": "akash13s",
-            "reason": "9 commits to 3 of these files in 6 months"
+            "reason": "8 commits to 3 of these files in 6 months"
           },
           {
-            "login": "arisrayelyan",
-            "reason": "9 commits to 2 of these files in 6 months"
+            "login": "hayksaryan",
+            "reason": "5 commits to catalog.json in 6 months"
           }
         ]
       },
       {
-        "id": "D3",
-        "title": "Account planning also covers a whole cohort",
-        "headline": "abm writes a cohort plan for a segment or list, leaving per-account plans to separate runs.",
+        "id": "D2",
+        "title": "Account planning covers a whole segment",
+        "headline": "Asked about a segment or account list, abm writes one cohort plan and leaves per-account committees to separate runs.",
         "risk": "medium",
         "irreversible": false,
         "audience": "customers",
-        "before": "abm planned one named company: stakeholders, persona matching and outreach.",
-        "after": "A segment, cohort or list gets one plan: who is in it, the angle they share, tiers and plays per tier. Tier 1 accounts are listed as ready-to-run single-account plans.",
-        "why": "Teams plan campaigns across segments, not only one account at a time.",
+        "before": "abm planned one named company: stakeholders, persona matches and outreach.",
+        "after": "A segment, cohort or list gets a plan covering who is in it, one shared angle from similar won deals, tiers and plays per tier. It names no people at individual accounts.",
+        "why": "So a campaign across many accounts can be planned in one pass, with each account's plan run afterwards.",
         "whySource": "description",
         "reuse": {
           "verdict": "reuses",
-          "text": "Reuses abm's account-plan rules, its HTML scaffold, and the existing deal and qualification tools.",
-          "evidence": [
-            {
-              "file": "skills/abm/references/cohort-plan.md",
-              "line": 5,
-              "endLine": 5,
-              "side": "head"
-            }
-          ]
+          "text": "Reuses the account plan's HTML scaffold and shared evidence rules. Tiers use the CRM's own account tiers when present."
         },
         "simplicity": {
-          "verdict": "simple",
-          "text": "One new reference file, routed by a short switch in the method; the single-account path is unchanged."
+          "verdict": "justified",
+          "text": "One new reference plus a routing paragraph. Per-account depth is delegated instead of duplicated."
         },
         "proof": {
           "verdict": "none",
-          "text": "abm wasn't run to completion after this change, per the description."
+          "text": "No test covers the cohort path, and the description lists abm as not yet run."
         },
         "rollout": null,
         "seenInProd": null,
-        "findings": [],
+        "findings": [
+          "Unmentioned 7-of-10 pass mark in two skills"
+        ],
         "authorAsks": null,
-        "question": "Is leaving committees and contacts out of cohort plans right, so each account still needs its own run?",
+        "question": "Is a cohort plan that names no people per account right, with committees coming from a run per account?",
         "evidence": [
           {
-            "file": "skills/abm/references/task-method.md",
-            "line": 3,
-            "endLine": 4,
+            "file": "skills/abm/SKILL.md",
+            "line": 12,
+            "endLine": 12,
             "side": "head"
           },
           {
@@ -1064,70 +871,331 @@
             "line": 53,
             "endLine": 55,
             "side": "head"
+          },
+          {
+            "file": "skills/abm/references/task-method.md",
+            "line": 3,
+            "endLine": 4,
+            "side": "head"
           }
         ],
         "hunks": [
-          "H3",
-          "H5",
-          "H7",
           "H9",
           "H10",
-          "H47",
-          "H48",
-          "H50",
-          "H51",
-          "H52"
+          "H53",
+          "H54",
+          "H56",
+          "H57",
+          "H58"
         ],
         "kind": "feature",
         "owners": [
           {
             "login": "akash13s",
-            "reason": "9 commits to 3 of these files in 6 months"
+            "reason": "8 commits to 2 of these files in 6 months"
           },
           {
-            "login": "arisrayelyan",
-            "reason": "9 commits to 2 of these files in 6 months"
+            "login": "hayksaryan",
+            "reason": "5 commits to catalog.json in 6 months"
+          }
+        ]
+      },
+      {
+        "id": "D3",
+        "title": "Five skills return rows beside the document",
+        "headline": "prospector, abm, champion-deal-room, generate and pipeline each declare a data shape and return matching rows when asked.",
+        "risk": "medium",
+        "irreversible": false,
+        "audience": "internal",
+        "before": "These skills produced only a document. A later step had to read the page to act on it.",
+        "after": "When the host asks for data, each returns the rows its document shows (accounts, people, plays, pieces, risks), with null where a tool returned nothing.",
+        "why": "So a later step can act on the results without parsing the document.",
+        "whySource": "description",
+        "reuse": {
+          "verdict": "new, justified",
+          "text": "No skill had a data shape before. Each shape is defined in its skill's folder."
+        },
+        "simplicity": {
+          "verdict": "simple",
+          "text": "One schema file and a short method note per skill. Nothing changes when data isn't requested."
+        },
+        "proof": {
+          "verdict": "none",
+          "text": "Nothing in the repo loads or checks these shapes, so a malformed one would ship unnoticed."
+        },
+        "rollout": "Read by the Octave app (octave-app#8914). No order is stated.",
+        "seenInProd": null,
+        "findings": [
+          "Prospector data drops the seed and score"
+        ],
+        "authorAsks": null,
+        "question": "Is returning rows only when the host asks right, leaving document-only runs exactly as before?",
+        "evidence": [
+          {
+            "file": "skills/prospector/output.schema.json",
+            "line": 1,
+            "endLine": 20,
+            "side": "head"
+          },
+          {
+            "file": "skills/abm/references/task-method.md",
+            "line": 29,
+            "endLine": 33,
+            "side": "head"
+          },
+          {
+            "file": "skills/pipeline/references/task-method.md",
+            "line": 21,
+            "endLine": 23,
+            "side": "head"
+          }
+        ],
+        "hunks": [
+          "H19",
+          "H20",
+          "H26",
+          "H36",
+          "H37",
+          "H55",
+          "H59",
+          "H64",
+          "H65",
+          "H71",
+          "H72",
+          "H79",
+          "H80",
+          "H83"
+        ],
+        "kind": "feature",
+        "owners": [
+          {
+            "login": "akash13s",
+            "reason": "6 commits to catalog.json in 6 months"
+          },
+          {
+            "login": "hayksaryan",
+            "reason": "5 commits to catalog.json in 6 months"
           }
         ]
       },
       {
         "id": "D4",
-        "title": "Battlecards start from Octave's own competitor data",
-        "headline": "battlecard-doc reads the generated battlecard, intel and deal outcomes before the library profile.",
+        "title": "Four output skills shape any subject",
+        "headline": "New document and magazine skills join deck and one-pager as format-only skills, and microsite becomes a landing-page job.",
         "risk": "medium",
         "irreversible": false,
         "audience": "customers",
-        "before": "A card was built from the competitor's library profile, plus calls and Ask Octave.",
-        "after": "It first reads Octave's generated battlecard, recent intel and competitive deal outcomes, then builds a deal card in nine weighted parts.",
-        "why": "Octave already holds a generated battlecard and intel that the skill ignored.",
+        "before": "Document and magazine existed only as shared format guides and couldn't be run by name. Deck, one-pager and microsite opened with their special-case rules.",
+        "after": "All five open with two ways in (content supplied, or only a subject) and narrative patterns chosen by purpose, and existing rules sit under the matching pattern. The skill count goes to 32.",
+        "why": "An output skill says how something is shaped, holds no view on evidence, and can be run alone or used by a job.",
         "whySource": "description",
         "reuse": {
-          "verdict": "reuses",
-          "text": "Builds on the generated battlecard rather than writing a second card that disagrees with it.",
+          "verdict": "new, could reuse",
+          "text": "Document and magazine reuse the shared format guides. The two-ways-in text is copied into five task methods rather than kept in one shared reference.",
           "evidence": [
             {
-              "file": "skills/battlecard-doc/references/task-method.md",
-              "line": 15,
-              "endLine": 15,
+              "file": "skills/document/SKILL.md",
+              "line": 29,
+              "endLine": 29,
+              "side": "head"
+            },
+            {
+              "file": "skills/deck/references/task-method.md",
+              "line": 3,
+              "endLine": 9,
+              "side": "head"
+            },
+            {
+              "file": "skills/one-pager/references/task-method.md",
+              "line": 3,
+              "endLine": 9,
               "side": "head"
             }
           ]
         },
         "simplicity": {
           "verdict": "justified",
-          "text": "Adds two sections to the method, but leaves the sections template it now conflicts with unchanged."
+          "text": "Thin skills over existing format guides. The copied intro text is the one source of drift."
+        },
+        "proof": {
+          "verdict": "partial",
+          "text": "The validator's count of 32 and its link check fail if document or magazine go missing. The author ran both by hand, but not deck, one-pager or microsite."
+        },
+        "rollout": null,
+        "seenInProd": null,
+        "findings": [
+          "Seven changed skills not yet run"
+        ],
+        "authorAsks": null,
+        "question": "Is repeating the two-ways-in guidance in each output skill right, given five copies must stay in step?",
+        "evidence": [
+          {
+            "file": "catalog.json",
+            "line": 809,
+            "endLine": 821,
+            "side": "head"
+          },
+          {
+            "file": "skills/deck/references/task-method.md",
+            "line": 11,
+            "endLine": 24,
+            "side": "head"
+          },
+          {
+            "file": "scripts/validate_package.py",
+            "line": 14,
+            "endLine": 14,
+            "side": "head"
+          }
+        ],
+        "hunks": [
+          "H22",
+          "H23",
+          "H25",
+          "H31",
+          "H32",
+          "H33",
+          "H34",
+          "H35",
+          "H51",
+          "H66",
+          "H67",
+          "H68",
+          "H69",
+          "H70",
+          "H73",
+          "H74",
+          "H75",
+          "H76",
+          "H77",
+          "H78"
+        ],
+        "kind": "feature",
+        "owners": [
+          {
+            "login": "akash13s",
+            "reason": "8 commits to 5 of these files in 6 months"
+          },
+          {
+            "login": "hayksaryan",
+            "reason": "6 commits to 2 of these files in 6 months"
+          }
+        ]
+      },
+      {
+        "id": "D5",
+        "title": "Catalog entries say how a skill is offered",
+        "headline": "Every catalog entry gains optional fields: title, kind, about, pillars and outputs. The validator checks them and the changelog order.",
+        "risk": "medium",
+        "irreversible": false,
+        "audience": "customers",
+        "before": "Catalog entries held only release fields: version, runtimes, required tools and changelog.",
+        "after": "Entries carry a readable title, a job or output kind, likely subjects, GTM areas and formats (default first). Changing only these fields needs no version bump.",
+        "why": "So Octave can offer each skill on the right page and in the right formats when it syncs the catalog.",
+        "whySource": "description",
+        "reuse": {
+          "verdict": "reuses",
+          "text": "Extends the existing catalog check in the package validator instead of adding a new one."
+        },
+        "simplicity": {
+          "verdict": "simple",
+          "text": "Optional fields with fixed id lists, documented in one page."
+        },
+        "proof": {
+          "verdict": "partial",
+          "text": "The validator rejects unknown ids and a stale first changelog entry. Removing the fields wouldn't fail anything."
+        },
+        "rollout": "The Octave app reads these on sync. Pairs with octave-app#8914, with no stated order.",
+        "seenInProd": null,
+        "findings": [
+          "Release and sync now gate on catalog fields"
+        ],
+        "authorAsks": null,
+        "question": "Is letting these fields change without a version bump right, given the app reads them on every catalog sync?",
+        "evidence": [
+          {
+            "file": "docs/catalog-fields.md",
+            "line": 3,
+            "endLine": 11,
+            "side": "head"
+          },
+          {
+            "file": "docs/catalog-fields.md",
+            "line": 28,
+            "endLine": 30,
+            "side": "head"
+          },
+          {
+            "file": "scripts/validate_package.py",
+            "line": 60,
+            "endLine": 77,
+            "side": "head"
+          }
+        ],
+        "hunks": [
+          "H13",
+          "H14",
+          "H15",
+          "H18",
+          "H21",
+          "H24",
+          "H27",
+          "H28",
+          "H29",
+          "H30",
+          "H38",
+          "H39",
+          "H40",
+          "H43",
+          "H44",
+          "H45",
+          "H46",
+          "H47",
+          "H50",
+          "H52"
+        ],
+        "kind": "config",
+        "owners": [
+          {
+            "login": "akash13s",
+            "reason": "6 commits to 2 of these files in 6 months"
+          },
+          {
+            "login": "hayksaryan",
+            "reason": "6 commits to 2 of these files in 6 months"
+          }
+        ]
+      },
+      {
+        "id": "D6",
+        "title": "Battlecards build on Octave's own competitor read",
+        "headline": "battlecard-doc reads Octave's generated battlecard, intel and deal outcomes before the library profile, then fills nine weighted parts.",
+        "risk": "low",
+        "irreversible": false,
+        "audience": "customers",
+        "before": "A card was built from the library's competitor profile alone.",
+        "after": "The generated battlecard is the starting point, with intel and deal results leading the card. A card for one deal ends on one thing to say, show and ask.",
+        "why": "So a card doesn't contradict what Octave already knows, and leads with how buyers actually decided.",
+        "whySource": "description",
+        "reuse": {
+          "verdict": "reuses",
+          "text": "Reuses outcome stats and competitive insights that other skills already call. The intel tools are new to this repo."
+        },
+        "simplicity": {
+          "verdict": "simple",
+          "text": "Method text only, and the page's sections are unchanged."
         },
         "proof": {
           "verdict": "none",
-          "text": "battlecard-doc wasn't run to completion after this change, per the description."
+          "text": "No test, and the description lists battlecard-doc as not yet run."
         },
-        "rollout": "Depends on the intel and battlecard tools existing on every host that runs the skill.",
+        "rollout": null,
         "seenInProd": null,
         "findings": [
-          "Deal card order conflicts with section template"
+          "Battlecard relies on intel tools new here"
         ],
         "authorAsks": null,
-        "question": "Is it right to treat the generated battlecard as the starting point and only sharpen it for the deal?",
+        "question": "Is treating Octave's generated battlecard as the starting point right, so a new card never disagrees with it?",
         "evidence": [
           {
             "file": "skills/battlecard-doc/references/task-method.md",
@@ -1136,207 +1204,40 @@
             "side": "head"
           },
           {
-            "file": "skills/battlecard-doc/references/task-method.md",
+            "file": "skills/battlecard-doc/references/tool-reference.md",
             "line": 21,
-            "endLine": 35,
+            "endLine": 24,
             "side": "head"
           }
         ],
         "hunks": [
-          "H15",
           "H16",
-          "H56",
-          "H57"
-        ],
-        "kind": "feature",
-        "owners": [
-          {
-            "login": "akash13s",
-            "reason": "6 commits to catalog.json in 6 months"
-          },
-          {
-            "login": "hayksaryan",
-            "reason": "5 commits to catalog.json in 6 months"
-          }
-        ]
-      },
-      {
-        "id": "D5",
-        "title": "Catalog says how each skill is offered",
-        "headline": "Every catalog entry gains a display name, job-or-output kind, subjects, pillars and default formats.",
-        "risk": "medium",
-        "irreversible": false,
-        "audience": "customers",
-        "before": "The catalog held only release fields such as version, changelog and runtimes.",
-        "after": "Entries carry optional offering fields, documented in a new guide. Changing only these fields needs no version bump.",
-        "why": "So Octave can show skills as tasks, group them by area, and pick a default format.",
-        "whySource": "description",
-        "reuse": {
-          "verdict": "new, justified",
-          "text": "No existing metadata described how a skill is offered; the fields sit beside the existing release fields.",
-          "evidence": [
-            {
-              "file": "docs/catalog-fields.md",
-              "line": 3,
-              "endLine": 3,
-              "side": "head"
-            }
-          ]
-        },
-        "simplicity": {
-          "verdict": "simple",
-          "text": "Five optional fields and one doc page; nothing enforces them."
-        },
-        "proof": {
-          "verdict": "none",
-          "text": "The validator checks only that each skill has a catalog key, not the new fields' values."
-        },
-        "rollout": "Read by Octave's catalog sync; needs octave-app#8914 to use them.",
-        "seenInProd": "The skill picker in Octave shows the new names and groupings once the sync runs.",
-        "findings": [
-          "New catalog fields are never validated",
-          "Six changelogs put the new release last"
-        ],
-        "authorAsks": null,
-        "question": "Is it right that metadata-only changes skip a version bump, given Octave reads these fields at sync?",
-        "evidence": [
-          {
-            "file": "docs/catalog-fields.md",
-            "line": 24,
-            "endLine": 38,
-            "side": "head"
-          },
-          {
-            "file": "catalog.json",
-            "line": 1242,
-            "endLine": 1258,
-            "side": "head"
-          }
-        ],
-        "hunks": [
-          "H13",
-          "H14",
-          "H19",
-          "H24",
-          "H25",
-          "H26",
-          "H27",
-          "H33",
-          "H34",
-          "H35",
-          "H38",
-          "H39",
-          "H40",
-          "H41",
-          "H42",
-          "H45"
-        ],
-        "kind": "config",
-        "owners": [
-          {
-            "login": "akash13s",
-            "reason": "6 commits to catalog.json in 6 months"
-          },
-          {
-            "login": "hayksaryan",
-            "reason": "5 commits to catalog.json in 6 months"
-          }
-        ]
-      },
-      {
-        "id": "D6",
-        "title": "Four output skills, microsite becomes a job",
-        "headline": "Adds document and magazine, restructures deck and one-pager by purpose, and offers microsite as a job.",
-        "risk": "low",
-        "irreversible": false,
-        "audience": "customers",
-        "before": "Document and magazine existed only as shared format guides and couldn't be run by name; deck, one-pager and microsite opened on their specific rules.",
-        "after": "Each output method opens with two ways in and a table of narrative patterns by purpose, with the existing rules filed under their pattern. Microsite is offered as a landing-page job.",
-        "why": "An output skill should shape any subject or supplied content without holding opinions about evidence.",
-        "whySource": "description",
-        "reuse": {
-          "verdict": "reuses",
-          "text": "The new skills point at the existing shared HTML-document and magazine formats rather than new templates.",
-          "evidence": [
-            {
-              "file": "skills/magazine/SKILL.md",
-              "line": 26,
-              "endLine": 32,
-              "side": "head"
-            }
-          ]
-        },
-        "simplicity": {
-          "verdict": "simple",
-          "text": "Document and magazine are near-identical thin wrappers over existing shared formats."
-        },
-        "proof": {
-          "verdict": "partial",
-          "text": "The validator's 32-skill count fails without the two new skills; document and magazine were run by hand, the rest weren't."
-        },
-        "rollout": null,
-        "seenInProd": null,
-        "findings": [],
-        "authorAsks": null,
-        "question": "Is it right that deck, one-pager and microsite each restate the same two-ways-in text instead of sharing one guide?",
-        "evidence": [
-          {
-            "file": "skills/document/references/task-method.md",
-            "line": 11,
-            "endLine": 30,
-            "side": "head"
-          },
-          {
-            "file": "skills/deck/references/task-method.md",
-            "line": 3,
-            "endLine": 22,
-            "side": "head"
-          }
-        ],
-        "hunks": [
-          "H6",
-          "H20",
-          "H21",
-          "H22",
-          "H28",
-          "H29",
-          "H30",
-          "H31",
-          "H46",
-          "H60",
-          "H61",
+          "H17",
           "H62",
-          "H63",
-          "H64",
-          "H67",
-          "H68",
-          "H69",
-          "H70",
-          "H71",
-          "H72"
+          "H63"
         ],
         "kind": "feature",
         "owners": [
           {
             "login": "akash13s",
-            "reason": "9 commits to 6 of these files in 6 months"
+            "reason": "6 commits to catalog.json in 6 months"
           },
           {
-            "login": "arisrayelyan",
-            "reason": "10 commits to 4 of these files in 6 months"
+            "login": "hayksaryan",
+            "reason": "5 commits to catalog.json in 6 months"
           }
         ]
       }
     ],
     "skim": [
       {
-        "title": "Ads platform copy guide",
-        "why": "Adds a guide to Google, LinkedIn and Meta field lengths, a pointer to it from the ads method, and the ads 1.3.0 catalog entry.",
+        "title": "Ads gets a per-platform copy guide",
+        "why": "New reference on visible field lengths and reader differences for Google Search, LinkedIn and Meta, linked from the ads method. Version 1.3.0.",
         "hunks": [
           "H11",
           "H12",
-          "H54",
-          "H55"
+          "H60",
+          "H61"
         ],
         "kind": "docs",
         "owners": [
@@ -1351,12 +1252,12 @@
         ]
       },
       {
-        "title": "Win-loss report routes text questions to insights",
-        "why": "Its description pointed text-only questions back at itself; it now points at insights. Version 1.3.2.",
+        "title": "Win-loss report routes buyer questions to insights",
+        "why": "The description used to send text-only questions back to the skill itself. It now points at insights. Version 1.3.2.",
         "hunks": [
-          "H43",
-          "H44",
-          "H82"
+          "H48",
+          "H49",
+          "H88"
         ],
         "kind": "fix",
         "owners": [
@@ -1372,7 +1273,7 @@
       },
       {
         "title": "Plugin version bump",
-        "why": "Plugin and marketplace go from 2.21.0 to 2.22.1 together; the validator checks they match.",
+        "why": "Plugin and marketplace versions both go to 2.22.1, kept equal as the validator requires.",
         "hunks": [
           "H1",
           "H2"
@@ -1386,6 +1287,29 @@
           {
             "login": "arisrayelyan",
             "reason": "4 commits to .claude-plugin in 6 months"
+          }
+        ]
+      },
+      {
+        "title": "README and examples describe the new behavior",
+        "why": "Skill table rows and usage examples for lookalike prospecting, cohort abm, document and magazine.",
+        "hunks": [
+          "H3",
+          "H4",
+          "H5",
+          "H6",
+          "H7",
+          "H8"
+        ],
+        "kind": "docs",
+        "owners": [
+          {
+            "login": "arisrayelyan",
+            "reason": "6 commits to README.md in 6 months"
+          },
+          {
+            "login": "akash13s",
+            "reason": "4 commits to README.md in 6 months"
           }
         ]
       }
