@@ -1,17 +1,28 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Account plan",
-  "description": "The account the plan is for, the people it maps and the plays it recommends, so a later step can act on them without reading the document. Every required field is stated: the value from the work, copied exactly, or null when there is none. Nothing is made up.",
+  "description": "The account the plan is for, the people it maps and the plays it recommends, so a later step can act on them without reading the document. Every required field is stated: the value from the work, copied exactly, or null when there is none. Nothing is made up. A run about one account returns `scope: \"account\"` with its people and plays. A run about a segment, a cohort or a list of accounts returns `scope: \"cohort\"` with the cohort's members and tiers and its plays by tier, and no people: the people come from the plan for each account.",
   "type": "object",
   "required": [
-    "accountName",
-    "accountDomain",
+    "scope",
     "stakeholders",
     "plays"
   ],
   "properties": {
+    "scope": {
+      "type": "string",
+      "enum": [
+        "account",
+        "cohort"
+      ],
+      "description": "What the plan is about: one account, or a cohort of accounts."
+    },
     "accountName": {
-      "type": "string"
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The account's name. Null for a cohort plan."
     },
     "accountDomain": {
       "type": [
@@ -29,7 +40,7 @@
     },
     "stakeholders": {
       "type": "array",
-      "description": "One row per person the plan maps. Empty when none could be found.",
+      "description": "One row per person the plan maps. Empty when none could be found. Empty for a cohort plan.",
       "items": {
         "type": "object",
         "required": [
@@ -137,6 +148,72 @@
               "null"
             ],
             "description": "When to run it, in words."
+          },
+          "tier": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "For a cohort plan, the tier the play is for. Null for an account plan."
+          }
+        }
+      }
+    },
+    "cohort": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The cohort a cohort plan is about. Null for an account plan.",
+      "required": [
+        "name",
+        "members"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "What the cohort is, in a few words."
+        },
+        "sharedAngle": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The one angle the cohort shares, in a sentence."
+        },
+        "members": {
+          "type": "array",
+          "description": "The accounts in the cohort, one row each.",
+          "items": {
+            "type": "object",
+            "required": [
+              "name"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "domain": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "tier": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "The tier the plan puts the account in."
+              },
+              "reason": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Why it belongs in the cohort, in a sentence."
+              }
+            }
           }
         }
       }

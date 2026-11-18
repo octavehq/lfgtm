@@ -25,7 +25,7 @@ A competitor read is strongest where it is specific to how buyers decide. Build 
 1. **A read and a play for each part.** Every section pairs what the evidence shows about the competitor there with the move to make, tied to that evidence. A section with a read and no play is unfinished; generic advice is not a play.
 2. **What the decision turns on.** The dimensions buyers themselves compare the two on, which side each favored, and which the buyer treated as decisive, in the buyer's words. Search this deal's calls and the calls of deals against the same competitor (`search_call_transcripts`, `get_call_transcript`). This is the centre of the card.
 3. **Quotes with their outcome.** Each quote carries who said it, the company, the date, and whether that deal was won, lost or is open. Keep what buyers said apart from what our own reps said. Give what buyers in lost deals said the most weight: it is what the seller has not heard yet.
-4. **What happens to deals when they are in it.** Win rate with the competitor present against the baseline, and the change in cycle length and deal size (`get_entity` with `includeUsage`, `get_competitive_insights`), then the same for this deal's own segment and buyer where the tools give it. Every figure names its period and the number of deals behind it; a figure from a handful of deals says so.
+4. **What happens to deals when they are in it.** Win rate with the competitor present against the baseline, and the change in cycle length and deal size (`get_entity_outcome_stats`, as below, with `get_competitive_insights` for the period's trend), then the same for this deal's own segment and buyer where the tools give it. Every figure names its period and the number of deals behind it; a figure from a handful of deals says so.
 5. **How our claims landed.** What our reps claimed against this competitor, how buyers reacted, and what they pushed back with. This replaces a generic objection list.
 6. **Their commercial facts as buyers stated them.** Pricing, contract terms, what makes a buyer switch to or from them, what keeps a buyer with them, and what else the buyer is considering. Quote figures as the buyer gave them and say who said so.
 7. **What changed recently.** Whether they are coming up more or less, the newest intel with how to counter it (`get_intel`), and any release that closes a gap buyers had named. A beta is called a beta.
@@ -33,6 +33,8 @@ A competitor read is strongest where it is specific to how buyers decide. Build 
 9. **Who they are, in one strip.** Size, funding, founding and headquarters, with estimates marked as estimates. One strip, never a section.
 
 A card for one deal ends on what to do in this deal next: the one thing to say, the one thing to show, and the one question to ask, each traced to something above it.
+
+[single-competitor-sections.md](single-competitor-sections.md) names the page's sections and their markup (the hero, the deal situation, a section per competitor, our pitch). Fill those sections from the nine parts above. Where the two differ, the nine parts decide what leads and what is left out: a strengths and weaknesses grid, a watch-out or a trap question appears only when it carries one of the nine parts, with its evidence, and never to fill the template.
 
 Load [gtm-context.md](../../shared/gtm-context.md). Resolve offering, Motion, buyer cells, and
 competitive Custom Playbook. Read full selected offering, competitor,

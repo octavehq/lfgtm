@@ -2,7 +2,7 @@
 
 The default way in. When the request gives no explicit ICP, criteria or seed, start from the deals the workspace has won: take the best few as seeds, find companies and buyers that look like them, then qualify every candidate with the workspace's own qualification. The rules in [the task method](task-method.md) on suppressions, qualification, identity and shortfall apply unchanged.
 
-A similar company is a candidate, not a qualified account. Likeness finds the pool; `qualify_company` and `qualify_person` decide who is in the list.
+A similar company is a candidate, not a qualified account. Likeness finds the pool; the workspace's own qualification decides who is in the list.
 
 ## 1. Read recent won deals
 
@@ -34,7 +34,7 @@ Use the buyers' titles in a second way: they say which roles to look for at each
 
 ## 5. Qualify with the workspace's own model
 
-Run `qualify_company({ companyDomain })` on every company candidate and `qualify_person({ person: { ... } })` on every person candidate, within the agreed budget. Use the results as the task method says: show the composite with its sub-scores, keep unknowns as unknown, and let a true hard disqualifier outrank a high score. A candidate that is very similar to a seed and fails qualification is out, with its reason kept.
+Qualify every company candidate and every person candidate, within the agreed budget, the way [the task method](task-method.md) says: the workspace's saved qualification agent when there is one to use (`run_qualify_company_agent`, `run_qualify_person_agent`), and `qualify_company({ companyDomain })` or `qualify_person({ person: { ... } })` when there is none. Use the results as the task method says: show the composite with its sub-scores, keep unknowns as unknown, and let a true hard disqualifier outrank a high score. A candidate that is very similar to a seed and fails qualification is out, with its reason kept.
 
 Do not add a similarity score of your own beside the configured one. The row says which seed the candidate resembles and on which traits the tool matched; fit is the qualification result.
 
