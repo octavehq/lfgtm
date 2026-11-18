@@ -22,7 +22,8 @@
           "countryCode",
           "qualification",
           "fitReason",
-          "score"
+          "score",
+          "matchedTraits"
         ],
         "properties": {
           "name": {
@@ -103,13 +104,6 @@
             ],
             "description": "One sentence on why the account fits or does not."
           },
-          "resembles": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "For a lookalike row, the seed it resembles (the won deal's account or buyer). Null on any other route. Internal: never used in outreach copy."
-          },
           "matchedTraits": {
             "type": [
               "array",
@@ -118,7 +112,7 @@
             "items": {
               "type": "string"
             },
-            "description": "For a lookalike row, the traits the row shares with its seed, as the tool reported them. Null on any other route."
+            "description": "For a lookalike row, the traits the row shares with the won deal it resembles, as the tool reported them. Null on any other route. The won customer is not named here: it is named only in the document's internal summary."
           }
         }
       }
@@ -138,7 +132,10 @@
           "seniority",
           "jobFunction",
           "email",
-          "roleReason"
+          "roleReason",
+          "matchedTraits",
+          "qualification",
+          "score"
         ],
         "properties": {
           "name": {
@@ -258,13 +255,6 @@
             ],
             "description": "One sentence on why this person is the one to reach, from the role evidence."
           },
-          "resembles": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "For a lookalike row, the seed it resembles (the won deal's account or buyer). Null on any other route. Internal: never used in outreach copy."
-          },
           "matchedTraits": {
             "type": [
               "array",
@@ -273,7 +263,14 @@
             "items": {
               "type": "string"
             },
-            "description": "For a lookalike row, the traits the row shares with its seed, as the tool reported them. Null on any other route."
+            "description": "For a lookalike row, the traits the row shares with the won deal it resembles, as the tool reported them. Null on any other route. The won customer is not named here: it is named only in the document's internal summary."
+          },
+          "score": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "The person qualification's overall score, when it ran and returned one."
           }
         }
       }
