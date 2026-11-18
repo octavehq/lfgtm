@@ -21,7 +21,8 @@
           "city",
           "countryCode",
           "qualification",
-          "fitReason"
+          "fitReason",
+          "score"
         ],
         "properties": {
           "name": {
@@ -101,6 +102,23 @@
               "null"
             ],
             "description": "One sentence on why the account fits or does not."
+          },
+          "resembles": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "For a lookalike row, the seed it resembles (the won deal's account or buyer). Null on any other route. Internal: never used in outreach copy."
+          },
+          "matchedTraits": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "For a lookalike row, the traits the row shares with its seed, as the tool reported them. Null on any other route."
           }
         }
       }
@@ -239,6 +257,23 @@
               "null"
             ],
             "description": "One sentence on why this person is the one to reach, from the role evidence."
+          },
+          "resembles": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "For a lookalike row, the seed it resembles (the won deal's account or buyer). Null on any other route. Internal: never used in outreach copy."
+          },
+          "matchedTraits": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "For a lookalike row, the traits the row shares with its seed, as the tool reported them. Null on any other route."
           }
         }
       }

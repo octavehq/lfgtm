@@ -36,7 +36,7 @@ Use the buyers' titles in a second way: they say which roles to look for at each
 
 Qualify every company candidate and every person candidate, within the agreed budget, the way [the task method](task-method.md) says: the workspace's saved qualification agent when there is one to use (`run_qualify_company_agent`, `run_qualify_person_agent`), and `qualify_company({ companyDomain })` or `qualify_person({ person: { ... } })` when there is none. Use the results as the task method says: show the composite with its sub-scores, keep unknowns as unknown, and let a true hard disqualifier outrank a high score. A candidate that is very similar to a seed and fails qualification is out, with its reason kept.
 
-Do not add a similarity score of your own beside the configured one. The row says which seed the candidate resembles and on which traits the tool matched; fit is the qualification result.
+Do not add a similarity score of your own beside the configured one. When the run returns data beside its document, each lookalike row carries its seed in `resembles` and the shared traits in `matchedTraits`. The row says which seed the candidate resembles and on which traits the tool matched; fit is the qualification result.
 
 ## 6. What the list may claim
 
