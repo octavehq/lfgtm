@@ -372,7 +372,7 @@
         "messaging",
         "deal-execution"
       ],
-      "rank": 60,
+      "rank": 50,
       "outputs": [
         "html-document",
         "one-pager"
@@ -1978,7 +1978,7 @@
         "outbound",
         "deal-execution"
       ],
-      "rank": 50,
+      "rank": 60,
       "outputs": [
         "html-document",
         "one-pager"
