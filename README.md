@@ -93,8 +93,8 @@ See [**docs/org-instructions/**](docs/org-instructions/) for short and long reco
 | Skill | Description |
 |-------|-------------|
 | `/octave:research` | Context-aware prep for calls, demos, outreach, deal reviews |
-| `/octave:prospector` | Find, enrich, and qualify ICP-fit prospects using your library |
-| `/octave:abm` | Account-based planning with stakeholder mapping and outreach |
+| `/octave:prospector` | Find lookalikes of your won deals, or ICP-fit prospects from your library, then enrich and qualify them |
+| `/octave:abm` | Account-based planning for one company (stakeholders and outreach) or a segment or cohort (angle, tiers, plays) |
 
 ### Sales Enablement Skills
 
@@ -124,6 +124,8 @@ See [**docs/org-instructions/**](docs/org-instructions/) for short and long reco
 | `/octave:meeting-prep` | Meeting prep that leads with lookalike deals, charts what each attendee will raise, and ends on the next best action (HTML or Markdown) |
 | `/octave:deck` | Build Octave-powered HTML slide decks with brand styling and export |
 | `/octave:one-pager` | Personalized one-pager / leave-behind as self-contained HTML |
+| `/octave:document` | Turn a subject or supplied content into a long-form document, with a narrative pattern picked by purpose |
+| `/octave:magazine` | Turn a subject or supplied content into an editorial magazine to swipe through |
 | `/octave:proposal` | Formal business case and proposal as customer-facing HTML |
 | `/octave:microsite` | Personalized ABM microsite / landing page as HTML |
 | `/octave:champion-deal-room` | Internal deal room a rep hands a champion to run the buying-committee sell — business case, stakeholder map, objection handling, path to yes |
@@ -217,11 +219,14 @@ Account-based planning:
 - Per-stakeholder messaging strategy
 - Engagement sequence recommendations
 - Initial outreach generation
+- For a segment, a cohort or a list of accounts, a cohort plan with who is in it, the one angle they share, tiers, and the plays per tier
 
 ```
 /octave:abm acme.com
 /octave:abm acme.com --stakeholders 5 --motion "Enterprise Net New"
 /octave:abm "Acme Corp" --depth quick
+/octave:abm --segment "Healthcare"
+/octave:abm --accounts accounts.csv
 ```
 
 ### /octave:pipeline
@@ -274,11 +279,13 @@ Comprehensive library audit to identify:
 
 ### /octave:prospector
 Find and qualify companies and people matching your ICP:
-- Searches using your library's segments and personas as criteria
+- Starts from lookalikes of your recent won deals by default (similar companies and similar buyers)
+- Or searches using your library's segments and personas as criteria
 - Enriches, qualifies, and scores each prospect
 - Provides filter suggestions for Apollo, Clay, or LinkedIn Sales Nav
 
 ```
+/octave:prospector
 /octave:prospector --motion "Enterprise Sales"
 /octave:prospector --similar-to stripe.com
 /octave:prospector --company acme.com

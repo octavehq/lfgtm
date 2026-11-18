@@ -426,6 +426,10 @@ TRAP QUESTIONS
 
 # Use specific Motion
 /octave:abm acme.com --motion "Enterprise Net New"
+
+# Plan a segment or a list of accounts as a cohort
+/octave:abm --segment "Healthcare"
+/octave:abm --accounts accounts.csv
 ```
 
 Example output:
@@ -710,6 +714,9 @@ The skill also handles cases where the issue isn't a missing question but a miss
 ### Find ICP-Fit Companies
 
 ```
+# Lookalikes of your recent won deals (the default)
+/octave:prospector
+
 # Using a Motion's ICP
 /octave:prospector --motion "Enterprise Net New"
 

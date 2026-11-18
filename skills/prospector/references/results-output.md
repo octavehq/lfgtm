@@ -1,7 +1,11 @@
 # Prospect results
 
-Company-only rows: returned account identity/domain; offering/motion; fit reasoning; actual qualification status and available subscores; hard disqualifiers; unknowns; source/date; next validation/action.
+Company-only rows: returned account identity/domain; offering/motion; fit reasoning; actual qualification status and available subscores; hard disqualifiers; unknowns; source/date; next validation/action. A lookalike row also names the seed it resembles and the traits matched; the seed's name stays in the internal list and out of outreach copy.
 
 Company-plus-contact adds discovered/enriched person ID/profile, name/title, identity source, and role evidence. Verified identity is distinct from a confirmed buying role. Discover these people before output.
 
 Return unique eligible requested N or a shortfall with searched/returned/qualified counts and applied/unresolved exclusions. Create an actual UTF-8 CSV using a standard CSV writer and round-trip parse it. If files are unavailable, label the result CSV text; do not claim a file exists.
+
+## Data it returns
+
+When the run is asked for data beside its document (the skill's `output.schema.json`), return the same rows the results show, in the same order, as two flat lists. `accounts` has one row per account: name, domain, logo, industry, employee count, founded year, city, country code, the qualification's actual result and score, and one sentence of fit reasoning. `contacts` has one row per person discovered, pointing at their account by `companyDomain`: name, title, seniority, function, headline, profile link, photo, location, an email only when a tool returned one, the person qualification's result and score, and one sentence on why this person. On the lookalike route, every row also carries `matchedTraits`, the traits it shares with the won deal it resembles as the tool reported them; on any other route it is null. The won customer's name is never in a row. Copy each value exactly as a tool returned it, including the logo, the photo, the headline, the seniority and the function, which are easy to drop; write null for what no tool returned, never leave the field out. City is the city alone. Leave `contacts` empty for company-only results. State a shortfall in `shortfall` in plain words, with the number asked for in `requested`. If the host refuses the data as too large, drop the lowest-ranked rows, say how many in `shortfall`, and keep the document complete.

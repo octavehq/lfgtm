@@ -1,13 +1,15 @@
 ---
 name: prospector
-description: Find, enrich, and qualify prospects against your library's ICP criteria. Use when user says "find prospects", "who should I target", "find VPs at [company]", "build a list", "prospect for", or asks to find people matching ICP. Do NOT use for single-account deep research — use /octave:research instead.
+description: Find, enrich, and qualify prospects. By default it starts from lookalikes of recent won deals (similar companies and similar buyers), then qualifies them against your library's ICP; an explicit ICP, criteria or seed company also works. Use when user says "find prospects", "who should I target", "find more accounts like our customers", "lookalikes of our won deals", "companies like [company]", "find VPs at [company]", "build a list", "prospect for", or asks to find people matching ICP. Do NOT use for single-account deep research — use /octave:research instead.
 ---
 
-# /octave:prospector - ICP-Fit Prospecting
+# /octave:prospector - Lookalike and ICP-Fit Prospecting
 
 ## Run the task
 
 Read [the task method](references/task-method.md) before selecting context, claims, or output. It is the execution method for this skill. Supporting templates supply structure and styling; populate them from the task method and current evidence, not their illustrative figures or assertions.
+
+Choose the way in. With no explicit ICP, criteria or seed, start from [lookalikes of won deals](references/lookalikes.md): read recent won deals with `list_deals`, take the best few as seeds, call `find_similar_companies` for their accounts and `find_similar_people` for their buyers, then qualify every candidate with the workspace's own qualification (its saved qualification agent when there is one, `qualify_company` and `qualify_person` when there is none). A named seed company uses the same route with that company as the seed. An explicit motion, segment, persona or criteria uses the criteria route in the task method. A named company with a request for people finds contacts there.
 
 Resolve companies, people, or companies plus contacts. Company-only output has no invented contacts. Discover requested contacts before delivery. Use actual configured qualification, preserve unknowns and hard exclusions, and return N unique eligible results or an honest shortfall.
 
@@ -18,11 +20,15 @@ Resolve current tool schemas before execution; use returned IDs and pagination. 
 ## Usage
 
 ```
-/octave:prospector [options]
+/octave:prospector                                  # lookalikes of recent won deals
+/octave:prospector --similar-to <domain>            # lookalikes of one company
+/octave:prospector [--motion <name>] [--segment <name>] [--persona <name>]
+/octave:prospector --company <domain> [--persona <name>]
 ```
 
 ## References by task
 
+- [lookalikes of won deals](references/lookalikes.md), which also covers running on a schedule or when a deal is won
 - [results output](references/results-output.md)
 - [scale filters](references/scale-filters.md)
 

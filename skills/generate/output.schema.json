@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Generated content",
+  "description": "Each piece of content the run wrote, in the order the document shows them, so a later step can send, review or reuse a piece without reading the document. Every required field is stated: the value from the work, copied exactly, or null when there is none. Nothing is made up.",
+  "type": "object",
+  "required": [
+    "pieces"
+  ],
+  "properties": {
+    "pieces": {
+      "type": "array",
+      "description": "One row per piece written. A sequence is one row per step.",
+      "items": {
+        "type": "object",
+        "required": [
+          "channel",
+          "body",
+          "recipientName",
+          "companyDomain",
+          "subject"
+        ],
+        "properties": {
+          "channel": {
+            "type": "string",
+            "enum": [
+              "email",
+              "linkedin",
+              "call_prep",
+              "other"
+            ],
+            "description": "What the piece is for."
+          },
+          "step": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "description": "Its place in a sequence, starting at 1; null for a single piece."
+          },
+          "recipientName": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Who it is written to, when it is written to one person."
+          },
+          "recipientTitle": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "recipientEmail": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Only an address the request or a tool gave; never guessed."
+          },
+          "companyName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "companyDomain": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The recipient's company domain, matching an account row when the request came with a list."
+          },
+          "subject": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The subject line; null for a piece that has none."
+          },
+          "body": {
+            "type": "string",
+            "description": "The piece in full, as the document shows it."
+          },
+          "angle": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "One sentence on the angle taken and what it rests on."
+          }
+        }
+      }
+    }
+  }
+}

@@ -11,7 +11,7 @@ import yaml
 def validate(root):
     root=Path(root).resolve();errors=[]
     skills=list((root/'skills').glob('*/SKILL.md'))
-    if len(skills)!=30:errors.append(f'expected 30 skills, found {len(skills)}')
+    if len(skills)!=32:errors.append(f'expected 32 skills, found {len(skills)}')
     agents=list((root/'agents').rglob('*.md'))
     if len(agents)!=12:errors.append(f'expected 12 agent resources, found {len(agents)}')
     for path in agents:
@@ -57,6 +57,25 @@ def validate(root):
         for path in skills:
             name=path.parent.name
             if name not in cataloged:errors.append(f'skill missing from catalog.json: {name}')
+        # The offering fields (docs/catalog-fields.md): a typo in one ships unnoticed otherwise.
+        kinds={'job','output'}
+        pillars={'outbound','deal-execution','messaging','revenue-intelligence','octave-setup'}
+        outputs={'html-document','one-pager','slide-deck','magazine','microsite'}
+        for name,entry in cataloged.items():
+            if 'title' in entry and not (isinstance(entry['title'],str) and entry['title'].strip()):errors.append(f'catalog.json {name}: title must be a non-empty string')
+            if 'kind' in entry and entry['kind'] not in kinds:errors.append(f'catalog.json {name}: kind must be one of {sorted(kinds)}')
+            for field,allowed in (('pillars',pillars),('outputs',outputs)):
+                value=entry.get(field)
+                if value is None:continue
+                if not isinstance(value,list) or not value:errors.append(f'catalog.json {name}: {field} must be a non-empty list');continue
+                for item in value:
+                    if item not in allowed:errors.append(f'catalog.json {name}: unknown {field} id {item!r}')
+                if len(set(value))!=len(value):errors.append(f'catalog.json {name}: {field} repeats an id')
+            if 'rank' in entry and not (isinstance(entry['rank'],int) and not isinstance(entry['rank'],bool) and 1<=entry['rank']<=999):errors.append(f'catalog.json {name}: rank must be a whole number from 1 to 999')
+            about=entry.get('about')
+            if about is not None and not (isinstance(about,list) and about and all(isinstance(a,str) and re.fullmatch(r'[a-z][a-z-]*',a) for a in about)):errors.append(f'catalog.json {name}: about must be a non-empty list of lowercase words')
+            log=entry.get('changelog') or []
+            if log and log[0].get('version')!=entry.get('version'):errors.append(f'catalog.json {name}: the changelog must list the current version ({entry.get("version")}) first')
     return errors
 
 

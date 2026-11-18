@@ -1,0 +1,294 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Prospect results",
+  "description": "The accounts and contacts the run returned, as two flat lists in the same order as the results it wrote, so a later step can act on the rows without reading the document. Every required field is stated on every row: the value a tool returned, copied exactly, or null when no tool returned one. Nothing is made up.",
+  "type": "object",
+  "required": [
+    "accounts"
+  ],
+  "properties": {
+    "accounts": {
+      "type": "array",
+      "description": "One row per returned account. Empty when nothing qualified.",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "domain",
+          "logoUrl",
+          "industry",
+          "employeeCount",
+          "city",
+          "countryCode",
+          "qualification",
+          "fitReason",
+          "score",
+          "matchedTraits"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "domain": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The account's website domain. Contacts point at their account by this."
+          },
+          "logoUrl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The company's logo image, as a tool returned it."
+          },
+          "industry": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "employeeCount": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "founded": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "The year the company was founded."
+          },
+          "city": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The city alone, without state or country."
+          },
+          "countryCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Two-letter country code."
+          },
+          "qualification": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "qualified",
+              "not_qualified",
+              "unknown",
+              null
+            ],
+            "description": "The configured qualification's actual result. unknown when it was not run or could not decide."
+          },
+          "score": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "The qualification's overall score, when it returned one."
+          },
+          "fitReason": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "One sentence on why the account fits or does not."
+          },
+          "matchedTraits": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "For a lookalike row, the traits the row shares with the won deal it resembles, as the tool reported them. Null on any other route. The won customer is not named here: it is named only in the document's internal summary."
+          }
+        }
+      }
+    },
+    "contacts": {
+      "type": "array",
+      "description": "One row per person discovered, across every account. Empty or left out for company-only results.",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "title",
+          "companyDomain",
+          "profileUrl",
+          "photoUrl",
+          "headline",
+          "seniority",
+          "jobFunction",
+          "email",
+          "roleReason",
+          "matchedTraits",
+          "qualification",
+          "score"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Full name."
+          },
+          "firstName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "lastName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "seniority": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The current role's seniority, as a tool returned it."
+          },
+          "jobFunction": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The current role's function, as a tool returned it."
+          },
+          "headline": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The profile's headline, as a tool returned it; it may arrive already cut short."
+          },
+          "companyDomain": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The domain of the account this person belongs to, matching an account row."
+          },
+          "companyName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "profileUrl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The person's public profile link, as a tool returned it."
+          },
+          "photoUrl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The person's profile photo, as a tool returned it."
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Only an address a tool returned; never guessed."
+          },
+          "location": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "city": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The city alone, without state or country."
+          },
+          "countryCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Two-letter country code."
+          },
+          "qualification": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "qualified",
+              "not_qualified",
+              "unknown",
+              null
+            ],
+            "description": "The person qualification's actual result, when one was run."
+          },
+          "roleReason": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "One sentence on why this person is the one to reach, from the role evidence."
+          },
+          "matchedTraits": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "For a lookalike row, the traits the row shares with the won deal it resembles, as the tool reported them. Null on any other route. The won customer is not named here: it is named only in the document's internal summary."
+          },
+          "score": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "The person qualification's overall score, when it ran and returned one."
+          }
+        }
+      }
+    },
+    "requested": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "How many results were asked for, when a number was given."
+    },
+    "shortfall": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "When fewer rows are returned than asked for, or rows were left out to fit what the host accepts: why and how many, in one or two plain sentences. Null otherwise."
+    }
+  }
+}

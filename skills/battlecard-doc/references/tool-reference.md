@@ -18,7 +18,10 @@
 
 | What you need | Tool | When to use |
 |---------------|------|-------------|
-| Competitor full profile | `get_entity({ oId: "<competitor_oId>" })` | Always -- the core source |
+| Octave's own battlecard | `get_entity({ oId: "<competitor_oId>", includeBattlecard: true })` | First. The generated battlecard (executive brief, momentum, threat assessment, how to respond). Build on it |
+| Intel on the competitor | `list_intel` for the competitor, then `get_intel({ oId })` | First. Recent moves with dates and citations |
+| How deals against them went | `get_competitive_insights` for the period | First. How often they came up and how those deals ended |
+| Competitor full profile | `get_entity({ oId: "<competitor_oId>" })` | Always: the library's own record |
 | All competitors (context) | `list_entities({ entityType: "competitor" })` | Quick scan of landscape around this competitor |
 | Competitive positioning | `search_knowledge_base({ query: "<competitor> positioning", entityTypes: ["competitor"] })` | Messaging angles from competitor entities |
 | Custom Motion Playbooks (COMPETITIVE) | `list_motions()` then `list_motion_playbooks({ motionOId })` filtered by `narrativeType === "COMPETITIVE"` and matching competitor | Find competitive Custom Motion Playbooks layered onto each Motion |

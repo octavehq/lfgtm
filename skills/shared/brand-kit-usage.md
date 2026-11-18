@@ -13,7 +13,7 @@ The **target company's logo** (the prospect, account, or competitor) appears onl
 
 > **POC / demo runs are not a special case.** When Octave produces showcase assets inside a *prospect's* workspace to demonstrate the platform, `get_workspace_company` resolves to that prospect, so the same rule renders the demo in the prospect's brand automatically. "Workspace company" is always whoever's instance is running the skill.
 
-## 2. Brand kit lookup (cache first)
+## 2. Brand kit lookup (cache first, then the workspace)
 
 1. Resolve the selected brand to `~/.octave/brands/<workspaceOId>/<canonicalDomain>/current.json` using [brand_cache.py](../get-brand-components/scripts/brand_cache.py). Preserve the full hostname/TLD. Verify manifest identity. Reuse an inherited brand choice without another extraction or intake.
    - **Legacy fallback.** When nothing resolves at the workspace path, look for an older kit at `~/.octave/brands/<name>/` (a name-based folder holding `manifest.json` and `tokens.css` directly, with no `current.json`). Accept it only when its manifest's `canonicalDomain` or `domain` equals the canonical domain exactly; never match on the folder name alone. Use that folder as the kit directory everywhere below (tokens, guardrails, logo, `--kit-dir`), and tell the operator once that the kit predates workspace binding and a fresh capture would migrate it.
@@ -23,10 +23,13 @@ The **target company's logo** (the prospect, account, or competitor) appears onl
    - **respect the kit's visual rules:** read `brand-kit.md` → **Guardrails** (+ `manifest.rules`) and, if present, `corrections.md`; these constrain visual design, including heading case (follow the kit; sentence case when it says nothing, and never force headings or product names to uppercase). The producing skill owns copy, messaging, and sourced proof points; the brand kit supplies styling only. When a kit states copy preferences (two-sentence or two-line headlines, a tagline pattern, a set voice), the [editorial rules](editorial-rules.md) and [information principles](information-principles.md) win: headlines stay one sentence in one run of text and claims keep their records;
    - for doc-shaped output you can compose directly with the renderer at `../get-brand-components/scripts/render_kit.py` (hero / split / logos / pricing / cta / footer blocks, see the `get-brand-components` skill for the token contract);
    - **before delivering**, run the deterministic adherence lint on the rendered HTML: `python3 ../get-brand-components/scripts/check_adherence.py --file <out.html> --kit-dir <resolved-capture-path>` — it flags off-palette colors, off-kit fonts, and hotlinked assets in seconds. Fix or justify every finding. (Older kits may lack guardrails or `corrections.md` — skip what's absent.)
-3. **If no kit exists →** offer to build one first: *"No brand kit for <Company> yet, want me to capture it (~1 min) so this is on-brand?"* → run `/octave:get-brand-components <domain>`, then proceed.
-4. **If the user declines →** generate with the default style preset (see [style-presets.md](style-presets.md)).
+3. **If the cache has no kit → check the workspace before anything else.** A kit a teammate captured and published lives in the workspace's assets, not on this machine, so an empty cache does not mean there is no kit. Call `brand_kit_get_default`:
+   - **It returns a kit →** use it by default, with no question, exactly as in step 2. Download its files once with the [asset-manager download](../asset-manager/references/operations.md) (`download-artifact.sh --uuid <uuid> --out <run folder>`; they land in `<run folder>/<identifier>/`), check that the folder holds `manifest.json` and `tokens.css` and that the manifest's `canonicalDomain` or `domain` is the workspace company's, and use that folder as the kit directory everywhere in step 2 (tokens, guardrails, logo, `--kit-dir`). Tell the operator in one line that the workspace's kit is in use. Do not promote it into the cache as a new capture: `/octave:get-brand-components` owns the cache.
+   - **It returns `{ brandKit: null }`, the manifest is for another company, or the host has no Octave asset tools →** go to step 4.
+4. **If no kit exists anywhere →** offer to build one first: *"No brand kit for <Company> yet, want me to capture it (~1 min) so this is on-brand?"* → run `/octave:get-brand-components <domain>`, then proceed.
+5. **If the user declines →** generate with the default style preset (see [style-presets.md](style-presets.md)).
 
-> An explicit style/brand override wins; otherwise reuse the selected brand kit. See the `get-brand-components` skill for the kit format, token contract, and renderer.
+> An explicit style/brand override wins; otherwise reuse the selected brand kit. Never ask whether to use a kit that exists, in the cache or in the workspace: asking is only for building one. See the `get-brand-components` skill for the kit format, token contract, and renderer.
 
 ### Logo integrity: verify the pixels before you ship
 

@@ -22,6 +22,15 @@ The account plan is a tight, account-level **plan** organized as six jobs (fit &
 - [ ] **Section 5 personas are selected by relevance to THIS account**, from the library's actual personas, not a standing eng/CISO/GRC default. They should visibly differ when the account/segment differs (e.g. Privacy/DPO for regulated health/finance, Procurement for enterprise/late-stage, VP of IT for lean mid-market). *(2026-07-09, account plan for an insurance prospect: positioning defaulted to the same eng/CISO/GRC triad as the 2026-07-08 run even though a finance-specific Privacy/DPO persona existed and the plan flagged the privacy role as an open gap.)*
 - [ ] **Section 6 is quick.** Entry point + ≤6 sequenced steps + 1-2 real sample emails. Not a 37-step project plan. Sample emails are real and specific, not lorem.
 
+## History, signals and outreach
+
+- [ ] **History comes from two-way contact.** Contact counts and associations are not engagement; a failed CRM read is reported as failed, never as no history.
+- [ ] **Signals are about this company.** A namesake, parent or subsidiary is discarded; the company's own marketing is not an internal initiative; every hit has a date from its source and a link.
+- [ ] **No trigger checklist.** Only triggers that hit are shown, plus at most three to validate; no stored CRM value (a stage name, a reason code) is printed. *(2026-11-18, single-account run)*
+- [ ] **The why-now is fresh.** A dated signal no more than about four months old, never a funding round alone; otherwise the plan says it is proactive.
+- [ ] **Outreach reads as written for one person.** No CRM bookkeeping, no exact job title, no calendar dates, one closing question answerable with yes, no or one of two options; no two emails share an opener, a lead-in or a closing question.
+- [ ] **Steps can be acted on alone.** Each names a person on the committee, a channel, and what to send or say.
+
 ## Tightness & language
 
 - [ ] **Fixed card shapes, capped.** Stat strip (4), committee (primary-view default five people, 1-2 per persona), positioning (personas relevant to the requested scope), risk grid (≤4 pairs). Explicit scope overrides default display sizes.

@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Deal strategy",
+  "description": "The deal the strategy is for, what is wrong, who matters and what to do next, so a later step can act on it without reading the document. Every required field is stated: the value from the work, copied exactly, or null when there is none. Nothing is made up.",
+  "type": "object",
+  "required": [
+    "accountName",
+    "mode",
+    "diagnosis",
+    "nextSteps"
+  ],
+  "properties": {
+    "accountName": {
+      "type": "string"
+    },
+    "accountDomain": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "dealName": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The deal's name as the CRM has it."
+    },
+    "stage": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The deal's stage as the CRM has it."
+    },
+    "mode": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "stalled",
+        "multi-thread",
+        "competitive",
+        "executive",
+        "close",
+        "expand",
+        null
+      ],
+      "description": "Which strategy was run."
+    },
+    "diagnosis": {
+      "type": "string",
+      "description": "What is going on in the deal, in two or three sentences."
+    },
+    "risks": {
+      "type": "array",
+      "description": "One row per risk named, most serious first.",
+      "items": {
+        "type": "object",
+        "required": [
+          "risk",
+          "evidence"
+        ],
+        "properties": {
+          "risk": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "What the risk rests on: a call, an email, a CRM field."
+          }
+        }
+      }
+    },
+    "stakeholders": {
+      "type": "array",
+      "description": "One row per person the strategy names.",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "title",
+          "stance"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "stance": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "supporter",
+              "neutral",
+              "sceptic",
+              "blocker",
+              "unknown",
+              null
+            ]
+          },
+          "move": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "What to do about this person, in one sentence."
+          }
+        }
+      }
+    },
+    "nextSteps": {
+      "type": "array",
+      "description": "One row per recommended step, in order.",
+      "items": {
+        "type": "object",
+        "required": [
+          "action",
+          "owner",
+          "by"
+        ],
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "owner": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Who should do it: a named person or a role."
+          },
+          "by": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "When, in words or as a date."
+          },
+          "why": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

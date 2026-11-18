@@ -158,6 +158,7 @@ main{padding:40px 48px 12px;}
 <body>
 <nav class="side-nav" aria-label="Section navigation">
   <a href="#fit" class="active">Fit and timing</a>
+  <a href="#history">What happened before</a>
   <a href="#drivers">What is driving them</a>
   <a href="#committee">Buying committee</a>
   <a href="#positioning">Positioning</a>
@@ -170,14 +171,16 @@ main{padding:40px 48px 12px;}
   <main>
     <!-- 2. Fit & timing: .k label + conclusion h2 + .lead-verdict + .deal-intel-grid (4 cards) + .grid-2 (Why it fits / Watch-outs) -->
     <section class="section" id="fit">...</section>
-    <!-- 3. Drivers: .driver cards, each .pain + .tag(known|likely|explore) + .body -->
+    <!-- 2b. History: conclusion h2 + a short list of history lines + .talk-track quote cards (speaker, title) + the objection and the answer; one line when there is none -->
+    <section class="section" id="history">...</section>
+    <!-- 3. Drivers: dated signal rows with a source link, then .driver cards, each .pain + .tag(known|likely|explore) + .body -->
     <section class="section" id="drivers">...</section>
     <!-- 4. Committee: .people grid of .person cards (avatar, nm, tt, role-badge, disp, li link, .unconfirmed as needed) + .gap-line -->
     <section class="section" id="committee">...</section>
     <!-- 5. Positioning: .persona-tabs (role=tablist) + .persona-panel[data-tab-label] each with .pfield blocks (concerns/status quo/.lead-with/proof-fit).
          The <key>/<Persona Name> below are PLACEHOLDERS — choose the personas relevant to the requested scope per account (see account-plan-template.md §5); do NOT default to a fixed eng/ciso/grc set. -->
     <section class="section" id="positioning">...</section>
-    <!-- 6. Engagement: .entry-card + .talk-track sample emails + .seq numbered steps + seed/CRM note -->
+    <!-- 6. Engagement: .entry-card + one .talk-track card per person (framing, opening move, email, three-beat talk track) + approach line + .seq numbered steps (person, channel, action) + seed/CRM note -->
     <section class="section" id="engagement">...</section>
     <!-- 7. Risks: .risk-grid of .risk-pair (.risk-item + .mit-item) -->
     <section class="section" id="risks">...</section>

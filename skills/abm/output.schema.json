@@ -1,0 +1,278 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Account plan",
+  "description": "The account the plan is for, the people it maps and the plays it recommends, so a later step can act on them without reading the document. Every required field is stated: the value from the work, copied exactly, or null when there is none. Nothing is made up. A run about one account returns `scope: \"account\"` with its people and plays. A run about a segment, a cohort or a list of accounts returns `scope: \"cohort\"` with the cohort's members and tiers and its plays by tier, and no people: the people come from the plan for each account.",
+  "type": "object",
+  "required": [
+    "scope",
+    "whyNow",
+    "signals",
+    "stakeholders",
+    "plays"
+  ],
+  "properties": {
+    "scope": {
+      "type": "string",
+      "enum": [
+        "account",
+        "cohort"
+      ],
+      "description": "What the plan is about: one account, or a cohort of accounts."
+    },
+    "accountName": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The account's name. Null for a cohort plan."
+    },
+    "accountDomain": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The account's website domain."
+    },
+    "summary": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The plan's point in two or three sentences."
+    },
+    "whyNow": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "One sentence on the reason to reach out now, naming the strongest signal that qualifies. Null when no signal qualifies or for a cohort plan."
+    },
+    "signals": {
+      "type": "array",
+      "description": "The buying signals found for the account, freshest first. Empty for a cohort plan.",
+      "items": {
+        "type": "object",
+        "required": [
+          "label",
+          "date",
+          "sourceUrl"
+        ],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "What happened, in one or two sentences a rep could repeat."
+          },
+          "date": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The date the source shows, YYYY-MM-DD or YYYY-MM. Null when the source carries none."
+          },
+          "sourceUrl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The page the evidence is on."
+          }
+        }
+      }
+    },
+    "stakeholders": {
+      "type": "array",
+      "description": "One row per person the plan maps. Empty when none could be found. Empty for a cohort plan.",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "title",
+          "role",
+          "profileUrl",
+          "angle",
+          "source"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "persona": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The library persona this person matches, by name."
+          },
+          "role": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "champion",
+              "economic_buyer",
+              "technical_buyer",
+              "user",
+              "influencer",
+              "blocker",
+              "unknown",
+              null
+            ],
+            "description": "Their part in a decision, from the evidence; unknown when it does not say."
+          },
+          "profileUrl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The person's public profile link, as a tool returned it."
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Only an address a tool returned; never guessed."
+          },
+          "angle": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "One sentence on what to say to this person and why."
+          },
+          "source": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "call",
+              "email",
+              "crm",
+              "search",
+              null
+            ],
+            "description": "How the team knows the person: they spoke on a call, were in an email thread, are a CRM contact, or were found by search."
+          }
+        }
+      }
+    },
+    "plays": {
+      "type": "array",
+      "description": "One row per recommended play, in the order to run them.",
+      "items": {
+        "type": "object",
+        "required": [
+          "title",
+          "audience",
+          "message"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "audience": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Who the play is aimed at: a person, a persona or a team."
+          },
+          "channel": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "message": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "What the play says, in one or two sentences."
+          },
+          "timing": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "When to run it, in words."
+          },
+          "tier": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "For a cohort plan, the tier the play is for. Null for an account plan."
+          }
+        }
+      }
+    },
+    "cohort": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The cohort a cohort plan is about. Null for an account plan.",
+      "required": [
+        "name",
+        "members"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "What the cohort is, in a few words."
+        },
+        "sharedAngle": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The one angle the cohort shares, in a sentence."
+        },
+        "members": {
+          "type": "array",
+          "description": "The accounts in the cohort, one row each.",
+          "items": {
+            "type": "object",
+            "required": [
+              "name"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "domain": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "tier": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "The tier the plan puts the account in."
+              },
+              "reason": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Why it belongs in the cohort, in a sentence."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
