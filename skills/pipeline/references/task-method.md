@@ -17,3 +17,7 @@ Read [mode-close-output.md](mode-close-output.md) for the applicable mode.
 
 
 Read [mode-expand-output.md](mode-expand-output.md) for the applicable mode.
+
+## Data beside the document
+
+When the run is asked for data beside its document (the skill's `output.schema.json`), return the account and deal, which mode was run, the diagnosis in two or three sentences, each risk with what it rests on, each named person with their stance and the move for them, and the next steps in order with an owner and a time. Copy the deal's name and stage as the CRM has them. Write null for what is not known and `unknown` for a stance the evidence does not show.

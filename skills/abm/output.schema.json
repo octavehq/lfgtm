@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Account plan",
+  "description": "The account the plan is for, the people it maps and the plays it recommends, so a later step can act on them without reading the document. Every required field is stated: the value from the work, copied exactly, or null when there is none. Nothing is made up.",
+  "type": "object",
+  "required": [
+    "accountName",
+    "accountDomain",
+    "stakeholders",
+    "plays"
+  ],
+  "properties": {
+    "accountName": {
+      "type": "string"
+    },
+    "accountDomain": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The account's website domain."
+    },
+    "summary": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The plan's point in two or three sentences."
+    },
+    "stakeholders": {
+      "type": "array",
+      "description": "One row per person the plan maps. Empty when none could be found.",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "title",
+          "role",
+          "profileUrl",
+          "angle"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "persona": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The library persona this person matches, by name."
+          },
+          "role": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "champion",
+              "economic_buyer",
+              "technical_buyer",
+              "user",
+              "influencer",
+              "blocker",
+              "unknown",
+              null
+            ],
+            "description": "Their part in a decision, from the evidence; unknown when it does not say."
+          },
+          "profileUrl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The person's public profile link, as a tool returned it."
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Only an address a tool returned; never guessed."
+          },
+          "angle": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "One sentence on what to say to this person and why."
+          }
+        }
+      }
+    },
+    "plays": {
+      "type": "array",
+      "description": "One row per recommended play, in the order to run them.",
+      "items": {
+        "type": "object",
+        "required": [
+          "title",
+          "audience",
+          "message"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "audience": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Who the play is aimed at: a person, a persona or a team."
+          },
+          "channel": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "message": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "What the play says, in one or two sentences."
+          },
+          "timing": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "When to run it, in words."
+          }
+        }
+      }
+    }
+  }
+}

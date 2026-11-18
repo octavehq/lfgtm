@@ -24,7 +24,7 @@
         {
           "version": "1.4.0",
           "date": "2026-11-17",
-          "notes": "Plans a segment, a cohort or a list of accounts as well as one company. A cohort plan says who is in it and why they belong together, the one angle they share (from won deals that look like them and what was said on those calls), the tiers, and the plays per tier. Per-account plans come from running the skill for each account. The single-company plan is unchanged.",
+          "notes": "Plans a segment, a cohort or a list of accounts as well as one company. A cohort plan says who is in it and why they belong together, the one angle they share (from won deals that look like them and what was said on those calls), the tiers, and the plays per tier. Per-account plans come from running the skill for each account. The single-company plan is unchanged. Returns the account, the people it maps and the plays it recommends as data beside the document, so a later step can act on them.",
           "review": false
         },
         {
@@ -510,7 +510,7 @@
       ]
     },
     "champion-deal-room": {
-      "version": "1.4.0",
+      "version": "1.5.0",
       "title": "Arm a champion",
       "kind": "job",
       "about": [
@@ -528,6 +528,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.5.0",
+          "date": "2026-11-14",
+          "notes": "Returns the people to engage, the objections answered and the path to yes as data beside the document, so a later step can act on them.",
+          "review": false
+        },
         {
           "version": "1.4.0",
           "date": "2026-11-05",
@@ -830,7 +836,7 @@
       ]
     },
     "generate": {
-      "version": "1.3.1",
+      "version": "1.4.0",
       "title": "Draft a message",
       "kind": "job",
       "about": [
@@ -850,6 +856,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.4.0",
+          "date": "2026-11-14",
+          "notes": "Returns each piece it wrote as data beside the document (channel, recipient, subject, body), so a later step can review or reuse a piece.",
+          "review": false
+        },
         {
           "version": "1.3.1",
           "date": "2026-11-05",
@@ -1459,7 +1471,7 @@
       ]
     },
     "pipeline": {
-      "version": "1.3.1",
+      "version": "1.4.0",
       "title": "Plan the next move on a deal",
       "kind": "job",
       "about": [
@@ -1481,6 +1493,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.4.0",
+          "date": "2026-11-14",
+          "notes": "Returns the diagnosis, risks, named people and next steps as data beside the document, so a later step can act on them.",
+          "review": false
+        },
         {
           "version": "1.3.1",
           "date": "2026-11-05",
@@ -1757,7 +1775,7 @@
         {
           "version": "1.3.0",
           "date": "2026-11-17",
-          "notes": "Starts from lookalikes of won deals by default. It reads recent won deals, takes the best few as seeds, finds similar companies and similar buyers, then qualifies them with the workspace's own qualification. An explicit ICP or criteria still works. Adds guidance for running it on a schedule or when a deal is won.",
+          "notes": "Starts from lookalikes of won deals by default. It reads recent won deals, takes the best few as seeds, finds similar companies and similar buyers, then qualifies them with the workspace's own qualification. An explicit ICP or criteria still works. Adds guidance for running it on a schedule or when a deal is won. Returns its results as data beside the document: a flat list of accounts (firmographics, logo, qualification) and a flat list of the contacts found there (title, profile, photo), so a later step can act on the rows. Names the Octave tools it uses, prefers the workspace's own saved qualification agent, and says what a qualification result means.",
           "review": false
         },
         {

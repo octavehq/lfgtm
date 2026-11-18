@@ -10,6 +10,9 @@ Retrieve CRM relationship, open opportunities, owners, activities, and relevant 
 
 Use [Ask Octave first](../../shared/octave-research-toolkit.md#ask-octave-first-for-questions-that-span-records) for the first pass on the account: ask `ask_octave` which people at the account have appeared in calls and deals, what the account has raised, and which comparable accounts and proof points sit behind won deals for the same personas. Use that to find candidates and routes, then verify identity, participation, and role with the narrow CRM, call, and person tools. Graph links do not establish a buying role, and an answer can be wrong about this account, so drop any statement that cites another account. If the tool is unavailable, continue with the narrow tools and note it.
 
+On an Octave host, find people at the account with `find_person`, take firmographics from `enrich_company`, and read account fit from `qualify_company`. A fit result is a score out of 10 with its reasons: 7 or more is a fit unless a disqualifier was triggered.
+
+
 Select the committee from this customer's relevant persona cells. For each person, record identity source, participation evidence, and buying-role evidence independently. A verified title without engagement supports a candidate, not a confirmed champion. A seller-reported role is usable with that provenance. Preserve role gaps instead of manufacturing names. Count a role as missing only when it should be engaged at this account's stage, size and motion, list later roles as needed later, and write the committee as people, never seats ([information principles](../../shared/information-principles.md#reading-calls-and-deals) rules 23 and 24; [editorial rule 14b](../../shared/editorial-rules.md)).
 
 For every buying trigger, separate the library definition from the account occurrence. Mark occurrence Known only when dated account evidence or attributed operator confirmation establishes it. Otherwise show Trigger to validate, its relevance, and a confirming question. Apply the same separation to persona pains: strategic relevance is not confirmed account pain.
@@ -22,3 +25,7 @@ Keep the committee, per-persona positioning, outreach, and sequence aligned. For
 Quick: a compact account decision, the strongest available entry route, up to three primary people/roles, relevant persona framing, one sample email, and the next three actions. Retrieve enough evidence for those claims; put unresolved research into a short next-check list.
 
 Full: cover the requested stakeholder count and relevant buying roles, all material persona framing, engagement sequence, and risks. Show a compact primary committee with additional verified people in an appendix when needed. The user's explicit count overrides default display caps. Return an honest discovery shortfall rather than weak matches or invented people. Do not treat a fixed security persona triad as the default committee.
+
+## Data beside the document
+
+When the run is asked for data beside its document (the skill's `output.schema.json`), return the account's name and domain, each mapped person as a row of `stakeholders` (name, title, matched persona, their part in a decision, profile link, and one sentence on the angle) and each recommended play as a row of `plays` in the order to run them. Copy names, titles and links exactly as a tool returned them, write null for what no tool returned, and use `unknown` for a part in a decision the evidence does not show.
