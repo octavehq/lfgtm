@@ -1304,11 +1304,12 @@
     },
     "microsite": {
       "version": "1.5.0",
-      "title": "Microsite",
-      "kind": "output",
+      "title": "Build a personalized landing page",
+      "kind": "job",
       "about": [
         "company",
-        "person"
+        "person",
+        "deal"
       ],
       "outputs": [
         "microsite"
@@ -1375,6 +1376,10 @@
           "notes": "The task method leads with the two ways in (supplied content, or only a subject) and the narrative patterns by purpose: a page for a named account, a page for a persona or segment, a rendered handoff. The rules it already held are unchanged, under their pattern.",
           "review": false
         }
+      ],
+      "pillars": [
+        "outbound",
+        "deal-execution"
       ]
     },
     "one-pager": {

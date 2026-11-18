@@ -13,7 +13,7 @@
 ## Kinds
 
 - **job**: gathers evidence about a subject and decides what to say. Most skills.
-- **output**: says how something is shaped and styled, for any subject. Run it alone ("make a deck about X") or let a job use it. `deck`, `one-pager`, `microsite`, `document` and `magazine` are outputs: they hold narrative patterns and the rules for the shape, and no opinion about which evidence a subject needs.
+- **output**: says how something is shaped and styled, for any subject. Run it alone ("make a deck about X") or let a job use it. `deck`, `one-pager`, `document` and `magazine` are outputs: they hold narrative patterns and the rules for the shape, and no opinion about which evidence a subject needs.
 
 ## Pillars
 

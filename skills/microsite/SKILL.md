@@ -1,15 +1,15 @@
 ---
 name: microsite
-description: Personalized ABM microsite builder that generates self-contained HTML landing pages using GTM intelligence. Use when user says "microsite for [company]", "personalized landing page", "ABM page", or asks for a personalized web page for a target account.
+description: Build a personalized landing page for one person, account or deal, as self-contained HTML grounded in GTM intelligence. Use when user says "landing page for [company]", "microsite for [company]", "personalized page for [person]", "ABM page", "a page for this deal", or asks for a personalized web page for a named buyer.
 ---
 
-# /octave:microsite - Personalized ABM Microsite Builder
+# /octave:microsite - Personalized Landing Page Builder
 
 ## Run the task
 
 Read [the task method](references/task-method.md) before selecting context, claims, or output. It is the execution method for this skill. Supporting templates supply structure and styling; populate them from the task method and current evidence, not their illustrative figures or assertions.
 
-This is an output skill: it says how a microsite is shaped and written, for any subject or supplied content. When a job skill fits the request (meeting prep, a battlecard, an account plan, a win/loss review), run that skill and let it use this one for the shape.
+This skill builds one thing: a landing page made for a named person, account or deal. For the analysis behind it (an account plan, a battlecard, meeting prep), run that skill; this one turns what is known into the page the buyer opens.
 
 Select named account versus persona/segment/industry. A renderOnly handoff preserves approved findings, hierarchy, brand and distribution and skips strategy intake. Public marketing and recipient-restricted sales content require the corresponding host/access route. Base content and CTAs must work without JavaScript. An account or persona page renders in [story mode](../shared/formats/story-mode.md) by default (the angle's sections mapped to five to eight screens, or the count the user asks for); the scrolling landing page in the html architecture reference is document mode, used when the user asks for a long-form page or a renderOnly handoff carries more sections than the screen budget.
 
