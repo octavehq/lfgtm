@@ -2,7 +2,7 @@
   "repo": "octavehq/lfgtm",
   "pr": 77,
   "title": "Catalog: how each skill is offered, four output skills, a cohort plan and lookalike prospecting",
-  "headSha": "4d157400cf9dbe5fc3d889951ead641ba3917b3e",
+  "headSha": "875d17b3c07d134419169033c595b24571f371f2",
   "baseSha": "4808a1dd1c2cc111fb9e4e8582d9710335c00c4a",
   "mergeBaseSha": "4808a1dd1c2cc111fb9e4e8582d9710335c00c4a",
   "model": "claude-opus-5-5",
@@ -10,13 +10,13 @@
   "stats": {
     "files": 37,
     "hunks": 88,
-    "additions": 1951,
+    "additions": 1986,
     "deletions": 29
   },
-  "durationMs": 325102,
-  "turns": 33,
-  "costUsd": 5.715632,
-  "analysisCostUsd": 3.9021108,
+  "durationMs": 55734,
+  "turns": 2,
+  "costUsd": 1.4920586,
+  "analysisCostUsd": 0.5848934000000001,
   "crossRepo": {
     "owner": "octavehq",
     "searched": [
@@ -77,49 +77,31 @@
     "durationMs": 288668
   },
   "stages": {
-    "reach": {
-      "costUsd": 0,
-      "ms": 22
-    },
-    "crossRepo": {
-      "costUsd": 0,
-      "ms": 8435
-    },
     "analyze": {
-      "costUsd": 3.9021108,
-      "ms": 288660,
+      "costUsd": 0.5848934000000001,
+      "ms": 28285,
       "usage": {
-        "input": 52,
-        "output": 27344,
-        "cacheRead": 2059682,
-        "cacheCreate": 133738
-      }
-    },
-    "investigate": {
-      "costUsd": 0.6263098,
-      "ms": 4,
-      "usage": {
-        "input": 36,
-        "output": 7041,
-        "cacheRead": 542849,
-        "cacheCreate": 47097
+        "input": 4,
+        "output": 3353,
+        "cacheRead": 41655,
+        "cacheCreate": 36209
       }
     },
     "verify": {
-      "costUsd": 1.1872113999999998,
-      "ms": 36140,
+      "costUsd": 0.9071651999999999,
+      "ms": 26435,
       "usage": {
-        "input": 104,
-        "output": 15251,
-        "cacheRead": 556237,
-        "cacheCreate": 96316
+        "input": 64,
+        "output": 9070,
+        "cacheRead": 325106,
+        "cacheCreate": 82561
       }
     }
   },
   "verification": {
     "verifiers": 3,
-    "checked": 6,
-    "kept": 4,
+    "checked": 10,
+    "kept": 8,
     "dropped": 2,
     "costUsd": 1.1872113999999998,
     "durationMs": 36140,
@@ -532,6 +514,311 @@
         "kept": false,
         "why": "dropped: only 0 of 3 verifiers found it real",
         "category": "question"
+      },
+      {
+        "title": "Five changed skills not yet run",
+        "kind": "gap",
+        "votes": [
+          {
+            "vote": "real",
+            "category": "risk",
+            "origin": "introduced",
+            "reason": "The PR adds new behaviour as prose only: prospector's default lookalike route and abm's cohort plan. The description says neither was run to completion and should be before release, and nothing automated checks skill prose. That is an open gate before merge.",
+            "evidence": [
+              {
+                "file": "skills/prospector/SKILL.md",
+                "line": 12,
+                "endLine": 12,
+                "side": "head"
+              },
+              {
+                "file": "skills/abm/references/cohort-plan.md",
+                "line": 1,
+                "endLine": 9,
+                "side": "head"
+              }
+            ]
+          },
+          {
+            "vote": "real",
+            "category": "risk",
+            "origin": "introduced",
+            "reason": "The PR body says one-pager, microsite, ads, abm's cohort plan and prospector's lookalike route haven't been run to completion, and that the last two are new behavior. No test exercises skill prose, so these ship unverified.",
+            "evidence": [
+              {
+                "file": "skills/prospector/SKILL.md",
+                "line": 12,
+                "side": "head"
+              },
+              {
+                "file": "skills/abm/references/cohort-plan.md",
+                "line": 1,
+                "endLine": 9,
+                "side": "head"
+              }
+            ]
+          }
+        ],
+        "real": 2,
+        "notReal": 0,
+        "failed": 0,
+        "kept": true,
+        "why": "2 of 3 verifiers found it real",
+        "origin": "introduced",
+        "category": "risk"
+      },
+      {
+        "title": "Contact rows still have no score",
+        "kind": "gap",
+        "votes": [
+          {
+            "vote": "real",
+            "category": "risk",
+            "origin": "introduced",
+            "reason": "The task method says to give the score on every row and rank by it, and lookalikes.md has every person candidate qualified. But contact rows have no score field and an optional qualification, so the person score can't be carried in the data.",
+            "evidence": [
+              {
+                "file": "skills/prospector/output.schema.json",
+                "line": 131,
+                "endLine": 142,
+                "side": "head"
+              },
+              {
+                "file": "skills/prospector/output.schema.json",
+                "line": 241,
+                "endLine": 253,
+                "side": "head"
+              },
+              {
+                "file": "skills/prospector/references/task-method.md",
+                "line": 21,
+                "side": "head"
+              },
+              {
+                "file": "skills/prospector/references/lookalikes.md",
+                "line": 37,
+                "side": "head"
+              }
+            ]
+          },
+          {
+            "vote": "real",
+            "category": "risk",
+            "origin": "introduced",
+            "reason": "The method qualifies every person candidate and says to give the score on every row and rank by it. Yet the new contact schema has no score field, and its qualification is optional. Only account rows require qualification and score, so data rows lose the person score.",
+            "evidence": [
+              {
+                "file": "skills/prospector/output.schema.json",
+                "line": 131,
+                "endLine": 142,
+                "side": "head"
+              },
+              {
+                "file": "skills/prospector/output.schema.json",
+                "line": 241,
+                "endLine": 253,
+                "side": "head"
+              },
+              {
+                "file": "skills/prospector/references/task-method.md",
+                "line": 21,
+                "endLine": 21,
+                "side": "head"
+              },
+              {
+                "file": "skills/prospector/references/lookalikes.md",
+                "line": 37,
+                "endLine": 37,
+                "side": "head"
+              }
+            ]
+          }
+        ],
+        "real": 2,
+        "notReal": 0,
+        "failed": 0,
+        "kept": true,
+        "why": "2 of 3 verifiers found it real",
+        "origin": "introduced",
+        "category": "risk"
+      },
+      {
+        "title": "Seed customer names now ride in data rows",
+        "kind": "gap",
+        "votes": [
+          {
+            "vote": "real",
+            "category": "risk",
+            "origin": "introduced",
+            "reason": "lookalikes.md:17 says seed customers are named only in the internal summary, but the new schema puts the seed's name in `resembles` on every lookalike account and contact row. Those rows exist so later steps can act without reading the document. Only a description note keeps the name out of outreach copy.",
+            "evidence": [
+              {
+                "file": "skills/prospector/references/lookalikes.md",
+                "line": 17,
+                "endLine": 17,
+                "side": "head"
+              },
+              {
+                "file": "skills/prospector/output.schema.json",
+                "line": 106,
+                "endLine": 112,
+                "side": "head"
+              },
+              {
+                "file": "skills/prospector/output.schema.json",
+                "line": 4,
+                "endLine": 4,
+                "side": "head"
+              },
+              {
+                "file": "skills/prospector/references/lookalikes.md",
+                "line": 39,
+                "endLine": 39,
+                "side": "head"
+              }
+            ]
+          },
+          {
+            "vote": "real",
+            "category": "question",
+            "origin": "introduced",
+            "reason": "Both lines are new in this PR. lookalikes.md:17 says seed customers are named only in the internal summary, but line 39 and the schema put the seed in `resembles` on every lookalike row. That data is built for later steps to act on, and only a description note keeps the name out of copy.",
+            "evidence": [
+              {
+                "file": "skills/prospector/references/lookalikes.md",
+                "line": 17,
+                "endLine": 17,
+                "side": "head"
+              },
+              {
+                "file": "skills/prospector/references/lookalikes.md",
+                "line": 39,
+                "endLine": 39,
+                "side": "head"
+              },
+              {
+                "file": "skills/prospector/output.schema.json",
+                "line": 106,
+                "endLine": 112,
+                "side": "head"
+              },
+              {
+                "file": "skills/prospector/output.schema.json",
+                "line": 4,
+                "endLine": 4,
+                "side": "head"
+              }
+            ]
+          },
+          {
+            "vote": "not_real",
+            "category": "question",
+            "origin": "introduced",
+            "reason": "The PR puts the seed name in the rows on purpose and marks it internal in the schema, lookalikes.md §5 and results-output.md. The rule protects what a prospect reads, not internal data. Any later step leaking the seed into copy is speculative.",
+            "evidence": [
+              {
+                "file": "skills/prospector/output.schema.json",
+                "line": 106,
+                "endLine": 112,
+                "side": "head"
+              },
+              {
+                "file": "skills/prospector/references/lookalikes.md",
+                "line": 17,
+                "endLine": 17,
+                "side": "head"
+              },
+              {
+                "file": "skills/prospector/references/results-output.md",
+                "line": 3,
+                "endLine": 3,
+                "side": "head"
+              }
+            ]
+          }
+        ],
+        "real": 2,
+        "notReal": 1,
+        "failed": 0,
+        "kept": true,
+        "why": "2 of 3 verifiers found it real",
+        "origin": "introduced",
+        "category": "question"
+      },
+      {
+        "title": "Seed fields optional and missing from data guide",
+        "kind": "gap",
+        "votes": [
+          {
+            "vote": "real",
+            "category": "risk",
+            "origin": "introduced",
+            "reason": "The schema says resembles/matchedTraits are 'Null on any other route', yet neither is in either required list. The data paragraph doesn't list them either, so a lookalike row can leave them out and still pass. Its rule 'never leave the field out' only covers the fields it names.",
+            "evidence": [
+              {
+                "file": "skills/prospector/output.schema.json",
+                "line": 15,
+                "endLine": 26,
+                "side": "head"
+              },
+              {
+                "file": "skills/prospector/output.schema.json",
+                "line": 106,
+                "endLine": 122,
+                "side": "head"
+              },
+              {
+                "file": "skills/prospector/references/results-output.md",
+                "line": 11,
+                "endLine": 11,
+                "side": "head"
+              },
+              {
+                "file": "skills/prospector/references/lookalikes.md",
+                "line": 39,
+                "endLine": 39,
+                "side": "head"
+              }
+            ]
+          },
+          {
+            "vote": "real",
+            "category": "risk",
+            "origin": "introduced",
+            "reason": "This PR adds `resembles` and `matchedTraits`, and their descriptions say to use null on other routes, but neither field is in `required`. The data paragraph also leaves them out, so a lookalike row can drop them and look like a row from any other route. Note `founded` is optional too.",
+            "evidence": [
+              {
+                "file": "skills/prospector/output.schema.json",
+                "line": 15,
+                "endLine": 26,
+                "side": "head"
+              },
+              {
+                "file": "skills/prospector/output.schema.json",
+                "line": 106,
+                "endLine": 122,
+                "side": "head"
+              },
+              {
+                "file": "skills/prospector/references/results-output.md",
+                "line": 11,
+                "side": "head"
+              },
+              {
+                "file": "skills/prospector/references/lookalikes.md",
+                "line": 39,
+                "side": "head"
+              }
+            ]
+          }
+        ],
+        "real": 2,
+        "notReal": 0,
+        "failed": 0,
+        "kept": true,
+        "why": "2 of 3 verifiers found it real",
+        "origin": "introduced",
+        "category": "risk"
       }
     ]
   },
@@ -547,14 +834,14 @@
       "unknownIds": []
     },
     "evidence": {
-      "total": 45,
-      "valid": 45,
+      "total": 47,
+      "valid": 47,
       "invalid": []
     },
     "claims": {
-      "total": 22,
-      "checked": 15,
-      "inferred": 7
+      "total": 21,
+      "checked": 13,
+      "inferred": 8
     },
     "reach": {
       "groups": 1,
@@ -568,13 +855,56 @@
     "symbols": 1,
     "groups": 1,
     "sites": 16,
-    "ms": 22
+    "ms": 3
   },
-  "generatedAt": "2026-11-18T04:37:18.056Z",
+  "generatedAt": "2026-11-18T04:49:41.029Z",
   "runBy": "jtemps",
   "depth": "brief",
   "auto": {
     "picked": "brief",
     "reason": "1363 changed lines of code in 9 files"
+  },
+  "update": {
+    "mode": "update",
+    "from": "814320bffee75874ef7cad18f1b1069a19a5a276",
+    "fromHead": "4d157400cf9dbe5fc3d889951ead641ba3917b3e",
+    "kind": "small",
+    "summary": "2 files changed since the brief, affecting 2 of 6 decisions",
+    "decisions": {
+      "D1": {
+        "at": "875d17b3c07d134419169033c595b24571f371f2",
+        "what": "changed"
+      }
+    },
+    "added": [
+      "Five changed skills not yet run",
+      "Contact rows still have no score",
+      "Seed customer names now ride in data rows",
+      "Seed fields optional and missing from data guide"
+    ],
+    "resolved": [
+      "Unmentioned 7-of-10 pass mark in two skills",
+      "Prospector data drops the seed and score",
+      "Seven changed skills not yet run"
+    ],
+    "removed": [],
+    "baseFiles": [],
+    "rechecked": [],
+    "newCode": {
+      "hunks": [
+        "H83",
+        "H84"
+      ],
+      "found": [
+        "Contact rows still have no score",
+        "Seed customer names now ride in data rows",
+        "Seed fields optional and missing from data guide"
+      ],
+      "folded": [],
+      "costUsd": 0.21981440000000002,
+      "ms": 28880
+    },
+    "ms": 55734,
+    "costUsd": 1.4920586
   }
 }

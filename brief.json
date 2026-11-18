@@ -1,6 +1,6 @@
 {
   "schemaVersion": "5",
-  "verdictLine": "Medium risk · needs work · 4 gaps",
+  "verdictLine": "Medium risk · needs work · 5 gaps",
   "intent": {
     "stated": "Add offering fields to the catalog, add document and magazine, reframe deck, one-pager and microsite, deepen battlecard-doc, add abm cohort plans and prospector lookalikes, and fold in #76's structured results.",
     "actual": {
@@ -10,6 +10,7 @@
         {
           "file": "skills/prospector/SKILL.md",
           "line": 12,
+          "endLine": 12,
           "side": "head"
         },
         {
@@ -19,9 +20,9 @@
           "side": "head"
         },
         {
-          "file": "skills/prospector/references/task-method.md",
-          "line": 17,
-          "endLine": 21,
+          "file": "skills/prospector/references/lookalikes.md",
+          "line": 39,
+          "endLine": 39,
           "side": "head"
         }
       ]
@@ -29,63 +30,6 @@
     "delivers": "partial"
   },
   "attention": [
-    {
-      "kind": "gap",
-      "title": "Unmentioned 7-of-10 pass mark in two skills",
-      "detail": "When a qualification returns only a score, prospector and abm now count 7 of 10 as a pass and say on the page that 7 was assumed. The description doesn't mention this. It also calls abm's single-company path unchanged, but that account plan gained this rule and new tool steps.",
-      "status": "checked",
-      "evidence": [
-        {
-          "file": "skills/prospector/references/task-method.md",
-          "line": 20,
-          "endLine": 21,
-          "side": "head"
-        },
-        {
-          "file": "skills/abm/references/task-method.md",
-          "line": 13,
-          "side": "head"
-        }
-      ],
-      "origin": "introduced",
-      "verification": {
-        "verifiers": 2,
-        "real": 2,
-        "notReal": 0,
-        "failed": 0
-      }
-    },
-    {
-      "kind": "gap",
-      "title": "Prospector data drops the seed and score",
-      "detail": "The results reference says each lookalike row names the won deal it resembles and the traits that matched, and the method says every row carries the score. The new data shape has no field for the seed or traits and doesn't require `score`, so a later step reading the rows loses both.",
-      "status": "checked",
-      "evidence": [
-        {
-          "file": "skills/prospector/references/results-output.md",
-          "line": 3,
-          "side": "head"
-        },
-        {
-          "file": "skills/prospector/output.schema.json",
-          "line": 15,
-          "endLine": 25,
-          "side": "head"
-        },
-        {
-          "file": "skills/prospector/references/task-method.md",
-          "line": 21,
-          "side": "head"
-        }
-      ],
-      "origin": "introduced",
-      "verification": {
-        "verifiers": 3,
-        "real": 3,
-        "notReal": 0,
-        "failed": 0
-      }
-    },
     {
       "kind": "gap",
       "title": "Battlecard relies on intel tools new here",
@@ -104,19 +48,12 @@
           "endLine": 19,
           "side": "head"
         }
-      ],
-      "origin": "introduced",
-      "verification": {
-        "verifiers": 2,
-        "real": 2,
-        "notReal": 0,
-        "failed": 0
-      }
+      ]
     },
     {
       "kind": "gap",
-      "title": "Seven changed skills not yet run",
-      "detail": "The description says deck, one-pager, microsite, battlecard-doc, ads, abm and prospector were not run to completion after the change. Prospector's new default route and abm's new cohort path are new behavior with no recorded run, and no automated check covers skill prose.",
+      "title": "Five changed skills not yet run",
+      "detail": "The description says one-pager, microsite, ads, abm's cohort plan and prospector's lookalike route were not run to completion after the change. It says the last two are new behavior and should be run before release. No automated check covers skill prose.",
       "status": "inferred",
       "evidence": [
         {
@@ -133,9 +70,114 @@
       ],
       "origin": "introduced",
       "verification": {
+        "verifiers": 2,
+        "real": 2,
+        "notReal": 0,
+        "failed": 0
+      }
+    },
+    {
+      "kind": "gap",
+      "title": "Contact rows still have no score",
+      "detail": "The fix added a score to account rows only. The lookalike method qualifies every person candidate, and the task method says to give the score on every row and rank by it. Contact rows have no score field, and their qualification is optional. A later step that ranks or filters contacts from the data loses the person score. Ask whether contacts should carry a required score and qualification.",
+      "status": "checked",
+      "evidence": [
+        {
+          "file": "skills/prospector/output.schema.json",
+          "line": 131,
+          "endLine": 142,
+          "side": "head"
+        },
+        {
+          "file": "skills/prospector/output.schema.json",
+          "line": 241,
+          "endLine": 253,
+          "side": "head"
+        },
+        {
+          "file": "skills/prospector/references/task-method.md",
+          "line": 21,
+          "side": "head"
+        },
+        {
+          "file": "skills/prospector/references/lookalikes.md",
+          "line": 37,
+          "side": "head"
+        }
+      ],
+      "origin": "introduced",
+      "verification": {
+        "verifiers": 2,
+        "real": 2,
+        "notReal": 0,
+        "failed": 0
+      }
+    },
+    {
+      "kind": "gap",
+      "title": "Seed customer names now ride in data rows",
+      "detail": "The method says seed customers are named only in the internal summary. Now every lookalike account and contact row names its seed in resembles, inside data built so a later step can act on the rows without reading the document. Outreach steps such as generate get the customer name, and only a description note keeps it out of copy. Ask whether downstream consumers drop resembles, or whether it…",
+      "status": "inferred",
+      "evidence": [
+        {
+          "file": "skills/prospector/output.schema.json",
+          "line": 106,
+          "endLine": 112,
+          "side": "head"
+        },
+        {
+          "file": "skills/prospector/output.schema.json",
+          "line": 4,
+          "side": "head"
+        },
+        {
+          "file": "skills/prospector/references/lookalikes.md",
+          "line": 17,
+          "side": "head"
+        },
+        {
+          "file": "skills/prospector/references/lookalikes.md",
+          "line": 39,
+          "side": "head"
+        }
+      ],
+      "origin": "introduced",
+      "verification": {
         "verifiers": 3,
         "real": 2,
         "notReal": 1,
+        "failed": 0
+      }
+    },
+    {
+      "kind": "gap",
+      "title": "Seed fields optional and missing from data guide",
+      "detail": "resembles and matchedTraits are not required, unlike the other row fields, which must always be present, even as null. The data paragraph the run follows when it returns data doesn't list them either; only the lookalike method does. A lookalike row can leave them out, and a reader can't tell that from a row on another route. matchedTraits must also be 'as the tool reported them'. Can the author…",
+      "status": "inferred",
+      "evidence": [
+        {
+          "file": "skills/prospector/output.schema.json",
+          "line": 15,
+          "endLine": 26,
+          "side": "head"
+        },
+        {
+          "file": "skills/prospector/output.schema.json",
+          "line": 113,
+          "endLine": 122,
+          "side": "head"
+        },
+        {
+          "file": "skills/prospector/references/results-output.md",
+          "line": 11,
+          "side": "head"
+        }
+      ],
+      "origin": "introduced",
+      "verification": {
+        "verifiers": 2,
+        "real": 2,
+        "notReal": 0,
         "failed": 0
       }
     },
@@ -177,6 +219,7 @@
           {
             "file": "skills/prospector/SKILL.md",
             "line": 12,
+            "endLine": 12,
             "side": "head"
           },
           {
@@ -186,15 +229,15 @@
             "side": "head"
           },
           {
-            "file": "skills/prospector/references/task-method.md",
-            "line": 17,
-            "endLine": 21,
+            "file": "skills/prospector/references/lookalikes.md",
+            "line": 39,
+            "endLine": 39,
             "side": "head"
           }
         ]
       },
       "before": "Prospector built its candidate list from the library's segments, personas and ICP criteria.",
-      "after": "A bare request reads won deals from the past year, picks a few as seeds, and searches for similar companies and people. When a qualification gives only a score, 7 of 10 counts as a pass.",
+      "after": "A bare request reads won deals from the past year, picks a few as seeds, and searches for similar companies and people. Each lookalike row keeps its seed and shared traits in the returned data.",
       "hunks": [
         "H41",
         "H42",
@@ -227,6 +270,7 @@
           {
             "file": "skills/abm/SKILL.md",
             "line": 12,
+            "endLine": 12,
             "side": "head"
           },
           {
@@ -345,6 +389,7 @@
           {
             "file": "scripts/validate_package.py",
             "line": 14,
+            "endLine": 14,
             "side": "head"
           }
         ]
@@ -755,7 +800,7 @@
         "irreversible": false,
         "audience": "customers",
         "before": "Prospector built its candidate list from the library's segments, personas and ICP criteria.",
-        "after": "A bare request reads won deals from the past year, picks a few as seeds, and searches for similar companies and people. When a qualification gives only a score, 7 of 10 counts as a pass.",
+        "after": "A bare request reads won deals from the past year, picks a few as seeds, and searches for similar companies and people. Each lookalike row keeps its seed and shared traits in the returned data.",
         "why": "To find more accounts like the customers already won, and to support running on a schedule or when a deal is won.",
         "whySource": "description",
         "reuse": {
@@ -776,14 +821,12 @@
         },
         "proof": {
           "verdict": "none",
-          "text": "No test exercises skill instructions, and the description says prospector wasn't run to completion."
+          "text": "No test exercises skill instructions, and the description says prospector's lookalike route wasn't run to completion."
         },
         "rollout": null,
         "seenInProd": "A bare prospector run should open its internal summary with a line naming the seed deals. Without deal history, it should fall back to the criteria route and say so.",
         "findings": [
-          "Unmentioned 7-of-10 pass mark in two skills",
-          "Prospector data drops the seed and score",
-          "Seven changed skills not yet run"
+          "Five changed skills not yet run"
         ],
         "authorAsks": null,
         "question": "Is lookalikes-of-won-deals the right default, given a bare request now depends on the workspace's deal history?",
@@ -801,9 +844,9 @@
             "side": "head"
           },
           {
-            "file": "skills/prospector/references/task-method.md",
-            "line": 17,
-            "endLine": 21,
+            "file": "skills/prospector/references/lookalikes.md",
+            "line": 39,
+            "endLine": 39,
             "side": "head"
           }
         ],
@@ -854,9 +897,7 @@
         },
         "rollout": null,
         "seenInProd": null,
-        "findings": [
-          "Unmentioned 7-of-10 pass mark in two skills"
-        ],
+        "findings": [],
         "authorAsks": null,
         "question": "Is a cohort plan that names no people per account right, with committees coming from a run per account?",
         "evidence": [
@@ -925,9 +966,7 @@
         },
         "rollout": "Read by the Octave app (octave-app#8914). No order is stated.",
         "seenInProd": null,
-        "findings": [
-          "Prospector data drops the seed and score"
-        ],
+        "findings": [],
         "authorAsks": null,
         "question": "Is returning rows only when the host asks right, leaving document-only runs exactly as before?",
         "evidence": [
@@ -1023,9 +1062,7 @@
         },
         "rollout": null,
         "seenInProd": null,
-        "findings": [
-          "Seven changed skills not yet run"
-        ],
+        "findings": [],
         "authorAsks": null,
         "question": "Is repeating the two-ways-in guidance in each output skill right, given five copies must stay in step?",
         "evidence": [

@@ -1,6 +1,6 @@
 ## PRevue Review Brief
 
-### 🟡 Medium risk · needs work · 4 gaps
+### 🟡 Medium risk · needs work · 5 gaps
 
 The changes are agent instructions, not data writes, but prospector's default behavior and abm's scope change for every user. These new paths have no recorded run, and the app reads the new catalog fields.
 
@@ -10,49 +10,56 @@ The changes are agent instructions, not data writes, but prospector's default be
 
 **Needs your attention**
 
-<details><summary><b>🟡 Gap</b> · Unmentioned 7-of-10 pass mark in two skills · introduced by this PR · verified 2/2 · 2 files →</summary>
-
-When a qualification returns only a score, prospector and abm now count 7 of 10 as a pass and say on the page that 7 was assumed. The description doesn't mention this. It also calls abm's single-company path unchanged, but that account plan gained this rule and new tool steps.
-
-[`skills/prospector/references/task-method.md:20-21`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/skills/prospector/references/task-method.md#L20-L21) · [`skills/abm/references/task-method.md:13`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/skills/abm/references/task-method.md#L13)
-
-</details>
-<details><summary><b>🟡 Gap</b> · Prospector data drops the seed and score · introduced by this PR · verified 3/3 · 3 files →</summary>
-
-The results reference says each lookalike row names the won deal it resembles and the traits that matched, and the method says every row carries the score. The new data shape has no field for the seed or traits and doesn't require `score`, so a later step reading the rows loses both.
-
-[`skills/prospector/references/results-output.md:3`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/skills/prospector/references/results-output.md#L3) · [`skills/prospector/output.schema.json:15-25`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/skills/prospector/output.schema.json#L15-L25) · [`skills/prospector/references/task-method.md:21`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/skills/prospector/references/task-method.md#L21)
-
-</details>
-<details><summary><b>🟡 Gap</b> · Battlecard relies on intel tools new here <i>(inferred)</i> · introduced by this PR · verified 2/2 · 2 files →</summary>
+<details><summary><b>🟡 Gap</b> · Battlecard relies on intel tools new here <i>(inferred)</i> · 2 files →</summary>
 
 `list_intel`, `get_intel` and the battlecard option on `get_entity` appear nowhere else in the repo or in the README tool list. The method only covers empty results. It doesn't say what to do if the server lacks these tools. Can the author confirm they ship today, or that they arrive with octave-app#8914?
 
-[`skills/battlecard-doc/references/tool-reference.md:21-23`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/skills/battlecard-doc/references/tool-reference.md#L21-L23) · [`skills/battlecard-doc/references/task-method.md:15-19`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/skills/battlecard-doc/references/task-method.md#L15-L19)
+[`skills/battlecard-doc/references/tool-reference.md:21-23`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/battlecard-doc/references/tool-reference.md#L21-L23) · [`skills/battlecard-doc/references/task-method.md:15-19`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/battlecard-doc/references/task-method.md#L15-L19)
 
 </details>
-<details><summary><b>🟡 Gap</b> · Seven changed skills not yet run <i>(inferred)</i> · introduced by this PR · verified 2/3 · 2 files →</summary>
+<details><summary><b>🟡 Gap</b> · Five changed skills not yet run <i>(inferred)</i> · introduced by this PR · verified 2/2 · 2 files →</summary>
 
-The description says deck, one-pager, microsite, battlecard-doc, ads, abm and prospector were not run to completion after the change. Prospector's new default route and abm's new cohort path are new behavior with no recorded run, and no automated check covers skill prose.
+The description says one-pager, microsite, ads, abm's cohort plan and prospector's lookalike route were not run to completion after the change. It says the last two are new behavior and should be run before release. No automated check covers skill prose.
 
-[`skills/prospector/SKILL.md:12`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/skills/prospector/SKILL.md#L12) · [`skills/abm/references/cohort-plan.md:1-9`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/skills/abm/references/cohort-plan.md#L1-L9)
+[`skills/prospector/SKILL.md:12`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/prospector/SKILL.md#L12) · [`skills/abm/references/cohort-plan.md:1-9`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/abm/references/cohort-plan.md#L1-L9)
+
+</details>
+<details><summary><b>🟡 Gap</b> · Contact rows still have no score · introduced by this PR · verified 2/2 · 3 files →</summary>
+
+The fix added a score to account rows only. The lookalike method qualifies every person candidate, and the task method says to give the score on every row and rank by it. Contact rows have no score field, and their qualification is optional. A later step that ranks or filters contacts from the data loses the person score. Ask whether contacts should carry a required score and qualification.
+
+[`skills/prospector/output.schema.json:131-142`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/prospector/output.schema.json#L131-L142) · [`skills/prospector/output.schema.json:241-253`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/prospector/output.schema.json#L241-L253) · [`skills/prospector/references/task-method.md:21`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/prospector/references/task-method.md#L21) · [`skills/prospector/references/lookalikes.md:37`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/prospector/references/lookalikes.md#L37)
+
+</details>
+<details><summary><b>🟡 Gap</b> · Seed customer names now ride in data rows <i>(inferred)</i> · introduced by this PR · verified 2/3 · 2 files →</summary>
+
+The method says seed customers are named only in the internal summary. Now every lookalike account and contact row names its seed in resembles, inside data built so a later step can act on the rows without reading the document. Outreach steps such as generate get the customer name, and only a description note keeps it out of copy. Ask whether downstream consumers drop resembles, or whether it…
+
+[`skills/prospector/output.schema.json:106-112`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/prospector/output.schema.json#L106-L112) · [`skills/prospector/output.schema.json:4`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/prospector/output.schema.json#L4) · [`skills/prospector/references/lookalikes.md:17`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/prospector/references/lookalikes.md#L17) · [`skills/prospector/references/lookalikes.md:39`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/prospector/references/lookalikes.md#L39)
+
+</details>
+<details><summary><b>🟡 Gap</b> · Seed fields optional and missing from data guide <i>(inferred)</i> · introduced by this PR · verified 2/2 · 2 files →</summary>
+
+resembles and matchedTraits are not required, unlike the other row fields, which must always be present, even as null. The data paragraph the run follows when it returns data doesn't list them either; only the lookalike method does. A lookalike row can leave them out, and a reader can't tell that from a row on another route. matchedTraits must also be 'as the tool reported them'. Can the author…
+
+[`skills/prospector/output.schema.json:15-26`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/prospector/output.schema.json#L15-L26) · [`skills/prospector/output.schema.json:113-122`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/prospector/output.schema.json#L113-L122) · [`skills/prospector/references/results-output.md:11`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/prospector/references/results-output.md#L11)
 
 </details>
 <details><summary><b>🔵 Info</b> · Release and sync now gate on catalog fields · 3 files →</summary>
 
 The validator now fails on an unknown kind, pillar or output id, a malformed about list, or a changelog whose first entry isn't the current version. It gates the release ZIP and the downstream sync. The Codex and Cursor builds carry no catalog, so only the root run checks these rules.
 
-[`scripts/build-release.py:11-12`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/scripts/build-release.py#L11-L12) · [`scripts/validate.sh:5`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/scripts/validate.sh#L5) · [`scripts/validate_package.py:60-77`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/scripts/validate_package.py#L60-L77)
+[`scripts/build-release.py:11-12`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/scripts/build-release.py#L11-L12) · [`scripts/validate.sh:5`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/scripts/validate.sh#L5) · [`scripts/validate_package.py:60-77`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/scripts/validate_package.py#L60-L77)
 
 </details>
 
-**What the code does:** Implements each listed change. abm's single-company plan also gains new tool steps and a default 7-of-10 fit rule that the description calls unchanged.<details><summary>3 files →</summary>
+**What the code does:** Implements each listed change. abm's single-company plan also gains new tool steps and a default 7-of-10 fit rule that the description calls unchanged.<details><summary>2 files →</summary>
 
-[`skills/prospector/SKILL.md:12`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/skills/prospector/SKILL.md#L12) · [`skills/prospector/references/lookalikes.md:7-19`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/skills/prospector/references/lookalikes.md#L7-L19) · [`skills/prospector/references/task-method.md:17-21`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/skills/prospector/references/task-method.md#L17-L21)
+[`skills/prospector/SKILL.md:12`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/prospector/SKILL.md#L12) · [`skills/prospector/references/lookalikes.md:7-19`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/prospector/references/lookalikes.md#L7-L19) · [`skills/prospector/references/lookalikes.md:39`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/prospector/references/lookalikes.md#L39)
 
 </details>
 
-<sub>The PR says: Add offering fields to the catalog, add document and magazine, reframe deck, one-pager and microsite, deepen battlecard-doc, add abm cohort plans and prospector lookalikes, and fold in #76's structured results. · 37 files · 88 hunks · +1951 −29</sub>
+<sub>The PR says: Add offering fields to the catalog, add document and magazine, reframe deck, one-pager and microsite, deepen battlecard-doc, add abm cohort plans and prospector lookalikes, and fold in #76's structured results. · 37 files · 88 hunks · +1986 −29</sub>
 
 ### Themes (10)
 
@@ -60,14 +67,14 @@ The validator now fails on an unknown kind, pillar or output id, a malformed abo
 
 <sub>Owners: @akash13s (8 commits to 3 of these files in 6 months), @hayksaryan (5 commits to catalog.json in 6 months)</sub>
 
-With no criteria given, prospector seeds from recent won deals, finds similar companies and buyers, then qualifies them.<details><summary>3 files →</summary>
+With no criteria given, prospector seeds from recent won deals, finds similar companies and buyers, then qualifies them.<details><summary>2 files →</summary>
 
-[`skills/prospector/SKILL.md:12`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/skills/prospector/SKILL.md#L12) · [`skills/prospector/references/lookalikes.md:7-19`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/skills/prospector/references/lookalikes.md#L7-L19) · [`skills/prospector/references/task-method.md:17-21`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/skills/prospector/references/task-method.md#L17-L21)
+[`skills/prospector/SKILL.md:12`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/prospector/SKILL.md#L12) · [`skills/prospector/references/lookalikes.md:7-19`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/prospector/references/lookalikes.md#L7-L19) · [`skills/prospector/references/lookalikes.md:39`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/prospector/references/lookalikes.md#L39)
 
 </details>
 
 - **Before:** Prospector built its candidate list from the library's segments, personas and ICP criteria.
-- **After:** A bare request reads won deals from the past year, picks a few as seeds, and searches for similar companies and people. When a qualification gives only a score, 7 of 10 counts as a pass.
+- **After:** A bare request reads won deals from the past year, picks a few as seeds, and searches for similar companies and people. Each lookalike row keeps its seed and shared traits in the returned data.
 
 <details><summary>Hunks</summary>
 
@@ -88,7 +95,7 @@ With no criteria given, prospector seeds from recent won deals, finds similar co
 
 Asked about a segment or account list, abm writes one cohort plan and leaves per-account committees to separate runs.<details><summary>3 files →</summary>
 
-[`skills/abm/SKILL.md:12`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/skills/abm/SKILL.md#L12) · [`skills/abm/references/cohort-plan.md:53-55`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/skills/abm/references/cohort-plan.md#L53-L55) · [`skills/abm/references/task-method.md:3-4`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/skills/abm/references/task-method.md#L3-L4)
+[`skills/abm/SKILL.md:12`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/abm/SKILL.md#L12) · [`skills/abm/references/cohort-plan.md:53-55`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/abm/references/cohort-plan.md#L53-L55) · [`skills/abm/references/task-method.md:3-4`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/abm/references/task-method.md#L3-L4)
 
 </details>
 
@@ -113,7 +120,7 @@ Asked about a segment or account list, abm writes one cohort plan and leaves per
 
 prospector, abm, champion-deal-room, generate and pipeline each declare a data shape and return matching rows when asked.<details><summary>3 files →</summary>
 
-[`skills/prospector/output.schema.json:1-20`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/skills/prospector/output.schema.json#L1-L20) · [`skills/abm/references/task-method.md:29-33`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/skills/abm/references/task-method.md#L29-L33) · [`skills/pipeline/references/task-method.md:21-23`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/skills/pipeline/references/task-method.md#L21-L23)
+[`skills/prospector/output.schema.json:1-20`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/prospector/output.schema.json#L1-L20) · [`skills/abm/references/task-method.md:29-33`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/abm/references/task-method.md#L29-L33) · [`skills/pipeline/references/task-method.md:21-23`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/pipeline/references/task-method.md#L21-L23)
 
 </details>
 
@@ -135,7 +142,7 @@ prospector, abm, champion-deal-room, generate and pipeline each declare a data s
 - [H72](https://github.com/octavehq/lfgtm/pull/77/files#diff-da385fbe0d122ce11070d44f61c089ec07a716e96d674beecc1bbe1b30c0824aR15) `skills/generate/references/task-method.md` +4 −0
 - [H79](https://github.com/octavehq/lfgtm/pull/77/files#diff-75a1932d7e3817372c09a22e00a7bbb6d0b401afa092946da2ca325c64b8d148R1) `skills/pipeline/output.schema.json` +161 −0
 - [H80](https://github.com/octavehq/lfgtm/pull/77/files#diff-59aa2ca43ecab808915a7253aa707aecb0cf95634b9e90862278ebea60cc72a7R17) `skills/pipeline/references/task-method.md` +4 −0
-- [H83](https://github.com/octavehq/lfgtm/pull/77/files#diff-9bc05748fbb63e4731f1c3f25a77461780e6cb45cc55c61188f5dfea4125f913R1) `skills/prospector/output.schema.json` +262 −0
+- [H83](https://github.com/octavehq/lfgtm/pull/77/files#diff-9bc05748fbb63e4731f1c3f25a77461780e6cb45cc55c61188f5dfea4125f913R1) `skills/prospector/output.schema.json` +297 −0
 
 </details>
 
@@ -145,7 +152,7 @@ prospector, abm, champion-deal-room, generate and pipeline each declare a data s
 
 New document and magazine skills join deck and one-pager as format-only skills, and microsite becomes a landing-page job.<details><summary>3 files →</summary>
 
-[`catalog.json:809-821`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/catalog.json#L809-L821) · [`skills/deck/references/task-method.md:11-24`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/skills/deck/references/task-method.md#L11-L24) · [`scripts/validate_package.py:14`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/scripts/validate_package.py#L14)
+[`catalog.json:809-821`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/catalog.json#L809-L821) · [`skills/deck/references/task-method.md:11-24`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/deck/references/task-method.md#L11-L24) · [`scripts/validate_package.py:14`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/scripts/validate_package.py#L14)
 
 </details>
 
@@ -183,7 +190,7 @@ New document and magazine skills join deck and one-pager as format-only skills, 
 
 Every catalog entry gains optional fields: title, kind, about, pillars and outputs. The validator checks them and the changelog order.<details><summary>2 files →</summary>
 
-[`docs/catalog-fields.md:3-11`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/docs/catalog-fields.md#L3-L11) · [`docs/catalog-fields.md:28-30`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/docs/catalog-fields.md#L28-L30) · [`scripts/validate_package.py:60-77`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/scripts/validate_package.py#L60-L77)
+[`docs/catalog-fields.md:3-11`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/docs/catalog-fields.md#L3-L11) · [`docs/catalog-fields.md:28-30`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/docs/catalog-fields.md#L28-L30) · [`scripts/validate_package.py:60-77`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/scripts/validate_package.py#L60-L77)
 
 </details>
 
@@ -221,7 +228,7 @@ Every catalog entry gains optional fields: title, kind, about, pillars and outpu
 
 battlecard-doc reads Octave's generated battlecard, intel and deal outcomes before the library profile, then fills nine weighted parts.<details><summary>2 files →</summary>
 
-[`skills/battlecard-doc/references/task-method.md:11-19`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/skills/battlecard-doc/references/task-method.md#L11-L19) · [`skills/battlecard-doc/references/tool-reference.md:21-24`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/skills/battlecard-doc/references/tool-reference.md#L21-L24)
+[`skills/battlecard-doc/references/task-method.md:11-19`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/battlecard-doc/references/task-method.md#L11-L19) · [`skills/battlecard-doc/references/tool-reference.md:21-24`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/battlecard-doc/references/tool-reference.md#L21-L24)
 
 </details>
 
@@ -306,7 +313,7 @@ Medium: no data changes, but two skills change their default behavior with no re
 **Callers and dependents**
 - The release ZIP build and the validate workflow (used by publish and sync) now also fail on bad offering fields or a changelog not newest-first. They pass at head.<details><summary>3 files →</summary>
 
-[`scripts/build-release.py:11-12`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/scripts/build-release.py#L11-L12) · [`.github/workflows/validate.yml:25`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/.github/workflows/validate.yml#L25) · [`scripts/validate.sh:5`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/scripts/validate.sh#L5)
+[`scripts/build-release.py:11-12`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/scripts/build-release.py#L11-L12) · [`.github/workflows/validate.yml:25`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/.github/workflows/validate.yml#L25) · [`scripts/validate.sh:5`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/scripts/validate.sh#L5)
 
 </details>
 
@@ -318,7 +325,7 @@ Medium: no data changes, but two skills change their default behavior with no re
 
 - 🟡 affected · `validate` · 16 sites: The release ZIP build and the validate workflow (used by publish and sync) now also fail on bad offering fields or a changelog not newest-first. They pass at head.<details><summary>3 files →</summary>
 
-[`scripts/build-release.py:11-12`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/scripts/build-release.py#L11-L12) · [`.github/workflows/validate.yml:25`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/.github/workflows/validate.yml#L25) · [`scripts/validate.sh:5`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/scripts/validate.sh#L5)
+[`scripts/build-release.py:11-12`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/scripts/build-release.py#L11-L12) · [`.github/workflows/validate.yml:25`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/.github/workflows/validate.yml#L25) · [`scripts/validate.sh:5`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/scripts/validate.sh#L5)
 
 </details>
 
@@ -326,12 +333,12 @@ Medium: no data changes, but two skills change their default behavior with no re
 
 - With no criteria given, prospector now starts from lookalikes of recent won deals instead of library criteria.<details><summary>2 files →</summary>
 
-[`skills/prospector/SKILL.md:12`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/skills/prospector/SKILL.md#L12) · [`skills/prospector/references/task-method.md:3-4`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/skills/prospector/references/task-method.md#L3-L4)
+[`skills/prospector/SKILL.md:12`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/prospector/SKILL.md#L12) · [`skills/prospector/references/task-method.md:3-4`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/skills/prospector/references/task-method.md#L3-L4)
 
 </details>
 - The validator checks catalog field values and changelog order but doesn't load or check the new data shape files.<details><summary>1 file →</summary>
 
-[`scripts/validate_package.py:54-77`](https://github.com/octavehq/lfgtm/blob/4d157400cf9dbe5fc3d889951ead641ba3917b3e/scripts/validate_package.py#L54-L77)
+[`scripts/validate_package.py:54-77`](https://github.com/octavehq/lfgtm/blob/875d17b3c07d134419169033c595b24571f371f2/scripts/validate_package.py#L54-L77)
 
 </details>
 
@@ -346,11 +353,11 @@ Medium: no data changes, but two skills change their default behavior with no re
 <details><summary>Brief quality checks</summary>
 
 - Coverage: 88/88 hunks in themes, 0 marked unexplained
-- Claims: 15 checked ✓, 7 inferred ~
-- Evidence links: 45/45 point at real lines
+- Claims: 13 checked ✓, 8 inferred ~
+- Evidence links: 47/47 point at real lines
 - Schema: valid
 - Investigators: 1 traced the affected uses; 1 new finding, 0 duplicates dropped
 
 </details>
 
-<sub>PRevue · claude-opus-5-5 (high) · 33 turns · 5.4 min · run locally by @jtemps · head 4d15740 · ✓ checked against the code, ~ inferred</sub>
+<sub>PRevue · claude-opus-5-5 (high) · 2 turns · 0.9 min · run locally by @jtemps · head 875d17b · ✓ checked against the code, ~ inferred</sub>
