@@ -11,7 +11,7 @@ Read [the task method](references/task-method.md) before selecting context, clai
 
 A request that names one company gets an account plan. A request that names a segment, a cohort or a list of accounts gets a cohort plan from [cohort plan](references/cohort-plan.md): who is in it and why they belong together, the one angle they share, tiers, and the plays per tier, ending on how the per-account plans are run. A cohort plan names no committee for an individual account.
 
-For an account plan, Quick covers the strongest entry route, up to three primary roles, one sample email, and next actions. Full covers the requested committee count or reports the discovery shortfall. Assemble outreach before rendering and review.
+An account plan says what happened before with the account, gives each buying signal with its date and source, puts the people the team has already spoken with first, and writes an email and a talk track per person. Quick covers the strongest entry route, up to three primary roles, the entry person's email and talk track, and next actions. Full covers the requested committee count or reports the discovery shortfall. Assemble outreach before rendering and review.
 
 Use [GTM context](../shared/gtm-context.md) for strategic tasks and [evidence and inputs](../shared/evidence-and-inputs.md) for material claims and missing facts. A narrow list/get or a render-only handoff does not require unrelated research. Read [host runtime](../shared/host-runtime.md) for available tools, portable resource paths, routing, and review fallback.
 
@@ -29,6 +29,7 @@ Resolve current tool schemas before execution; use returned IDs and pagination. 
 
 - [cohort plan](references/cohort-plan.md)
 - [account plan template](references/account-plan-template.md)
+- [outreach copy](references/outreach-copy.md)
 - [html scaffold](references/html-scaffold.md)
 - [regression checklist](references/regression-checklist.md)
 

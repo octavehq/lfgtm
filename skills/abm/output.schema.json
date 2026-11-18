@@ -5,6 +5,8 @@
   "type": "object",
   "required": [
     "scope",
+    "whyNow",
+    "signals",
     "stakeholders",
     "plays"
   ],
@@ -38,6 +40,45 @@
       ],
       "description": "The plan's point in two or three sentences."
     },
+    "whyNow": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "One sentence on the reason to reach out now, naming the strongest signal that qualifies. Null when no signal qualifies or for a cohort plan."
+    },
+    "signals": {
+      "type": "array",
+      "description": "The buying signals found for the account, freshest first. Empty for a cohort plan.",
+      "items": {
+        "type": "object",
+        "required": [
+          "label",
+          "date",
+          "sourceUrl"
+        ],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "What happened, in one or two sentences a rep could repeat."
+          },
+          "date": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The date the source shows, YYYY-MM-DD or YYYY-MM. Null when the source carries none."
+          },
+          "sourceUrl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The page the evidence is on."
+          }
+        }
+      }
+    },
     "stakeholders": {
       "type": "array",
       "description": "One row per person the plan maps. Empty when none could be found. Empty for a cohort plan.",
@@ -48,7 +89,8 @@
           "title",
           "role",
           "profileUrl",
-          "angle"
+          "angle",
+          "source"
         ],
         "properties": {
           "name": {
@@ -104,6 +146,20 @@
               "null"
             ],
             "description": "One sentence on what to say to this person and why."
+          },
+          "source": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "call",
+              "email",
+              "crm",
+              "search",
+              null
+            ],
+            "description": "How the team knows the person: they spoke on a call, were in an email thread, are a CRM contact, or were found by search."
           }
         }
       }

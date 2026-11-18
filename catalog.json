@@ -24,7 +24,7 @@
         {
           "version": "1.4.0",
           "date": "2026-11-17",
-          "notes": "Plans a segment, a cohort or a list of accounts as well as one company. A cohort plan says who is in it and why they belong together, the one angle they share (from won deals that look like them and what was said on those calls), the tiers, and the plays per tier. Per-account plans come from running the skill for each account. The single-company plan is unchanged. Returns the account, the people it maps and the plays it recommends as data beside the document, so a later step can act on them.",
+          "notes": "Plans a segment, a cohort or a list of accounts as well as one company. A cohort plan says who is in it and why they belong together, the one angle they share (from won deals that look like them and what was said on those calls), the tiers, and the plays per tier. Per-account plans come from running the skill for each account. The single-company plan now says what happened before with the account, gives each buying signal with its date and source, puts the people the team has already spoken with first, and writes an email and a talk track for each person. Returns the account, the people it maps and the plays it recommends as data beside the document, so a later step can act on them.",
           "review": false
         },
         {
