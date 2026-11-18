@@ -15,6 +15,10 @@
 - **job**: gathers evidence about a subject and decides what to say. Most skills.
 - **output**: says how something is shaped and styled, for any subject. Run it alone ("make a deck about X") or let a job use it. `deck`, `one-pager`, `document` and `magazine` are outputs: they hold narrative patterns and the rules for the shape, and no opinion about which evidence a subject needs.
 
+## Rank
+
+`rank` is a whole number from 1 to 999 that orders skills of one kind where they are offered to run, lowest first. A skill with no rank follows the ranked ones, by title. A surface that shows only the first few of a group shows the lowest ranks, so rank the skills worth leading with and leave the rest unranked. Leave gaps (10, 20, 30) so one can be placed between two later.
+
 ## Pillars
 
 `pillars` uses these ids: `outbound`, `deal-execution`, `messaging`, `revenue-intelligence`, `octave-setup`.

@@ -71,6 +71,7 @@ def validate(root):
                 for item in value:
                     if item not in allowed:errors.append(f'catalog.json {name}: unknown {field} id {item!r}')
                 if len(set(value))!=len(value):errors.append(f'catalog.json {name}: {field} repeats an id')
+            if 'rank' in entry and not (isinstance(entry['rank'],int) and not isinstance(entry['rank'],bool) and 1<=entry['rank']<=999):errors.append(f'catalog.json {name}: rank must be a whole number from 1 to 999')
             about=entry.get('about')
             if about is not None and not (isinstance(about,list) and about and all(isinstance(a,str) and re.fullmatch(r'[a-z][a-z-]*',a) for a in about)):errors.append(f'catalog.json {name}: about must be a non-empty list of lowercase words')
             log=entry.get('changelog') or []

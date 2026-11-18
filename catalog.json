@@ -13,6 +13,7 @@
         "outbound",
         "deal-execution"
       ],
+      "rank": 30,
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -371,6 +372,7 @@
         "messaging",
         "deal-execution"
       ],
+      "rank": 60,
       "outputs": [
         "html-document",
         "one-pager"
@@ -451,6 +453,7 @@
         "revenue-intelligence",
         "deal-execution"
       ],
+      "rank": 70,
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -520,6 +523,7 @@
       "pillars": [
         "deal-execution"
       ],
+      "rank": 120,
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -596,6 +600,7 @@
       "pillars": [
         "deal-execution"
       ],
+      "rank": 130,
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -658,6 +663,7 @@
       "version": "1.4.0",
       "title": "Deck",
       "kind": "output",
+      "rank": 20,
       "about": [
         "company",
         "deal",
@@ -810,6 +816,7 @@
       "version": "1.0.0",
       "title": "Document",
       "kind": "output",
+      "rank": 10,
       "about": [
         "topic",
         "company",
@@ -1077,6 +1084,7 @@
       "pillars": [
         "revenue-intelligence"
       ],
+      "rank": 90,
       "outputs": [
         "html-document",
         "magazine",
@@ -1214,6 +1222,7 @@
       "version": "1.0.0",
       "title": "Magazine",
       "kind": "output",
+      "rank": 40,
       "about": [
         "period",
         "topic",
@@ -1251,6 +1260,7 @@
       "pillars": [
         "deal-execution"
       ],
+      "rank": 10,
       "outputs": [
         "html-document",
         "slide-deck",
@@ -1398,6 +1408,7 @@
       "version": "1.5.0",
       "title": "One-pager",
       "kind": "output",
+      "rank": 30,
       "about": [
         "company",
         "deal",
@@ -1481,6 +1492,7 @@
       "pillars": [
         "deal-execution"
       ],
+      "rank": 20,
       "outputs": [
         "html-document",
         "one-pager"
@@ -1691,6 +1703,7 @@
       "pillars": [
         "deal-execution"
       ],
+      "rank": 110,
       "outputs": [
         "html-document"
       ],
@@ -1764,6 +1777,7 @@
       "pillars": [
         "outbound"
       ],
+      "rank": 40,
       "default": true,
       "owner": "octave",
       "runtimes": [
@@ -1964,6 +1978,7 @@
         "outbound",
         "deal-execution"
       ],
+      "rank": 50,
       "outputs": [
         "html-document",
         "one-pager"
@@ -2037,6 +2052,7 @@
       "pillars": [
         "revenue-intelligence"
       ],
+      "rank": 80,
       "outputs": [
         "html-document"
       ],
@@ -2173,6 +2189,7 @@
       "pillars": [
         "revenue-intelligence"
       ],
+      "rank": 100,
       "default": true,
       "owner": "octave",
       "runtimes": [
