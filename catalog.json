@@ -814,7 +814,7 @@
     },
     "document": {
       "version": "1.0.0",
-      "title": "Document",
+      "title": "Interactive doc",
       "kind": "output",
       "rank": 10,
       "about": [

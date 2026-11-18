@@ -1,6 +1,6 @@
 ---
 name: document
-description: Turn a subject or supplied content into a long-form document that reads top to bottom, as self-contained HTML or Markdown. Use when user says "write this up", "make a report on", "turn these notes into a document", "long-form document about", or asks for a readable write-up with no more specific deliverable in mind. Do NOT use when a job skill fits the request (meeting prep, battlecard, account plan, win/loss report, proposal); use that skill.
+description: Turn a subject or supplied content into an interactive doc, a designed page that scrolls top to bottom with charts, timelines and quotes where the evidence calls for them, as self-contained HTML or Markdown. Use when user says "write this up", "make a report on", "turn these notes into a document", "long-form document about", or asks for a readable write-up with no more specific deliverable in mind. Do NOT use when a job skill fits the request (meeting prep, battlecard, account plan, win/loss report, proposal); use that skill.
 ---
 
 # /octave:document - Long-Form Document
