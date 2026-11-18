@@ -50,7 +50,7 @@ The header states the play in plain words ("They evaluated in July and paused on
 ### 3. What's likely driving them / what to explore (job: why they'd buy)
 Not a signals dump. What pains probably drive this account and what to dig into.
 - 3-4 items, one line each: the likely pain or pressure → why it points to us.
-- **Buying signals:** one row per trigger that hit, freshest first, each with its date, one or two sentences a rep could repeat, and a link to the page it is on. A signal older than about four months is labelled as older and is never the why-now.
+- **Buying signals:** one row per trigger that hit, freshest first, each with its date, one or two sentences a rep could repeat, and a link to the page it is on. A signal older than about four months is labelled as older and is never the why-now. Triggers that did not hit are left out, except at most three worth a confirming question.
 - **Buying triggers:** show the library definition separately from dated account occurrence. Known requires account evidence or attributed operator confirmation; otherwise use Trigger to validate and a confirming question.
 - Be honest about what's unknown. A short "worth confirming" note is fine; do not manufacture certainty.
 

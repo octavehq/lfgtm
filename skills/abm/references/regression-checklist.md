@@ -26,6 +26,7 @@ The account plan is a tight, account-level **plan** organized as six jobs (fit &
 
 - [ ] **History comes from two-way contact.** Contact counts and associations are not engagement; a failed CRM read is reported as failed, never as no history.
 - [ ] **Signals are about this company.** A namesake, parent or subsidiary is discarded; the company's own marketing is not an internal initiative; every hit has a date from its source and a link.
+- [ ] **No trigger checklist.** Only triggers that hit are shown, plus at most three to validate; no stored CRM value (a stage name, a reason code) is printed. *(2026-11-18, single-account run)*
 - [ ] **The why-now is fresh.** A dated signal no more than about four months old, never a funding round alone; otherwise the plan says it is proactive.
 - [ ] **Outreach reads as written for one person.** No CRM bookkeeping, no exact job title, no calendar dates, one closing question answerable with yes, no or one of two options; no two emails share an opener, a lead-in or a closing question.
 - [ ] **Steps can be acted on alone.** Each names a person on the committee, a channel, and what to send or say.
