@@ -1,0 +1,118 @@
+{
+ "version": 1,
+ "symbols": [
+  {
+   "name": "validate",
+   "kind": "function",
+   "file": "scripts/validate_package.py",
+   "line": 11,
+   "side": "head",
+   "match": "word"
+  }
+ ],
+ "groups": [
+  {
+   "id": "R1",
+   "symbol": "validate",
+   "kind": "function",
+   "defined": {
+    "file": "scripts/validate_package.py",
+    "line": 11,
+    "side": "head"
+   },
+   "count": 16,
+   "files": 8,
+   "sites": [
+    {
+     "file": ".github/workflows/publish-claude-tag-zip.yml",
+     "line": 21,
+     "text": "validate:"
+    },
+    {
+     "file": ".github/workflows/publish-claude-tag-zip.yml",
+     "line": 22,
+     "text": "uses: ./.github/workflows/validate.yml"
+    },
+    {
+     "file": ".github/workflows/publish-claude-tag-zip.yml",
+     "line": 24,
+     "text": "needs: validate"
+    },
+    {
+     "file": ".github/workflows/sync-downstream.yml",
+     "line": 13,
+     "text": "validate:"
+    },
+    {
+     "file": ".github/workflows/sync-downstream.yml",
+     "line": 14,
+     "text": "uses: ./.github/workflows/validate.yml"
+    },
+    {
+     "file": ".github/workflows/sync-downstream.yml",
+     "line": 16,
+     "text": "needs: validate"
+    },
+    {
+     "file": ".github/workflows/validate.yml",
+     "line": 12,
+     "text": "validate:"
+    },
+    {
+     "file": ".github/workflows/validate.yml",
+     "line": 25,
+     "text": "- run: bash scripts/validate.sh"
+    },
+    {
+     "file": "scripts/build-release.py",
+     "line": 7,
+     "text": "from validate_package import validate"
+    },
+    {
+     "file": "scripts/build-release.py",
+     "line": 11,
+     "text": "errors=validate(ROOT)"
+    },
+    {
+     "file": "scripts/validate_package.py",
+     "line": 65,
+     "text": "args=ap.parse_args();errors=validate(args.root)"
+    },
+    {
+     "file": "skills/ads/scripts/creative.py",
+     "line": 16,
+     "text": "def validate(ad):"
+    },
+    {
+     "file": "skills/ads/scripts/creative.py",
+     "line": 53,
+     "text": "validate(ad)"
+    },
+    {
+     "file": "skills/ads/scripts/creative.py",
+     "line": 74,
+     "text": "validate(ad)"
+    },
+    {
+     "file": "skills/get-brand-components/scripts/brand_cache.py",
+     "line": 184,
+     "text": "p=sub.add_parser('promote',help='validate a staging capture and point the cache at it (status draft)');p.add_argument('staging',type=Path)"
+    },
+    {
+     "file": "tests/test_reliability.py",
+     "line": 292,
+     "text": "with self.assertRaises(ValueError):creative.validate(ad)",
+     "test": true
+    }
+   ]
+  }
+ ],
+ "unused": [],
+ "stats": {
+  "symbols": 1,
+  "groups": 1,
+  "sites": 16,
+  "ms": 31
+ },
+ "related": []
+}
