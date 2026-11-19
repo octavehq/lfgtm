@@ -154,7 +154,7 @@
       ]
     },
     "ads-resonance": {
-      "version": "1.2.1",
+      "version": "1.2.2",
       "title": "Learn from ad performance",
       "kind": "job",
       "about": [
@@ -171,6 +171,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.2",
+          "date": "2026-11-18",
+          "notes": "Shared brand-kit guidance: a brand kit published in the workspace is used by default before offering to capture one, and the operator is never asked whether to use a kit that exists.",
+          "review": false
+        },
         {
           "version": "1.2.1",
           "date": "2026-11-05",
@@ -216,7 +222,7 @@
       ]
     },
     "asset-manager": {
-      "version": "1.5.0",
+      "version": "1.5.1",
       "title": "Publish and manage assets",
       "kind": "job",
       "pillars": [
@@ -230,6 +236,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.5.1",
+          "date": "2026-11-18",
+          "notes": "Shared brand-kit guidance: a brand kit published in the workspace is used by default before offering to capture one, and the operator is never asked whether to use a kit that exists.",
+          "review": false
+        },
         {
           "version": "1.5.0",
           "date": "2026-11-12",
@@ -299,7 +311,7 @@
       ]
     },
     "audit": {
-      "version": "1.2.1",
+      "version": "1.2.2",
       "title": "Audit the library",
       "kind": "job",
       "about": [
@@ -316,6 +328,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.2",
+          "date": "2026-11-18",
+          "notes": "Shared brand-kit guidance: a brand kit published in the workspace is used by default before offering to capture one, and the operator is never asked whether to use a kit that exists.",
+          "review": false
+        },
         {
           "version": "1.2.1",
           "date": "2026-11-05",
@@ -442,7 +460,7 @@
       ]
     },
     "call-analyzer": {
-      "version": "1.3.1",
+      "version": "1.3.2",
       "title": "Review a call or thread",
       "kind": "job",
       "about": [
@@ -462,6 +480,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.2",
+          "date": "2026-11-18",
+          "notes": "Shared brand-kit guidance: a brand kit published in the workspace is used by default before offering to capture one, and the operator is never asked whether to use a kit that exists.",
+          "review": false
+        },
         {
           "version": "1.3.1",
           "date": "2026-11-05",
@@ -589,7 +613,7 @@
       ]
     },
     "deal-coach": {
-      "version": "1.3.1",
+      "version": "1.3.2",
       "title": "Rehearse a deal conversation",
       "kind": "job",
       "about": [
@@ -609,6 +633,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.2",
+          "date": "2026-11-18",
+          "notes": "Shared brand-kit guidance: a brand kit published in the workspace is used by default before offering to capture one, and the operator is never asked whether to use a kit that exists.",
+          "review": false
+        },
         {
           "version": "1.3.1",
           "date": "2026-11-05",
@@ -731,7 +761,7 @@
       ]
     },
     "digest": {
-      "version": "1.3.1",
+      "version": "1.3.2",
       "title": "Recap the period",
       "kind": "job",
       "about": [
@@ -756,6 +786,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.2",
+          "date": "2026-11-18",
+          "notes": "Shared brand-kit guidance: a brand kit published in the workspace is used by default before offering to capture one, and the operator is never asked whether to use a kit that exists.",
+          "review": false
+        },
         {
           "version": "1.3.1",
           "date": "2026-11-05",
@@ -920,7 +956,7 @@
       ]
     },
     "get-brand-components": {
-      "version": "1.6.0",
+      "version": "1.6.1",
       "title": "Capture a brand kit",
       "kind": "job",
       "about": [
@@ -937,6 +973,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.6.1",
+          "date": "2026-11-18",
+          "notes": "Shared brand-kit guidance: a brand kit published in the workspace is used by default before offering to capture one, and the operator is never asked whether to use a kit that exists.",
+          "review": false
+        },
         {
           "version": "1.6.0",
           "date": "2026-11-05",
@@ -1000,7 +1042,7 @@
       ]
     },
     "icp-refine": {
-      "version": "1.3.1",
+      "version": "1.3.2",
       "title": "Refine the ICP",
       "kind": "job",
       "about": [
@@ -1022,6 +1064,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.2",
+          "date": "2026-11-18",
+          "notes": "Shared brand-kit guidance: a brand kit published in the workspace is used by default before offering to capture one, and the operator is never asked whether to use a kit that exists.",
+          "review": false
+        },
         {
           "version": "1.3.1",
           "date": "2026-11-05",
@@ -1073,7 +1121,7 @@
       ]
     },
     "insights": {
-      "version": "1.3.1",
+      "version": "1.3.2",
       "title": "Ask what buyers are saying",
       "kind": "job",
       "about": [
@@ -1098,6 +1146,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.2",
+          "date": "2026-11-18",
+          "notes": "Shared brand-kit guidance: a brand kit published in the workspace is used by default before offering to capture one, and the operator is never asked whether to use a kit that exists.",
+          "review": false
+        },
         {
           "version": "1.3.1",
           "date": "2026-11-05",
@@ -1149,7 +1203,7 @@
       ]
     },
     "library": {
-      "version": "1.2.1",
+      "version": "1.2.2",
       "title": "Look up or edit the library",
       "kind": "job",
       "about": [
@@ -1168,6 +1222,12 @@
         "get_entity_schema"
       ],
       "changelog": [
+        {
+          "version": "1.2.2",
+          "date": "2026-11-18",
+          "notes": "Shared brand-kit guidance: a brand kit published in the workspace is used by default before offering to capture one, and the operator is never asked whether to use a kit that exists.",
+          "review": false
+        },
         {
           "version": "1.2.1",
           "date": "2026-11-05",
@@ -1249,7 +1309,7 @@
       ]
     },
     "meeting-prep": {
-      "version": "1.3.1",
+      "version": "1.3.2",
       "title": "Prepare for a meeting",
       "kind": "job",
       "about": [
@@ -1274,6 +1334,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.2",
+          "date": "2026-11-18",
+          "notes": "Shared brand-kit guidance: a brand kit published in the workspace is used by default before offering to capture one, and the operator is never asked whether to use a kit that exists.",
+          "review": false
+        },
         {
           "version": "1.3.1",
           "date": "2026-11-05",
@@ -1562,7 +1628,7 @@
       ]
     },
     "positioning": {
-      "version": "1.3.1",
+      "version": "1.3.2",
       "title": "Build positioning and messaging",
       "kind": "job",
       "about": [
@@ -1580,6 +1646,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.2",
+          "date": "2026-11-18",
+          "notes": "Shared brand-kit guidance: a brand kit published in the workspace is used by default before offering to capture one, and the operator is never asked whether to use a kit that exists.",
+          "review": false
+        },
         {
           "version": "1.3.1",
           "date": "2026-11-05",
@@ -1631,7 +1703,7 @@
       ]
     },
     "product-launch": {
-      "version": "1.2.1",
+      "version": "1.2.2",
       "title": "Plan a launch",
       "kind": "job",
       "about": [
@@ -1648,6 +1720,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.2",
+          "date": "2026-11-18",
+          "notes": "Shared brand-kit guidance: a brand kit published in the workspace is used by default before offering to capture one, and the operator is never asked whether to use a kit that exists.",
+          "review": false
+        },
         {
           "version": "1.2.1",
           "date": "2026-11-05",
@@ -1693,7 +1771,7 @@
       ]
     },
     "proposal": {
-      "version": "1.3.1",
+      "version": "1.3.2",
       "title": "Write a proposal",
       "kind": "job",
       "about": [
@@ -1715,6 +1793,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.2",
+          "date": "2026-11-18",
+          "notes": "Shared brand-kit guidance: a brand kit published in the workspace is used by default before offering to capture one, and the operator is never asked whether to use a kit that exists.",
+          "review": false
+        },
         {
           "version": "1.3.1",
           "date": "2026-11-05",
@@ -1837,7 +1921,7 @@
       ]
     },
     "public-changelog": {
-      "version": "2.2.1",
+      "version": "2.2.2",
       "title": "Publish the changelog",
       "kind": "job",
       "about": [
@@ -1854,6 +1938,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "2.2.2",
+          "date": "2026-11-18",
+          "notes": "Shared brand-kit guidance: a brand kit published in the workspace is used by default before offering to capture one, and the operator is never asked whether to use a kit that exists.",
+          "review": false
+        },
         {
           "version": "2.2.1",
           "date": "2026-11-05",
@@ -1905,7 +1995,7 @@
       ]
     },
     "qual-doctor": {
-      "version": "1.2.1",
+      "version": "1.2.2",
       "title": "Tune qualification",
       "kind": "job",
       "about": [
@@ -1922,6 +2012,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.2",
+          "date": "2026-11-18",
+          "notes": "Shared brand-kit guidance: a brand kit published in the workspace is used by default before offering to capture one, and the operator is never asked whether to use a kit that exists.",
+          "review": false
+        },
         {
           "version": "1.2.1",
           "date": "2026-11-05",
@@ -1967,7 +2063,7 @@
       ]
     },
     "research": {
-      "version": "1.3.1",
+      "version": "1.3.2",
       "title": "Get to know a company or person",
       "kind": "job",
       "about": [
@@ -1991,6 +2087,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.2",
+          "date": "2026-11-18",
+          "notes": "Shared brand-kit guidance: a brand kit published in the workspace is used by default before offering to capture one, and the operator is never asked whether to use a kit that exists.",
+          "review": false
+        },
         {
           "version": "1.3.1",
           "date": "2026-11-05",
@@ -2042,7 +2144,7 @@
       ]
     },
     "signals": {
-      "version": "1.2.1",
+      "version": "1.2.2",
       "title": "See what needs me today",
       "kind": "job",
       "about": [
@@ -2064,6 +2166,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.2.2",
+          "date": "2026-11-18",
+          "notes": "Shared brand-kit guidance: a brand kit published in the workspace is used by default before offering to capture one, and the operator is never asked whether to use a kit that exists.",
+          "review": false
+        },
         {
           "version": "1.2.1",
           "date": "2026-11-05",
@@ -2109,7 +2217,7 @@
       ]
     },
     "train": {
-      "version": "1.3.0",
+      "version": "1.3.1",
       "title": "Onboard a rep",
       "kind": "job",
       "about": [
@@ -2127,6 +2235,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.3.1",
+          "date": "2026-11-18",
+          "notes": "Shared brand-kit guidance: a brand kit published in the workspace is used by default before offering to capture one, and the operator is never asked whether to use a kit that exists.",
+          "review": false
+        },
         {
           "version": "1.3.0",
           "date": "2026-11-12",
