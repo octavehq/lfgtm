@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "skills": {
     "abm": {
-      "version": "1.4.1",
+      "version": "1.4.2",
       "title": "Plan an account",
       "kind": "job",
       "about": [
@@ -22,6 +22,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.4.2",
+          "date": "2026-11-19",
+          "notes": "Cohort actions carry supplied conversation event IDs, dates and deep links into structured evidence and visible source links.",
+          "review": false
+        },
         {
           "version": "1.4.1",
           "date": "2026-11-18",
