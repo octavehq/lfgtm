@@ -368,7 +368,7 @@
                     "string",
                     "null"
                   ],
-                  "description": "Original source timestamp in ISO 8601 UTC, not the plan generation date."
+                  "description": "Original source date (YYYY-MM-DD) or ISO 8601 timestamp, preserving its precision; never the plan generation date."
                 },
                 "summary": {
                   "type": "string"
