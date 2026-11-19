@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "skills": {
     "abm": {
-      "version": "1.4.0",
+      "version": "1.4.1",
       "title": "Plan an account",
       "kind": "job",
       "about": [
@@ -22,6 +22,12 @@
       ],
       "requiredTools": [],
       "changelog": [
+        {
+          "version": "1.4.1",
+          "date": "2026-11-18",
+          "notes": "Cohort plans return stable, dated worklist actions with owners, completion signals and hold/reopen conditions so later checks can retain completed work.",
+          "review": false
+        },
         {
           "version": "1.4.0",
           "date": "2026-11-17",
@@ -1965,7 +1971,7 @@
         {
           "version": "2.0.0",
           "date": "2026-10-29",
-          "notes": "New entries are fielded: a description of 3 to 4 sentences, a Use case line (“A <role> can now…”) and a Problem it solves line, with a New or Improvement badge. A single-paragraph entry is refused as new. Entries already live keep their shape and lines unless the staging paste lists them under reshape (the paragraph is replaced by fields) or remove (the entry comes off the page). The 200 to 900 character paragraph limit is gone.",
+          "notes": "New entries are fielded: a description of 3 to 4 sentences, a Use case line (\u201cA <role> can now\u2026\u201d) and a Problem it solves line, with a New or Improvement badge. A single-paragraph entry is refused as new. Entries already live keep their shape and lines unless the staging paste lists them under reshape (the paragraph is replaced by fields) or remove (the entry comes off the page). The 200 to 900 character paragraph limit is gone.",
           "review": false
         },
         {

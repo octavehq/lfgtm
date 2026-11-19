@@ -273,6 +273,131 @@
           }
         }
       }
+    },
+    "worklist": {
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "account",
+          "status",
+          "owner",
+          "nextAction",
+          "completionSignal",
+          "reopenCondition",
+          "evidence"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Stable action key: account domain plus the workflow/task. Reuse the exact ID from a prior worklist for the same action; a new action gets a new ID."
+          },
+          "account": {
+            "type": "object",
+            "required": [
+              "name",
+              "domain"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "domain": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "open",
+              "on_hold",
+              "completed"
+            ],
+            "description": "Completed only with an attributed completion record; an answered capability question is not a completed setup test."
+          },
+          "owner": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Verified owner or accountable role; null when not known."
+          },
+          "nextAction": {
+            "type": "string"
+          },
+          "completionSignal": {
+            "type": "string"
+          },
+          "reopenCondition": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "recordId",
+                "url",
+                "date",
+                "summary"
+              ],
+              "properties": {
+                "recordId": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "date": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "Original source date (YYYY-MM-DD) or ISO 8601 timestamp, preserving its precision; never the plan generation date."
+                },
+                "summary": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "description": "One stable row per concrete account task or deliberate hold, with provenance and an observable completion condition."
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "scope": {
+            "const": "cohort"
+          }
+        },
+        "required": [
+          "scope"
+        ]
+      },
+      "then": {
+        "required": [
+          "worklist"
+        ]
+      }
+    }
+  ]
 }

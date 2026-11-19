@@ -61,3 +61,9 @@ Sections, in order: the cohort (who and why together), the angle, the tiers (rul
 ## Before delivering
 
 Check that every account in the table is in the resolved cohort and none was added, every tier follows the stated rule, every count names its base, the angle cites deals and calls you opened in this run, no buyer-facing line names another customer, and no person is named for an account you did not research. Report unrun checks as NOT RUN.
+
+## Carry the work forward
+
+Return `worklist` beside the document, following `output.schema.json`: stable action ID, account identity, owner or accountable role, status, concrete next action, observable completion signal, reopen condition and dated source references. Include deliberate holds as rows. Reuse supplied action IDs and completion reports when revising a plan; do not reopen completed work merely because the report reran. A newly supported failure can justify a new action with its own ID.
+
+Make each row actionable without requiring another plan when the next step is already established. Propose the actual test or follow-up; execution is a separate host action. Do not turn a no-send request into a document full of approval gates. Show clickable source links when the tools supply them, preserve record IDs when no link exists, and keep missing source references null. The document and data must agree on owners, statuses and completion signals. Completed means recorded completion of that action, not an answered product question or a generated draft. Owner reports stay attributed and never become independent customer evidence.
