@@ -51,11 +51,11 @@ It is built around **five teaching topics**, plus a cover and a completion slide
 
 Workspace-company logo, the title "[Company] GTM Primer", a one-line subtitle, a compact "how it works" strip (Read the topic, Clear the checkpoints, Advance), and a Start button. No target-account or deal metadata.
 
-**The whole doc is branded to and about the workspace company** (the company whose MCP connection is active, resolved via `get_workspace_company`). This is an internal enablement doc for that company's own reps, so its logo, title, and subject are always the workspace company, never a customer or target account. Customers appear only as small named proof on Slide 5, never as the brand or subject.
+**The whole doc is branded to and about the workspace company** (the company whose MCP connection is active, resolved via `get_workspace_details`). This is an internal enablement doc for that company's own reps, so its logo, title, and subject are always the workspace company, never a customer or target account. Customers appear only as small named proof on Slide 5, never as the brand or subject.
 
 ### 1. What we sell
 
-The story a rep must be able to tell, and the customers who prove it. Grounded in `get_workspace_company` (whyWeExist, positioning, whyCustomersBuy, marketDynamics) and the product entity.
+The story a rep must be able to tell, and the customers who prove it. Grounded in `get_workspace_details` (whyWeExist, positioning, whyCustomersBuy, marketDynamics) and the product entity.
 
 - **Lead statement**, 2 to 3 sentences: what we make, the problem it solves, who it is for. Plain language. Follow with the single mantra line as a callout (the one sentence a rep repeats).
 - **Customer archetype cards, 3.** The strongest addition, and what makes the slide feel real. Each card: an archetype name (e.g. "The technical founder who tried to build it himself"), **their problem** (one to two lines), **why us** (one line), and the **real customer** it is drawn from (named). Pull these from real references/proof points (`get_entity` on references). Never invent an archetype; each maps to a real customer story.
