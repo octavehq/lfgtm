@@ -4,14 +4,14 @@ Shared reference for every skill that renders styled HTML output. Covers (1) who
 
 ## 1. Whose brand: selected sender/workspace by default
 
-The document's design system (fonts, colors, header, footer, chrome) always wears the **workspace company's brand**: the Octave customer whose instance is running the skill. Resolve it with `get_workspace_company`, verify its workspace ID and canonical hostname, and run the kit lookup below. This holds for every asset type, whether it stays internal (battlecard, meeting-prep, brief, wins-losses, positioning) or goes out to a prospect (one-pager, proposal, microsite, deck). A company brands its own output, the same way it puts its own letterhead on a document it sends. Use the workspace company's kit by default, without asking.
+The document's design system (fonts, colors, header, footer, chrome) always wears the **workspace company's brand**: the Octave customer whose instance is running the skill. Resolve it with `get_workspace_details`, verify its workspace ID and canonical hostname, and run the kit lookup below. This holds for every asset type, whether it stays internal (battlecard, meeting-prep, brief, wins-losses, positioning) or goes out to a prospect (one-pager, proposal, microsite, deck). A company brands its own output, the same way it puts its own letterhead on a document it sends. Use the workspace company's kit by default, without asking.
 
 The **target company's logo** (the prospect, account, or competitor) appears only in content, a masthead accent, a "prepared for" line, or a deal-context card, to personalize the asset. It never controls the design system. Fetch it with `get_external_brand_logo` / `get_external_brand_assets` and place it in content, not the chrome.
 
 - Branding a document in the target's colors is the wrong default; a target-company kit for the design system is used only if the user explicitly asks (e.g. a co-branded piece).
 - Respect an explicit `--style <preset>` or brand override.
 
-> **POC / demo runs are not a special case.** When Octave produces showcase assets inside a *prospect's* workspace to demonstrate the platform, `get_workspace_company` resolves to that prospect, so the same rule renders the demo in the prospect's brand automatically. "Workspace company" is always whoever's instance is running the skill.
+> **POC / demo runs are not a special case.** When Octave produces showcase assets inside a *prospect's* workspace to demonstrate the platform, `get_workspace_details` resolves to that prospect, so the same rule renders the demo in the prospect's brand automatically. "Workspace company" is always whoever's instance is running the skill.
 
 ## 2. Brand kit lookup (cache first, then the workspace)
 

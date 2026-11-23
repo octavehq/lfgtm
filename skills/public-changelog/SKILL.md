@@ -125,7 +125,7 @@ bash <plugin-root>/skills/asset-manager/scripts/download-artifact.sh --uuid <uui
 
 ### 2b. New page: fix its chrome once
 
-Resolve the company with `get_workspace_company`. Propose a title, a one-sentence dek and a
+Resolve the company with `get_workspace_details`. Propose a title, a one-sentence dek and a
 footer line, for example "Acme Changelog" / "What we shipped, and what it means for teams using
 Acme." / "Acme, <their positioning line>". **Tell the user these three lines are permanent:**
 changing one later re-extracts it as a release entry. Then:

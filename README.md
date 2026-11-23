@@ -568,7 +568,7 @@ Proposed library changes (add / edit / merge) from conversation findings, queued
 
 ### Workspace Company
 The workspace's own company profile (singleton).
-- `get_workspace_company` - Get the workspace company (null if not yet bootstrapped)
+- `get_workspace_details` - Get the workspace company (null if not yet bootstrapped)
 - `update_workspace_company` - Update workspace company fields (description, positioning, etc.)
 
 ### CRM
