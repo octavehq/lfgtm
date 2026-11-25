@@ -32,7 +32,7 @@
 | Competitive wins | `list_events({ startDate: "<180d ago>", filters: { eventTypes: ["DEAL_WON"], competitors: ["<oId>"] } })` | Real deal outcomes -- wins against this competitor |
 | Competitive losses | `list_events({ startDate: "<180d ago>", filters: { eventTypes: ["DEAL_LOST"], competitors: ["<oId>"] } })` | Real deal outcomes -- losses to this competitor |
 | Deal details | `get_event_detail({ eventOId })` | Deep dive on notable wins or losses for evidence |
-| Conversation evidence | `list_findings({ query: "<competitor>", eventFilters: { competitors: ["<oId>"] } })` | Real objections and mentions from calls |
+| Conversation evidence | `list_findings({ query: "<competitor>", linkedEntities: { competitors: ["<oId>"] } })` | Real objections and mentions from calls: only findings linked to the competitor. `eventFilters.competitors` would also return every other finding on those calls |
 | Verbatim quotes, won vs. lost | `search_call_transcripts({ query: "<competitor>", dealOutcome: "WON" })` / `dealOutcome: "LOST"` | The customer's own words about this competitor, split by outcome — for trap questions and objection counters |
 | Best evidence for this competitor | `get_entity_evidence({ entityOId: "<competitor_oId>" })` | Pipeline-linked verbatim quotes evidencing the competitor card, preferred over a paraphrase |
 | Proof points | `list_entities({ entityType: "proof_point" })` | Competitive win proof points, switching stories |

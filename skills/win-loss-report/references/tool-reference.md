@@ -29,8 +29,8 @@
 
 | What you need | Tool | When to use |
 |---------------|------|-------------|
-| Objections in won deals | `list_findings({ query: "objections and pushback raised by prospects", eventFilters: { outcomeFilters: ["WON"] }, startDate })` | Objections that were overcome |
-| Objections in lost deals | `list_findings({ query: "objections and pushback raised by prospects", eventFilters: { outcomeFilters: ["LOST"] }, startDate })` | Objections that killed deals |
+| Objections in won deals | `list_findings({ query: "objections and pushback raised by prospects", eventFilters: { opportunityStatuses: ["WON"] }, startDate })` | Objections that were overcome |
+| Objections in lost deals | `list_findings({ query: "objections and pushback raised by prospects", eventFilters: { opportunityStatuses: ["LOST"] }, startDate })` | Objections that killed deals |
 | Value props presented | `list_findings({ query: "value propositions presented on calls", startDate })` | What messaging worked vs didn't |
 | Competitor mentions | `list_findings({ query: "competitor mentions and comparisons", startDate })` | Competitive landscape in deals |
 | Feature requests | `list_findings({ query: "feature requests and product gaps", startDate })` | Product gaps causing losses |
@@ -64,7 +64,7 @@
 |---------------|------|-------------|
 | Competitor profile | `get_entity({ oId })` | Full competitor context |
 | Deals vs competitor | `list_events({ filters: { eventTypes: ["DEAL_WON", "DEAL_LOST"], competitors: ["<oId>"] } })` | Win/loss record against this competitor |
-| Findings mentioning competitor | `list_findings({ query: "objections and mentions related to this competitor", eventFilters: { competitors: ["<oId>"] }, startDate })` | Real objections and mentions from calls |
+| Findings mentioning competitor | `list_findings({ query: "objections and mentions related to this competitor", linkedEntities: { competitors: ["<oId>"] }, startDate })` | Real objections and mentions from calls: only findings linked to the competitor. `eventFilters.competitors` would also return every other finding on those calls |
 | Competitive positioning | `search_knowledge_base({ query: "<competitor> differentiation", entityTypes: ["competitor"] })` | Existing positioning guidance |
 | Verbatim mentions of this competitor | `search_call_transcripts({ query: "<competitor>", dealOutcome: "WON" })` / `"LOST"` | What prospects actually said about this competitor, split by outcome |
 | Objections raised when this competitor came up | `search_call_transcripts({ query: "objections raised", contentFilter: { callPhrases: ["<competitor>"] } })` | Scopes to calls that mention the competitor anywhere, then pulls the objection quotes from within them -- the objection itself doesn't need to name the competitor |
