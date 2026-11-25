@@ -10,6 +10,8 @@ Counts must state what was counted. A recurring quote from one deal is not sever
 
 Distinguish seller usage, buyer acknowledgment, resolved concern, engagement, and commercial outcome. State association as association unless the evidence supports a causal design; a buyer-attributed explanation remains an attributed explanation. Account-level totals cannot establish a headline-level winner or a persona-specific effect.
 
+For what goes with an outcome (a persona, use case, competitor or trait on winning or fast-moving deals), compare within a segment as well as overall (compare_cohorts with stratifyBy segment): a trait common in one kind of account can stand in for the account. Before recommending a person or trait for a group of accounts, check it occurs there; if it rarely does, say who plays that part there instead. Back the who with the why: read the calls on those deals and quote what the buyers reacted to and what moved them, then turn that into the play.
+
 Show numerator, denominator, scope, confidence limits, and alternative explanations when they change a decision. Do not use arbitrary scores or volume thresholds as proof of certainty. Unknown, zero, and not-applicable require separate calculation behavior. Do not calculate a ratio when its denominator is undefined; report the reason.
 
 For tuning or learning, keep diagnostic/training cases separate from evaluation cases; include relevant good, bad, borderline, unknown, and adjacent cases. Record the original hypothesis, comparison, outcome, and decision rule before evaluating. Preserve inconclusive results; do not change the population after seeing results to rescue a prediction. When changes affect shared library objects, evaluate impacted consumers and use workspace-mutations.md.
